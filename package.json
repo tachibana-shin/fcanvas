@@ -1,0 +1,22 @@
+{
+  "name": "mycanvas",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "devDependencies": {
+     "@babel/core": "^7.0.0-rc.1",
+     "@babel/preset-env": "^7.0.0-rc.1",
+     "@babel/register": "^7.0.0-rc.1",
+     "babel": "^6.23.0",
+     "babel-loader": "^8.1.0",
+     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+     "uglifyjs-webpack-plugin": "^2.2.0",
+     "webpack": "^4.44.2",
+     "webpack-cli": "^3.3.12",
+     "eslint": "^7.24.0"
+  },
+  "scripts": {
+    "dev": "node_modules/webpack/bin/webpack.js --mode production --watch --progress --hide-modules",
+    "build": "node_modules/webpack/bin/webpack.js --mode production --progress --hide-module"
+ }
+}
