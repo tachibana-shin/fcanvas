@@ -1,16 +1,25 @@
-import MyCanvas, { setup } from "./src/index.js";
-const canvas = new MyCanvas();
+import MyCanvas, { setup, draw } from "./src/index.js"
+
+const canvas = new MyCanvas()
+const canvas2 = new MyCanvas()
 
 class App extends MyCanvas.Element {
   draw() {
-     //// clear
+    this.fill("red")
+    this.circle(100, 100, 50)
   }
 }
 
-const app = new App();
+const app = new App()
 
 setup(() => {
-  canvas.append();
-  canvas.width = canvas.windowWidth;
-  canvas.height = canvas.windowHeight;
-});
+  canvas.append()
+  canvas2.append()
+})
+
+draw(() => {
+  canvas.clear()
+  canvas2.clear()
+  canvas.run(app)
+  canvas2.run(app)
+})

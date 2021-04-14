@@ -44,9 +44,7 @@ class MyElement {
 
     if (this._queue.length > 0) {
       for (
-        let index = 0, length = this._queue.length;
-        index < length;
-        index++
+        let index = 0, length = this._queue.length; index < length; index++
       ) {
         this.run(this._queue[index]);
       }
@@ -63,6 +61,13 @@ class MyElement {
       );
     }
   }
+  getQueue(index) {
+    if (index < 0) {
+      index += this._queue.length
+    }
+
+    return this._queue[index]
+  }
   run(canvasElement) {
     this.mycanvas.run(canvasElement);
   }
@@ -71,9 +76,9 @@ class MyElement {
   }
   get mycanvas() {
     const canvas =
-      this._idActiveNow === null
-        ? this._els[this._els.length - 1]
-        : this._els.find((item) => item._id === this._idActiveNow);
+      this._idActiveNow === null ?
+      this._els[this._els.length - 1] :
+      this._els.find((item) => item._id === this._idActiveNow);
 
     if (canvas instanceof MyCanvas) {
       return canvas;
@@ -311,15 +316,15 @@ class MyElement {
   }
 
   hypot =
-    typeof Math.hypot === "function"
-      ? Math.hypot
-      : (...args) => {
-          const len = args.length;
-          let i = 0,
-            result = 0;
-          while (i < len) result += Math.pow(args[i++], 2);
-          return Math.sqrt(result);
-        };
+    typeof Math.hypot === "function" ?
+    Math.hypot :
+    (...args) => {
+      const len = args.length;
+      let i = 0,
+        result = 0;
+      while (i < len) result += Math.pow(args[i++], 2);
+      return Math.sqrt(result);
+    };
 
   __functionDefault(property, arg) {
     if (arg === undefined) {
@@ -607,10 +612,10 @@ class MyCanvas {
         return red;
       } else {
         const after = MyCanvas.constants.colorMode[this._ENV.colorMode].match(
-          /hsl|hsb/i
-        )
-          ? "%"
-          : "";
+            /hsl|hsb/i
+          ) ?
+          "%" :
+          "";
 
         return `${MyCanvas.constants.colorMode[this._ENV.colorMode]}a(${[
           red,
@@ -945,11 +950,11 @@ export function setup(callback, argv) {
   }
 }
 export function draw(callback, canvas, argv) {
-  if (canvas instanceof MyCanvas && canvas._ENV.clear === true) {
+  if (canvas?._ENV.clear === true) {
     canvas.clear();
   }
   callback(argv);
-  if (canvas instanceof MyCanvas && canvas._ENV.loop === true) {
+  if (!canvas || canvas?._ENV.loop === true) {
     requestAnimationFrame(() => draw(callback, canvas, argv));
   }
 }

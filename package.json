@@ -16,7 +16,7 @@
      "eslint": "^7.24.0"
   },
   "scripts": {
-    "dev": "node_modules/webpack/bin/webpack.js --mode production --watch --progress --hide-modules",
+    "dev": "node_modules/webpack/bin/webpack.js --mode development --watch",
     "build": "node_modules/webpack/bin/webpack.js --mode production --progress --hide-module"
  }
 }
