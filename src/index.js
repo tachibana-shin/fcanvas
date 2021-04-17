@@ -10,16 +10,16 @@ import {
 class MyElement {
   constructor(canvas) {
     if (canvas === undefined) {
-      const canvas = new MyCanvas();
+      const canvas = new fCanvas();
       this._els.push(canvas);
     } else {
-      if (canvas instanceof MyCanvas) {
+      if (canvas instanceof fCanvas) {
         this.bind(canvas);
       } else {
-        const canvas = new MyCanvas();
+        const canvas = new fCanvas();
         this._els.push(canvas);
         console.error(
-          "mycanvas: super() in MyElement.constructor not's MyCanvas element."
+          "fCanvas: super() in MyElement.constructor not's fCanvas element."
         );
       }
     }
@@ -29,7 +29,7 @@ class MyElement {
   _idActiveNow = null;
 
   get $el() {
-    return this.mycanvas.$el;
+    return this.fCanvas.$el;
   }
   _queue = [];
   _run(canvas) {
@@ -44,7 +44,9 @@ class MyElement {
 
     if (this._queue.length > 0) {
       for (
-        let index = 0, length = this._queue.length; index < length; index++
+        let index = 0, length = this._queue.length;
+        index < length;
+        index++
       ) {
         this.run(this._queue[index]);
       }
@@ -57,56 +59,56 @@ class MyElement {
       this._queue.push(canvasElement);
     } else {
       console.error(
-        `mycanvas: the parameter passed to MyElement.addQueue() must be a MyCanvas object.`
+        `fCanvas: the parameter passed to MyElement.addQueue() must be a fCanvas object.`
       );
     }
   }
   getQueue(index) {
     if (index < 0) {
-      index += this._queue.length
+      index += this._queue.length;
     }
 
-    return this._queue[index]
+    return this._queue[index];
   }
   run(canvasElement) {
-    this.mycanvas.run(canvasElement);
+    this.fCanvas.run(canvasElement);
   }
   has(id) {
     return this._els.some((item) => item._id === id);
   }
-  get mycanvas() {
+  get fCanvas() {
     const canvas =
-      this._idActiveNow === null ?
-      this._els[this._els.length - 1] :
-      this._els.find((item) => item._id === this._idActiveNow);
+      this._idActiveNow === null
+        ? this._els[this._els.length - 1]
+        : this._els.find((item) => item._id === this._idActiveNow);
 
-    if (canvas instanceof MyCanvas) {
+    if (canvas instanceof fCanvas) {
       return canvas;
     } else {
       console.warn(
-        "mycanvas: The current referenced version of the MyCanvas.run function is incorrect."
+        "fCanvas: The current referenced version of the fCanvas.run function is incorrect."
       );
       return this._els[0];
     }
   }
 
   bind(canvas) {
-    if (canvas instanceof MyCanvas) {
+    if (canvas instanceof fCanvas) {
       if (this.has(canvas._id) === false) {
         this._els.push(canvas);
       }
     } else {
       console.error(
-        "mycanvas: the parameter passed to MyElement.bind() must be a MyCanvas object."
+        "fCanvas: the parameter passed to MyElement.bind() must be a fCanvas object."
       );
     }
   }
   get $context2d() {
-    return this.mycanvas.$context2d;
+    return this.fCanvas.$context2d;
   }
 
   _extendsCanvas(name, ...argv) {
-    return this.mycanvas[name](...argv);
+    return this.fCanvas[name](...argv);
   }
   _toRadius(...argv) {
     return this._extendsCanvas("_toRadius", ...argv);
@@ -145,25 +147,25 @@ class MyElement {
     return this._extendsCanvas("atan2", ...argv);
   }
   get mouseX() {
-    return this.mycanvas.mouseX;
+    return this.fCanvas.mouseX;
   }
   get mouseY() {
-    return this.mycanvas.mouseY;
+    return this.fCanvas.mouseY;
   }
   get interact() {
-    return this.mycanvas.interact;
+    return this.fCanvas.interact;
   }
   get width() {
-    return this.mycanvas.width;
+    return this.fCanvas.width;
   }
   get height() {
-    return this.mycanvas.height;
+    return this.fCanvas.height;
   }
   get windowWidth() {
-    return this.mycanvas.windowWidth;
+    return this.fCanvas.windowWidth;
   }
   get windowHeight() {
-    return this.mycanvas.windowHeight;
+    return this.fCanvas.windowHeight;
   }
 
   _createLinear(type, ...argv) {
@@ -290,7 +292,7 @@ class MyElement {
     }
     this.$context2d.drawImage(image, ...args);
   }
-  rect(x, y, w, h, $1 = 0, $2 = $1, $3 = $1, $4 = $2) {
+  rect(x, y, w, h, $1, $2 = $1, $3 = $1, $4 = $2) {
     this.begin();
     [x, y] = this._figureOffset(x, y, w, h);
 
@@ -316,15 +318,15 @@ class MyElement {
   }
 
   hypot =
-    typeof Math.hypot === "function" ?
-    Math.hypot :
-    (...args) => {
-      const len = args.length;
-      let i = 0,
-        result = 0;
-      while (i < len) result += Math.pow(args[i++], 2);
-      return Math.sqrt(result);
-    };
+    typeof Math.hypot === "function"
+      ? Math.hypot
+      : (...args) => {
+          const len = args.length;
+          let i = 0,
+            result = 0;
+          while (i < len) result += Math.pow(args[i++], 2);
+          return Math.sqrt(result);
+        };
 
   __functionDefault(property, arg) {
     if (arg === undefined) {
@@ -334,7 +336,7 @@ class MyElement {
     }
   }
   __functionDefault2(name, ...argv) {
-    this.$context2d[name](...argv);
+    return this.$context2d[name](...argv);
   }
 
   quadratic(...argv) {
@@ -368,22 +370,22 @@ class MyElement {
     this.__functionDefault2("isPointInPath", ...argv);
   }
   createImageData(...argv) {
-    this.__functionDefault2("createImageData", ...argv);
+    return this.__functionDefault2("createImageData", ...argv);
   }
   getImageData(...argv) {
-    this.__functionDefault2("getImageData", ...argv);
+    return this.__functionDefault2("getImageData", ...argv);
   }
   putImageData(...argv) {
     this.__functionDefault2("putImageData", ...argv);
   }
   createPattern(...argv) {
-    this.__functionDefault2("createPattern", ...argv);
+    return this.__functionDefault2("createPattern", ...argv);
   }
   createRadialGradient(...argv) {
-    this.__functionDefault2("createRadialGradient", ...argv);
+    return this.__functionDefault2("createRadialGradient", ...argv);
   }
   createLinearGradient(...argv) {
-    this.__functionDefault2("createLinearGradient", ...argv);
+    return this.__functionDefault2("createLinearGradient", ...argv);
   }
 
   lineJoin(argv) {
@@ -400,7 +402,7 @@ class MyElement {
   }
 }
 
-class MyCanvas {
+class fCanvas {
   static Element = MyElement;
   static constants = {
     angleMode: {
@@ -456,7 +458,7 @@ class MyCanvas {
   _el = document.createElement("canvas");
 
   constructor() {
-    this._id = MyCanvas.count++;
+    this._id = fCanvas.count++;
 
     const handlerEvent = (event) => {
       try {
@@ -575,16 +577,16 @@ class MyCanvas {
   }
 
   _methodMode(type, value) {
-    if (!(type in this._ENV) || !(type in MyCanvas.constants)) {
+    if (!(type in this._ENV) || !(type in fCanvas.constants)) {
       console.warn(`${type}: This method mode don't install.`);
     } else {
       if (value === undefined) {
-        return MyCanvas.constants[type][this._ENV[type]];
+        return fCanvas.constants[type][this._ENV[type]];
       } else {
         let validate = false;
-        for (const key in MyCanvas.constants[type]) {
+        for (const key in fCanvas.constants[type]) {
           if (
-            MyCanvas.constants[type][key].toLowerCase() === value.toLowerCase()
+            fCanvas.constants[type][key].toLowerCase() === value.toLowerCase()
           ) {
             this._ENV[type] = key;
           }
@@ -611,13 +613,13 @@ class MyCanvas {
       if (typeof red === "string") {
         return red;
       } else {
-        const after = MyCanvas.constants.colorMode[this._ENV.colorMode].match(
-            /hsl|hsb/i
-          ) ?
-          "%" :
-          "";
+        const after = fCanvas.constants.colorMode[this._ENV.colorMode].match(
+          /hsl|hsb/i
+        )
+          ? "%"
+          : "";
 
-        return `${MyCanvas.constants.colorMode[this._ENV.colorMode]}a(${[
+        return `${fCanvas.constants.colorMode[this._ENV.colorMode]}a(${[
           red,
           green + after,
           blue + after,
@@ -748,7 +750,7 @@ class MyCanvas {
     }
   }
   __functionDefault2(name, ...argv) {
-    this.$context2d[name](...argv);
+    return this.$context2d[name](...argv);
   }
 
   font(argv) {
@@ -986,5 +988,5 @@ export function touchEnded(callback, element = window) {
   return bindEvent("touchend", callback, element);
 }
 
-export default MyCanvas;
+export default fCanvas;
 export * from "./methods/index.js";

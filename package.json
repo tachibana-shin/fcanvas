@@ -1,31 +1,38 @@
 {
   "name": "fcanvas",
   "version": "0.0.1",
-  "main": "src/index.js",
+  "main": "fcanvas.js",
+  "module": "./fcanvas.esm.js",
+  "typings": "types/index.d.ts",
   "license": "MIT",
   "devDependencies": {
-     "@babel/core": "^7.0.0-rc.1",
-     "@babel/preset-env": "^7.0.0-rc.1",
-     "@babel/register": "^7.0.0-rc.1",
-     "babel": "^6.23.0",
-     "babel-loader": "^8.1.0",
-     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
-     "uglifyjs-webpack-plugin": "^2.2.0",
-     "webpack": "^4.44.2",
-     "webpack-cli": "^3.3.12",
-     "eslint": "^7.24.0"
+    "@babel/core": "^7.0.0-rc.1",
+    "@babel/preset-env": "^7.0.0-rc.1",
+    "@babel/register": "^7.0.0-rc.1",
+    "babel-loader": "^8.2.2",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^7.24.0",
+    "rollup": "^2.45.2",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
   },
   "scripts": {
-    "dev": "node_modules/webpack/bin/webpack.js --mode development --watch",
-    "build": "node_modules/webpack/bin/webpack.js --mode production --progress --hide-module"
- },
-
- "author": "Nguyen Thanh",
- "repository": {
-   "type": "git",
-   "url": "git://github.com/nguyenthanh1995/mycanvas.git"
- },
- "keywords": [
-    "mycanvas"
- ]
+    "dev": "node node_modules/webpack/bin/webpack.js --mode development --watch",
+    "build": "node node_modules/webpack/bin/webpack.js --mode production --progress --hide-module"
+  },
+  "author": "Nguyen Thanh",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nguyenthanh1995/mycanvas.git"
+  },
+  "keywords": [
+    "fCanvas"
+  ]
 }

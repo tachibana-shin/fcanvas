@@ -1,9 +1,9 @@
-import MyCanvas, { setup, draw } from "./src/index.js"
+import fCanvas, { setup, draw } from "./src/index.js"
 
-const canvas = new MyCanvas()
-const canvas2 = new MyCanvas()
+const canvas = new fCanvas()
+const canvas2 = new fCanvas()
 
-class App extends MyCanvas.Element {
+class App extends fCanvas.Element {
   draw() {
     this.fill("red")
     this.circle(100, 100, 50)

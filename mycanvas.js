@@ -514,7 +514,7 @@
         this._context2d = this._$el.getContext("2d");
       } else {
         throw new Error(
-          "myCanvas.js: when setting the value to canvasLocal. $el must make sure it is a HTMLCanvasElement."
+          "fCanvas.js: when setting the value to canvasLocal. $el must make sure it is a HTMLCanvasElement."
         );
       }
     }
