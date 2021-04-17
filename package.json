@@ -1,6 +1,6 @@
 {
-  "name": "mycanvas",
-  "version": "1.0.0",
+  "name": "jcanvas",
+  "version": "0.0.1",
   "main": "src/index.js",
   "license": "MIT",
   "devDependencies": {
@@ -18,5 +18,14 @@
   "scripts": {
     "dev": "node_modules/webpack/bin/webpack.js --mode development --watch",
     "build": "node_modules/webpack/bin/webpack.js --mode production --progress --hide-module"
- }
+ },
+
+ "author": "Nguyen Thanh",
+ "repository": {
+   "type": "git",
+   "url": "git://github.com/nguyenthanh1995/mycanvas.git"
+ },
+ "keywords": [
+    "mycanvas"
+ ]
 }
