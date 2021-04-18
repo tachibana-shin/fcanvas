@@ -1,5 +1,3 @@
-import DOMMatrix from "../classes/DOMMatrix.js"
-
 interface CircleElement {
    x: number,
    y: number,
@@ -16,7 +14,7 @@ export interface CircleImpact {
    (el1: CircleElement, el2: CircleElement): boolean
 }
 export interface CircleImpactPoint {
-   (el: CircleElement, x: number, y: numnber): boolean
+   (el: CircleElement, x: number, y: number): boolean
 }
 export interface CircleImpactRect {
    (rect: RectElement, circle: CircleElement): boolean
@@ -39,13 +37,13 @@ export interface createVector {
 }
 
 export interface loadImage {
-   (src: string): Promise
+   (src: string): Promise<HTMLImageElement>
 }
 export interface map {
    (value: number, min: number, max: number, minr: number, maxr: number): number
 }
 export interface random {
-   (start?: number, end?: numnber): number
+   (start?: number, end?: number): number
 }
 export interface range {
    (start: number | string, end: number | string, step: number): Array<number | string>
