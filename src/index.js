@@ -6,6 +6,7 @@ import {
   windowSize,
   isMobile,
 } from "./utils/index.js";
+import _Emitter from "./classes/Emitter.js";
 
 class MyElement {
   constructor(canvas) {
@@ -938,16 +939,25 @@ function bindEvent(name, callback, element) {
   };
 }
 
-export { default as Emitter } from "./classes/Emitter.js";
+export const Emitter = _Emitter;
+
+let inited = false;
+const emitter = new Emitter();
 
 export function setup(callback, argv) {
   if (document.readyState === "complete") {
     //// readyState === "complete"
+
+    inited = true;
+    emitter.emit("load");
     callback(argv);
   } else {
     function load() {
       document.removeEventListener("DOMContentLoaded", load);
       window.removeEventListener("load", load);
+
+      inited = true;
+      emitter.emit("load");
       callback(argv);
     }
 
@@ -956,12 +966,18 @@ export function setup(callback, argv) {
   }
 }
 export function draw(callback, canvas, argv) {
-  if (canvas?._ENV.clear === true) {
-    canvas.clear();
-  }
-  callback(argv);
-  if (!canvas || canvas?._ENV.loop === true) {
-    requestAnimationFrame(() => draw(callback, canvas, argv));
+  if (inited) {
+    if (canvas?._ENV.clear === true) {
+      canvas.clear();
+    }
+    callback(argv);
+    if (!canvas || canvas?._ENV.loop === true) {
+      requestAnimationFrame(() => draw(callback, canvas, argv));
+    }
+  } else {
+    emitter.once("load", () => {
+      draw(callback, canvas, argv);
+    });
   }
 }
 export function keyPressed(callback, element = window) {

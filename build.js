@@ -70,9 +70,10 @@ build(
       babel({
         babelrc: false,
         runtimeHelpers: true,
-        presets: ["@babel/preset-env"],
+        // presets: ["@babel/preset-env"],
         plugins: [
           "@babel/plugin-proposal-class-properties",
+          "@babel/plugin-proposal-optional-chaining",
           [
             "@babel/plugin-transform-runtime",
             {

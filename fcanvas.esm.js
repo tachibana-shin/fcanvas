@@ -6,216 +6,6 @@ function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
-var asyncToGenerator = createCommonjsModule(function (module) {
-  function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
-    try {
-      var info = gen[key](arg);
-      var value = info.value;
-    } catch (error) {
-      reject(error);
-      return;
-    }
-
-    if (info.done) {
-      resolve(value);
-    } else {
-      Promise.resolve(value).then(_next, _throw);
-    }
-  }
-
-  function _asyncToGenerator(fn) {
-    return function () {
-      var self = this,
-          args = arguments;
-      return new Promise(function (resolve, reject) {
-        var gen = fn.apply(self, args);
-
-        function _next(value) {
-          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
-        }
-
-        function _throw(err) {
-          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
-        }
-
-        _next(undefined);
-      });
-    };
-  }
-
-  module.exports = _asyncToGenerator;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-var _asyncToGenerator = unwrapExports(asyncToGenerator);
-
-var arrayWithHoles = createCommonjsModule(function (module) {
-  function _arrayWithHoles(arr) {
-    if (Array.isArray(arr)) return arr;
-  }
-
-  module.exports = _arrayWithHoles;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(arrayWithHoles);
-
-var iterableToArrayLimit = createCommonjsModule(function (module) {
-  function _iterableToArrayLimit(arr, i) {
-    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-    var _e = undefined;
-
-    try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-        _arr.push(_s.value);
-
-        if (i && _arr.length === i) break;
-      }
-    } catch (err) {
-      _d = true;
-      _e = err;
-    } finally {
-      try {
-        if (!_n && _i["return"] != null) _i["return"]();
-      } finally {
-        if (_d) throw _e;
-      }
-    }
-
-    return _arr;
-  }
-
-  module.exports = _iterableToArrayLimit;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(iterableToArrayLimit);
-
-var arrayLikeToArray = createCommonjsModule(function (module) {
-  function _arrayLikeToArray(arr, len) {
-    if (len == null || len > arr.length) len = arr.length;
-
-    for (var i = 0, arr2 = new Array(len); i < len; i++) {
-      arr2[i] = arr[i];
-    }
-
-    return arr2;
-  }
-
-  module.exports = _arrayLikeToArray;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(arrayLikeToArray);
-
-var unsupportedIterableToArray = createCommonjsModule(function (module) {
-  function _unsupportedIterableToArray(o, minLen) {
-    if (!o) return;
-    if (typeof o === "string") return arrayLikeToArray(o, minLen);
-    var n = Object.prototype.toString.call(o).slice(8, -1);
-    if (n === "Object" && o.constructor) n = o.constructor.name;
-    if (n === "Map" || n === "Set") return Array.from(o);
-    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
-  }
-
-  module.exports = _unsupportedIterableToArray;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(unsupportedIterableToArray);
-
-var nonIterableRest = createCommonjsModule(function (module) {
-  function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-
-  module.exports = _nonIterableRest;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(nonIterableRest);
-
-var slicedToArray = createCommonjsModule(function (module) {
-  function _slicedToArray(arr, i) {
-    return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
-  }
-
-  module.exports = _slicedToArray;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-var _slicedToArray = unwrapExports(slicedToArray);
-
-var arrayWithoutHoles = createCommonjsModule(function (module) {
-  function _arrayWithoutHoles(arr) {
-    if (Array.isArray(arr)) return arrayLikeToArray(arr);
-  }
-
-  module.exports = _arrayWithoutHoles;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(arrayWithoutHoles);
-
-var iterableToArray = createCommonjsModule(function (module) {
-  function _iterableToArray(iter) {
-    if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
-  }
-
-  module.exports = _iterableToArray;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(iterableToArray);
-
-var nonIterableSpread = createCommonjsModule(function (module) {
-  function _nonIterableSpread() {
-    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-
-  module.exports = _nonIterableSpread;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(nonIterableSpread);
-
-var toConsumableArray = createCommonjsModule(function (module) {
-  function _toConsumableArray(arr) {
-    return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
-  }
-
-  module.exports = _toConsumableArray;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-var _toConsumableArray = unwrapExports(toConsumableArray);
-
-var classCallCheck = createCommonjsModule(function (module) {
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  module.exports = _classCallCheck;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-var _classCallCheck = unwrapExports(classCallCheck);
-
-var createClass = createCommonjsModule(function (module) {
-  function _defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  function _createClass(Constructor, protoProps, staticProps) {
-    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) _defineProperties(Constructor, staticProps);
-    return Constructor;
-  }
-
-  module.exports = _createClass;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-var _createClass = unwrapExports(createClass);
-
 var defineProperty = createCommonjsModule(function (module) {
   function _defineProperty(obj, key, value) {
     if (key in obj) {
@@ -237,783 +27,26 @@ var defineProperty = createCommonjsModule(function (module) {
 });
 var _defineProperty = unwrapExports(defineProperty);
 
-var _typeof_1 = createCommonjsModule(function (module) {
-  function _typeof(obj) {
-    "@babel/helpers - typeof";
-
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      module.exports = _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-
-      module.exports["default"] = module.exports, module.exports.__esModule = true;
-    } else {
-      module.exports = _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-
-      module.exports["default"] = module.exports, module.exports.__esModule = true;
-    }
-
-    return _typeof(obj);
-  }
-
-  module.exports = _typeof;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-
-var _typeof = unwrapExports(_typeof_1);
-
-var runtime_1 = createCommonjsModule(function (module) {
-  /**
-   * Copyright (c) 2014-present, Facebook, Inc.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
-   */
-  var runtime = function (exports) {
-
-    var Op = Object.prototype;
-    var hasOwn = Op.hasOwnProperty;
-    var undefined$1; // More compressible than void 0.
-
-    var $Symbol = typeof Symbol === "function" ? Symbol : {};
-    var iteratorSymbol = $Symbol.iterator || "@@iterator";
-    var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
-    var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
-
-    function define(obj, key, value) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-      return obj[key];
-    }
-
-    try {
-      // IE 8 has a broken Object.defineProperty that only works on DOM objects.
-      define({}, "");
-    } catch (err) {
-      define = function define(obj, key, value) {
-        return obj[key] = value;
-      };
-    }
-
-    function wrap(innerFn, outerFn, self, tryLocsList) {
-      // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
-      var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
-      var generator = Object.create(protoGenerator.prototype);
-      var context = new Context(tryLocsList || []); // The ._invoke method unifies the implementations of the .next,
-      // .throw, and .return methods.
-
-      generator._invoke = makeInvokeMethod(innerFn, self, context);
-      return generator;
-    }
-
-    exports.wrap = wrap; // Try/catch helper to minimize deoptimizations. Returns a completion
-    // record like context.tryEntries[i].completion. This interface could
-    // have been (and was previously) designed to take a closure to be
-    // invoked without arguments, but in all the cases we care about we
-    // already have an existing method we want to call, so there's no need
-    // to create a new function object. We can even get away with assuming
-    // the method takes exactly one argument, since that happens to be true
-    // in every case, so we don't have to touch the arguments object. The
-    // only additional allocation required is the completion record, which
-    // has a stable shape and so hopefully should be cheap to allocate.
-
-    function tryCatch(fn, obj, arg) {
-      try {
-        return {
-          type: "normal",
-          arg: fn.call(obj, arg)
-        };
-      } catch (err) {
-        return {
-          type: "throw",
-          arg: err
-        };
-      }
-    }
-
-    var GenStateSuspendedStart = "suspendedStart";
-    var GenStateSuspendedYield = "suspendedYield";
-    var GenStateExecuting = "executing";
-    var GenStateCompleted = "completed"; // Returning this object from the innerFn has the same effect as
-    // breaking out of the dispatch switch statement.
-
-    var ContinueSentinel = {}; // Dummy constructor functions that we use as the .constructor and
-    // .constructor.prototype properties for functions that return Generator
-    // objects. For full spec compliance, you may wish to configure your
-    // minifier not to mangle the names of these two functions.
-
-    function Generator() {}
-
-    function GeneratorFunction() {}
-
-    function GeneratorFunctionPrototype() {} // This is a polyfill for %IteratorPrototype% for environments that
-    // don't natively support it.
-
-
-    var IteratorPrototype = {};
-
-    IteratorPrototype[iteratorSymbol] = function () {
-      return this;
-    };
-
-    var getProto = Object.getPrototypeOf;
-    var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
-
-    if (NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
-      // This environment has a native %IteratorPrototype%; use it instead
-      // of the polyfill.
-      IteratorPrototype = NativeIteratorPrototype;
-    }
-
-    var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype);
-    GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
-    GeneratorFunctionPrototype.constructor = GeneratorFunction;
-    GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"); // Helper for defining the .next, .throw, and .return methods of the
-    // Iterator interface in terms of a single ._invoke method.
-
-    function defineIteratorMethods(prototype) {
-      ["next", "throw", "return"].forEach(function (method) {
-        define(prototype, method, function (arg) {
-          return this._invoke(method, arg);
-        });
-      });
-    }
-
-    exports.isGeneratorFunction = function (genFun) {
-      var ctor = typeof genFun === "function" && genFun.constructor;
-      return ctor ? ctor === GeneratorFunction || // For the native GeneratorFunction constructor, the best we can
-      // do is to check its .name property.
-      (ctor.displayName || ctor.name) === "GeneratorFunction" : false;
-    };
-
-    exports.mark = function (genFun) {
-      if (Object.setPrototypeOf) {
-        Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
-      } else {
-        genFun.__proto__ = GeneratorFunctionPrototype;
-        define(genFun, toStringTagSymbol, "GeneratorFunction");
-      }
-
-      genFun.prototype = Object.create(Gp);
-      return genFun;
-    }; // Within the body of any async function, `await x` is transformed to
-    // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
-    // `hasOwn.call(value, "__await")` to determine if the yielded value is
-    // meant to be awaited.
-
-
-    exports.awrap = function (arg) {
-      return {
-        __await: arg
-      };
-    };
-
-    function AsyncIterator(generator, PromiseImpl) {
-      function invoke(method, arg, resolve, reject) {
-        var record = tryCatch(generator[method], generator, arg);
-
-        if (record.type === "throw") {
-          reject(record.arg);
-        } else {
-          var result = record.arg;
-          var value = result.value;
-
-          if (value && _typeof(value) === "object" && hasOwn.call(value, "__await")) {
-            return PromiseImpl.resolve(value.__await).then(function (value) {
-              invoke("next", value, resolve, reject);
-            }, function (err) {
-              invoke("throw", err, resolve, reject);
-            });
-          }
-
-          return PromiseImpl.resolve(value).then(function (unwrapped) {
-            // When a yielded Promise is resolved, its final value becomes
-            // the .value of the Promise<{value,done}> result for the
-            // current iteration.
-            result.value = unwrapped;
-            resolve(result);
-          }, function (error) {
-            // If a rejected Promise was yielded, throw the rejection back
-            // into the async generator function so it can be handled there.
-            return invoke("throw", error, resolve, reject);
-          });
-        }
-      }
-
-      var previousPromise;
-
-      function enqueue(method, arg) {
-        function callInvokeWithMethodAndArg() {
-          return new PromiseImpl(function (resolve, reject) {
-            invoke(method, arg, resolve, reject);
-          });
-        }
-
-        return previousPromise = // If enqueue has been called before, then we want to wait until
-        // all previous Promises have been resolved before calling invoke,
-        // so that results are always delivered in the correct order. If
-        // enqueue has not been called before, then it is important to
-        // call invoke immediately, without waiting on a callback to fire,
-        // so that the async generator function has the opportunity to do
-        // any necessary setup in a predictable way. This predictability
-        // is why the Promise constructor synchronously invokes its
-        // executor callback, and why async functions synchronously
-        // execute code before the first await. Since we implement simple
-        // async functions in terms of async generators, it is especially
-        // important to get this right, even though it requires care.
-        previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, // Avoid propagating failures to Promises returned by later
-        // invocations of the iterator.
-        callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg();
-      } // Define the unified helper method that is used to implement .next,
-      // .throw, and .return (see defineIteratorMethods).
-
-
-      this._invoke = enqueue;
-    }
-
-    defineIteratorMethods(AsyncIterator.prototype);
-
-    AsyncIterator.prototype[asyncIteratorSymbol] = function () {
-      return this;
-    };
-
-    exports.AsyncIterator = AsyncIterator; // Note that simple async functions are implemented on top of
-    // AsyncIterator objects; they just return a Promise for the value of
-    // the final result produced by the iterator.
-
-    exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) {
-      if (PromiseImpl === void 0) PromiseImpl = Promise;
-      var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl);
-      return exports.isGeneratorFunction(outerFn) ? iter // If outerFn is a generator, return the full iterator.
-      : iter.next().then(function (result) {
-        return result.done ? result.value : iter.next();
-      });
-    };
-
-    function makeInvokeMethod(innerFn, self, context) {
-      var state = GenStateSuspendedStart;
-      return function invoke(method, arg) {
-        if (state === GenStateExecuting) {
-          throw new Error("Generator is already running");
-        }
-
-        if (state === GenStateCompleted) {
-          if (method === "throw") {
-            throw arg;
-          } // Be forgiving, per 25.3.3.3.3 of the spec:
-          // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
-
-
-          return doneResult();
-        }
-
-        context.method = method;
-        context.arg = arg;
-
-        while (true) {
-          var delegate = context.delegate;
-
-          if (delegate) {
-            var delegateResult = maybeInvokeDelegate(delegate, context);
-
-            if (delegateResult) {
-              if (delegateResult === ContinueSentinel) continue;
-              return delegateResult;
-            }
-          }
-
-          if (context.method === "next") {
-            // Setting context._sent for legacy support of Babel's
-            // function.sent implementation.
-            context.sent = context._sent = context.arg;
-          } else if (context.method === "throw") {
-            if (state === GenStateSuspendedStart) {
-              state = GenStateCompleted;
-              throw context.arg;
-            }
-
-            context.dispatchException(context.arg);
-          } else if (context.method === "return") {
-            context.abrupt("return", context.arg);
-          }
-
-          state = GenStateExecuting;
-          var record = tryCatch(innerFn, self, context);
-
-          if (record.type === "normal") {
-            // If an exception is thrown from innerFn, we leave state ===
-            // GenStateExecuting and loop back for another invocation.
-            state = context.done ? GenStateCompleted : GenStateSuspendedYield;
-
-            if (record.arg === ContinueSentinel) {
-              continue;
-            }
-
-            return {
-              value: record.arg,
-              done: context.done
-            };
-          } else if (record.type === "throw") {
-            state = GenStateCompleted; // Dispatch the exception by looping back around to the
-            // context.dispatchException(context.arg) call above.
-
-            context.method = "throw";
-            context.arg = record.arg;
-          }
-        }
-      };
-    } // Call delegate.iterator[context.method](context.arg) and handle the
-    // result, either by returning a { value, done } result from the
-    // delegate iterator, or by modifying context.method and context.arg,
-    // setting context.delegate to null, and returning the ContinueSentinel.
-
-
-    function maybeInvokeDelegate(delegate, context) {
-      var method = delegate.iterator[context.method];
-
-      if (method === undefined$1) {
-        // A .throw or .return when the delegate iterator has no .throw
-        // method always terminates the yield* loop.
-        context.delegate = null;
-
-        if (context.method === "throw") {
-          // Note: ["return"] must be used for ES3 parsing compatibility.
-          if (delegate.iterator["return"]) {
-            // If the delegate iterator has a return method, give it a
-            // chance to clean up.
-            context.method = "return";
-            context.arg = undefined$1;
-            maybeInvokeDelegate(delegate, context);
-
-            if (context.method === "throw") {
-              // If maybeInvokeDelegate(context) changed context.method from
-              // "return" to "throw", let that override the TypeError below.
-              return ContinueSentinel;
-            }
-          }
-
-          context.method = "throw";
-          context.arg = new TypeError("The iterator does not provide a 'throw' method");
-        }
-
-        return ContinueSentinel;
-      }
-
-      var record = tryCatch(method, delegate.iterator, context.arg);
-
-      if (record.type === "throw") {
-        context.method = "throw";
-        context.arg = record.arg;
-        context.delegate = null;
-        return ContinueSentinel;
-      }
-
-      var info = record.arg;
-
-      if (!info) {
-        context.method = "throw";
-        context.arg = new TypeError("iterator result is not an object");
-        context.delegate = null;
-        return ContinueSentinel;
-      }
-
-      if (info.done) {
-        // Assign the result of the finished delegate to the temporary
-        // variable specified by delegate.resultName (see delegateYield).
-        context[delegate.resultName] = info.value; // Resume execution at the desired location (see delegateYield).
-
-        context.next = delegate.nextLoc; // If context.method was "throw" but the delegate handled the
-        // exception, let the outer generator proceed normally. If
-        // context.method was "next", forget context.arg since it has been
-        // "consumed" by the delegate iterator. If context.method was
-        // "return", allow the original .return call to continue in the
-        // outer generator.
-
-        if (context.method !== "return") {
-          context.method = "next";
-          context.arg = undefined$1;
-        }
-      } else {
-        // Re-yield the result returned by the delegate method.
-        return info;
-      } // The delegate iterator is finished, so forget it and continue with
-      // the outer generator.
-
-
-      context.delegate = null;
-      return ContinueSentinel;
-    } // Define Generator.prototype.{next,throw,return} in terms of the
-    // unified ._invoke helper method.
-
-
-    defineIteratorMethods(Gp);
-    define(Gp, toStringTagSymbol, "Generator"); // A Generator should always return itself as the iterator object when the
-    // @@iterator function is called on it. Some browsers' implementations of the
-    // iterator prototype chain incorrectly implement this, causing the Generator
-    // object to not be returned from this call. This ensures that doesn't happen.
-    // See https://github.com/facebook/regenerator/issues/274 for more details.
-
-    Gp[iteratorSymbol] = function () {
-      return this;
-    };
-
-    Gp.toString = function () {
-      return "[object Generator]";
-    };
-
-    function pushTryEntry(locs) {
-      var entry = {
-        tryLoc: locs[0]
-      };
-
-      if (1 in locs) {
-        entry.catchLoc = locs[1];
-      }
-
-      if (2 in locs) {
-        entry.finallyLoc = locs[2];
-        entry.afterLoc = locs[3];
-      }
-
-      this.tryEntries.push(entry);
-    }
-
-    function resetTryEntry(entry) {
-      var record = entry.completion || {};
-      record.type = "normal";
-      delete record.arg;
-      entry.completion = record;
-    }
-
-    function Context(tryLocsList) {
-      // The root entry object (effectively a try statement without a catch
-      // or a finally block) gives us a place to store values thrown from
-      // locations where there is no enclosing try statement.
-      this.tryEntries = [{
-        tryLoc: "root"
-      }];
-      tryLocsList.forEach(pushTryEntry, this);
-      this.reset(true);
-    }
-
-    exports.keys = function (object) {
-      var keys = [];
-
-      for (var key in object) {
-        keys.push(key);
-      }
-
-      keys.reverse(); // Rather than returning an object with a next method, we keep
-      // things simple and return the next function itself.
-
-      return function next() {
-        while (keys.length) {
-          var key = keys.pop();
-
-          if (key in object) {
-            next.value = key;
-            next.done = false;
-            return next;
-          }
-        } // To avoid creating an additional object, we just hang the .value
-        // and .done properties off the next function object itself. This
-        // also ensures that the minifier will not anonymize the function.
-
-
-        next.done = true;
-        return next;
-      };
-    };
-
-    function values(iterable) {
-      if (iterable) {
-        var iteratorMethod = iterable[iteratorSymbol];
-
-        if (iteratorMethod) {
-          return iteratorMethod.call(iterable);
-        }
-
-        if (typeof iterable.next === "function") {
-          return iterable;
-        }
-
-        if (!isNaN(iterable.length)) {
-          var i = -1,
-              next = function next() {
-            while (++i < iterable.length) {
-              if (hasOwn.call(iterable, i)) {
-                next.value = iterable[i];
-                next.done = false;
-                return next;
-              }
-            }
-
-            next.value = undefined$1;
-            next.done = true;
-            return next;
-          };
-
-          return next.next = next;
-        }
-      } // Return an iterator with no values.
-
-
-      return {
-        next: doneResult
-      };
-    }
-
-    exports.values = values;
-
-    function doneResult() {
-      return {
-        value: undefined$1,
-        done: true
-      };
-    }
-
-    Context.prototype = {
-      constructor: Context,
-      reset: function reset(skipTempReset) {
-        this.prev = 0;
-        this.next = 0; // Resetting context._sent for legacy support of Babel's
-        // function.sent implementation.
-
-        this.sent = this._sent = undefined$1;
-        this.done = false;
-        this.delegate = null;
-        this.method = "next";
-        this.arg = undefined$1;
-        this.tryEntries.forEach(resetTryEntry);
-
-        if (!skipTempReset) {
-          for (var name in this) {
-            // Not sure about the optimal order of these conditions:
-            if (name.charAt(0) === "t" && hasOwn.call(this, name) && !isNaN(+name.slice(1))) {
-              this[name] = undefined$1;
-            }
-          }
-        }
-      },
-      stop: function stop() {
-        this.done = true;
-        var rootEntry = this.tryEntries[0];
-        var rootRecord = rootEntry.completion;
-
-        if (rootRecord.type === "throw") {
-          throw rootRecord.arg;
-        }
-
-        return this.rval;
-      },
-      dispatchException: function dispatchException(exception) {
-        if (this.done) {
-          throw exception;
-        }
-
-        var context = this;
-
-        function handle(loc, caught) {
-          record.type = "throw";
-          record.arg = exception;
-          context.next = loc;
-
-          if (caught) {
-            // If the dispatched exception was caught by a catch block,
-            // then let that catch block handle the exception normally.
-            context.method = "next";
-            context.arg = undefined$1;
-          }
-
-          return !!caught;
-        }
-
-        for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-          var entry = this.tryEntries[i];
-          var record = entry.completion;
-
-          if (entry.tryLoc === "root") {
-            // Exception thrown outside of any try block that could handle
-            // it, so set the completion value of the entire function to
-            // throw the exception.
-            return handle("end");
-          }
-
-          if (entry.tryLoc <= this.prev) {
-            var hasCatch = hasOwn.call(entry, "catchLoc");
-            var hasFinally = hasOwn.call(entry, "finallyLoc");
-
-            if (hasCatch && hasFinally) {
-              if (this.prev < entry.catchLoc) {
-                return handle(entry.catchLoc, true);
-              } else if (this.prev < entry.finallyLoc) {
-                return handle(entry.finallyLoc);
-              }
-            } else if (hasCatch) {
-              if (this.prev < entry.catchLoc) {
-                return handle(entry.catchLoc, true);
-              }
-            } else if (hasFinally) {
-              if (this.prev < entry.finallyLoc) {
-                return handle(entry.finallyLoc);
-              }
-            } else {
-              throw new Error("try statement without catch or finally");
-            }
-          }
-        }
-      },
-      abrupt: function abrupt(type, arg) {
-        for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-          var entry = this.tryEntries[i];
-
-          if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) {
-            var finallyEntry = entry;
-            break;
-          }
-        }
-
-        if (finallyEntry && (type === "break" || type === "continue") && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc) {
-          // Ignore the finally entry if control is not jumping to a
-          // location outside the try/catch block.
-          finallyEntry = null;
-        }
-
-        var record = finallyEntry ? finallyEntry.completion : {};
-        record.type = type;
-        record.arg = arg;
-
-        if (finallyEntry) {
-          this.method = "next";
-          this.next = finallyEntry.finallyLoc;
-          return ContinueSentinel;
-        }
-
-        return this.complete(record);
-      },
-      complete: function complete(record, afterLoc) {
-        if (record.type === "throw") {
-          throw record.arg;
-        }
-
-        if (record.type === "break" || record.type === "continue") {
-          this.next = record.arg;
-        } else if (record.type === "return") {
-          this.rval = this.arg = record.arg;
-          this.method = "return";
-          this.next = "end";
-        } else if (record.type === "normal" && afterLoc) {
-          this.next = afterLoc;
-        }
-
-        return ContinueSentinel;
-      },
-      finish: function finish(finallyLoc) {
-        for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-          var entry = this.tryEntries[i];
-
-          if (entry.finallyLoc === finallyLoc) {
-            this.complete(entry.completion, entry.afterLoc);
-            resetTryEntry(entry);
-            return ContinueSentinel;
-          }
-        }
-      },
-      "catch": function _catch(tryLoc) {
-        for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-          var entry = this.tryEntries[i];
-
-          if (entry.tryLoc === tryLoc) {
-            var record = entry.completion;
-
-            if (record.type === "throw") {
-              var thrown = record.arg;
-              resetTryEntry(entry);
-            }
-
-            return thrown;
-          }
-        } // The context.catch method must only be called with a location
-        // argument that corresponds to a known catch block.
-
-
-        throw new Error("illegal catch attempt");
-      },
-      delegateYield: function delegateYield(iterable, resultName, nextLoc) {
-        this.delegate = {
-          iterator: values(iterable),
-          resultName: resultName,
-          nextLoc: nextLoc
-        };
-
-        if (this.method === "next") {
-          // Deliberately forget the last sent value so that we don't
-          // accidentally pass it on to the delegate.
-          this.arg = undefined$1;
-        }
-
-        return ContinueSentinel;
-      }
-    }; // Regardless of whether this script is executing as a CommonJS module
-    // or not, return the runtime object so that we can declare the variable
-    // regeneratorRuntime in the outer scope, which allows this module to be
-    // injected easily by `bin/regenerator --include-runtime script.js`.
-
-    return exports;
-  }( // If this script is executing as a CommonJS module, use module.exports
-  // as the regeneratorRuntime namespace. Otherwise create a new empty
-  // object. Either way, the resulting object will be used to initialize
-  // the regeneratorRuntime variable at the top of this file.
-  module.exports );
-
-  try {
-    regeneratorRuntime = runtime;
-  } catch (accidentalStrictMode) {
-    // This module should not be running in strict mode, so the above
-    // assignment should always work unless something is misconfigured. Just
-    // in case runtime.js accidentally runs in strict mode, we can escape
-    // strict mode using a global Function call. This could conceivably fail
-    // if a Content Security Policy forbids using Function, but in that case
-    // the proper solution is to fix the accidental strict mode problem. If
-    // you've misconfigured your bundler to force strict mode and applied a
-    // CSP to forbid Function, and you're not willing to fix either of those
-    // problems, please detail your unique predicament in a GitHub issue.
-    Function("r", "regeneratorRuntime = r")(runtime);
-  }
-});
-
-var regenerator = runtime_1;
-
-var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame || function (e) {
+const requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame || function (e) {
   setTimeout(e, 100 / 6);
 };
-var supportPassive = false;
+let supportPassive = false;
 
 try {
-  var opts = Object.defineProperty({}, "passive", {
-    get: function get() {
+  let opts = Object.defineProperty({}, "passive", {
+    get: function () {
       supportPassive = true;
     }
   });
   window.addEventListener("testPassive", null, opts);
   window.removeEventListener("testPassive", null, opts);
 } catch (e) {}
-var windowSize = {
+const windowSize = {
   windowWidth: {
-    get: function get() {
-      return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    }
+    get: () => window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
   },
   windowHeight: {
-    get: function get() {
-      return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    }
+    get: () => window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
   }
 };
 function trim(string) {
@@ -1024,7 +57,7 @@ function trim(string) {
   }
 }
 function fontToArray(font) {
-  var _font = font.split(" ");
+  const _font = font.split(" ");
 
   if (_font.length === 2) {
     return {
@@ -1045,8 +78,8 @@ function fontToArray(font) {
 function AutoToPx(string, fi, fontSize) {
   if (typeof string == "string") {
     string = trim(string);
-    var number = parseFloat(string);
-    var dp = (string.match(/[a-z%]+$/i) || [, "px"])[1];
+    const number = parseFloat(string);
+    const dp = (string.match(/[a-z%]+$/i) || [, "px"])[1];
 
     switch (dp) {
       case "px":
@@ -1081,12 +114,12 @@ function AutoToPx(string, fi, fontSize) {
   }
 }
 function getTouchInfo(element, touches) {
-  var rect = element.getBoundingClientRect();
-  var sx = element.scrollWidth / element.width || 1;
-  var sy = element.scrollHeight / element.height || 1;
-  var _touches = [],
-      length = touches.length;
-  var i = 0,
+  const rect = element.getBoundingClientRect();
+  const sx = element.scrollWidth / element.width || 1;
+  const sy = element.scrollHeight / element.height || 1;
+  const _touches = [],
+        length = touches.length;
+  let i = 0,
       touch;
 
   while (i < length) {
@@ -1103,10 +136,9 @@ function getTouchInfo(element, touches) {
 
   return _touches;
 }
-
 function isMobile() {
   /// code from https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
-  var check = false;
+  let check = false;
 
   (function (a) {
     if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4))) check = true;
@@ -1115,118 +147,54 @@ function isMobile() {
   return check;
 }
 
-var Emitter = /*#__PURE__*/function () {
-  function Emitter() {
-    _classCallCheck(this, Emitter);
-
+class Emitter$1 {
+  constructor() {
     _defineProperty(this, "__events", []);
   }
 
-  _createClass(Emitter, [{
-    key: "on",
-    value: function on(name, callback) {
-      if (typeof callback === "function") {
-        if (name in this.__events) {
-          this.__events[name].push(callback);
-        } else {
-          this.__events[name] = [callback];
-        }
+  on(name, callback) {
+    if (typeof callback === "function") {
+      if (name in this.__events) {
+        this.__events[name].push(callback);
+      } else {
+        this.__events[name] = [callback];
       }
     }
-  }, {
-    key: "off",
-    value: function off(name, callback) {
-      if (callback) {
-        this.__events[name] = this.__events[name].filter(function (item) {
-          return item !== callback;
-        });
+  }
 
-        if (this.__events[name].length === 0) {
-          delete this.__events[name];
-        }
-      } else {
+  off(name, callback) {
+    if (callback) {
+      this.__events[name] = this.__events[name].filter(item => item !== callback);
+
+      if (this.__events[name].length === 0) {
         delete this.__events[name];
       }
+    } else {
+      delete this.__events[name];
     }
-  }, {
-    key: "emit",
-    value: function emit(name, payload) {
-      if (name in this.__events) {
-        for (var index = 0, length = this.__events[name].length; index < length; index++) {
-          this.__events[name][index](payload);
-        }
+  }
+
+  emit(name, payload) {
+    if (name in this.__events) {
+      for (let index = 0, length = this.__events[name].length; index < length; index++) {
+        this.__events[name][index](payload);
       }
     }
-  }]);
+  }
 
-  return Emitter;
-}();
-
-var setPrototypeOf = createCommonjsModule(function (module) {
-  function _setPrototypeOf(o, p) {
-    module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-      o.__proto__ = p;
-      return o;
+  once(name, callback) {
+    const handler = (...args) => {
+      callback(...args);
+      this.off(name, handler);
     };
 
-    module.exports["default"] = module.exports, module.exports.__esModule = true;
-    return _setPrototypeOf(o, p);
+    this.on(name, handler);
   }
 
-  module.exports = _setPrototypeOf;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(setPrototypeOf);
+}
 
-var isNativeReflectConstruct = createCommonjsModule(function (module) {
-  function _isNativeReflectConstruct() {
-    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-    if (Reflect.construct.sham) return false;
-    if (typeof Proxy === "function") return true;
-
-    try {
-      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  module.exports = _isNativeReflectConstruct;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-unwrapExports(isNativeReflectConstruct);
-
-var construct = createCommonjsModule(function (module) {
-  function _construct(Parent, args, Class) {
-    if (isNativeReflectConstruct()) {
-      module.exports = _construct = Reflect.construct;
-      module.exports["default"] = module.exports, module.exports.__esModule = true;
-    } else {
-      module.exports = _construct = function _construct(Parent, args, Class) {
-        var a = [null];
-        a.push.apply(a, args);
-        var Constructor = Function.bind.apply(Parent, a);
-        var instance = new Constructor();
-        if (Class) setPrototypeOf(instance, Class.prototype);
-        return instance;
-      };
-
-      module.exports["default"] = module.exports, module.exports.__esModule = true;
-    }
-
-    return _construct.apply(null, arguments);
-  }
-
-  module.exports = _construct;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-var _construct = unwrapExports(construct);
-
-var DOMatrix$1 = window.DOMMatrix || window.WebkitDOMMatix || /*#__PURE__*/function () {
-  function _class2(css) {
-    _classCallCheck(this, _class2);
-
+const DOMatrix$1 = window.DOMMatrix || window.WebkitDOMMatix || class {
+  constructor(css) {
     _defineProperty(this, "a", 1);
 
     _defineProperty(this, "b", 0);
@@ -1239,33 +207,21 @@ var DOMatrix$1 = window.DOMMatrix || window.WebkitDOMMatix || /*#__PURE__*/funct
 
     _defineProperty(this, "f", 0);
 
-    var vnode = document.createElement("div");
+    const vnode = document.createElement("div");
     vnode.style.opacity = 0;
     vnode.style.position = "fixed";
     vnode.style.top = vnode.style.left = -9e99 + "px";
     vnode.style[TRANSFORM_Prop] = css;
     document.documentElement.appendChild(vnode);
-    var transform = getComputedStyle(vnode)[TRANSFORM_Prop];
+    let transform = getComputedStyle(vnode)[TRANSFORM_Prop];
     if (transform == "none") transform = "1, 0, 0, 1, 0, 0";
-    transform = transform.replace(/^(?:matrix3d|matrix)\(|\s|\)$/g, "").split(",").map(function (e) {
-      return +e;
-    });
+    transform = transform.replace(/^(?:matrix3d|matrix)\(|\s|\)$/g, "").split(",").map(e => +e);
     document.documentElement.removeChild(vnode);
     transform._isMatrix = true;
-    var _transform = transform;
-
-    var _transform2 = _slicedToArray(_transform, 6);
-
-    this.a = _transform2[0];
-    this.b = _transform2[1];
-    this.c = _transform2[2];
-    this.d = _transform2[3];
-    this.e = _transform2[4];
-    this.f = _transform2[5];
+    [this.a, this.b, this.c, this.d, this.e, this.f] = transform;
   }
 
-  return _class2;
-}();
+};
 
 function calculateRemainder2D(xComponent, yComponent) {
   if (xComponent !== 0) {
@@ -1295,331 +251,295 @@ function calculateRemainder3D(xComponent, yComponent, zComponent) {
   return this;
 }
 
-var Vector = /*#__PURE__*/function () {
-  function Vector() {
-    var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-    var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-    var z = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-
-    _classCallCheck(this, Vector);
-
-    var _ref = [x, y, z];
-    this.x = _ref[0];
-    this.y = _ref[1];
-    this.z = _ref[2];
+class Vector {
+  constructor(x = 0, y = 0, z = 0) {
+    [this.x, this.y, this.z] = [x, y, z];
   }
 
-  _createClass(Vector, [{
-    key: "set",
-    value: function set(x, y, z) {
-      if (x instanceof Vector) {
-        this.x = x.x || 0;
-        this.y = x.y || 0;
-        this.z = x.z || 0;
-        return this;
-      }
-
-      if (x instanceof Array) {
-        this.x = x[0] || 0;
-        this.y = x[1] || 0;
-        this.z = x[2] || 0;
-        return this;
-      }
-
-      this.x = x || 0;
-      this.y = y || 0;
-      this.z = z || 0;
+  set(x, y, z) {
+    if (x instanceof Vector) {
+      this.x = x.x || 0;
+      this.y = x.y || 0;
+      this.z = x.z || 0;
       return this;
     }
-  }, {
-    key: "copy",
-    value: function copy() {
-      return new Vector([this.x, this.y, this.z]);
-    }
-  }, {
-    key: "add",
-    value: function add(x, y, z) {
-      if (x instanceof Vector) {
-        this.x += x.x || 0;
-        this.y += x.y || 0;
-        this.z += x.z || 0;
-        return this;
-      }
 
-      if (x instanceof Array) {
-        this.x += x[0] || 0;
-        this.y += x[1] || 0;
-        this.z += x[2] || 0;
-        return this;
-      }
-
-      this.x += x || 0;
-      this.y += y || 0;
-      this.z += z || 0;
+    if (x instanceof Array) {
+      this.x = x[0] || 0;
+      this.y = x[1] || 0;
+      this.z = x[2] || 0;
       return this;
     }
-  }, {
-    key: "rem",
-    value: function rem(x, y, z) {
-      if (x instanceof Vector) {
-        if (Number.isFinite(x.x) && Number.isFinite(x.y) && Number.isFinite(x.z)) {
-          var xComponent = parseFloat(x.x);
-          var yComponent = parseFloat(x.y);
-          var zComponent = parseFloat(x.z);
-          calculateRemainder3D.call(this, xComponent, yComponent, zComponent);
-        }
-      } else if (x instanceof Array) {
-        if (x.every(function (element) {
-          return Number.isFinite(element);
-        })) {
-          if (x.length === 2) {
-            calculateRemainder2D.call(this, x[0], x[1]);
-          }
 
-          if (x.length === 3) {
-            calculateRemainder3D.call(this, x[0], x[1], x[2]);
-          }
-        }
-      } else if (arguments.length === 1) {
-        if (Number.isFinite(arguments[0]) && arguments[0] !== 0) {
-          this.x = this.x % arguments[0];
-          this.y = this.y % arguments[0];
-          this.z = this.z % arguments[0];
-          return this;
-        }
-      } else if (arguments.length === 2) {
-        var vectorComponents = [].slice.call(arguments);
+    this.x = x || 0;
+    this.y = y || 0;
+    this.z = z || 0;
+    return this;
+  }
 
-        if (vectorComponents.every(function (element) {
-          return Number.isFinite(element);
-        })) {
-          if (vectorComponents.length === 2) {
-            calculateRemainder2D.call(this, vectorComponents[0], vectorComponents[1]);
-          }
-        }
-      } else if (arguments.length === 3) {
-        var _vectorComponents = [].slice.call(arguments);
+  copy() {
+    return new Vector([this.x, this.y, this.z]);
+  }
 
-        if (_vectorComponents.every(function (element) {
-          return Number.isFinite(element);
-        })) {
-          if (_vectorComponents.length === 3) {
-            calculateRemainder3D.call(this, _vectorComponents[0], _vectorComponents[1], _vectorComponents[2]);
-          }
+  add(x, y, z) {
+    if (x instanceof Vector) {
+      this.x += x.x || 0;
+      this.y += x.y || 0;
+      this.z += x.z || 0;
+      return this;
+    }
+
+    if (x instanceof Array) {
+      this.x += x[0] || 0;
+      this.y += x[1] || 0;
+      this.z += x[2] || 0;
+      return this;
+    }
+
+    this.x += x || 0;
+    this.y += y || 0;
+    this.z += z || 0;
+    return this;
+  }
+
+  rem(x, y, z) {
+    if (x instanceof Vector) {
+      if (Number.isFinite(x.x) && Number.isFinite(x.y) && Number.isFinite(x.z)) {
+        var xComponent = parseFloat(x.x);
+        var yComponent = parseFloat(x.y);
+        var zComponent = parseFloat(x.z);
+        calculateRemainder3D.call(this, xComponent, yComponent, zComponent);
+      }
+    } else if (x instanceof Array) {
+      if (x.every(function (element) {
+        return Number.isFinite(element);
+      })) {
+        if (x.length === 2) {
+          calculateRemainder2D.call(this, x[0], x[1]);
+        }
+
+        if (x.length === 3) {
+          calculateRemainder3D.call(this, x[0], x[1], x[2]);
+        }
+      }
+    } else if (arguments.length === 1) {
+      if (Number.isFinite(arguments[0]) && arguments[0] !== 0) {
+        this.x = this.x % arguments[0];
+        this.y = this.y % arguments[0];
+        this.z = this.z % arguments[0];
+        return this;
+      }
+    } else if (arguments.length === 2) {
+      var vectorComponents = [].slice.call(arguments);
+
+      if (vectorComponents.every(function (element) {
+        return Number.isFinite(element);
+      })) {
+        if (vectorComponents.length === 2) {
+          calculateRemainder2D.call(this, vectorComponents[0], vectorComponents[1]);
+        }
+      }
+    } else if (arguments.length === 3) {
+      var _vectorComponents = [].slice.call(arguments);
+
+      if (_vectorComponents.every(function (element) {
+        return Number.isFinite(element);
+      })) {
+        if (_vectorComponents.length === 3) {
+          calculateRemainder3D.call(this, _vectorComponents[0], _vectorComponents[1], _vectorComponents[2]);
         }
       }
     }
-  }, {
-    key: "sub",
-    value: function sub(x, y, z) {
-      if (x instanceof Vector) {
-        this.x -= x.x || 0;
-        this.y -= x.y || 0;
-        this.z -= x.z || 0;
-        return this;
-      }
+  }
 
-      if (x instanceof Array) {
-        this.x -= x[0] || 0;
-        this.y -= x[1] || 0;
-        this.z -= x[2] || 0;
-        return this;
-      }
-
-      this.x -= x || 0;
-      this.y -= y || 0;
-      this.z -= z || 0;
+  sub(x, y, z) {
+    if (x instanceof Vector) {
+      this.x -= x.x || 0;
+      this.y -= x.y || 0;
+      this.z -= x.z || 0;
       return this;
     }
-  }, {
-    key: "mult",
-    value: function mult(n) {
-      this.x *= n;
-      this.y *= n;
-      this.z *= n;
+
+    if (x instanceof Array) {
+      this.x -= x[0] || 0;
+      this.y -= x[1] || 0;
+      this.z -= x[2] || 0;
       return this;
     }
-  }, {
-    key: "div",
-    value: function div(n) {
-      if (n === 0) {
-        console.warn("div:", "divide by 0");
-        return this;
-      }
 
-      this.x /= n;
-      this.y /= n;
-      this.z /= n;
+    this.x -= x || 0;
+    this.y -= y || 0;
+    this.z -= z || 0;
+    return this;
+  }
+
+  mult(n) {
+    this.x *= n;
+    this.y *= n;
+    this.z *= n;
+    return this;
+  }
+
+  div(n) {
+    if (n === 0) {
+      console.warn("div:", "divide by 0");
       return this;
     }
-  }, {
-    key: "mag",
-    value: function mag() {
-      return Math.sqrt(this.magSq());
-    }
-  }, {
-    key: "magSq",
-    value: function magSq() {
-      var x = this.x,
-          y = this.y,
-          z = this.z;
-      return x * x + y * y + z * z;
-    }
-  }, {
-    key: "dot",
-    value: function dot(x, y, z) {
-      if (x instanceof Vector) {
-        return this.dot(x.x, x.y, x.z);
-      }
 
-      return this.x * (x || 0) + this.y * (y || 0) + this.z * (z || 0);
-    }
-  }, {
-    key: "cross",
-    value: function cross(v) {
-      var x = this.y * v.z - this.z * v.y;
-      var y = this.z * v.x - this.x * v.z;
-      var z = this.x * v.y - this.y * v.x;
-      return new Vector([x, y, z]);
-    }
-  }, {
-    key: "normalize",
-    value: function normalize() {
-      var len = this.mag();
-      if (len !== 0) this.mult(1 / len);
-      return this;
-    }
-  }, {
-    key: "limit",
-    value: function limit(max) {
-      var mSq = this.magSq();
+    this.x /= n;
+    this.y /= n;
+    this.z /= n;
+    return this;
+  }
 
-      if (mSq > max * max) {
-        this.div(Math.sqrt(mSq)) //normalize it
-        .mult(max);
-      }
+  mag() {
+    return Math.sqrt(this.magSq());
+  }
 
-      return this;
-    }
-  }, {
-    key: "setMag",
-    value: function setMag(n) {
-      return this.normalize().mult(n);
-    }
-  }, {
-    key: "heading",
-    value: function heading() {
-      return getDeg(Math.atan2(this.y, this.x));
-    }
-  }, {
-    key: "rotate",
-    value: function rotate(a) {
-      var newHeading = getRadius(this.heading() + a);
-      var mag = this.mag();
-      this.x = Math.cos(newHeading) * mag;
-      this.y = Math.sin(newHeading) * mag;
-      return this;
-    }
-  }, {
-    key: "angleBetween",
-    value: function angleBetween(v) {
-      var dotmagmag = this.dot(v) / (this.mag() * v.mag());
-      var angle;
-      angle = Math.acos(Math.min(1, Math.max(-1, dotmagmag)));
-      angle = angle * Math.sign(this.cross(v).z || 1);
-      return getDeg(angle);
-    }
-  }, {
-    key: "lerp",
-    value: function lerp(x, y, z, amt) {
-      if (x instanceof Vector) {
-        return this.lerp(x.x, x.y, x.z, y);
-      }
+  magSq() {
+    const {
+      x,
+      y,
+      z
+    } = this;
+    return x * x + y * y + z * z;
+  }
 
-      this.x += (x - this.x) * amt || 0;
-      this.y += (y - this.y) * amt || 0;
-      this.z += (z - this.z) * amt || 0;
-      return this;
+  dot(x, y, z) {
+    if (x instanceof Vector) {
+      return this.dot(x.x, x.y, x.z);
     }
-  }, {
-    key: "reflect",
-    value: function reflect(surfaceNormal) {
-      surfaceNormal.normalize();
-      return this.sub(surfaceNormal.mult(2 * this.dot(surfaceNormal)));
-    }
-  }, {
-    key: "array",
-    value: function array() {
-      return [this.x || 0, this.y || 0, this.z || 0];
-    }
-  }, {
-    key: "equals",
-    value: function equals(x, y, z) {
-      var a, b, c;
 
-      if (x instanceof Vector) {
-        a = x.x || 0;
-        b = x.y || 0;
-        c = x.z || 0;
-      } else if (x instanceof Array) {
-        a = x[0] || 0;
-        b = x[1] || 0;
-        c = x[2] || 0;
-      } else {
-        a = x || 0;
-        b = y || 0;
-        c = z || 0;
-      }
+    return this.x * (x || 0) + this.y * (y || 0) + this.z * (z || 0);
+  }
 
-      return this.x === a && this.y === b && this.z === c;
-    }
-  }, {
-    key: "toString",
-    value: function toString() {
-      return "Vector: [" + this.array().join(", ") + "]";
-    }
-  }]);
+  cross(v) {
+    var x = this.y * v.z - this.z * v.y;
+    var y = this.z * v.x - this.x * v.z;
+    var z = this.x * v.y - this.y * v.x;
+    return new Vector([x, y, z]);
+  }
 
-  return Vector;
-}();
+  normalize() {
+    const len = this.mag();
+    if (len !== 0) this.mult(1 / len);
+    return this;
+  }
+
+  limit(max) {
+    const mSq = this.magSq();
+
+    if (mSq > max * max) {
+      this.div(Math.sqrt(mSq)) //normalize it
+      .mult(max);
+    }
+
+    return this;
+  }
+
+  setMag(n) {
+    return this.normalize().mult(n);
+  }
+
+  heading() {
+    return getDeg(Math.atan2(this.y, this.x));
+  }
+
+  rotate(a) {
+    var newHeading = getRadius(this.heading() + a);
+    var mag = this.mag();
+    this.x = Math.cos(newHeading) * mag;
+    this.y = Math.sin(newHeading) * mag;
+    return this;
+  }
+
+  angleBetween(v) {
+    var dotmagmag = this.dot(v) / (this.mag() * v.mag());
+    var angle;
+    angle = Math.acos(Math.min(1, Math.max(-1, dotmagmag)));
+    angle = angle * Math.sign(this.cross(v).z || 1);
+    return getDeg(angle);
+  }
+
+  lerp(x, y, z, amt) {
+    if (x instanceof Vector) {
+      return this.lerp(x.x, x.y, x.z, y);
+    }
+
+    this.x += (x - this.x) * amt || 0;
+    this.y += (y - this.y) * amt || 0;
+    this.z += (z - this.z) * amt || 0;
+    return this;
+  }
+
+  reflect(surfaceNormal) {
+    surfaceNormal.normalize();
+    return this.sub(surfaceNormal.mult(2 * this.dot(surfaceNormal)));
+  }
+
+  array() {
+    return [this.x || 0, this.y || 0, this.z || 0];
+  }
+
+  equals(x, y, z) {
+    var a, b, c;
+
+    if (x instanceof Vector) {
+      a = x.x || 0;
+      b = x.y || 0;
+      c = x.z || 0;
+    } else if (x instanceof Array) {
+      a = x[0] || 0;
+      b = x[1] || 0;
+      c = x[2] || 0;
+    } else {
+      a = x || 0;
+      b = y || 0;
+      c = z || 0;
+    }
+
+    return this.x === a && this.y === b && this.z === c;
+  }
+
+  toString() {
+    return "Vector: [" + this.array().join(", ") + "]";
+  }
+
+}
 
 function CircleImpact(e, f) {
-  return Math.pow(f.x - e.x, 2) + Math.pow(f.y - e.y, 2) < Math.pow(e.radius + f.radius, 2);
+  return (f.x - e.x) ** 2 + (f.y - e.y) ** 2 < (e.radius + f.radius) ** 2;
 }
 function CircleImpactPoint(e, x, y) {
-  return Math.pow(x - e.x, 2) + Math.pow(y - e.y, 2) < Math.pow(e.radius, 2);
+  return (x - e.x) ** 2 + (y - e.y) ** 2 < e.radius ** 2;
 }
 function CircleImpactRect(box, sphere) {
-  var x = Math.max(box.x, Math.min(sphere.x, box.x + box.width));
-  var y = Math.max(box.y, Math.min(sphere.y, box.y + box.height));
-  var distance = (x - sphere.x) * (x - sphere.x) + (y - sphere.y) * (y - sphere.y);
-  return distance < Math.pow(sphere.radius, 2);
+  const x = Math.max(box.x, Math.min(sphere.x, box.x + box.width));
+  const y = Math.max(box.y, Math.min(sphere.y, box.y + box.height));
+  const distance = (x - sphere.x) * (x - sphere.x) + (y - sphere.y) * (y - sphere.y);
+  return distance < sphere.radius ** 2;
 }
 function constrain(value, min, max) {
   return Math.min(Math.max(min, value), max);
 }
 function createMatrix(css) {
-  var _DOMMatrix = new DOMatrix$1(css),
-      a = _DOMMatrix.a,
-      b = _DOMMatrix.b,
-      c = _DOMMatrix.c,
-      d = _DOMMatrix.d,
-      e = _DOMMatrix.e,
-      f = _DOMMatrix.f;
-
+  const {
+    a,
+    b,
+    c,
+    d,
+    e,
+    f
+  } = new DOMatrix$1(css);
   return [a, b, c, d, e, f];
 }
-function createVector() {
-  for (var _len = arguments.length, argv = new Array(_len), _key = 0; _key < _len; _key++) {
-    argv[_key] = arguments[_key];
-  }
-
-  return _construct(Vector, argv);
+function createVector(...argv) {
+  return new Vector(...argv);
 }
 function loadImage(src) {
-  var img = new Image();
+  const img = new Image();
   img.src = src;
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     function loaded() {
       resolve(img);
       img.removeEventListener("load", loaded);
@@ -1637,11 +557,7 @@ function loadImage(src) {
 function map(a, b, c, d, e) {
   return (a - b) * (e - d) / (c - b) + d;
 }
-function random() {
-  for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    args[_key2] = arguments[_key2];
-  }
-
+function random(...args) {
   if (args.length === 1) {
     return args[0] != null && "length" in args[0] ? args[0][Math.floor(Math.random() * args[0].length)] : Math.random() * args[0];
   }
@@ -1652,8 +568,8 @@ function random() {
 }
 function range($start, $end, $step) {
   $step = $step || 1;
-  var arr = [];
-  var isChar = false;
+  const arr = [];
+  let isChar = false;
   if ($end === undefined) $end = $start, $start = 1;
 
   if (typeof $start == "string") {
@@ -1689,698 +605,455 @@ function RectImpactPoint(e, x, y) {
   return e.x < x && e.x + e.width > x && e.y < y && e.y + e.height > y;
 }
 
-var MyElement = /*#__PURE__*/function () {
-  function MyElement(canvas) {
-    _classCallCheck(this, MyElement);
-
+class MyElement {
+  constructor(canvas) {
     _defineProperty(this, "_els", []);
 
     _defineProperty(this, "_idActiveNow", null);
 
     _defineProperty(this, "_queue", []);
 
-    _defineProperty(this, "hypot", typeof Math.hypot === "function" ? Math.hypot : function () {
-      var len = arguments.length;
-      var i = 0,
+    _defineProperty(this, "hypot", typeof Math.hypot === "function" ? Math.hypot : (...args) => {
+      const len = args.length;
+      let i = 0,
           result = 0;
 
-      while (i < len) {
-        var _i;
-
-        result += Math.pow((_i = i++, _i < 0 || arguments.length <= _i ? undefined : arguments[_i]), 2);
-      }
+      while (i < len) result += Math.pow(args[i++], 2);
 
       return Math.sqrt(result);
     });
 
     if (canvas === undefined) {
-      var _canvas = new fCanvas();
+      const canvas = new fCanvas();
 
-      this._els.push(_canvas);
+      this._els.push(canvas);
     } else {
       if (canvas instanceof fCanvas) {
         this.bind(canvas);
       } else {
-        var _canvas2 = new fCanvas();
+        const canvas = new fCanvas();
 
-        this._els.push(_canvas2);
+        this._els.push(canvas);
 
         console.error("fCanvas: super() in MyElement.constructor not's fCanvas element.");
       }
     }
   }
 
-  _createClass(MyElement, [{
-    key: "$el",
-    get: function get() {
-      return this.pcanvas.$el;
+  get $el() {
+    return this.pcanvas.$el;
+  }
+
+  _run(canvas) {
+    this.bind(canvas);
+    this._idActiveNow = canvas._id;
+
+    if (typeof this.update === "function") {
+      this.update();
+    } else if (typeof this.draw === "function") {
+      this.draw();
     }
-  }, {
-    key: "_run",
-    value: function _run(canvas) {
-      this.bind(canvas);
-      this._idActiveNow = canvas._id;
 
-      if (typeof this.update === "function") {
-        this.update();
-      } else if (typeof this.draw === "function") {
-        this.draw();
-      }
-
-      if (this._queue.length > 0) {
-        for (var index = 0, length = this._queue.length; index < length; index++) {
-          this.run(this._queue[index]);
-        }
-      }
-
-      this._idActiveNow = null;
-    }
-  }, {
-    key: "addQueue",
-    value: function addQueue(canvasElement) {
-      if (canvasElement instanceof MyElement) {
-        this._queue.push(canvasElement);
-      } else {
-        console.error("fCanvas: the parameter passed to MyElement.addQueue() must be a fCanvas object.");
+    if (this._queue.length > 0) {
+      for (let index = 0, length = this._queue.length; index < length; index++) {
+        this.run(this._queue[index]);
       }
     }
-  }, {
-    key: "getQueue",
-    value: function getQueue(index) {
-      if (index < 0) {
-        index += this._queue.length;
+
+    this._idActiveNow = null;
+  }
+
+  addQueue(canvasElement) {
+    if (canvasElement instanceof MyElement) {
+      this._queue.push(canvasElement);
+    } else {
+      console.error(`fCanvas: the parameter passed to MyElement.addQueue() must be a fCanvas object.`);
+    }
+  }
+
+  getQueue(index) {
+    if (index < 0) {
+      index += this._queue.length;
+    }
+
+    return this._queue[index];
+  }
+
+  run(canvasElement) {
+    this.pcanvas.run(canvasElement);
+  }
+
+  has(id) {
+    return this._els.some(item => item._id === id);
+  }
+
+  get pcanvas() {
+    const canvas = this._idActiveNow === null ? this._els[this._els.length - 1] : this._els.find(item => item._id === this._idActiveNow);
+
+    if (canvas instanceof fCanvas) {
+      return canvas;
+    } else {
+      console.warn("fCanvas: The current referenced version of the fCanvas.run function is incorrect.");
+      return this._els[0];
+    }
+  }
+
+  bind(canvas) {
+    if (canvas instanceof fCanvas) {
+      if (this.has(canvas._id) === false) {
+        this._els.push(canvas);
       }
+    } else {
+      console.error("fCanvas: the parameter passed to MyElement.bind() must be a fCanvas object.");
+    }
+  }
 
-      return this._queue[index];
-    }
-  }, {
-    key: "run",
-    value: function run(canvasElement) {
-      this.pcanvas.run(canvasElement);
-    }
-  }, {
-    key: "has",
-    value: function has(id) {
-      return this._els.some(function (item) {
-        return item._id === id;
-      });
-    }
-  }, {
-    key: "pcanvas",
-    get: function get() {
-      var _this = this;
+  get $context2d() {
+    return this.pcanvas.$context2d;
+  }
 
-      var canvas = this._idActiveNow === null ? this._els[this._els.length - 1] : this._els.find(function (item) {
-        return item._id === _this._idActiveNow;
-      });
+  _extendsCanvas(name, ...argv) {
+    return this.pcanvas[name](...argv);
+  }
 
-      if (canvas instanceof fCanvas) {
-        return canvas;
-      } else {
-        console.warn("fCanvas: The current referenced version of the fCanvas.run function is incorrect.");
-        return this._els[0];
-      }
-    }
-  }, {
-    key: "bind",
-    value: function bind(canvas) {
-      if (canvas instanceof fCanvas) {
-        if (this.has(canvas._id) === false) {
-          this._els.push(canvas);
-        }
-      } else {
-        console.error("fCanvas: the parameter passed to MyElement.bind() must be a fCanvas object.");
-      }
-    }
-  }, {
-    key: "$context2d",
-    get: function get() {
-      return this.pcanvas.$context2d;
-    }
-  }, {
-    key: "_extendsCanvas",
-    value: function _extendsCanvas(name) {
-      var _this$pcanvas;
+  _toRadius(...argv) {
+    return this._extendsCanvas("_toRadius", ...argv);
+  }
 
-      for (var _len = arguments.length, argv = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        argv[_key - 1] = arguments[_key];
-      }
+  _toDegress(...argv) {
+    return this._extendsCanvas("_toDegress", ...argv);
+  }
 
-      return (_this$pcanvas = this.pcanvas)[name].apply(_this$pcanvas, argv);
-    }
-  }, {
-    key: "_toRadius",
-    value: function _toRadius() {
-      for (var _len2 = arguments.length, argv = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        argv[_key2] = arguments[_key2];
-      }
+  _toRgb(...argv) {
+    return this._extendsCanvas("_toRgb", ...argv);
+  }
 
-      return this._extendsCanvas.apply(this, ["_toRadius"].concat(argv));
-    }
-  }, {
-    key: "_toDegress",
-    value: function _toDegress() {
-      for (var _len3 = arguments.length, argv = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        argv[_key3] = arguments[_key3];
-      }
+  _figureOffset(...argv) {
+    return this._extendsCanvas("_figureOffset", ...argv);
+  }
 
-      return this._extendsCanvas.apply(this, ["_toDegress"].concat(argv));
-    }
-  }, {
-    key: "_toRgb",
-    value: function _toRgb() {
-      for (var _len4 = arguments.length, argv = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        argv[_key4] = arguments[_key4];
-      }
+  sin(...argv) {
+    return this._extendsCanvas("sin", ...argv);
+  }
 
-      return this._extendsCanvas.apply(this, ["_toRgb"].concat(argv));
-    }
-  }, {
-    key: "_figureOffset",
-    value: function _figureOffset() {
-      for (var _len5 = arguments.length, argv = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-        argv[_key5] = arguments[_key5];
-      }
+  asin(...argv) {
+    return this._extendsCanvas("asin", ...argv);
+  }
 
-      return this._extendsCanvas.apply(this, ["_figureOffset"].concat(argv));
-    }
-  }, {
-    key: "sin",
-    value: function sin() {
-      for (var _len6 = arguments.length, argv = new Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-        argv[_key6] = arguments[_key6];
-      }
+  cos(...argv) {
+    return this._extendsCanvas("cos", ...argv);
+  }
 
-      return this._extendsCanvas.apply(this, ["sin"].concat(argv));
-    }
-  }, {
-    key: "asin",
-    value: function asin() {
-      for (var _len7 = arguments.length, argv = new Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
-        argv[_key7] = arguments[_key7];
-      }
+  acos(...argv) {
+    return this._extendsCanvas("acos", ...argv);
+  }
 
-      return this._extendsCanvas.apply(this, ["asin"].concat(argv));
-    }
-  }, {
-    key: "cos",
-    value: function cos() {
-      for (var _len8 = arguments.length, argv = new Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
-        argv[_key8] = arguments[_key8];
-      }
+  tan(...argv) {
+    return this._extendsCanvas("tan", ...argv);
+  }
 
-      return this._extendsCanvas.apply(this, ["cos"].concat(argv));
-    }
-  }, {
-    key: "acos",
-    value: function acos() {
-      for (var _len9 = arguments.length, argv = new Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
-        argv[_key9] = arguments[_key9];
-      }
+  atan(...argv) {
+    return this._extendsCanvas("atan", ...argv);
+  }
 
-      return this._extendsCanvas.apply(this, ["acos"].concat(argv));
-    }
-  }, {
-    key: "tan",
-    value: function tan() {
-      for (var _len10 = arguments.length, argv = new Array(_len10), _key10 = 0; _key10 < _len10; _key10++) {
-        argv[_key10] = arguments[_key10];
-      }
+  tan2(...argv) {
+    return this._extendsCanvas("tan2", ...argv);
+  }
 
-      return this._extendsCanvas.apply(this, ["tan"].concat(argv));
-    }
-  }, {
-    key: "atan",
-    value: function atan() {
-      for (var _len11 = arguments.length, argv = new Array(_len11), _key11 = 0; _key11 < _len11; _key11++) {
-        argv[_key11] = arguments[_key11];
-      }
+  atan2(...argv) {
+    return this._extendsCanvas("atan2", ...argv);
+  }
 
-      return this._extendsCanvas.apply(this, ["atan"].concat(argv));
-    }
-  }, {
-    key: "tan2",
-    value: function tan2() {
-      for (var _len12 = arguments.length, argv = new Array(_len12), _key12 = 0; _key12 < _len12; _key12++) {
-        argv[_key12] = arguments[_key12];
-      }
+  get mouseX() {
+    return this.pcanvas.mouseX;
+  }
 
-      return this._extendsCanvas.apply(this, ["tan2"].concat(argv));
+  get mouseY() {
+    return this.pcanvas.mouseY;
+  }
+
+  get interact() {
+    return this.pcanvas.interact;
+  }
+
+  get width() {
+    return this.pcanvas.width;
+  }
+
+  get height() {
+    return this.pcanvas.height;
+  }
+
+  get windowWidth() {
+    return this.pcanvas.windowWidth;
+  }
+
+  get windowHeight() {
+    return this.pcanvas.windowHeight;
+  }
+
+  _createLinear(type, ...argv) {
+    return this.$context2d[type](...argv);
+  }
+
+  fill(...argv) {
+    if (argv.length === 0) {
+      return this.$context2d.fillStyle || "rgba(0, 0, 0, 0)";
+    } else {
+      this.$context2d.fillStyle = this._toRgb(argv);
+      this.$context2d.fill();
     }
-  }, {
-    key: "atan2",
-    value: function atan2() {
-      for (var _len13 = arguments.length, argv = new Array(_len13), _key13 = 0; _key13 < _len13; _key13++) {
-        argv[_key13] = arguments[_key13];
+  }
+
+  stroke(...argv) {
+    if (argv.length === 0) {
+      return this.$context2d.strokeStyle || "rgba(0, 0, 0, 0)";
+    } else {
+      this.$context2d.strokeStyle = this._toRgb(argv);
+      this.$context2d.stroke();
+    }
+  }
+
+  noFill() {
+    this.fill(0, 0, 0, 0);
+  }
+
+  lineWidth(value) {
+    if (value === undefined) {
+      return this.$context2d.lineWidth;
+    } else {
+      this.$context2d.lineWidth = value;
+    }
+  }
+
+  miterLimit(value) {
+    if (value === undefined) {
+      return this.$context2d.miterLimit;
+    } else {
+      if (this.lineJoin() !== "miter") {
+        this.lineJoin("miter");
       }
 
-      return this._extendsCanvas.apply(this, ["atan2"].concat(argv));
+      this.$context2d = value;
     }
-  }, {
-    key: "mouseX",
-    get: function get() {
-      return this.pcanvas.mouseX;
-    }
-  }, {
-    key: "mouseY",
-    get: function get() {
-      return this.pcanvas.mouseY;
-    }
-  }, {
-    key: "interact",
-    get: function get() {
-      return this.pcanvas.interact;
-    }
-  }, {
-    key: "width",
-    get: function get() {
-      return this.pcanvas.width;
-    }
-  }, {
-    key: "height",
-    get: function get() {
-      return this.pcanvas.height;
-    }
-  }, {
-    key: "windowWidth",
-    get: function get() {
-      return this.pcanvas.windowWidth;
-    }
-  }, {
-    key: "windowHeight",
-    get: function get() {
-      return this.pcanvas.windowHeight;
-    }
-  }, {
-    key: "_createLinear",
-    value: function _createLinear(type) {
-      var _this$$context2d;
+  }
 
-      for (var _len14 = arguments.length, argv = new Array(_len14 > 1 ? _len14 - 1 : 0), _key14 = 1; _key14 < _len14; _key14++) {
-        argv[_key14 - 1] = arguments[_key14];
-      }
+  shadowOffset(...args) {
+    if (args.length === 0) {
+      return {
+        x: this.$context2d.shadowOffsetX,
+        y: this.$context2d.shadowOffsetY
+      };
+    } else {
+      [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = args;
+    }
+  }
 
-      return (_this$$context2d = this.$context2d)[type].apply(_this$$context2d, argv);
-    }
-  }, {
-    key: "fill",
-    value: function fill() {
-      for (var _len15 = arguments.length, argv = new Array(_len15), _key15 = 0; _key15 < _len15; _key15++) {
-        argv[_key15] = arguments[_key15];
-      }
+  measureText(text) {
+    return this.$context2d.measureText(text).width;
+  }
 
-      if (argv.length === 0) {
-        return this.$context2d.fillStyle || "rgba(0, 0, 0, 0)";
-      } else {
-        this.$context2d.fillStyle = this._toRgb(argv);
-        this.$context2d.fill();
-      }
-    }
-  }, {
-    key: "stroke",
-    value: function stroke() {
-      for (var _len16 = arguments.length, argv = new Array(_len16), _key16 = 0; _key16 < _len16; _key16++) {
-        argv[_key16] = arguments[_key16];
-      }
+  begin() {
+    this.$context2d.beginPath();
+  }
 
-      if (argv.length === 0) {
-        return this.$context2d.strokeStyle || "rgba(0, 0, 0, 0)";
-      } else {
-        this.$context2d.strokeStyle = this._toRgb(argv);
-        this.$context2d.stroke();
-      }
-    }
-  }, {
-    key: "noFill",
-    value: function noFill() {
-      this.fill(0, 0, 0, 0);
-    }
-  }, {
-    key: "lineWidth",
-    value: function lineWidth(value) {
-      if (value === undefined) {
-        return this.$context2d.lineWidth;
-      } else {
-        this.$context2d.lineWidth = value;
-      }
-    }
-  }, {
-    key: "miterLimit",
-    value: function miterLimit(value) {
-      if (value === undefined) {
-        return this.$context2d.miterLimit;
-      } else {
-        if (this.lineJoin() !== "miter") {
-          this.lineJoin("miter");
-        }
+  close() {
+    this.$context2d.closePath();
+  }
 
-        this.$context2d = value;
-      }
-    }
-  }, {
-    key: "shadowOffset",
-    value: function shadowOffset() {
-      for (var _len17 = arguments.length, args = new Array(_len17), _key17 = 0; _key17 < _len17; _key17++) {
-        args[_key17] = arguments[_key17];
-      }
+  save() {
+    this.$context2d.save();
+  }
 
-      if (args.length === 0) {
-        return {
-          x: this.$context2d.shadowOffsetX,
-          y: this.$context2d.shadowOffsetY
-        };
-      } else {
-        this.$context2d.shadowOffsetX = args[0];
-        this.$context2d.shadowOffsetY = args[1];
-      }
+  restore() {
+    this.$context2d.restore();
+  }
+
+  arc(c, t, e, i, n, o) {
+    this.begin();
+    this.$context2d.arc(c, t, e, this._toRadius(i) - Math.PI / 2, this._toRadius(n) - Math.PI / 2, o);
+    this.close();
+  }
+
+  pie(x, y, r, d1, d2, a) {
+    this.begin();
+    this.move(x, y);
+    this.arc(x, y, r, d1, d2, a);
+    this.to(x, y);
+    this.close();
+  }
+
+  line(c, t, e, i) {
+    this.move(c, t);
+    this.to(e, i);
+  }
+
+  ellipse(c, t, e, i, n, o, r) {
+    this.begin();
+    this.$context2d.ellipse(c, t, e, i, this._toRadius(n) - Math.PI / 2, this._toRadius(o), r === undefined ? !1 : r);
+    this.close();
+  }
+
+  circle(x, y, r) {
+    this.arc(x, y, r, 0, 360);
+  }
+
+  point(x, y) {
+    this.circle(x, y, 1);
+  }
+
+  triange(a, b, c, d, e, f) {
+    this.begin();
+    this.move(a, b);
+    this.to(c, d);
+    this.to(e, f);
+    this.close();
+  }
+
+  drawImage(image, ...args) {
+    if (args.length === 2) {
+      args = this._figureOffset(...args, image.width, image.height);
+    } else if (args.length === 6) {
+      [args[5], args[6]] = this._figureOffset(...args.slice(3));
     }
-  }, {
-    key: "measureText",
-    value: function measureText(text) {
-      return this.$context2d.measureText(text).width;
-    }
-  }, {
-    key: "begin",
-    value: function begin() {
-      this.$context2d.beginPath();
-    }
-  }, {
-    key: "close",
-    value: function close() {
-      this.$context2d.closePath();
-    }
-  }, {
-    key: "save",
-    value: function save() {
-      this.$context2d.save();
-    }
-  }, {
-    key: "restore",
-    value: function restore() {
-      this.$context2d.restore();
-    }
-  }, {
-    key: "arc",
-    value: function arc(c, t, e, i, n, o) {
-      this.begin();
-      this.$context2d.arc(c, t, e, this._toRadius(i) - Math.PI / 2, this._toRadius(n) - Math.PI / 2, o);
-      this.close();
-    }
-  }, {
-    key: "pie",
-    value: function pie(x, y, r, d1, d2, a) {
-      this.begin();
+
+    this.$context2d.drawImage(image, ...args);
+  }
+
+  rect(x, y, w, h, $1, $2 = $1, $3 = $1, $4 = $2) {
+    this.begin();
+    [x, y] = this._figureOffset(x, y, w, h);
+
+    if (arguments.length < 5) {
+      this.$context2d.rect(x, y, w, h);
+    } else {
+      const arc = [AutoToPx($1, w), AutoToPx($2, h), AutoToPx($3, w), AutoToPx($4, h)];
       this.move(x, y);
-      this.arc(x, y, r, d1, d2, a);
-      this.to(x, y);
-      this.close();
+      this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
+      this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
+      this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
+      this.arcTo(x, y, x + w - arc[0], y, arc[0]);
     }
-  }, {
-    key: "line",
-    value: function line(c, t, e, i) {
-      this.move(c, t);
-      this.to(e, i);
+
+    this.close();
+  }
+
+  square(x, y, w, ...radius) {
+    this.rect(x, y, w, w, ...radius);
+  }
+
+  __functionDefault(property, arg) {
+    if (arg === undefined) {
+      return this.$context2d[property];
+    } else {
+      this.$context2d[property] = arg;
     }
-  }, {
-    key: "ellipse",
-    value: function ellipse(c, t, e, i, n, o, r) {
-      this.begin();
-      this.$context2d.ellipse(c, t, e, i, this._toRadius(n) - Math.PI / 2, this._toRadius(o), r === undefined ? !1 : r);
-      this.close();
-    }
-  }, {
-    key: "circle",
-    value: function circle(x, y, r) {
-      this.arc(x, y, r, 0, 360);
-    }
-  }, {
-    key: "point",
-    value: function point(x, y) {
-      this.circle(x, y, 1);
-    }
-  }, {
-    key: "triange",
-    value: function triange(a, b, c, d, e, f) {
-      this.begin();
-      this.move(a, b);
-      this.to(c, d);
-      this.to(e, f);
-      this.close();
-    }
-  }, {
-    key: "drawImage",
-    value: function drawImage(image) {
-      var _this$$context2d2;
+  }
 
-      for (var _len18 = arguments.length, args = new Array(_len18 > 1 ? _len18 - 1 : 0), _key18 = 1; _key18 < _len18; _key18++) {
-        args[_key18 - 1] = arguments[_key18];
-      }
+  __functionDefault2(name, ...argv) {
+    return this.$context2d[name](...argv);
+  }
 
-      if (args.length === 2) {
-        args = this._figureOffset.apply(this, _toConsumableArray(args).concat([image.width, image.height]));
-      } else if (args.length === 6) {
-        var _this$_figureOffset = this._figureOffset.apply(this, _toConsumableArray(args.slice(3)));
+  quadratic(...argv) {
+    this.__functionDefault2("quadraticCurveTo", ...argv);
+  }
 
-        var _this$_figureOffset2 = _slicedToArray(_this$_figureOffset, 2);
+  bezier(...argv) {
+    this.__functionDefault2("bezierCurveTo", ...argv);
+  }
 
-        args[5] = _this$_figureOffset2[0];
-        args[6] = _this$_figureOffset2[1];
-      }
+  move(...argv) {
+    this.__functionDefault2("moveTo", ...argv);
+  }
 
-      (_this$$context2d2 = this.$context2d).drawImage.apply(_this$$context2d2, [image].concat(_toConsumableArray(args)));
-    }
-  }, {
-    key: "rect",
-    value: function rect(x, y, w, h, $1) {
-      var $2 = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : $1;
-      var $3 = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : $1;
-      var $4 = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : $2;
-      this.begin();
+  to(...argv) {
+    this.__functionDefault2("lineTo", ...argv);
+  }
 
-      var _this$_figureOffset3 = this._figureOffset(x, y, w, h);
+  fillText(...argv) {
+    this.__functionDefault2("fillText", ...argv);
+  }
 
-      var _this$_figureOffset4 = _slicedToArray(_this$_figureOffset3, 2);
+  strokeText(...argv) {
+    this.__functionDefault2("strokeText", ...argv);
+  }
 
-      x = _this$_figureOffset4[0];
-      y = _this$_figureOffset4[1];
+  fillRect(...argv) {
+    this.__functionDefault2("fillRect", ...argv);
+  }
 
-      if (arguments.length < 5) {
-        this.$context2d.rect(x, y, w, h);
-      } else {
-        var arc = [AutoToPx($1, w), AutoToPx($2, h), AutoToPx($3, w), AutoToPx($4, h)];
-        this.move(x, y);
-        this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
-        this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
-        this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
-        this.arcTo(x, y, x + w - arc[0], y, arc[0]);
-      }
+  strokeRect(...argv) {
+    this.__functionDefault2("strokeRect", ...argv);
+  }
 
-      this.close();
-    }
-  }, {
-    key: "square",
-    value: function square(x, y, w) {
-      for (var _len19 = arguments.length, radius = new Array(_len19 > 3 ? _len19 - 3 : 0), _key19 = 3; _key19 < _len19; _key19++) {
-        radius[_key19 - 3] = arguments[_key19];
-      }
+  arcTo(...argv) {
+    this.__functionDefault2("arcTo", ...argv);
+  }
 
-      this.rect.apply(this, [x, y, w, w].concat(radius));
-    }
-  }, {
-    key: "__functionDefault",
-    value: function __functionDefault(property, arg) {
-      if (arg === undefined) {
-        return this.$context2d[property];
-      } else {
-        this.$context2d[property] = arg;
-      }
-    }
-  }, {
-    key: "__functionDefault2",
-    value: function __functionDefault2(name) {
-      var _this$$context2d3;
+  isPoint(...argv) {
+    this.__functionDefault2("isPointInPath", ...argv);
+  }
 
-      for (var _len20 = arguments.length, argv = new Array(_len20 > 1 ? _len20 - 1 : 0), _key20 = 1; _key20 < _len20; _key20++) {
-        argv[_key20 - 1] = arguments[_key20];
-      }
+  createImageData(...argv) {
+    return this.__functionDefault2("createImageData", ...argv);
+  }
 
-      return (_this$$context2d3 = this.$context2d)[name].apply(_this$$context2d3, argv);
-    }
-  }, {
-    key: "quadratic",
-    value: function quadratic() {
-      for (var _len21 = arguments.length, argv = new Array(_len21), _key21 = 0; _key21 < _len21; _key21++) {
-        argv[_key21] = arguments[_key21];
-      }
+  getImageData(...argv) {
+    return this.__functionDefault2("getImageData", ...argv);
+  }
 
-      this.__functionDefault2.apply(this, ["quadraticCurveTo"].concat(argv));
-    }
-  }, {
-    key: "bezier",
-    value: function bezier() {
-      for (var _len22 = arguments.length, argv = new Array(_len22), _key22 = 0; _key22 < _len22; _key22++) {
-        argv[_key22] = arguments[_key22];
-      }
+  putImageData(...argv) {
+    this.__functionDefault2("putImageData", ...argv);
+  }
 
-      this.__functionDefault2.apply(this, ["bezierCurveTo"].concat(argv));
-    }
-  }, {
-    key: "move",
-    value: function move() {
-      for (var _len23 = arguments.length, argv = new Array(_len23), _key23 = 0; _key23 < _len23; _key23++) {
-        argv[_key23] = arguments[_key23];
-      }
+  createPattern(...argv) {
+    return this.__functionDefault2("createPattern", ...argv);
+  }
 
-      this.__functionDefault2.apply(this, ["moveTo"].concat(argv));
-    }
-  }, {
-    key: "to",
-    value: function to() {
-      for (var _len24 = arguments.length, argv = new Array(_len24), _key24 = 0; _key24 < _len24; _key24++) {
-        argv[_key24] = arguments[_key24];
-      }
+  createRadialGradient(...argv) {
+    return this.__functionDefault2("createRadialGradient", ...argv);
+  }
 
-      this.__functionDefault2.apply(this, ["lineTo"].concat(argv));
-    }
-  }, {
-    key: "fillText",
-    value: function fillText() {
-      for (var _len25 = arguments.length, argv = new Array(_len25), _key25 = 0; _key25 < _len25; _key25++) {
-        argv[_key25] = arguments[_key25];
-      }
+  createLinearGradient(...argv) {
+    return this.__functionDefault2("createLinearGradient", ...argv);
+  }
 
-      this.__functionDefault2.apply(this, ["fillText"].concat(argv));
-    }
-  }, {
-    key: "strokeText",
-    value: function strokeText() {
-      for (var _len26 = arguments.length, argv = new Array(_len26), _key26 = 0; _key26 < _len26; _key26++) {
-        argv[_key26] = arguments[_key26];
-      }
+  lineJoin(argv) {
+    return this.__functionDefault("lineJoin", argv);
+  }
 
-      this.__functionDefault2.apply(this, ["strokeText"].concat(argv));
-    }
-  }, {
-    key: "fillRect",
-    value: function fillRect() {
-      for (var _len27 = arguments.length, argv = new Array(_len27), _key27 = 0; _key27 < _len27; _key27++) {
-        argv[_key27] = arguments[_key27];
-      }
+  lineCap(argv) {
+    return this.__functionDefault("lineCap", argv);
+  }
 
-      this.__functionDefault2.apply(this, ["fillRect"].concat(argv));
-    }
-  }, {
-    key: "strokeRect",
-    value: function strokeRect() {
-      for (var _len28 = arguments.length, argv = new Array(_len28), _key28 = 0; _key28 < _len28; _key28++) {
-        argv[_key28] = arguments[_key28];
-      }
+  shadowBlur(argv) {
+    return this.__functionDefault("shadowBlur", argv);
+  }
 
-      this.__functionDefault2.apply(this, ["strokeRect"].concat(argv));
-    }
-  }, {
-    key: "arcTo",
-    value: function arcTo() {
-      for (var _len29 = arguments.length, argv = new Array(_len29), _key29 = 0; _key29 < _len29; _key29++) {
-        argv[_key29] = arguments[_key29];
-      }
+  shadowColor(argv) {
+    return this.__functionDefault("shadowColor", argv);
+  }
 
-      this.__functionDefault2.apply(this, ["arcTo"].concat(argv));
-    }
-  }, {
-    key: "isPoint",
-    value: function isPoint() {
-      for (var _len30 = arguments.length, argv = new Array(_len30), _key30 = 0; _key30 < _len30; _key30++) {
-        argv[_key30] = arguments[_key30];
-      }
+}
 
-      this.__functionDefault2.apply(this, ["isPointInPath"].concat(argv));
-    }
-  }, {
-    key: "createImageData",
-    value: function createImageData() {
-      for (var _len31 = arguments.length, argv = new Array(_len31), _key31 = 0; _key31 < _len31; _key31++) {
-        argv[_key31] = arguments[_key31];
-      }
+class fCanvas {
+  get mouseX() {
+    var _this$touches$;
 
-      return this.__functionDefault2.apply(this, ["createImageData"].concat(argv));
-    }
-  }, {
-    key: "getImageData",
-    value: function getImageData() {
-      for (var _len32 = arguments.length, argv = new Array(_len32), _key32 = 0; _key32 < _len32; _key32++) {
-        argv[_key32] = arguments[_key32];
-      }
+    return ((_this$touches$ = this.touches[0]) === null || _this$touches$ === void 0 ? void 0 : _this$touches$.x) || null;
+  }
 
-      return this.__functionDefault2.apply(this, ["getImageData"].concat(argv));
-    }
-  }, {
-    key: "putImageData",
-    value: function putImageData() {
-      for (var _len33 = arguments.length, argv = new Array(_len33), _key33 = 0; _key33 < _len33; _key33++) {
-        argv[_key33] = arguments[_key33];
-      }
+  get mouseY() {
+    var _this$touches$2;
 
-      this.__functionDefault2.apply(this, ["putImageData"].concat(argv));
-    }
-  }, {
-    key: "createPattern",
-    value: function createPattern() {
-      for (var _len34 = arguments.length, argv = new Array(_len34), _key34 = 0; _key34 < _len34; _key34++) {
-        argv[_key34] = arguments[_key34];
-      }
+    return ((_this$touches$2 = this.touches[0]) === null || _this$touches$2 === void 0 ? void 0 : _this$touches$2.y) || null;
+  }
 
-      return this.__functionDefault2.apply(this, ["createPattern"].concat(argv));
-    }
-  }, {
-    key: "createRadialGradient",
-    value: function createRadialGradient() {
-      for (var _len35 = arguments.length, argv = new Array(_len35), _key35 = 0; _key35 < _len35; _key35++) {
-        argv[_key35] = arguments[_key35];
-      }
+  get interact() {
+    return this.touches.length > 0;
+  }
 
-      return this.__functionDefault2.apply(this, ["createRadialGradient"].concat(argv));
-    }
-  }, {
-    key: "createLinearGradient",
-    value: function createLinearGradient() {
-      for (var _len36 = arguments.length, argv = new Array(_len36), _key36 = 0; _key36 < _len36; _key36++) {
-        argv[_key36] = arguments[_key36];
-      }
-
-      return this.__functionDefault2.apply(this, ["createLinearGradient"].concat(argv));
-    }
-  }, {
-    key: "lineJoin",
-    value: function lineJoin(argv) {
-      return this.__functionDefault("lineJoin", argv);
-    }
-  }, {
-    key: "lineCap",
-    value: function lineCap(argv) {
-      return this.__functionDefault("lineCap", argv);
-    }
-  }, {
-    key: "shadowBlur",
-    value: function shadowBlur(argv) {
-      return this.__functionDefault("shadowBlur", argv);
-    }
-  }, {
-    key: "shadowColor",
-    value: function shadowColor(argv) {
-      return this.__functionDefault("shadowColor", argv);
-    }
-  }]);
-
-  return MyElement;
-}();
-
-var fCanvas = /*#__PURE__*/function () {
-  function fCanvas() {
-    var _this2 = this;
-
-    _classCallCheck(this, fCanvas);
-
+  constructor() {
     _defineProperty(this, "_ENV", {
       angleMode: 1,
       rectAlign: 0,
@@ -2419,12 +1092,12 @@ var fCanvas = /*#__PURE__*/function () {
 
     this._id = fCanvas.count++;
 
-    var handlerEvent = function handlerEvent(event) {
+    const handlerEvent = event => {
       try {
-        _this2.touches = getTouchInfo(_this2.$el, event.touches || [event]);
-        _this2.changedTouches = getTouchInfo(_this2.$el, event.changedTouches || [event]);
-        _this2.preventTouch && event.preventDefault();
-        _this2.stopTouch && event.stopPropagation();
+        this.touches = getTouchInfo(this.$el, event.touches || [event]);
+        this.changedTouches = getTouchInfo(this.$el, event.changedTouches || [event]);
+        this.preventTouch && event.preventDefault();
+        this.stopTouch && event.stopPropagation();
       } catch (e) {
         throw e;
       }
@@ -2435,711 +1108,516 @@ var fCanvas = /*#__PURE__*/function () {
     this.$on(isMobile() ? "touchend" : "mouseup", handlerEvent);
   }
 
-  _createClass(fCanvas, [{
-    key: "mouseX",
-    get: function get() {
-      var _this$touches$;
-
-      return ((_this$touches$ = this.touches[0]) === null || _this$touches$ === void 0 ? void 0 : _this$touches$.x) || null;
-    }
-  }, {
-    key: "mouseY",
-    get: function get() {
-      var _this$touches$2;
-
-      return ((_this$touches$2 = this.touches[0]) === null || _this$touches$2 === void 0 ? void 0 : _this$touches$2.y) || null;
-    }
-  }, {
-    key: "interact",
-    get: function get() {
-      return this.touches.length > 0;
-    }
-  }, {
-    key: "$on",
-    value: function $on(name, callback) {
-      if (name in this._events) {
-        if (Array.isArray(this._events[name])) {
-          this._events[name].push(callback);
-        } else {
-          this._events[name] = [callback];
-        }
+  $on(name, callback) {
+    if (name in this._events) {
+      if (Array.isArray(this._events[name])) {
+        this._events[name].push(callback);
       } else {
-        this._events[name] = callback;
+        this._events[name] = [callback];
       }
-
-      this.$el.addEventListener(name, callback);
+    } else {
+      this._events[name] = callback;
     }
-  }, {
-    key: "$off",
-    value: function $off(name, callback) {
-      var _this3 = this;
 
-      if (name in this._events) {
-        if (Array.isArray(this._events[name])) {
-          this._events[name] = this._events[name].filter(function (item) {
-            if (item === callback) {
-              _this3.$el.removeEventListener(name, item);
+    this.$el.addEventListener(name, callback);
+  }
 
-              return false;
-            }
-
-            return true;
-          });
-        } else {
-          if (this._events[name] === callback) {
-            this.$el.removeEventListener(name, this._events[name]);
-            delete this._events[name];
-          }
-        }
-      }
-    }
-  }, {
-    key: "_moveEvent",
-    value: function _moveEvent(toEl) {
-      var _this4 = this;
-
-      var _loop = function _loop(name) {
-        if (Array.isArray(_this4._events[name])) {
-          _this4._events[name].forEach(function (item) {
-            toEl.addEventListener(name, item);
-
-            _this4.$el.removeEventListener(name, item);
-          });
-        } else {
-          toEl.addEventListener(name, _this4._events[name]);
-
-          _this4.$el.removeEventListener(name, _this4._events[name]);
-        }
-      };
-
-      for (var name in this._events) {
-        _loop(name);
-      }
-    }
-  }, {
-    key: "append",
-    value: function append() {
-      var parent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document.body;
-      parent.appendChild(this.$el);
-    }
-  }, {
-    key: "mount",
-    value: function mount(query) {
-      if (typeof query === "string") {
-        query = document.querySelector(query) || this.$el;
-      }
-
-      var _ref = [this.$el.width, this.$el.height];
-      query.width = _ref[0];
-      query.height = _ref[1];
-
-      this._moveEvent(query);
-
-      this._el = query;
-    }
-  }, {
-    key: "noClear",
-    value: function noClear() {
-      this._ENV.clear = false;
-    }
-  }, {
-    key: "$el",
-    get: function get() {
-      return this._el;
-    }
-  }, {
-    key: "$context2d",
-    get: function get() {
-      if (this._context2dCaching === null) {
-        return this._context2dCaching = this.$el.getContext("2d");
-      }
-
-      return this._context2dCaching;
-    }
-  }, {
-    key: "run",
-    value: function run(element) {
-      element._run(this);
-    }
-  }, {
-    key: "width",
-    get: function get() {
-      return this.$el.width;
-    },
-    set: function set(value) {
-      this.$el.width = value;
-    }
-  }, {
-    key: "height",
-    get: function get() {
-      return this.$el.height;
-    },
-    set: function set(value) {
-      this.$el.height = value;
-    }
-  }, {
-    key: "windowWidth",
-    get: function get() {
-      return windowSize.windowWidth.get();
-    }
-  }, {
-    key: "windowHeight",
-    get: function get() {
-      return windowSize.windowHeight.get();
-    }
-  }, {
-    key: "_methodMode",
-    value: function _methodMode(type, value) {
-      if (!(type in this._ENV) || !(type in fCanvas.constants)) {
-        console.warn("".concat(type, ": This method mode don't install."));
-      } else {
-        if (value === undefined) {
-          return fCanvas.constants[type][this._ENV[type]];
-        } else {
-          var validate = false;
-
-          for (var key in fCanvas.constants[type]) {
-            if (fCanvas.constants[type][key].toLowerCase() === value.toLowerCase()) {
-              this._ENV[type] = key;
-            }
-
-            validate = true;
+  $off(name, callback) {
+    if (name in this._events) {
+      if (Array.isArray(this._events[name])) {
+        this._events[name] = this._events[name].filter(item => {
+          if (item === callback) {
+            this.$el.removeEventListener(name, item);
+            return false;
           }
 
-          if (validate === false) {
-            console.warn("".concat(type, ": Value't is validate."));
+          return true;
+        });
+      } else {
+        if (this._events[name] === callback) {
+          this.$el.removeEventListener(name, this._events[name]);
+          delete this._events[name];
+        }
+      }
+    }
+  }
+
+  _moveEvent(toEl) {
+    for (const name in this._events) {
+      if (Array.isArray(this._events[name])) {
+        this._events[name].forEach(item => {
+          toEl.addEventListener(name, item);
+          this.$el.removeEventListener(name, item);
+        });
+      } else {
+        toEl.addEventListener(name, this._events[name]);
+        this.$el.removeEventListener(name, this._events[name]);
+      }
+    }
+  }
+
+  append(parent = document.body) {
+    parent.appendChild(this.$el);
+  }
+
+  mount(query) {
+    if (typeof query === "string") {
+      query = document.querySelector(query) || this.$el;
+    }
+
+    [query.width, query.height] = [this.$el.width, this.$el.height];
+
+    this._moveEvent(query);
+
+    this._el = query;
+  }
+
+  noClear() {
+    this._ENV.clear = false;
+  }
+
+  get $el() {
+    return this._el;
+  }
+
+  get $context2d() {
+    if (this._context2dCaching === null) {
+      return this._context2dCaching = this.$el.getContext("2d");
+    }
+
+    return this._context2dCaching;
+  }
+
+  run(element) {
+    element._run(this);
+  }
+
+  get width() {
+    return this.$el.width;
+  }
+
+  set width(value) {
+    this.$el.width = value;
+  }
+
+  get height() {
+    return this.$el.height;
+  }
+
+  set height(value) {
+    this.$el.height = value;
+  }
+
+  get windowWidth() {
+    return windowSize.windowWidth.get();
+  }
+
+  get windowHeight() {
+    return windowSize.windowHeight.get();
+  }
+
+  _methodMode(type, value) {
+    if (!(type in this._ENV) || !(type in fCanvas.constants)) {
+      console.warn(`${type}: This method mode don't install.`);
+    } else {
+      if (value === undefined) {
+        return fCanvas.constants[type][this._ENV[type]];
+      } else {
+        let validate = false;
+
+        for (const key in fCanvas.constants[type]) {
+          if (fCanvas.constants[type][key].toLowerCase() === value.toLowerCase()) {
+            this._ENV[type] = key;
           }
+
+          validate = true;
+        }
+
+        if (validate === false) {
+          console.warn(`${type}: Value't is validate.`);
         }
       }
     }
-  }, {
-    key: "_toRadius",
-    value: function _toRadius(value) {
-      return this._ENV.angleMode == 0 ? value * Math.PI / 180 : value;
-    }
-  }, {
-    key: "_toDegress",
-    value: function _toDegress(value) {
-      return this._ENV.angleMode == 1 ? value * 180 / Math.PI : value;
-    }
-  }, {
-    key: "_toRgb",
-    value: function _toRgb(_ref2) {
-      var _ref3 = _slicedToArray(_ref2, 4),
-          _ref3$ = _ref3[0],
-          red = _ref3$ === void 0 ? 0 : _ref3$,
-          _ref3$2 = _ref3[1],
-          green = _ref3$2 === void 0 ? red : _ref3$2,
-          _ref3$3 = _ref3[2],
-          blue = _ref3$3 === void 0 ? green : _ref3$3,
-          _ref3$4 = _ref3[3],
-          alpha = _ref3$4 === void 0 ? 1 : _ref3$4;
+  }
 
-      if (Array.isArray(red)) {
-        return this._toRgb(red);
+  _toRadius(value) {
+    return this._ENV.angleMode == 0 ? value * Math.PI / 180 : value;
+  }
+
+  _toDegress(value) {
+    return this._ENV.angleMode == 1 ? value * 180 / Math.PI : value;
+  }
+
+  _toRgb([red = 0, green = red, blue = green, alpha = 1]) {
+    if (Array.isArray(red)) {
+      return this._toRgb(red);
+    } else {
+      if (typeof red === "string") {
+        return red;
       } else {
-        if (typeof red === "string") {
-          return red;
-        } else {
-          var after = fCanvas.constants.colorMode[this._ENV.colorMode].match(/hsl|hsb/i) ? "%" : "";
-          return "".concat(fCanvas.constants.colorMode[this._ENV.colorMode], "a(").concat([red, green + after, blue + after, alpha].join(","), ")");
-        }
+        const after = fCanvas.constants.colorMode[this._ENV.colorMode].match(/hsl|hsb/i) ? "%" : "";
+        return `${fCanvas.constants.colorMode[this._ENV.colorMode]}a(${[red, green + after, blue + after, alpha].join(",")})`;
       }
     }
-  }, {
-    key: "_figureOffset",
-    value: function _figureOffset(x, y, width, height) {
-      switch (this._ENV.rectAlign) {
-        case 1:
-          x -= width / 2;
-          break;
+  }
 
-        case 2:
-          x -= width;
-          break;
+  _figureOffset(x, y, width, height) {
+    switch (this._ENV.rectAlign) {
+      case 1:
+        x -= width / 2;
+        break;
+
+      case 2:
+        x -= width;
+        break;
+    }
+
+    switch (this._ENV.rectBaseline) {
+      case 1:
+        y -= height / 2;
+        break;
+
+      case 2:
+        y -= height;
+        break;
+    }
+
+    return [x, y];
+  }
+
+  angleMode(value) {
+    return this._methodMode("angleMode", value);
+  }
+
+  rectAlign(value) {
+    return this._methodMode("rectAlign", value);
+  }
+
+  colorMode(value) {
+    return this._methodMode("colorMode", value);
+  }
+
+  rectBaseline(value) {
+    return this._methodMode("rectBaseline", value);
+  }
+
+  fontSize(value) {
+    const {
+      size,
+      weight,
+      family
+    } = fontToArray(this.font());
+
+    if (value === undefined) {
+      return size;
+    } else {
+      value = AutoToPx(value, size, size);
+      this.font([weight, `${value}px`, family].join(" "));
+    }
+  }
+
+  fontFamily(value) {
+    const {
+      size,
+      weight,
+      family
+    } = fontToArray(this.font());
+
+    if (value === undefined) {
+      return family;
+    } else {
+      this.font([weight, `${size}px`, value].join(" "));
+    }
+  }
+
+  fontWeight(value) {
+    const {
+      size,
+      weight,
+      family
+    } = fontToArray(this.font());
+
+    if (value === undefined) {
+      return weight;
+    } else {
+      this.font([value, `${size}px`, family].join(" "));
+    }
+  }
+
+  clear(x = 0, y = 0, w = this.width, h = this.height) {
+    this.$context2d.clearRect(x, y, w, h);
+  }
+
+  background(...argv) {
+    var _argv$;
+
+    if (((_argv$ = argv[0]) === null || _argv$ === void 0 ? void 0 : _argv$.constructor) === HTMLImageElement) {
+      this.$context2d.drawImage(argv[0], 0, 0, this.width, this.height);
+    } else {
+      this.$context2d.fillStyle = this._toRgb(argv);
+      this.$context2d.fill();
+      this.$context2d.fillRect(0, 0, this.width, this.height);
+    }
+  }
+
+  toDataURL(...args) {
+    this.$el.toDataURL(...args);
+  }
+
+  rotate(value) {
+    if (value === undefined) {
+      return this._ENV.rotate;
+    } else {
+      this.$context2d.rotate(this._ENV.rotate = this._toRadius(value));
+    }
+  }
+
+  resetTransform() {
+    this.setTransform(1, 0, 0, 1, 0, 0);
+  }
+
+  async preload(callback) {
+    this.ready = false;
+    const result = await callback();
+    this.ready = true;
+
+    if (this._setupCallback) {
+      setup(this._setupCallback, result);
+    }
+
+    if (this._drawCallback) {
+      draw(this._drawCallback, this, result);
+    }
+  }
+
+  setup(callback, argv) {
+    if (this.ready) {
+      setup(callback, argv);
+    } else {
+      this._setupCallback = callback;
+    }
+  }
+
+  draw(callback, argv) {
+    if (this.ready) {
+      draw(callback, this, argv);
+    } else {
+      this._drawCallback = callback;
+    }
+  }
+
+  __functionDefault(property, arg) {
+    if (arg === undefined) {
+      return this.$context2d[property];
+    } else {
+      this.$context2d[property] = arg;
+    }
+  }
+
+  __functionDefault2(name, ...argv) {
+    return this.$context2d[name](...argv);
+  }
+
+  font(argv) {
+    return this.__functionDefault("font", argv);
+  }
+
+  textAlign(argv) {
+    return this.__functionDefault("textAlign", argv);
+  }
+
+  textBaseline(argv) {
+    return this.__functionDefault("textBaseline", argv);
+  }
+
+  globalOperation(argv) {
+    return this.__functionDefault("globalCompositeOperation", argv);
+  }
+
+  translate(...argv) {
+    this.__functionDefault2("translate", ...argv);
+  }
+
+  scale(...argv) {
+    this.__functionDefault2("scale", ...argv);
+  }
+
+  clip(...argv) {
+    this.__functionDefault2("clip", ...argv);
+  }
+
+  transform(...argv) {
+    if (argv[0] instanceof DOMatrix) {
+      const {
+        a = 1,
+        b = 0,
+        c = 0,
+        d = 1,
+        e = 0,
+        f = 0
+      } = argv[0];
+      this.$context2d.transform(a, b, c, d, e, f);
+    } else {
+      this.$context2d.transform(...argv);
+    }
+  }
+
+  setTransform(...argv) {
+    if (argv[0] instanceof DOMatrix) {
+      const {
+        a = 1,
+        b = 0,
+        c = 0,
+        d = 1,
+        e = 0,
+        f = 0
+      } = argv[0];
+      this.$context2d.setTransform(a, b, c, d, e, f);
+    } else {
+      this.$context2d.setTransform(...argv);
+    }
+  }
+
+  sin(deg) {
+    return Math.sin(this._toRadius(deg));
+  }
+
+  asin(...argv) {
+    return this._toDegress(Math.asin(...argv));
+  }
+
+  cos(deg) {
+    return Math.cos(this._toRadius(deg));
+  }
+
+  acos(...argv) {
+    return this._toDegress(Math.acos(...argv));
+  }
+
+  tan(deg) {
+    return Math.tan(this._toRadius(deg));
+  }
+
+  atan(...argv) {
+    return this._toDegress(Math.atan(...argv));
+  }
+
+  tan2(deg) {
+    return Math.tan2(this._toRadius(deg));
+  }
+
+  atan2(...argv) {
+    return this._toDegress(Math.atan2(...argv));
+  }
+
+  cursor() {
+    this.$el.style.cursor = this._store.cursor;
+  }
+
+  noCursor() {
+    this._store.cursor = this.$el.style.cursor || "auto";
+    this.$el.style.cursor = "none";
+  }
+
+  loop() {
+    this._ENV.loop = true;
+  }
+
+  noLoop() {
+    this._ENV.loop = false;
+  }
+
+  keyPressed(callback) {
+    this.$on("keypress", callback);
+    return {
+      off: () => {
+        this.$off("keypress", callback);
       }
+    };
+  }
 
-      switch (this._ENV.rectBaseline) {
-        case 1:
-          y -= height / 2;
-          break;
-
-        case 2:
-          y -= height;
-          break;
+  mouseIn(callback) {
+    this.$on("mouseover", callback);
+    return {
+      off: () => {
+        this.$off("mouseover", callback);
       }
+    };
+  }
 
-      return [x, y];
-    }
-  }, {
-    key: "angleMode",
-    value: function angleMode(value) {
-      return this._methodMode("angleMode", value);
-    }
-  }, {
-    key: "rectAlign",
-    value: function rectAlign(value) {
-      return this._methodMode("rectAlign", value);
-    }
-  }, {
-    key: "colorMode",
-    value: function colorMode(value) {
-      return this._methodMode("colorMode", value);
-    }
-  }, {
-    key: "rectBaseline",
-    value: function rectBaseline(value) {
-      return this._methodMode("rectBaseline", value);
-    }
-  }, {
-    key: "fontSize",
-    value: function fontSize(value) {
-      var _fontToArray = fontToArray(this.font()),
-          size = _fontToArray.size,
-          weight = _fontToArray.weight,
-          family = _fontToArray.family;
-
-      if (value === undefined) {
-        return size;
-      } else {
-        value = AutoToPx(value, size, size);
-        this.font([weight, "".concat(value, "px"), family].join(" "));
+  mouseOut(callback) {
+    this.$on("mouseout", callback);
+    return {
+      off: () => {
+        this.$off("mouseout", callback);
       }
-    }
-  }, {
-    key: "fontFamily",
-    value: function fontFamily(value) {
-      var _fontToArray2 = fontToArray(this.font()),
-          size = _fontToArray2.size,
-          weight = _fontToArray2.weight,
-          family = _fontToArray2.family;
+    };
+  }
 
-      if (value === undefined) {
-        return family;
-      } else {
-        this.font([weight, "".concat(size, "px"), value].join(" "));
+  mouseDowned(callback) {
+    this.$on("mousedown", callback);
+    return {
+      off: () => {
+        this.$off("mousedown", callback);
       }
-    }
-  }, {
-    key: "fontWeight",
-    value: function fontWeight(value) {
-      var _fontToArray3 = fontToArray(this.font()),
-          size = _fontToArray3.size,
-          weight = _fontToArray3.weight,
-          family = _fontToArray3.family;
+    };
+  }
 
-      if (value === undefined) {
-        return weight;
-      } else {
-        this.font([value, "".concat(size, "px"), family].join(" "));
+  touchStarted(callback) {
+    this.$on("touchstart", callback);
+    return {
+      off: () => {
+        this.$off("touchstart", callback);
       }
-    }
-  }, {
-    key: "clear",
-    value: function clear() {
-      var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-      var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-      var w = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this.width;
-      var h = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : this.height;
-      this.$context2d.clearRect(x, y, w, h);
-    }
-  }, {
-    key: "background",
-    value: function background() {
-      var _argv$;
+    };
+  }
 
-      for (var _len37 = arguments.length, argv = new Array(_len37), _key37 = 0; _key37 < _len37; _key37++) {
-        argv[_key37] = arguments[_key37];
+  touchMoved(callback) {
+    this.$on("touchmove", callback);
+    return {
+      off: () => {
+        this.$off("touchmove", callback);
       }
+    };
+  }
 
-      if (((_argv$ = argv[0]) === null || _argv$ === void 0 ? void 0 : _argv$.constructor) === HTMLImageElement) {
-        this.$context2d.drawImage(argv[0], 0, 0, this.width, this.height);
-      } else {
-        this.$context2d.fillStyle = this._toRgb(argv);
-        this.$context2d.fill();
-        this.$context2d.fillRect(0, 0, this.width, this.height);
+  touchEned(callback) {
+    this.$on("touchend", callback);
+    return {
+      off: () => {
+        this.$off("touchend", callback);
       }
-    }
-  }, {
-    key: "toDataURL",
-    value: function toDataURL() {
-      var _this$$el;
+    };
+  }
 
-      (_this$$el = this.$el).toDataURL.apply(_this$$el, arguments);
-    }
-  }, {
-    key: "rotate",
-    value: function rotate(value) {
-      if (value === undefined) {
-        return this._ENV.rotate;
-      } else {
-        this.$context2d.rotate(this._ENV.rotate = this._toRadius(value));
+  mouseMoved(callback) {
+    this.$on("mousemove", callback);
+    return {
+      off: () => {
+        this.$off("mousemove", callback);
       }
-    }
-  }, {
-    key: "resetTransform",
-    value: function resetTransform() {
-      this.setTransform(1, 0, 0, 1, 0, 0);
-    }
-  }, {
-    key: "preload",
-    value: function () {
-      var _preload = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee(callback) {
-        var result;
-        return regenerator.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                this.ready = false;
-                _context.next = 3;
-                return callback();
+    };
+  }
 
-              case 3:
-                result = _context.sent;
-                this.ready = true;
-
-                if (this._setupCallback) {
-                  _setup(this._setupCallback, result);
-                }
-
-                if (this._drawCallback) {
-                  _draw(this._drawCallback, this, result);
-                }
-
-              case 7:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this);
-      }));
-
-      function preload(_x) {
-        return _preload.apply(this, arguments);
+  mouseUped(callback) {
+    this.$on("mouseup", callback);
+    return {
+      off: () => {
+        this.$off("mouseup", callback);
       }
+    };
+  }
 
-      return preload;
-    }()
-  }, {
-    key: "setup",
-    value: function setup(callback, argv) {
-      if (this.ready) {
-        _setup(callback, argv);
-      } else {
-        this._setupCallback = callback;
+  mouseClicked(callback) {
+    this.$on("click", callback);
+    return {
+      off: () => {
+        this.$off("click", callback);
       }
-    }
-  }, {
-    key: "draw",
-    value: function draw(callback, argv) {
-      if (this.ready) {
-        _draw(callback, this, argv);
-      } else {
-        this._drawCallback = callback;
-      }
-    }
-  }, {
-    key: "__functionDefault",
-    value: function __functionDefault(property, arg) {
-      if (arg === undefined) {
-        return this.$context2d[property];
-      } else {
-        this.$context2d[property] = arg;
-      }
-    }
-  }, {
-    key: "__functionDefault2",
-    value: function __functionDefault2(name) {
-      var _this$$context2d4;
+    };
+  }
 
-      for (var _len38 = arguments.length, argv = new Array(_len38 > 1 ? _len38 - 1 : 0), _key38 = 1; _key38 < _len38; _key38++) {
-        argv[_key38 - 1] = arguments[_key38];
-      }
-
-      return (_this$$context2d4 = this.$context2d)[name].apply(_this$$context2d4, argv);
-    }
-  }, {
-    key: "font",
-    value: function font(argv) {
-      return this.__functionDefault("font", argv);
-    }
-  }, {
-    key: "textAlign",
-    value: function textAlign(argv) {
-      return this.__functionDefault("textAlign", argv);
-    }
-  }, {
-    key: "textBaseline",
-    value: function textBaseline(argv) {
-      return this.__functionDefault("textBaseline", argv);
-    }
-  }, {
-    key: "globalOperation",
-    value: function globalOperation(argv) {
-      return this.__functionDefault("globalCompositeOperation", argv);
-    }
-  }, {
-    key: "translate",
-    value: function translate() {
-      for (var _len39 = arguments.length, argv = new Array(_len39), _key39 = 0; _key39 < _len39; _key39++) {
-        argv[_key39] = arguments[_key39];
-      }
-
-      this.__functionDefault2.apply(this, ["translate"].concat(argv));
-    }
-  }, {
-    key: "scale",
-    value: function scale() {
-      for (var _len40 = arguments.length, argv = new Array(_len40), _key40 = 0; _key40 < _len40; _key40++) {
-        argv[_key40] = arguments[_key40];
-      }
-
-      this.__functionDefault2.apply(this, ["scale"].concat(argv));
-    }
-  }, {
-    key: "clip",
-    value: function clip() {
-      for (var _len41 = arguments.length, argv = new Array(_len41), _key41 = 0; _key41 < _len41; _key41++) {
-        argv[_key41] = arguments[_key41];
-      }
-
-      this.__functionDefault2.apply(this, ["clip"].concat(argv));
-    }
-  }, {
-    key: "transform",
-    value: function transform() {
-      if ((arguments.length <= 0 ? undefined : arguments[0]) instanceof DOMatrix) {
-        var _ref4 = arguments.length <= 0 ? undefined : arguments[0],
-            _ref4$a = _ref4.a,
-            a = _ref4$a === void 0 ? 1 : _ref4$a,
-            _ref4$b = _ref4.b,
-            b = _ref4$b === void 0 ? 0 : _ref4$b,
-            _ref4$c = _ref4.c,
-            c = _ref4$c === void 0 ? 0 : _ref4$c,
-            _ref4$d = _ref4.d,
-            d = _ref4$d === void 0 ? 1 : _ref4$d,
-            _ref4$e = _ref4.e,
-            e = _ref4$e === void 0 ? 0 : _ref4$e,
-            _ref4$f = _ref4.f,
-            f = _ref4$f === void 0 ? 0 : _ref4$f;
-
-        this.$context2d.transform(a, b, c, d, e, f);
-      } else {
-        var _this$$context2d5;
-
-        (_this$$context2d5 = this.$context2d).transform.apply(_this$$context2d5, arguments);
-      }
-    }
-  }, {
-    key: "setTransform",
-    value: function setTransform() {
-      if ((arguments.length <= 0 ? undefined : arguments[0]) instanceof DOMatrix) {
-        var _ref5 = arguments.length <= 0 ? undefined : arguments[0],
-            _ref5$a = _ref5.a,
-            a = _ref5$a === void 0 ? 1 : _ref5$a,
-            _ref5$b = _ref5.b,
-            b = _ref5$b === void 0 ? 0 : _ref5$b,
-            _ref5$c = _ref5.c,
-            c = _ref5$c === void 0 ? 0 : _ref5$c,
-            _ref5$d = _ref5.d,
-            d = _ref5$d === void 0 ? 1 : _ref5$d,
-            _ref5$e = _ref5.e,
-            e = _ref5$e === void 0 ? 0 : _ref5$e,
-            _ref5$f = _ref5.f,
-            f = _ref5$f === void 0 ? 0 : _ref5$f;
-
-        this.$context2d.setTransform(a, b, c, d, e, f);
-      } else {
-        var _this$$context2d6;
-
-        (_this$$context2d6 = this.$context2d).setTransform.apply(_this$$context2d6, arguments);
-      }
-    }
-  }, {
-    key: "sin",
-    value: function sin(deg) {
-      return Math.sin(this._toRadius(deg));
-    }
-  }, {
-    key: "asin",
-    value: function asin() {
-      return this._toDegress(Math.asin.apply(Math, arguments));
-    }
-  }, {
-    key: "cos",
-    value: function cos(deg) {
-      return Math.cos(this._toRadius(deg));
-    }
-  }, {
-    key: "acos",
-    value: function acos() {
-      return this._toDegress(Math.acos.apply(Math, arguments));
-    }
-  }, {
-    key: "tan",
-    value: function tan(deg) {
-      return Math.tan(this._toRadius(deg));
-    }
-  }, {
-    key: "atan",
-    value: function atan() {
-      return this._toDegress(Math.atan.apply(Math, arguments));
-    }
-  }, {
-    key: "tan2",
-    value: function tan2(deg) {
-      return Math.tan2(this._toRadius(deg));
-    }
-  }, {
-    key: "atan2",
-    value: function atan2() {
-      return this._toDegress(Math.atan2.apply(Math, arguments));
-    }
-  }, {
-    key: "cursor",
-    value: function cursor() {
-      this.$el.style.cursor = this._store.cursor;
-    }
-  }, {
-    key: "noCursor",
-    value: function noCursor() {
-      this._store.cursor = this.$el.style.cursor || "auto";
-      this.$el.style.cursor = "none";
-    }
-  }, {
-    key: "loop",
-    value: function loop() {
-      this._ENV.loop = true;
-    }
-  }, {
-    key: "noLoop",
-    value: function noLoop() {
-      this._ENV.loop = false;
-    }
-  }, {
-    key: "keyPressed",
-    value: function keyPressed(callback) {
-      var _this5 = this;
-
-      this.$on("keypress", callback);
-      return {
-        off: function off() {
-          _this5.$off("keypress", callback);
-        }
-      };
-    }
-  }, {
-    key: "mouseIn",
-    value: function mouseIn(callback) {
-      var _this6 = this;
-
-      this.$on("mouseover", callback);
-      return {
-        off: function off() {
-          _this6.$off("mouseover", callback);
-        }
-      };
-    }
-  }, {
-    key: "mouseOut",
-    value: function mouseOut(callback) {
-      var _this7 = this;
-
-      this.$on("mouseout", callback);
-      return {
-        off: function off() {
-          _this7.$off("mouseout", callback);
-        }
-      };
-    }
-  }, {
-    key: "mouseDowned",
-    value: function mouseDowned(callback) {
-      var _this8 = this;
-
-      this.$on("mousedown", callback);
-      return {
-        off: function off() {
-          _this8.$off("mousedown", callback);
-        }
-      };
-    }
-  }, {
-    key: "touchStarted",
-    value: function touchStarted(callback) {
-      var _this9 = this;
-
-      this.$on("touchstart", callback);
-      return {
-        off: function off() {
-          _this9.$off("touchstart", callback);
-        }
-      };
-    }
-  }, {
-    key: "touchMoved",
-    value: function touchMoved(callback) {
-      var _this10 = this;
-
-      this.$on("touchmove", callback);
-      return {
-        off: function off() {
-          _this10.$off("touchmove", callback);
-        }
-      };
-    }
-  }, {
-    key: "touchEned",
-    value: function touchEned(callback) {
-      var _this11 = this;
-
-      this.$on("touchend", callback);
-      return {
-        off: function off() {
-          _this11.$off("touchend", callback);
-        }
-      };
-    }
-  }, {
-    key: "mouseMoved",
-    value: function mouseMoved(callback) {
-      var _this12 = this;
-
-      this.$on("mousemove", callback);
-      return {
-        off: function off() {
-          _this12.$off("mousemove", callback);
-        }
-      };
-    }
-  }, {
-    key: "mouseUped",
-    value: function mouseUped(callback) {
-      var _this13 = this;
-
-      this.$on("mouseup", callback);
-      return {
-        off: function off() {
-          _this13.$off("mouseup", callback);
-        }
-      };
-    }
-  }, {
-    key: "mouseClicked",
-    value: function mouseClicked(callback) {
-      var _this14 = this;
-
-      this.$on("click", callback);
-      return {
-        off: function off() {
-          _this14.$off("click", callback);
-        }
-      };
-    }
-  }]);
-
-  return fCanvas;
-}();
+}
 
 _defineProperty(fCanvas, "Element", MyElement);
 
@@ -3171,77 +1649,79 @@ _defineProperty(fCanvas, "count", 0);
 function bindEvent(name, callback, element) {
   element.addEventListener(name, callback);
   return {
-    off: function off() {
+    off() {
       element.removeEventListener(name, callback);
     }
+
   };
 }
 
-function _setup(callback, argv) {
+const Emitter = Emitter$1;
+let inited = false;
+const emitter = new Emitter();
+function setup(callback, argv) {
   if (document.readyState === "complete") {
     //// readyState === "complete"
+    inited = true;
+    emitter.emit("load");
     callback(argv);
   } else {
-    var load = function load() {
+    function load() {
       document.removeEventListener("DOMContentLoaded", load);
       window.removeEventListener("load", load);
+      inited = true;
+      emitter.emit("load");
       callback(argv);
-    };
+    }
 
     document.addEventListener("DOMContentLoaded", load);
     window.addEventListener("load", load);
   }
 }
+function draw(callback, canvas, argv) {
+  if (inited) {
+    if ((canvas === null || canvas === void 0 ? void 0 : canvas._ENV.clear) === true) {
+      canvas.clear();
+    }
 
-function _draw(callback, canvas, argv) {
-  if ((canvas === null || canvas === void 0 ? void 0 : canvas._ENV.clear) === true) {
-    canvas.clear();
-  }
+    callback(argv);
 
-  callback(argv);
-
-  if (!canvas || (canvas === null || canvas === void 0 ? void 0 : canvas._ENV.loop) === true) {
-    requestAnimationFrame(function () {
-      return _draw(callback, canvas, argv);
+    if (!canvas || (canvas === null || canvas === void 0 ? void 0 : canvas._ENV.loop) === true) {
+      requestAnimationFrame(() => draw(callback, canvas, argv));
+    }
+  } else {
+    emitter.once("load", () => {
+      draw(callback, canvas, argv);
     });
   }
 }
-function keyPressed(callback) {
-  var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
+function keyPressed(callback, element = window) {
   return bindEvent("keypress", callback, element);
 }
-function changeSize(callback) {
-  var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
+function changeSize(callback, element = window) {
   return bindEvent("resize", callback, element);
 }
-function mouseWheel(callback) {
-  var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
+function mouseWheel(callback, element = window) {
   return bindEvent("wheel", callback, element);
 }
-function mousePressed(callback) {
-  var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
+function mousePressed(callback, element = window) {
   return bindEvent("mousedown", callback, element);
 }
-function mouseClicked(callback) {
-  var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
+function mouseClicked(callback, element = window) {
   return bindEvent("click", callback, element);
 }
-function mouseMoved(callback) {
-  var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
+function mouseMoved(callback, element = window) {
   return bindEvent("mousemove", callback, element);
 }
-function touchStarted(callback) {
-  var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
+function touchStarted(callback, element = window) {
   return bindEvent("touchstart", callback, element);
 }
-function touchMoved(callback) {
-  var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
+function touchMoved(callback, element = window) {
   return bindEvent("touchmove", callback, element);
 }
-function touchEnded(callback) {
-  var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
+function touchEnded(callback, element = window) {
   return bindEvent("touchend", callback, element);
 }
 
 export default fCanvas;
-export { CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, changeSize, constrain, createMatrix, createVector, _draw as draw, keyPressed, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, _setup as setup, touchEnded, touchMoved, touchStarted };
+export { CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, changeSize, constrain, createMatrix, createVector, draw, keyPressed, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, setup, touchEnded, touchMoved, touchStarted };
