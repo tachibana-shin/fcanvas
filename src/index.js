@@ -29,7 +29,7 @@ class MyElement {
   _idActiveNow = null;
 
   get $el() {
-    return this.fCanvas.$el;
+    return this.pcanvas.$el;
   }
   _queue = [];
   _run(canvas) {
@@ -71,12 +71,12 @@ class MyElement {
     return this._queue[index];
   }
   run(canvasElement) {
-    this.fCanvas.run(canvasElement);
+    this.pcanvas.run(canvasElement);
   }
   has(id) {
     return this._els.some((item) => item._id === id);
   }
-  get fCanvas() {
+  get pcanvas() {
     const canvas =
       this._idActiveNow === null
         ? this._els[this._els.length - 1]
@@ -104,11 +104,11 @@ class MyElement {
     }
   }
   get $context2d() {
-    return this.fCanvas.$context2d;
+    return this.pcanvas.$context2d;
   }
 
   _extendsCanvas(name, ...argv) {
-    return this.fCanvas[name](...argv);
+    return this.pcanvas[name](...argv);
   }
   _toRadius(...argv) {
     return this._extendsCanvas("_toRadius", ...argv);
@@ -147,25 +147,25 @@ class MyElement {
     return this._extendsCanvas("atan2", ...argv);
   }
   get mouseX() {
-    return this.fCanvas.mouseX;
+    return this.pcanvas.mouseX;
   }
   get mouseY() {
-    return this.fCanvas.mouseY;
+    return this.pcanvas.mouseY;
   }
   get interact() {
-    return this.fCanvas.interact;
+    return this.pcanvas.interact;
   }
   get width() {
-    return this.fCanvas.width;
+    return this.pcanvas.width;
   }
   get height() {
-    return this.fCanvas.height;
+    return this.pcanvas.height;
   }
   get windowWidth() {
-    return this.fCanvas.windowWidth;
+    return this.pcanvas.windowWidth;
   }
   get windowHeight() {
-    return this.fCanvas.windowHeight;
+    return this.pcanvas.windowHeight;
   }
 
   _createLinear(type, ...argv) {
@@ -694,9 +694,13 @@ class fCanvas {
     this.$context2d.clearRect(x, y, w, h);
   }
   background(...argv) {
-    this.$context2d.fillStyle = this._toRgb(argv);
-    this.$context2d.fill();
-    this.$context2d.fillRect(0, 0, this.width, this.height);
+    if (argv[0]?.constructor === HTMLImageElement) {
+      this.$context2d.drawImage(argv[0], 0, 0, this.width, this.height);
+    } else {
+      this.$context2d.fillStyle = this._toRgb(argv);
+      this.$context2d.fill();
+      this.$context2d.fillRect(0, 0, this.width, this.height);
+    }
   }
   toDataURL(...args) {
     this.$el.toDataURL(...args);
