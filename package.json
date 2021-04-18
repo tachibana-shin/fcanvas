@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "0.0.4-b2",
+  "version": "0.0.4-b3",
   "main": "fcanvas.js",
   "module": "./fcanvas.esm.js",
   "typings": "types/index.d.ts",
