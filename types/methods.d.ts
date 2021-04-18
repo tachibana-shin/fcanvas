@@ -1,3 +1,5 @@
+import { Vector  } from "./classes/Vector";
+
 interface CircleElement {
    x: number,
    y: number,
@@ -33,7 +35,7 @@ export interface createMatrix {
    (css: string): Array<number>
 }
 export interface createVector {
-   (...args: any): DOMMatrix
+   (...args: any): Vector
 }
 
 export interface loadImage {

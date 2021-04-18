@@ -42,8 +42,8 @@ interface toucher {
    id: number
 }
 
-interface MyElement {
-   constructor(canvas: fCanvas): void;
+declare class MyElement {
+   constructor(fcanvas?: fCanvas)
 
    $el: HTMLCanvasElement;
 
@@ -125,7 +125,9 @@ interface MyElement {
    shadowBlur(opacity: number): number | void
    shadowColor(red?: number | string | CanvasPattern, green?: number | string, blue?: number | string, alpha?: number | string): string | void
 }
-interface fCanvas {
+declare class fCanvas {
+   static Element: MyElement
+
    preventTouch: boolean;
    stopTouch: boolean;
    touches: Array<toucher>
