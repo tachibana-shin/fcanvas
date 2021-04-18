@@ -864,7 +864,7 @@ var MyElement = /*#__PURE__*/function () {
   _createClass(MyElement, [{
     key: "$el",
     get: function get() {
-      return this.fCanvas.$el;
+      return this.pcanvas.$el;
     }
   }, {
     key: "_run",
@@ -907,7 +907,7 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "run",
     value: function run(canvasElement) {
-      this.fCanvas.run(canvasElement);
+      this.pcanvas.run(canvasElement);
     }
   }, {
     key: "has",
@@ -917,7 +917,7 @@ var MyElement = /*#__PURE__*/function () {
       });
     }
   }, {
-    key: "fCanvas",
+    key: "pcanvas",
     get: function get() {
       var _this = this;
 
@@ -946,18 +946,18 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "$context2d",
     get: function get() {
-      return this.fCanvas.$context2d;
+      return this.pcanvas.$context2d;
     }
   }, {
     key: "_extendsCanvas",
     value: function _extendsCanvas(name) {
-      var _this$fCanvas;
+      var _this$pcanvas;
 
       for (var _len = arguments.length, argv = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         argv[_key - 1] = arguments[_key];
       }
 
-      return (_this$fCanvas = this.fCanvas)[name].apply(_this$fCanvas, argv);
+      return (_this$pcanvas = this.pcanvas)[name].apply(_this$pcanvas, argv);
     }
   }, {
     key: "_toRadius",
@@ -1070,37 +1070,37 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "mouseX",
     get: function get() {
-      return this.fCanvas.mouseX;
+      return this.pcanvas.mouseX;
     }
   }, {
     key: "mouseY",
     get: function get() {
-      return this.fCanvas.mouseY;
+      return this.pcanvas.mouseY;
     }
   }, {
     key: "interact",
     get: function get() {
-      return this.fCanvas.interact;
+      return this.pcanvas.interact;
     }
   }, {
     key: "width",
     get: function get() {
-      return this.fCanvas.width;
+      return this.pcanvas.width;
     }
   }, {
     key: "height",
     get: function get() {
-      return this.fCanvas.height;
+      return this.pcanvas.height;
     }
   }, {
     key: "windowWidth",
     get: function get() {
-      return this.fCanvas.windowWidth;
+      return this.pcanvas.windowWidth;
     }
   }, {
     key: "windowHeight",
     get: function get() {
-      return this.fCanvas.windowHeight;
+      return this.pcanvas.windowHeight;
     }
   }, {
     key: "_createLinear",
@@ -1877,13 +1877,19 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "background",
     value: function background() {
+      var _argv$;
+
       for (var _len37 = arguments.length, argv = new Array(_len37), _key37 = 0; _key37 < _len37; _key37++) {
         argv[_key37] = arguments[_key37];
       }
 
-      this.$context2d.fillStyle = this._toRgb(argv);
-      this.$context2d.fill();
-      this.$context2d.fillRect(0, 0, this.width, this.height);
+      if (((_argv$ = argv[0]) === null || _argv$ === void 0 ? void 0 : _argv$.constructor) === HTMLImageElement) {
+        this.$context2d.drawImage(argv[0], 0, 0, this.width, this.height);
+      } else {
+        this.$context2d.fillStyle = this._toRgb(argv);
+        this.$context2d.fill();
+        this.$context2d.fillRect(0, 0, this.width, this.height);
+      }
     }
   }, {
     key: "toDataURL",
