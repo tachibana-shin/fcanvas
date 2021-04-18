@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "0.0.3",
+  "version": "0.0.3-b1",
   "main": "fcanvas.js",
   "module": "./fcanvas.esm.js",
   "typings": "types/index.d.ts",
@@ -26,7 +26,9 @@
   },
   "scripts": {
     "dev": "node node_modules/webpack/bin/webpack.js --mode development --watch",
-    "build": "node node_modules/webpack/bin/webpack.js --mode production --progress --hide-module"
+    "build:webpack": "node node_modules/webpack/bin/webpack.js --mode production --progress --hide-module",
+    "build:rollup": "node build.js",
+    "build": "node node_modules/webpack/bin/webpack.js --mode production --progress --hide-module; node build.js"
   },
   "author": "Nguyen Thanh",
   "repository": {
