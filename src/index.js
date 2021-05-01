@@ -463,11 +463,15 @@ class fCanvas {
 
     const handlerEvent = (event) => {
       try {
-        this.touches = getTouchInfo(this.$el, event.touches || [event]);
-        this.changedTouches = getTouchInfo(
-          this.$el,
-          event.changedTouches || [event]
-        );
+        if (event.type !== "mouseout") {
+          this.touches = getTouchInfo(this.$el, event.touches || [event]);
+          this.changedTouches = getTouchInfo(
+            this.$el,
+            event.changedTouches || [event]
+          );
+        } else {
+          this.touches = [];
+        }
         this.preventTouch && event.preventDefault();
         this.stopTouch && event.stopPropagation();
       } catch (e) {
@@ -475,9 +479,9 @@ class fCanvas {
       }
     };
 
-    this.$on(isMobile() ? "touchstart" : "mousedown", handlerEvent);
+    this.$on(isMobile() ? "touchstart" : "mouseover", handlerEvent);
     this.$on(isMobile() ? "touchmove" : "mousemove", handlerEvent);
-    this.$on(isMobile() ? "touchend" : "mouseup", handlerEvent);
+    this.$on(isMobile() ? "touchend" : "mouseout", handlerEvent);
   }
 
   _events = {};
