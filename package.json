@@ -1,8 +1,9 @@
 {
   "name": "fcanvas",
-  "version": "0.0.4-b5",
+  "version": "0.0.4-b6",
   "main": "fcanvas.js",
   "module": "fcanvas.esm.js",
+  "unpkg": "fcanvas.esm.js",
   "typings": "types/index.d.ts",
   "license": "MIT",
   "devDependencies": {
