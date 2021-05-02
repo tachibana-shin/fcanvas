@@ -177,7 +177,7 @@ class MyElement {
   }
 
   fill() {
-    if (argv.length === 0) {
+    if (arguments.length === 0) {
       return this.$context2d.fillStyle || "rgba(0, 0, 0, 0)";
     } else {
       this.$context2d.fillStyle = this._toRgb(arguments);
@@ -185,7 +185,7 @@ class MyElement {
     }
   }
   stroke() {
-    if (argv.length === 0) {
+    if (arguments.length === 0) {
       return this.$context2d.strokeStyle || "rgba(0, 0, 0, 0)";
     } else {
       this.$context2d.strokeStyle = this._toRgb(arguments);
@@ -734,7 +734,7 @@ class fCanvas {
 
   async preload(callback) {
     this._existsPreload = true;
-    const result = await callback();
+    await callback();
 
     this._stamentReady.emit("preloaded");
   }
