@@ -1,28 +1,35 @@
-export declare class Vector {
+interface FnActive<T> {
+  (x?: number, y?: number, z?: number): T;
+  (prop: Array<number>[3 | 2 | 1]): T;
+  (vector: Vector): T;
+}
+interface Fn<T> {
+  (x: number, y?: number, z?: number): T;
+  (vector: Vector): T;
+}
 
-   constructor(x?: number, y?: number, z?: number)
-
-   set(x: Vector | number, y?: number, z?: number): Vector
-   copy(): Vector
-   add(x: Vector | number, y?: number, z?: number): Vector
-   rem(x: Vector | number, y?: number, z?: number): Vector | void
-   sub(x: Vector | number, y?: number, z?: number): Vector
-   mult(n: number): Vector
-   div(n: number): Vector
-   mag(): number
-   magSq(): number
-   dot(x: Vector | number, y?: number, z?: number): Number
-   cross(v: number): Vector
-   normalize(): Vector
-   limit(max: number): Vector
-   setMag(n: number): Vector
-   heading(): number
-   rotate(a: number
-   ): Vector
-   angleBetween(v: number): number
-   lerp(x: Vector | number, y?: number, z?: number, amt?: number): Vector
-   reflect(surfaceNormal: Vector): Vector
-   array(): Array<number>
-   equals(x: Vector | Array<number> | number, y?: number, z?: number): boolean
-   toString(): string
+export default class Vector {
+  constructor(x?: number, y?: number, z?: number);
+  set: FnActive<this>;
+  copy(): Vector;
+  add: FnActive<this>;
+  rem: FnActive<this | void>;
+  sub: FnActive<this>;
+  mult(n: number): this;
+  div(n: number): this;
+  mag(): number;
+  magSq(): number;
+  dot: Fn<number>;
+  cross(v: number): Vector;
+  normalize(): this;
+  limit(max: number): this;
+  setMag(n: number): this;
+  heading(): number;
+  rotate(a: number): this;
+  angleBetween(v: number): number;
+  lerp: Fn<this>;
+  reflect(surfaceNormal: Vector): this;
+  array(): Array<number>[3];
+  equals: FnActive<boolean>;
+  toString(): string;
 }

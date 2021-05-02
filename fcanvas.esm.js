@@ -107,7 +107,7 @@ function AutoToPx(string, fi, fontSize) {
         return fi / 100 * number;
 
       default:
-        return number;
+        return +number;
     }
   } else {
     return string + "";
@@ -147,9 +147,9 @@ function isMobile() {
   return check;
 }
 
-class Emitter$1 {
+class Emitter {
   constructor() {
-    _defineProperty(this, "__events", []);
+    _defineProperty(this, "__events", {});
   }
 
   on(name, callback) {
@@ -160,10 +160,14 @@ class Emitter$1 {
         this.__events[name] = [callback];
       }
     }
+
+    return () => {
+      this.off(name, callback);
+    };
   }
 
   off(name, callback) {
-    if (callback) {
+    if (typeof callback === "function") {
       this.__events[name] = this.__events[name].filter(item => item !== callback);
 
       if (this.__events[name].length === 0) {
@@ -174,10 +178,10 @@ class Emitter$1 {
     }
   }
 
-  emit(name, payload) {
+  emit(name, ...payload) {
     if (name in this.__events) {
-      for (let index = 0, length = this.__events[name].length; index < length; index++) {
-        this.__events[name][index](payload);
+      for (let index = this.__events[name].length - 1; index > -1; index--) {
+        this.__events[name][index](...payload);
       }
     }
   }
@@ -193,35 +197,135 @@ class Emitter$1 {
 
 }
 
-const DOMatrix$1 = window.DOMMatrix || window.WebkitDOMMatix || class {
-  constructor(css) {
-    _defineProperty(this, "a", 1);
+function reactiveDefine(value, callback, parent = []) {
+  if (value !== null && typeof value === "object") {
+    /// reactive children
+    if (Array.isArray(value)) {
+      /// bind to propertyes
+      /// reactive method array
+      if (!value.__reactive) {
+        ["push", "pop", "shift", "unshift", "splice"].forEach(name => {
+          const proto = value[name];
+          Object.defineProperty(value, name, {
+            writable: false,
+            enumerable: false,
+            configurable: true,
 
-    _defineProperty(this, "b", 0);
+            value() {
+              const newValue = proto.apply(this, arguments);
+              callback([...parent], this, newValue);
+              return newValue;
+            }
 
-    _defineProperty(this, "c", 0);
+          });
+        });
+        Object.defineProperty(value, "__reactive", {
+          writable: false,
+          enumerable: false,
+          configurable: true,
+          value: true
+        });
+      } ////
 
-    _defineProperty(this, "d", 1);
 
-    _defineProperty(this, "e", 0);
+      value.forEach((item, index) => {
+        if (item !== null && typeof item === "object") {
+          reactiveDefine(item, callback, [...parent, index]);
+        }
+      });
+    } else {
+      //// if object ===> reactive attribute
+      /// create __store if not exists
+      /// reactive social
+      if (!value.__reactive) {
+        Object.defineProperty(value, "__store", {
+          writable: true,
+          enumerable: false,
+          configurable: true,
+          value: { ...value
+          }
+        });
+        Object.defineProperty(value, "__reactive", {
+          writable: false,
+          enumerable: false,
+          configurable: true,
+          value: true
+        });
+      } else {
+        value.__store = { ...value
+        };
+      }
 
-    _defineProperty(this, "f", 0);
+      for (const key in value) {
+        Object.defineProperty(value, key, {
+          get() {
+            return value.__store[key];
+          },
 
-    const vnode = document.createElement("div");
-    vnode.style.opacity = 0;
-    vnode.style.position = "fixed";
-    vnode.style.top = vnode.style.left = -9e99 + "px";
-    vnode.style[TRANSFORM_Prop] = css;
-    document.documentElement.appendChild(vnode);
-    let transform = getComputedStyle(vnode)[TRANSFORM_Prop];
-    if (transform == "none") transform = "1, 0, 0, 1, 0, 0";
-    transform = transform.replace(/^(?:matrix3d|matrix)\(|\s|\)$/g, "").split(",").map(e => +e);
-    document.documentElement.removeChild(vnode);
-    transform._isMatrix = true;
-    [this.a, this.b, this.c, this.d, this.e, this.f] = transform;
+          enumerable: true,
+
+          set(newValue) {
+            const old = value.__store[key];
+            value.__store[key] = newValue;
+            reactiveDefine(newValue, callback, [...parent, key]);
+            callback([...parent, key], old, newValue);
+          }
+
+        });
+        reactiveDefine(value[key], callback, [...parent, key]);
+      }
+    }
+  }
+}
+
+class Store {
+  constructor(store = {}) {
+    _defineProperty(this, "__emitter", new Emitter());
+
+    for (const key in store) {
+      this[key] = store[key];
+    }
+
+    reactiveDefine(this, (paths, oldVal, newVal) => {
+      this.__emitter.emit(paths.join("."), oldVal, newVal);
+    });
   }
 
-};
+  $set(object, key, value) {
+    object[key] = value;
+    reactiveDefine(object, (paths, oldVal, newVal) => {
+      this.__emitter.emit(paths.join("."), oldVal, newVal);
+    });
+    object[key] = value;
+  }
+
+  $watch(key, callback) {
+    return this.__emitter.on(key, callback);
+  }
+
+}
+
+class Stament {
+  constructor() {
+    _defineProperty(this, "__store", new Store());
+  }
+
+  on(name, callback) {
+    if (this.__store[name]) {
+      callback();
+    } else {
+      const watcher = this.__store.$watch(name, () => {
+        callback();
+        watcher();
+      });
+    }
+  }
+
+  emit(name) {
+    this.__store.$set(this.__store, name, true);
+  }
+
+}
 
 function calculateRemainder2D(xComponent, yComponent) {
   if (xComponent !== 0) {
@@ -442,11 +546,11 @@ class Vector {
   }
 
   heading() {
-    return getDeg(Math.atan2(this.y, this.x));
+    return Math.atan2(this.y, this.x);
   }
 
   rotate(a) {
-    var newHeading = getRadius(this.heading() + a);
+    var newHeading = this.heading() + a;
     var mag = this.mag();
     this.x = Math.cos(newHeading) * mag;
     this.y = Math.sin(newHeading) * mag;
@@ -458,7 +562,7 @@ class Vector {
     var angle;
     angle = Math.acos(Math.min(1, Math.max(-1, dotmagmag)));
     angle = angle * Math.sign(this.cross(v).z || 1);
-    return getDeg(angle);
+    return angle;
   }
 
   lerp(x, y, z, amt) {
@@ -507,13 +611,43 @@ class Vector {
 
 }
 
+const DOMatrix$1 = window.DOMMatrix || window.WebkitDOMMatix || class {
+  constructor(css) {
+    _defineProperty(this, "a", 1);
+
+    _defineProperty(this, "b", 0);
+
+    _defineProperty(this, "c", 0);
+
+    _defineProperty(this, "d", 1);
+
+    _defineProperty(this, "e", 0);
+
+    _defineProperty(this, "f", 0);
+
+    const vnode = document.createElement("div");
+    vnode.style.opacity = 0;
+    vnode.style.position = "fixed";
+    vnode.style.top = vnode.style.left = -9e99 + "px";
+    vnode.style[TRANSFORM_Prop] = css;
+    document.documentElement.appendChild(vnode);
+    let transform = getComputedStyle(vnode)[TRANSFORM_Prop];
+    if (transform == "none") transform = "1, 0, 0, 1, 0, 0";
+    transform = transform.replace(/^(?:matrix3d|matrix)\(|\s|\)$/g, "").split(",").map(e => +e);
+    document.documentElement.removeChild(vnode);
+    transform._isMatrix = true;
+    [this.a, this.b, this.c, this.d, this.e, this.f] = transform;
+  }
+
+};
+
 function CircleImpact(e, f) {
   return (f.x - e.x) ** 2 + (f.y - e.y) ** 2 < (e.radius + f.radius) ** 2;
 }
 function CircleImpactPoint(e, x, y) {
   return (x - e.x) ** 2 + (y - e.y) ** 2 < e.radius ** 2;
 }
-function CircleImpactRect(box, sphere) {
+function CircleImpactRect(sphere, box) {
   const x = Math.max(box.x, Math.min(sphere.x, box.x + box.width));
   const y = Math.max(box.y, Math.min(sphere.y, box.y + box.height));
   const distance = (x - sphere.x) * (x - sphere.x) + (y - sphere.y) * (y - sphere.y);
@@ -559,7 +693,11 @@ function map(a, b, c, d, e) {
 }
 function random(...args) {
   if (args.length === 1) {
-    return args[0] != null && "length" in args[0] ? args[0][Math.floor(Math.random() * args[0].length)] : Math.random() * args[0];
+    if (args[0] !== null && typeof args[0] === "object" && "length" in args[0]) {
+      return args[0][Math.floor(Math.random() * args[0].length)];
+    }
+
+    return Math.random() * args[0];
   }
 
   if (args.length === 2) {
@@ -604,6 +742,9 @@ function RectImpact(a, b) {
 function RectImpactPoint(e, x, y) {
   return e.x < x && e.x + e.width > x && e.y < y && e.y + e.height > y;
 }
+function lerp(start, stop, amt) {
+  return amt * (stop - start) + start;
+}
 
 class MyElement {
   constructor(canvas) {
@@ -641,7 +782,7 @@ class MyElement {
   }
 
   get $el() {
-    return this.pcanvas.$el;
+    return this.$parent.$el;
   }
 
   _run(canvas) {
@@ -680,14 +821,14 @@ class MyElement {
   }
 
   run(canvasElement) {
-    this.pcanvas.run(canvasElement);
+    this.$parent.run(canvasElement);
   }
 
   has(id) {
     return this._els.some(item => item._id === id);
   }
 
-  get pcanvas() {
+  get $parent() {
     const canvas = this._idActiveNow === null ? this._els[this._els.length - 1] : this._els.find(item => item._id === this._idActiveNow);
 
     if (canvas instanceof fCanvas) {
@@ -709,11 +850,11 @@ class MyElement {
   }
 
   get $context2d() {
-    return this.pcanvas.$context2d;
+    return this.$parent.$context2d;
   }
 
   _extendsCanvas(name, ...argv) {
-    return this.pcanvas[name](...argv);
+    return this.$parent[name](...argv);
   }
 
   _toRadius(...argv) {
@@ -765,51 +906,51 @@ class MyElement {
   }
 
   get mouseX() {
-    return this.pcanvas.mouseX;
+    return this.$parent.mouseX;
   }
 
   get mouseY() {
-    return this.pcanvas.mouseY;
+    return this.$parent.mouseY;
   }
 
   get interact() {
-    return this.pcanvas.interact;
+    return this.$parent.interact;
   }
 
   get width() {
-    return this.pcanvas.width;
+    return this.$parent.width;
   }
 
   get height() {
-    return this.pcanvas.height;
+    return this.$parent.height;
   }
 
   get windowWidth() {
-    return this.pcanvas.windowWidth;
+    return this.$parent.windowWidth;
   }
 
   get windowHeight() {
-    return this.pcanvas.windowHeight;
+    return this.$parent.windowHeight;
   }
 
   _createLinear(type, ...argv) {
     return this.$context2d[type](...argv);
   }
 
-  fill(...argv) {
+  fill() {
     if (argv.length === 0) {
       return this.$context2d.fillStyle || "rgba(0, 0, 0, 0)";
     } else {
-      this.$context2d.fillStyle = this._toRgb(argv);
+      this.$context2d.fillStyle = this._toRgb(arguments);
       this.$context2d.fill();
     }
   }
 
-  stroke(...argv) {
+  stroke() {
     if (argv.length === 0) {
       return this.$context2d.strokeStyle || "rgba(0, 0, 0, 0)";
     } else {
-      this.$context2d.strokeStyle = this._toRgb(argv);
+      this.$context2d.strokeStyle = this._toRgb(arguments);
       this.$context2d.stroke();
     }
   }
@@ -862,11 +1003,11 @@ class MyElement {
   }
 
   save() {
-    this.$context2d.save();
+    this.$parent.save();
   }
 
   restore() {
-    this.$context2d.restore();
+    this.$parent.restore();
   }
 
   arc(c, t, e, i, n, o) {
@@ -1072,7 +1213,7 @@ class fCanvas {
 
     _defineProperty(this, "changedTouches", []);
 
-    _defineProperty(this, "_id", null);
+    _defineProperty(this, "_id", fCanvas.count++);
 
     _defineProperty(this, "_el", document.createElement("canvas"));
 
@@ -1080,17 +1221,13 @@ class fCanvas {
 
     _defineProperty(this, "_context2dCaching", null);
 
-    _defineProperty(this, "ready", true);
+    _defineProperty(this, "_stamentReady", new Stament());
 
-    _defineProperty(this, "_drawCallback", null);
-
-    _defineProperty(this, "_setupCallback", null);
+    _defineProperty(this, "_existsPreload", false);
 
     _defineProperty(this, "_store", {
       cursor: "auto"
     });
-
-    this._id = fCanvas.count++;
 
     const handlerEvent = event => {
       try {
@@ -1219,6 +1356,14 @@ class fCanvas {
 
   get windowHeight() {
     return windowSize.windowHeight.get();
+  }
+
+  save() {
+    this.$context2d.save();
+  }
+
+  restore() {
+    this.$context2d.restore();
   }
 
   _methodMode(type, value) {
@@ -1366,7 +1511,7 @@ class fCanvas {
   }
 
   toDataURL(...args) {
-    this.$el.toDataURL(...args);
+    return this.$el.toDataURL(...args);
   }
 
   rotate(value) {
@@ -1382,33 +1527,30 @@ class fCanvas {
   }
 
   async preload(callback) {
-    this.ready = false;
-    const result = await callback();
-    this.ready = true;
+    this._existsPreload = true;
+    await callback();
 
-    if (this._setupCallback) {
-      setup(this._setupCallback, result);
-    }
+    this._stamentReady.emit("preloaded");
+  }
 
-    if (this._drawCallback) {
-      draw(this._drawCallback, this, result);
+  async setup(callback) {
+    if (this._existsPreload) {
+      this._stamentReady.on("preloaded", async () => {
+        await setup(callback);
+
+        this._stamentReady.emit("setuped");
+      });
+    } else {
+      await setup(callback);
+
+      this._stamentReady.emit("setuped");
     }
   }
 
-  setup(callback, argv) {
-    if (this.ready) {
-      setup(callback, argv);
-    } else {
-      this._setupCallback = callback;
-    }
-  }
-
-  draw(callback, argv) {
-    if (this.ready) {
-      draw(callback, this, argv);
-    } else {
-      this._drawCallback = callback;
-    }
+  draw(callback) {
+    this._stamentReady.on("setuped", () => {
+      draw(callback, this);
+    });
   }
 
   __functionDefault(property, arg) {
@@ -1660,43 +1802,48 @@ function bindEvent(name, callback, element) {
 
   };
 }
-
-const Emitter = Emitter$1;
 let inited = false;
 const emitter = new Emitter();
-function setup(callback, argv) {
+async function setup(callback) {
   if (document.readyState === "complete") {
     //// readyState === "complete"
     inited = true;
     emitter.emit("load");
-    callback(argv);
-  } else {
-    function load() {
-      document.removeEventListener("DOMContentLoaded", load);
-      window.removeEventListener("load", load);
-      inited = true;
-      emitter.emit("load");
-      callback(argv);
-    }
+    const ret = callback();
 
-    document.addEventListener("DOMContentLoaded", load);
-    window.addEventListener("load", load);
+    if (ret && "length" in ret) {
+      await ret;
+    }
+  } else {
+    await new Promise((resolve, reject) => {
+      function load() {
+        document.removeEventListener("DOMContentLoaded", load);
+        window.removeEventListener("load", load);
+        inited = true;
+        emitter.emit("load");
+        callback();
+        resolve();
+      }
+
+      document.addEventListener("DOMContentLoaded", load);
+      window.addEventListener("load", load);
+    });
   }
 }
-function draw(callback, canvas, argv) {
+function draw(callback, canvas) {
   if (inited) {
     if ((canvas === null || canvas === void 0 ? void 0 : canvas._ENV.clear) === true) {
       canvas.clear();
     }
 
-    callback(argv);
+    callback();
 
     if (!canvas || (canvas === null || canvas === void 0 ? void 0 : canvas._ENV.loop) === true) {
-      requestAnimationFrame(() => draw(callback, canvas, argv));
+      requestAnimationFrame(() => draw(callback, canvas));
     }
   } else {
     emitter.once("load", () => {
-      draw(callback, canvas, argv);
+      draw(callback, canvas);
     });
   }
 }
@@ -1729,4 +1876,4 @@ function touchEnded(callback, element = window) {
 }
 
 export default fCanvas;
-export { CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, changeSize, constrain, createMatrix, createVector, draw, keyPressed, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, setup, touchEnded, touchMoved, touchStarted };
+export { CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, createMatrix, createVector, draw, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, setup, touchEnded, touchMoved, touchStarted };

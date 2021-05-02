@@ -6,7 +6,10 @@ import {
   windowSize,
   isMobile,
 } from "./utils/index.js";
-import _Emitter from "./classes/Emitter.js";
+import Emitter from "./classes/Emitter.js";
+import Stament from "./classes/Stament.js";
+import Store from "./classes/Store.js";
+import Vector from "./classes/Vector.js";
 
 class MyElement {
   constructor(canvas) {
@@ -30,7 +33,7 @@ class MyElement {
   _idActiveNow = null;
 
   get $el() {
-    return this.pcanvas.$el;
+    return this.$parent.$el;
   }
   _queue = [];
   _run(canvas) {
@@ -72,12 +75,12 @@ class MyElement {
     return this._queue[index];
   }
   run(canvasElement) {
-    this.pcanvas.run(canvasElement);
+    this.$parent.run(canvasElement);
   }
   has(id) {
     return this._els.some((item) => item._id === id);
   }
-  get pcanvas() {
+  get $parent() {
     const canvas =
       this._idActiveNow === null
         ? this._els[this._els.length - 1]
@@ -105,11 +108,11 @@ class MyElement {
     }
   }
   get $context2d() {
-    return this.pcanvas.$context2d;
+    return this.$parent.$context2d;
   }
 
   _extendsCanvas(name, ...argv) {
-    return this.pcanvas[name](...argv);
+    return this.$parent[name](...argv);
   }
   _toRadius(...argv) {
     return this._extendsCanvas("_toRadius", ...argv);
@@ -148,44 +151,44 @@ class MyElement {
     return this._extendsCanvas("atan2", ...argv);
   }
   get mouseX() {
-    return this.pcanvas.mouseX;
+    return this.$parent.mouseX;
   }
   get mouseY() {
-    return this.pcanvas.mouseY;
+    return this.$parent.mouseY;
   }
   get interact() {
-    return this.pcanvas.interact;
+    return this.$parent.interact;
   }
   get width() {
-    return this.pcanvas.width;
+    return this.$parent.width;
   }
   get height() {
-    return this.pcanvas.height;
+    return this.$parent.height;
   }
   get windowWidth() {
-    return this.pcanvas.windowWidth;
+    return this.$parent.windowWidth;
   }
   get windowHeight() {
-    return this.pcanvas.windowHeight;
+    return this.$parent.windowHeight;
   }
 
   _createLinear(type, ...argv) {
     return this.$context2d[type](...argv);
   }
 
-  fill(...argv) {
+  fill() {
     if (argv.length === 0) {
       return this.$context2d.fillStyle || "rgba(0, 0, 0, 0)";
     } else {
-      this.$context2d.fillStyle = this._toRgb(argv);
+      this.$context2d.fillStyle = this._toRgb(arguments);
       this.$context2d.fill();
     }
   }
-  stroke(...argv) {
+  stroke() {
     if (argv.length === 0) {
       return this.$context2d.strokeStyle || "rgba(0, 0, 0, 0)";
     } else {
-      this.$context2d.strokeStyle = this._toRgb(argv);
+      this.$context2d.strokeStyle = this._toRgb(arguments);
       this.$context2d.stroke();
     }
   }
@@ -230,10 +233,10 @@ class MyElement {
     this.$context2d.closePath();
   }
   save() {
-    this.$context2d.save();
+    this.$parent.save();
   }
   restore() {
-    this.$context2d.restore();
+    this.$parent.restore();
   }
 
   arc(c, t, e, i, n, o) {
@@ -455,12 +458,10 @@ class fCanvas {
 
   static count = 0;
 
-  _id = null;
+  _id = fCanvas.count++;
   _el = document.createElement("canvas");
 
   constructor() {
-    this._id = fCanvas.count++;
-
     const handlerEvent = (event) => {
       try {
         if (event.type !== "mouseout") {
@@ -579,6 +580,13 @@ class fCanvas {
   }
   get windowHeight() {
     return windowSize.windowHeight.get();
+  }
+
+  save() {
+    this.$context2d.save();
+  }
+  restore() {
+    this.$context2d.restore();
   }
 
   _methodMode(type, value) {
@@ -708,7 +716,7 @@ class fCanvas {
     }
   }
   toDataURL(...args) {
-    this.$el.toDataURL(...args);
+    return this.$el.toDataURL(...args);
   }
   rotate(value) {
     if (value === undefined) {
@@ -721,34 +729,30 @@ class fCanvas {
     this.setTransform(1, 0, 0, 1, 0, 0);
   }
 
-  ready = true;
-  _drawCallback = null;
-  _setupCallback = null;
-  async preload(callback) {
-    this.ready = false;
-    const result = await callback();
-    this.ready = true;
+  _stamentReady = new Stament();
+  _existsPreload = false;
 
-    if (this._setupCallback) {
-      setup(this._setupCallback, result);
-    }
-    if (this._drawCallback) {
-      draw(this._drawCallback, this, result);
+  async preload(callback) {
+    this._existsPreload = true;
+    const result = await callback();
+
+    this._stamentReady.emit("preloaded");
+  }
+  async setup(callback) {
+    if (this._existsPreload) {
+      this._stamentReady.on("preloaded", async () => {
+        await setup(callback);
+        this._stamentReady.emit("setuped");
+      });
+    } else {
+      await setup(callback);
+      this._stamentReady.emit("setuped");
     }
   }
-  setup(callback, argv) {
-    if (this.ready) {
-      setup(callback, argv);
-    } else {
-      this._setupCallback = callback;
-    }
-  }
-  draw(callback, argv) {
-    if (this.ready) {
-      draw(callback, this, argv);
-    } else {
-      this._drawCallback = callback;
-    }
+  draw(callback) {
+    this._stamentReady.on("setuped", () => {
+      draw(callback, this);
+    });
   }
 
   __functionDefault(property, arg) {
@@ -943,44 +947,51 @@ function bindEvent(name, callback, element) {
   };
 }
 
-export const Emitter = _Emitter;
+export { Emitter, Stament, Store, Vector };
 
 let inited = false;
 const emitter = new Emitter();
 
-export function setup(callback, argv) {
+export async function setup(callback) {
   if (document.readyState === "complete") {
     //// readyState === "complete"
 
     inited = true;
     emitter.emit("load");
-    callback(argv);
-  } else {
-    function load() {
-      document.removeEventListener("DOMContentLoaded", load);
-      window.removeEventListener("load", load);
+    const ret = callback();
 
-      inited = true;
-      emitter.emit("load");
-      callback(argv);
+    if (ret && "length" in ret) {
+      await ret;
     }
+  } else {
+    await new Promise((resolve, reject) => {
+      function load() {
+        document.removeEventListener("DOMContentLoaded", load);
+        window.removeEventListener("load", load);
 
-    document.addEventListener("DOMContentLoaded", load);
-    window.addEventListener("load", load);
+        inited = true;
+        emitter.emit("load");
+        callback();
+        resolve();
+      }
+
+      document.addEventListener("DOMContentLoaded", load);
+      window.addEventListener("load", load);
+    });
   }
 }
-export function draw(callback, canvas, argv) {
+export function draw(callback, canvas) {
   if (inited) {
     if (canvas?._ENV.clear === true) {
       canvas.clear();
     }
-    callback(argv);
+    callback();
     if (!canvas || canvas?._ENV.loop === true) {
-      requestAnimationFrame(() => draw(callback, canvas, argv));
+      requestAnimationFrame(() => draw(callback, canvas));
     }
   } else {
     emitter.once("load", () => {
-      draw(callback, canvas, argv);
+      draw(callback, canvas);
     });
   }
 }

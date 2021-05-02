@@ -1,6 +1,5 @@
 import DOMMatrix from "../classes/DOMMatrix.js";
-import Vector from "../classes/vector.js";
-
+import Vector from "../classes/Vector.js";
 
 export function CircleImpact(e, f) {
   return (f.x - e.x) ** 2 + (f.y - e.y) ** 2 < (e.radius + f.radius) ** 2;
@@ -10,7 +9,7 @@ export function CircleImpactPoint(e, x, y) {
   return (x - e.x) ** 2 + (y - e.y) ** 2 < e.radius ** 2;
 }
 
-export function CircleImpactRect(box, sphere) {
+export function CircleImpactRect(sphere, box) {
   const x = Math.max(box.x, Math.min(sphere.x, box.x + box.width));
   const y = Math.max(box.y, Math.min(sphere.y, box.y + box.height));
 
@@ -23,7 +22,6 @@ export function CircleImpactRect(box, sphere) {
 export function constrain(value, min, max) {
   return Math.min(Math.max(min, value), max);
 }
-
 
 export function createMatrix(css) {
   const { a, b, c, d, e, f } = new DOMMatrix(css);
@@ -59,9 +57,15 @@ export function map(a, b, c, d, e) {
 
 export function random(...args) {
   if (args.length === 1) {
-    return args[0] != null && "length" in args[0] ?
-      args[0][Math.floor(Math.random() * args[0].length)] :
-      Math.random() * args[0];
+    if (
+      args[0] !== null &&
+      typeof args[0] === "object" &&
+      "length" in args[0]
+    ) {
+      return args[0][Math.floor(Math.random() * args[0].length)];
+    }
+
+    return Math.random() * args[0];
   }
   if (args.length === 2) {
     return args[0] + Math.random() * (args[1] - args[0]);
@@ -73,7 +77,7 @@ export function range($start, $end, $step) {
   const arr = [];
   let isChar = false;
 
-  if ($end === undefined)($end = $start), ($start = 1);
+  if ($end === undefined) ($end = $start), ($start = 1);
 
   if (typeof $start == "string") {
     $start = $start.charCodeAt(0);
@@ -112,4 +116,8 @@ export function RectImpact(a, b) {
 
 export function RectImpactPoint(e, x, y) {
   return e.x < x && e.x + e.width > x && e.y < y && e.y + e.height > y;
+}
+
+export function lerp(start, stop, amt) {
+  return amt * (stop - start) + start;
 }

@@ -219,10 +219,10 @@ export default class Vector {
     return this.normalize().mult(n);
   }
   heading() {
-    return getDeg(Math.atan2(this.y, this.x));
+    return Math.atan2(this.y, this.x);
   }
   rotate(a) {
-    var newHeading = getRadius(this.heading() + a);
+    var newHeading = this.heading() + a;
     var mag = this.mag();
     this.x = Math.cos(newHeading) * mag;
     this.y = Math.sin(newHeading) * mag;
@@ -234,7 +234,7 @@ export default class Vector {
     angle = Math.acos(Math.min(1, Math.max(-1, dotmagmag)));
     angle = angle * Math.sign(this.cross(v).z || 1);
 
-    return getDeg(angle);
+    return angle;
   }
   lerp(x, y, z, amt) {
     if (x instanceof Vector) {

@@ -109,7 +109,7 @@ export function AutoToPx(string, fi, fontSize) {
       case "%":
         return (fi / 100) * number;
       default:
-        return number;
+        return +number;
     }
   } else {
     return string + "";

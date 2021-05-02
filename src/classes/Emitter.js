@@ -1,5 +1,5 @@
 export default class Emitter {
-  __events = [];
+  __events = {};
   on(name, callback) {
     if (typeof callback === "function") {
       if (name in this.__events) {
@@ -8,9 +8,13 @@ export default class Emitter {
         this.__events[name] = [callback];
       }
     }
+
+    return () => {
+      this.off(name, callback);
+    };
   }
   off(name, callback) {
-    if (callback) {
+    if (typeof callback === "function") {
       this.__events[name] = this.__events[name].filter(
         (item) => item !== callback
       );
@@ -22,14 +26,10 @@ export default class Emitter {
       delete this.__events[name];
     }
   }
-  emit(name, payload) {
+  emit(name, ...payload) {
     if (name in this.__events) {
-      for (
-        let index = 0, length = this.__events[name].length;
-        index < length;
-        index++
-      ) {
-        this.__events[name][index](payload);
+      for (let index = this.__events[name].length - 1; index > -1; index--) {
+        this.__events[name][index](...payload);
       }
     }
   }
