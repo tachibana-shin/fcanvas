@@ -10,22 +10,16 @@ import Emitter from "./classes/Emitter.js";
 import Stament from "./classes/Stament.js";
 import Store from "./classes/Store.js";
 import Vector from "./classes/Vector.js";
+import Animate from "./classes/Animate.js";
+
+///let noopFCanvas; /// new fCanvas after class fCanvas because error
 
 class MyElement {
   constructor(canvas) {
-    if (canvas === undefined) {
-      const canvas = new fCanvas();
+    if (canvas?.constructor === fCanvas) {
       this._els.push(canvas);
     } else {
-      if (canvas instanceof fCanvas) {
-        this.bind(canvas);
-      } else {
-        const canvas = new fCanvas();
-        this._els.push(canvas);
-        console.error(
-          "fCanvas: super() in MyElement.constructor not's fCanvas element."
-        );
-      }
+      this._els.push(noopFCanvas);
     }
   }
 
@@ -406,8 +400,97 @@ class MyElement {
   }
 }
 
+class EAnimate extends MyElement {
+  __animate = null;
+  constructor(animate) {
+    super();
+    this.__animate = new Animate(animate);
+  }
+  get $() {
+    return this.animate.$;
+  }
+  get running() {
+    return this.animate.running;
+  }
+  get done() {
+    return this.animate.done;
+  }
+  get animate() {
+    return this.__animate;
+  }
+  get type() {
+    return this.animate.type;
+  }
+  get xFrom() {
+    return this.animate.xFrom;
+  }
+  get yFrom() {
+    return this.animate.yFrom;
+  }
+  get zFrom() {
+    return this.animate.zFrom;
+  }
+
+  get xTo() {
+    return this.animate.xTo;
+  }
+  get yTo() {
+    return this.animate.yTo;
+  }
+  get zTo() {
+    return this.animate.zTo;
+  }
+
+  get x() {
+    return this.animate.x;
+  }
+  get y() {
+    return this.animate.y;
+  }
+  get z() {
+    return this.animate.z;
+  }
+
+  get time() {
+    return this.animate.time;
+  }
+
+  get frames() {
+    return this.animate.frames;
+  }
+  get frame() {
+    return this.animate.frame;
+  }
+  set frame(value) {
+    this.animate.frame = value;
+  }
+
+  config(animate) {
+    this.animate.config(animate);
+  }
+  set(x, y, z) {
+    this.animate.set(x, y, z);
+  }
+  moveTo(x, y, z) {
+    this.animate.move(x, y, z);
+  }
+  moveImmediate(x, y, z) {
+    this.animate.moveImmediate(x, y, z);
+  }
+  addFrame() {
+    this.animate.addFrame();
+  }
+  setType(type) {
+    this.animate.setType(type);
+  }
+  setTime(time) {
+    this.animate.setTime(time);
+  }
+}
+
 class fCanvas {
   static Element = MyElement;
+  static EAnimate = EAnimate;
   static constants = {
     angleMode: {
       0: "radial",
@@ -938,6 +1021,8 @@ class fCanvas {
   }
 }
 
+const noopFCanvas = new fCanvas();
+
 function bindEvent(name, callback, element) {
   element.addEventListener(name, callback);
   return {
@@ -947,7 +1032,7 @@ function bindEvent(name, callback, element) {
   };
 }
 
-export { Emitter, Stament, Store, Vector };
+export { Emitter, Stament, Store, Vector, Animate };
 
 let inited = false;
 const emitter = new Emitter();

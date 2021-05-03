@@ -25,7 +25,7 @@ export declare function CircleImpactPoint(
   x: number,
   y: number
 ): boolean;
-export declare function CircleImpactRect(sphere: Cirle, box: Rect): boolean;
+export declare function CircleImpactRect(sphere: Circle, box: Rect): boolean;
 export declare function constrain(
   value: number,
   min: number,

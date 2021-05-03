@@ -1,6 +1,8 @@
 import Emitter from "./classes/Emitter";
 import Stament from "./classes/Stament";
 import Store from "./classes/Store";
+import Vector from "./classes/Vector";
+import Animate, { AnimateConfig } from "./classes/Animate";
 import { Touch } from "./utils";
 
 interface CallbackColor<T> {
@@ -239,8 +241,49 @@ declare class MyElement {
   shadowColor: CallbackColor<string>;
 }
 
+declare class EAnimate extends MyElement {
+  __animate: typeof Animate | null;
+  get animate(): typeof Animate | null;
+  get $(): typeof Emitter;
+  get type(): string;
+  get xFrom(): number;
+  get xTo(): number;
+  get yFrom(): number;
+  get yTo(): number;
+  get zFrom(): number;
+  get zTo(): number;
+  get x(): number;
+  get y(): number;
+  get z(): number;
+  get time(): number;
+  get frames(): number;
+  get frame(): number;
+  set frame(value: number);
+  get running(): boolean;
+  get done(): boolean;
+  constructor(config?: AnimateConfig);
+  config({
+    xFrom,
+    xTo,
+    yFrom,
+    yTo,
+    zFrom,
+    zTo,
+    type,
+    time,
+    fps,
+  }: AnimateConfig): void;
+  set(x?: number, y?: number, z?: number): void;
+  moveTo(x?: number, y?: number, z?: number): void;
+  moveImmediate(x?: number, y?: number, z?: number): void;
+  addFrame(): void;
+  setType(type: number): void;
+  setTime(time: number): void;
+}
+
 declare class fCanvas {
   static Element: typeof MyElement;
+  static EAnimate: typeof EAnimate;
   static constants: {
     angleMode: {
       0: string;
@@ -475,7 +518,7 @@ declare class fCanvas {
     off: () => void;
   };
 }
-export { Emitter, Stament, Store };
+export { Emitter, Stament, Store, Vector, Animate };
 export declare function setup(callback: {
   (): Promise<void> | void;
 }): Promise<void>;
@@ -541,4 +584,3 @@ export declare function touchEnded(
 };
 export default fCanvas;
 export * from "./methods/index";
-export { default as Vector } from "./classes/Vector";
