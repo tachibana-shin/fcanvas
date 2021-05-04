@@ -1,8 +1,8 @@
 {
   "name": "fcanvas",
-  "version": "0.0.4-b14",
+  "version": "0.0.4-b15",
   "main": "fcanvas.js",
-  "module": "fcanvas.esm.js",
+  "module": "fcanvas.node.esm.js",
   "unpkg": "fcanvas.esm.js",
   "types": "typings/index.d.ts",
   "license": "MIT",
@@ -39,8 +39,9 @@
   "author": "Nguyen Thanh",
   "repository": {
     "type": "git",
-    "url": "git://github.com/nguyenthanh1995/mycanvas.git"
+    "url": "git://github.com/nguyenthanh1995/fcanvas.git"
   },
+  "homepage": "https://nguyenthanh1995.github.io/fcanvas",
   "keywords": [
     "fCanvas"
   ]
