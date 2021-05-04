@@ -1,13 +1,14 @@
 {
   "name": "fcanvas",
-  "version": "0.0.4-b11",
+  "version": "0.0.4-b12",
   "main": "fcanvas.js",
   "module": "fcanvas.esm.js",
   "unpkg": "fcanvas.esm.js",
-  "typings": "types/index.d.ts",
+  "types": "typings/index.d.ts",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.0.0-rc.1",
+    "@babel/plugin-proposal-object-rest-spread": "^7.13.8",
     "@babel/plugin-proposal-optional-chaining": "^7.13.12",
     "@babel/plugin-transform-runtime": "^7.13.15",
     "@babel/preset-env": "^7.0.0-rc.1",
@@ -30,7 +31,8 @@
     "dev": "node node_modules/webpack/bin/webpack.js --mode development --watch",
     "build:webpack": "node node_modules/webpack/bin/webpack.js --mode production --progress --hide-module",
     "build:rollup": "node build.js",
-    "build": "node node_modules/webpack/bin/webpack.js --mode production --progress --hide-module; node build.js"
+    "build": "tsc && npm run build:webpack && npm run build:rollup",
+    "prepare": "npm run build"
   },
   "author": "Nguyen Thanh",
   "repository": {
