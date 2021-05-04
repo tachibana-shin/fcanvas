@@ -96,6 +96,10 @@ function reactiveDefine(
 class Store {
   [propName: string]: any;
   private __emitter: Emitter = new Emitter();
+  /**
+   * @param {Object} store?
+   * @return {any}
+   */
   constructor(store?: Object) {
     for (const key in store) {
       this[key] = store[key];
@@ -105,6 +109,12 @@ class Store {
     });
   }
 
+  /**
+   * @param {Store|Object} object
+   * @param {string} key
+   * @param {any} value
+   * @return {void}
+   */
   $set(object: Store | Object, key: string, value: any): void {
     object[key] = value;
     reactiveDefine(
@@ -115,6 +125,11 @@ class Store {
     );
     object[key] = value;
   }
+  /**
+   * @param {string} key
+   * @param {CallbackEvent} callback
+   * @return {any}
+   */
   $watch(key: string, callback: CallbackEvent) {
     return this.__emitter.on(key, callback);
   }

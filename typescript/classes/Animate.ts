@@ -69,6 +69,15 @@ function getAnimate(
       return start + (distance / steps) * currentProgress;
   }
 }
+/**
+ * @param {AnimateType} type
+ * @param {number} start
+ * @param {number} stop
+ * @param {number} frame
+ * @param {number} frames
+ * @param {number=3} power
+ * @return {number}
+ */
 
 function getValueInFrame(
   type: AnimateType,
@@ -84,6 +93,12 @@ function getValueInFrame(
 }
 
 class Animate {
+  /**
+   * Get frames from time
+   * @param {number} time
+   * @param {number=1000/60} fps
+   * @return {number}
+   */
   static getFrames(time: number, fps: number = 1000 / 60): number {
     return time / fps; /// time * 1 / fps
   }
@@ -102,6 +117,9 @@ class Animate {
   public zFrom: number = 0;
   public zTo: number = 0;
 
+  /**
+   * @return {number}
+   */
   get x(): number {
     return getValueInFrame(
       this.type,
@@ -111,6 +129,9 @@ class Animate {
       this.frames
     );
   }
+  /**
+   * @return {number}
+   */
   get y(): number {
     return getValueInFrame(
       this.type,
@@ -120,6 +141,9 @@ class Animate {
       this.frames
     );
   }
+  /**
+   * @return {number}
+   */
   get z(): number {
     return getValueInFrame(
       this.type,
@@ -130,29 +154,62 @@ class Animate {
     );
   }
 
+  /**
+   * @return {number}
+   */
   get frames(): number {
     return Animate.getFrames(this.time, this.fps);
   }
+  /**
+   * @return {number}
+   */
   get frame(): number {
     return this._frame;
   }
+  /**
+   * @param {number} value
+   * @return {any}
+   */
   set frame(value: number) {
     this._frame = constrain(value, 0, this.frames);
     if (this._frame === this.frames) {
       this.$.emit("done");
     }
   }
+  /**
+   * @return {boolean}
+   */
   get running(): boolean {
     return this.frame < this.frames;
   }
+  /**
+   * @return {boolean}
+   */
   get done(): boolean {
     return this.frame === this.frames;
   }
 
+  /**
+   * @param {AnimateConfig={time:0}} config
+   * @return {any}
+   */
   constructor(config: AnimateConfig = { time: 0 }) {
     this.config(config);
   }
 
+  /**
+   * @param {any} {xFrom=0
+   * @param {any} xTo=0
+   * @param {any} yFrom=0
+   * @param {any} yTo=0
+   * @param {any} zFrom=0
+   * @param {any} zTo=0
+   * @param {any} type="linear"
+   * @param {any} time
+   * @param {any} fps=1000/60
+   * @param {AnimateConfig} }
+   * @return {void}
+   */
   config({
     xFrom = 0,
     xTo = 0,
@@ -177,35 +234,76 @@ class Animate {
     this.time = time;
     this.fps = fps;
   }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {void}
+   */
   set(x?: number, y?: number, z?: number): void {
     [this.xFrom, this.yFrom, this.zFrom] = [x || 0, y || 0, z || 0];
   }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {void}
+   */
   move(x?: number, y?: number, z?: number): void {
     this.frame = 1;
     [this.xTo, this.yTo, this.zTo] = [x || 0, y || 0, z || 0];
   }
+  
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {Promise<void>}
+   */
   moveAsync(x?: number, y?: number, z?: number): Promise<void> {
     this.move(x, y, z);
     return new Promise((resolve): void => {
       this.$.once("done", () => resolve());
     });
   }
+  /**
+   * @returns void
+   */
   addFrame(): void {
     this.frame++;
   }
+  /**
+   * @param  {AnimateType} type
+   * @returns void
+   */
   setType(type: AnimateType): void {
     this.type = type;
   }
+  /**
+   * @returns AnimateType
+   */
   getType(): AnimateType {
     return this.type;
   }
+  /**
+   * @param  {number} time
+   * @returns void
+   */
   setTime(time: number): void {
     this.time = time;
   }
+  /**
+   * @returns number
+   */
   getTime(): number {
     return this.time;
   }
-
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {void}
+   */
   moveImmediate(x?: number, y?: number, z?: number): void {
     [this.xFrom, this.yFrom, this.zFrom] = [this.x, this.y, this.z];
     this.move(x, y, z);

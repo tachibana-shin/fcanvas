@@ -1,3 +1,7 @@
+/**
+ * @param {any} e
+ * @return {any}
+ */
 export const requestAnimationFrame = window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     function (e) {
@@ -17,6 +21,10 @@ try {
 }
 catch (e) { }
 export const passive = supportPassive;
+/**
+ * @param {string} str
+ * @return {string}
+ */
 export function camelCase(str) {
     return str
         .replace(/^-ms-/, "ms-")
@@ -34,6 +42,10 @@ export const windowSize = {
             document.body.clientHeight,
     },
 };
+/**
+ * @param {string|number} string
+ * @return {string}
+ */
 export function convertToPx(string) {
     if ((string + "").match(/\w/)) {
         return string;
@@ -42,6 +54,10 @@ export function convertToPx(string) {
         return string + "px";
     }
 }
+/**
+ * @param {string|null} string
+ * @return {string}
+ */
 export function trim(string) {
     if (string == null) {
         return "null";
@@ -50,6 +66,10 @@ export function trim(string) {
         return string.replace(/^\s+|\s+$/g, "");
     }
 }
+/**
+ * @param {string} font
+ * @return {InfoFont}
+ */
 export function fontToArray(font) {
     const _font = font.split(" ");
     if (_font.length === 2) {
@@ -65,6 +85,12 @@ export function fontToArray(font) {
         weight: trim(_font[0]),
     };
 }
+/**
+ * @param {string|number} string
+ * @param {number} fi
+ * @param {number} fontSize?
+ * @return {number}
+ */
 export function AutoToPx(string, fi, fontSize) {
     if (typeof string === "string") {
         string = trim(string);
@@ -99,6 +125,11 @@ export function AutoToPx(string, fi, fontSize) {
         return parseFloat(string + "");
     }
 }
+/**
+ * @param {HTMLCanvasElement} element
+ * @param {any[]} touches
+ * @return {InfoTouch[]}
+ */
 export function getTouchInfo(element, touches) {
     const rect = element.getBoundingClientRect();
     const sx = element.scrollWidth / element.width || 1;
@@ -117,6 +148,9 @@ export function getTouchInfo(element, touches) {
     }
     return _touches;
 }
+/**
+ * @return {boolean}
+ */
 export function isMobile() {
     /// code from https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
     let check = false;

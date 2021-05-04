@@ -1,3 +1,7 @@
+/**
+ * @param {any} e
+ * @return {any}
+ */
 const requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || function (e) {
   return setTimeout(e, 100 / 6);
 };
@@ -23,6 +27,11 @@ const windowSize = {
     get: () => window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
   }
 };
+/**
+ * @param {string|null} string
+ * @return {string}
+ */
+
 function trim(string) {
   if (string == null) {
     return "null";
@@ -30,6 +39,11 @@ function trim(string) {
     return string.replace(/^\s+|\s+$/g, "");
   }
 }
+/**
+ * @param {string} font
+ * @return {InfoFont}
+ */
+
 function fontToArray(font) {
   const _font = font.split(" ");
 
@@ -47,6 +61,13 @@ function fontToArray(font) {
     weight: trim(_font[0])
   };
 }
+/**
+ * @param {string|number} string
+ * @param {number} fi
+ * @param {number} fontSize?
+ * @return {number}
+ */
+
 function AutoToPx(string, fi, fontSize) {
   if (typeof string === "string") {
     string = trim(string);
@@ -85,6 +106,12 @@ function AutoToPx(string, fi, fontSize) {
     return parseFloat(string + "");
   }
 }
+/**
+ * @param {HTMLCanvasElement} element
+ * @param {any[]} touches
+ * @return {InfoTouch[]}
+ */
+
 function getTouchInfo(element, touches) {
   const rect = element.getBoundingClientRect();
   const sx = element.scrollWidth / element.width || 1;
@@ -108,6 +135,10 @@ function getTouchInfo(element, touches) {
 
   return _touches;
 }
+/**
+ * @return {boolean}
+ */
+
 function isMobile() {
   /// code from https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
   let check = false;
@@ -123,6 +154,11 @@ class Emitter {
   constructor() {
     this.__events = {};
   }
+  /**
+   * @param {any} typeofcallback==="function"
+   * @return {any}
+   */
+
 
   on(name, callback) {
     if (typeof callback === "function") {
@@ -137,6 +173,12 @@ class Emitter {
       this.off(name, callback);
     };
   }
+  /**
+   * @param {string} name
+   * @param {CallbackEvent} callback?
+   * @return {void}
+   */
+
 
   off(name, callback) {
     if (typeof callback === "function") {
@@ -148,7 +190,25 @@ class Emitter {
     } else {
       delete this.__events[name];
     }
+    /**
+     * @param {string} name
+     * @param {any[]} ...payload
+     * @return {void}
+     */
+
+    /**
+     * @param {string} name
+     * @param {any[]} ...payload
+     * @return {void}
+     */
+
   }
+  /**
+   * @param {string} name
+   * @param {any[]} ...payload
+   * @return {void}
+   */
+
 
   emit(name, ...payload) {
     if (name in this.__events) {
@@ -157,6 +217,12 @@ class Emitter {
       }
     }
   }
+  /**
+   * @param {string} name
+   * @param {CallbackEvent} callback
+   * @return {void}
+   */
+
 
   once(name, callback) {
     const handler = (...args) => {
@@ -168,39 +234,6 @@ class Emitter {
   }
 
 }
-
-function unwrapExports (x) {
-	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-}
-
-function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}
-
-var defineProperty = createCommonjsModule(function (module) {
-  function _defineProperty(obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
-
-    return obj;
-  }
-
-  module.exports = _defineProperty;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-var _defineProperty = unwrapExports(defineProperty);
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function reactiveDefine(value, callback, parent = []) {
   if (value !== null && typeof value === "object") {
@@ -247,7 +280,8 @@ function reactiveDefine(value, callback, parent = []) {
           writable: true,
           enumerable: false,
           configurable: true,
-          value: _objectSpread({}, value)
+          value: { ...value
+          }
         });
         Object.defineProperty(value, "__reactive", {
           writable: false,
@@ -256,7 +290,8 @@ function reactiveDefine(value, callback, parent = []) {
           value: true
         });
       } else {
-        value.__store = _objectSpread({}, value);
+        value.__store = { ...value
+        };
       }
 
       for (const key in value) {
@@ -290,6 +325,10 @@ function reactiveDefine(value, callback, parent = []) {
 }
 
 class Store {
+  /**
+   * @param {Object} store?
+   * @return {any}
+   */
   constructor(store) {
     this.__emitter = new Emitter();
 
@@ -301,6 +340,13 @@ class Store {
       this.__emitter.emit(paths.join("."), oldVal, newVal);
     });
   }
+  /**
+   * @param {Store|Object} object
+   * @param {string} key
+   * @param {any} value
+   * @return {void}
+   */
+
 
   $set(object, key, value) {
     object[key] = value;
@@ -309,6 +355,12 @@ class Store {
     });
     object[key] = value;
   }
+  /**
+   * @param {string} key
+   * @param {CallbackEvent} callback
+   * @return {any}
+   */
+
 
   $watch(key, callback) {
     return this.__emitter.on(key, callback);
@@ -320,6 +372,12 @@ class Stament {
   constructor() {
     this.__store = new Store();
   }
+  /**
+   * @param {string} name
+   * @param {CallbackEvent} callback
+   * @return {void}
+   */
+
 
   on(name, callback) {
     if (this.__store[name]) {
@@ -331,6 +389,11 @@ class Stament {
       });
     }
   }
+  /**
+   * @param {string} name
+   * @return {void}
+   */
+
 
   emit(name) {
     this.__store.$set(this.__store, name, true);
@@ -367,9 +430,24 @@ function calculateRemainder3D(vector, xComponent, yComponent, zComponent) {
 }
 
 class Vector {
+  /**
+   * @param {number=0} x
+   * @param {number=0} y
+   * @param {number=0} z
+   * @return {any}
+   */
   constructor(x = 0, y = 0, z = 0) {
     [this.x, this.y, this.z] = [x, y, z];
   }
+  /**
+   * @param {Vector|[number?} x?
+   * @param {any} number?
+   * @param {any} number?]|number
+   * @param {number} y?
+   * @param {number} z?
+   * @return {this}
+   */
+
 
   set(x, y, z) {
     if (x instanceof Vector) {
@@ -391,10 +469,23 @@ class Vector {
     this.z = z || 0;
     return this;
   }
+  /**
+   * @return {Vector}
+   */
+
 
   copy() {
     return new Vector(this.x, this.y, this.z);
   }
+  /**
+   * @param {Vector|[number?} x?
+   * @param {any} number?
+   * @param {any} number?]|number
+   * @param {number} y?
+   * @param {number} z?
+   * @return {this}
+   */
+
 
   add(x, y, z) {
     if (x instanceof Vector) {
@@ -416,6 +507,15 @@ class Vector {
     this.z += z || 0;
     return this;
   }
+  /**
+   * @param {Vector|[number} x?
+   * @param {any} number
+   * @param {any} number?]|number
+   * @param {number} y?
+   * @param {number} z?
+   * @return {any}
+   */
+
 
   rem(x, y, z) {
     if (x instanceof Vector) {
@@ -466,6 +566,15 @@ class Vector {
       }
     }
   }
+  /**
+   * @param {Vector|[number?} x?
+   * @param {any} number?
+   * @param {any} number?]|number
+   * @param {number} y?
+   * @param {number} z?
+   * @return {this}
+   */
+
 
   sub(x, y, z) {
     if (x instanceof Vector) {
@@ -487,6 +596,11 @@ class Vector {
     this.z -= z || 0;
     return this;
   }
+  /**
+   * @param {number} n
+   * @return {this}
+   */
+
 
   mult(n) {
     this.x *= n;
@@ -494,6 +608,11 @@ class Vector {
     this.z *= n;
     return this;
   }
+  /**
+   * @param {number} n
+   * @return {this}
+   */
+
 
   div(n) {
     if (n === 0) {
@@ -506,10 +625,18 @@ class Vector {
     this.z /= n;
     return this;
   }
+  /**
+   * @return {number}
+   */
+
 
   mag() {
     return Math.sqrt(this.magSq());
   }
+  /**
+   * @return {number}
+   */
+
 
   magSq() {
     const {
@@ -519,6 +646,13 @@ class Vector {
     } = this;
     return x * x + y * y + z * z;
   }
+  /**
+   * @param {Vector|number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {number}
+   */
+
 
   dot(x, y, z) {
     if (x instanceof Vector) {
@@ -527,6 +661,11 @@ class Vector {
 
     return this.x * (x || 0) + this.y * (y || 0) + this.z * (z || 0);
   }
+  /**
+   * @param {Vector|{x:number;y:number;z:number}} v
+   * @return {Vector}
+   */
+
 
   cross(v) {
     var x = this.y * v.z - this.z * v.y;
@@ -534,12 +673,21 @@ class Vector {
     var z = this.x * v.y - this.y * v.x;
     return new Vector(x, y, z);
   }
+  /**
+   * @return {this}
+   */
+
 
   normalize() {
     const len = this.mag();
     if (len !== 0) this.mult(1 / len);
     return this;
   }
+  /**
+   * @param {number} max
+   * @return {this}
+   */
+
 
   limit(max) {
     const mSq = this.magSq();
@@ -551,14 +699,28 @@ class Vector {
 
     return this;
   }
+  /**
+   * @param {number} n
+   * @return {this}
+   */
+
 
   setMag(n) {
     return this.normalize().mult(n);
   }
+  /**
+   * @return {number}
+   */
+
 
   heading() {
     return Math.atan2(this.y, this.x);
   }
+  /**
+   * @param {number} a
+   * @return {this}
+   */
+
 
   rotate(a) {
     var newHeading = this.heading() + a;
@@ -567,6 +729,11 @@ class Vector {
     this.y = Math.sin(newHeading) * mag;
     return this;
   }
+  /**
+   * @param {Vector} v
+   * @return {number}
+   */
+
 
   angleBetween(v) {
     var dotmagmag = this.dot(v) / (this.mag() * v.mag());
@@ -575,6 +742,14 @@ class Vector {
     angle = angle * Math.sign(this.cross(v).z || 1);
     return angle;
   }
+  /**
+   * @param {Vector|number} x
+   * @param {number} y?
+   * @param {number} z?
+   * @param {number=1} amt
+   * @return {this}
+   */
+
 
   lerp(x, y, z, amt = 1) {
     if (x instanceof Vector) {
@@ -586,15 +761,33 @@ class Vector {
     this.z += (z || 0 - this.z) * amt || 0;
     return this;
   }
+  /**
+   * @param {Vector} surfaceNormal
+   * @return {this}
+   */
+
 
   reflect(surfaceNormal) {
     surfaceNormal.normalize();
     return this.sub(surfaceNormal.mult(2 * this.dot(surfaceNormal)));
   }
+  /**
+   * @return {[number, number, number]}
+   */
+
 
   array() {
     return [this.x || 0, this.y || 0, this.z || 0];
   }
+  /**
+   * @param {Vector|[number} x
+   * @param {any} number
+   * @param {any} number]|number
+   * @param {number} y?
+   * @param {number} z?
+   * @return {boolean}
+   */
+
 
   equals(x, y, z) {
     var a, b, c;
@@ -615,6 +808,10 @@ class Vector {
 
     return this.x === a && this.y === b && this.z === c;
   }
+  /**
+   * @return {string}
+   */
+
 
   toString() {
     return "Vector: [" + this.array().join(", ") + "]";
@@ -622,21 +819,51 @@ class Vector {
 
 }
 
+/**
+ * @param {Circle} circle1
+ * @param {Circle} circle2
+ * @return {boolean}
+ */
 function CircleImpact(circle1, circle2) {
   return (circle1.x - circle2.x) ** 2 + (circle1.y - circle2.y) ** 2 < (circle1.radius + circle2.radius) ** 2;
 }
+/**
+ * @param {Circle} circle
+ * @param {number} x
+ * @param {number} y
+ * @return {boolean}
+ */
+
 function CircleImpactPoint(circle, x, y) {
   return (x - circle.x) ** 2 + (y - circle.y) ** 2 < circle.radius ** 2;
 }
+/**
+ * @param {Circle} circle
+ * @param {Rect} rect
+ * @return {boolean}
+ */
+
 function CircleImpactRect(circle, rect) {
   const x = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
   const y = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
   const distance = (x - circle.x) * (x - circle.x) + (y - circle.y) * (y - circle.y);
   return distance < circle.radius ** 2;
 }
+/**
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ * @return {number}
+ */
+
 function constrain(value, min, max) {
   return Math.min(Math.max(min, value), max);
 }
+/**
+ * @param {string} src
+ * @return {Promise<HTMLImageElement>}
+ */
+
 function loadImage(src) {
   const img = new Image();
   img.src = src;
@@ -655,6 +882,15 @@ function loadImage(src) {
     img.addEventListener("error", error);
   });
 }
+/**
+ * @param {number} value
+ * @param {number} start
+ * @param {number} stop
+ * @param {number} min
+ * @param {number} max
+ * @return {number}
+ */
+
 function map(value, start, stop, min, max) {
   return (value - start) * (max - min) / (stop - start) + min;
 }
@@ -672,6 +908,13 @@ function random(...args) {
     return args[0] + Math.random() * (args[1] - args[0]);
   }
 }
+/**
+ * @param {any} start
+ * @param {any} stop
+ * @param {number} step
+ * @return {any}
+ */
+
 
 function range(start, stop, step) {
   step = step || 1;
@@ -705,15 +948,40 @@ function range(start, stop, step) {
 
   return arr;
 }
+/**
+ * @param {Rect} rect1
+ * @param {Rect} rect2
+ * @return {boolean}
+ */
+
 function RectImpact(rect1, rect2) {
   return rect1.x <= rect2.x + rect2.width && rect1.x + rect1.width >= rect2.x && rect1.y <= rect2.y + rect2.height && rect1.y + rect1.height >= rect2.y;
 }
+/**
+ * @param {Rect} rect
+ * @param {number} x
+ * @param {number} y
+ * @return {boolean}
+ */
+
 function RectImpactPoint(rect, x, y) {
   return rect.x < x && rect.x + rect.width > x && rect.y < y && rect.y + rect.height > y;
 }
+/**
+ * @param {number} start
+ * @param {number} stop
+ * @param {number} amt
+ * @return {number}
+ */
+
 function lerp(start, stop, amt) {
   return amt * (stop - start) + start;
 }
+/**
+ * @param {number[]} ...args
+ * @return {number}
+ */
+
 const hypot = typeof Math.hypot === "function" ? Math.hypot : (...args) => {
   const len = args.length;
   let i = 0,
@@ -769,6 +1037,16 @@ function getAnimate(type, currentProgress, start, distance, steps, power) {
       return start + distance / steps * currentProgress;
   }
 }
+/**
+ * @param {AnimateType} type
+ * @param {number} start
+ * @param {number} stop
+ * @param {number} frame
+ * @param {number} frames
+ * @param {number=3} power
+ * @return {number}
+ */
+
 
 function getValueInFrame(type, start, stop, frame, frames, power = 3) {
   const distance = stop - start;
@@ -776,6 +1054,10 @@ function getValueInFrame(type, start, stop, frame, frames, power = 3) {
 }
 
 class Animate {
+  /**
+   * @param {AnimateConfig={time:0}} config
+   * @return {any}
+   */
   constructor(config = {
     time: 0
   }) {
@@ -792,30 +1074,62 @@ class Animate {
     this.zTo = 0;
     this.config(config);
   }
+  /**
+   * Get frames from time
+   * @param {number} time
+   * @param {number=1000/60} fps
+   * @return {number}
+   */
+
 
   static getFrames(time, fps = 1000 / 60) {
     return time / fps; /// time * 1 / fps
   }
+  /**
+   * @return {number}
+   */
+
 
   get x() {
     return getValueInFrame(this.type, this.xFrom, this.xTo, this.frame, this.frames);
   }
+  /**
+   * @return {number}
+   */
+
 
   get y() {
     return getValueInFrame(this.type, this.yFrom, this.yTo, this.frame, this.frames);
   }
+  /**
+   * @return {number}
+   */
+
 
   get z() {
     return getValueInFrame(this.type, this.zFrom, this.zTo, this.frame, this.frames);
   }
+  /**
+   * @return {number}
+   */
+
 
   get frames() {
     return Animate.getFrames(this.time, this.fps);
   }
+  /**
+   * @return {number}
+   */
+
 
   get frame() {
     return this._frame;
   }
+  /**
+   * @param {number} value
+   * @return {any}
+   */
+
 
   set frame(value) {
     this._frame = constrain(value, 0, this.frames);
@@ -824,14 +1138,36 @@ class Animate {
       this.$.emit("done");
     }
   }
+  /**
+   * @return {boolean}
+   */
+
 
   get running() {
     return this.frame < this.frames;
   }
+  /**
+   * @return {boolean}
+   */
+
 
   get done() {
     return this.frame === this.frames;
   }
+  /**
+   * @param {any} {xFrom=0
+   * @param {any} xTo=0
+   * @param {any} yFrom=0
+   * @param {any} yTo=0
+   * @param {any} zFrom=0
+   * @param {any} zTo=0
+   * @param {any} type="linear"
+   * @param {any} time
+   * @param {any} fps=1000/60
+   * @param {AnimateConfig} }
+   * @return {void}
+   */
+
 
   config({
     xFrom = 0,
@@ -849,15 +1185,36 @@ class Animate {
     this.time = time;
     this.fps = fps;
   }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {void}
+   */
+
 
   set(x, y, z) {
     [this.xFrom, this.yFrom, this.zFrom] = [x || 0, y || 0, z || 0];
   }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {void}
+   */
+
 
   move(x, y, z) {
     this.frame = 1;
     [this.xTo, this.yTo, this.zTo] = [x || 0, y || 0, z || 0];
   }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {Promise<void>}
+   */
+
 
   moveAsync(x, y, z) {
     this.move(x, y, z);
@@ -865,26 +1222,55 @@ class Animate {
       this.$.once("done", () => resolve());
     });
   }
+  /**
+   * @returns void
+   */
+
 
   addFrame() {
     this.frame++;
   }
+  /**
+   * @param  {AnimateType} type
+   * @returns void
+   */
+
 
   setType(type) {
     this.type = type;
   }
+  /**
+   * @returns AnimateType
+   */
+
 
   getType() {
     return this.type;
   }
+  /**
+   * @param  {number} time
+   * @returns void
+   */
+
 
   setTime(time) {
     this.time = time;
   }
+  /**
+   * @returns number
+   */
+
 
   getTime() {
     return this.time;
   }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {void}
+   */
+
 
   moveImmediate(x, y, z) {
     [this.xFrom, this.yFrom, this.zFrom] = [this.x, this.y, this.z];
@@ -896,6 +1282,10 @@ class Animate {
 Animate.getValueInFrame = getValueInFrame;
 
 class MyElement {
+  /**
+   * @param {fCanvas} canvas?
+   * @return {any}
+   */
   constructor(canvas) {
     this._els = [];
     this._idActiveNow = -1;
@@ -907,6 +1297,10 @@ class MyElement {
       this._els.push(noopFCanvas);
     }
   }
+  /**
+   * @return {HTMLCanvasElement}
+   */
+
 
   get $el() {
     return this.$parent.$el;
@@ -930,6 +1324,11 @@ class MyElement {
 
     this._idActiveNow = -1;
   }
+  /**
+   * @param {MyElement} element
+   * @return {void}
+   */
+
 
   addQueue(element) {
     if (element instanceof MyElement) {
@@ -938,6 +1337,11 @@ class MyElement {
       console.error(`fCanvas: the parameter passed to MyElement.addQueue() must be a fCanvas object.`);
     }
   }
+  /**
+   * @param {number} index
+   * @return {MyElement | undefined}
+   */
+
 
   getQueue(index) {
     if (index < 0) {
@@ -946,14 +1350,28 @@ class MyElement {
 
     return this._queue[index];
   }
+  /**
+   * @param {MyElement} element
+   * @return {void}
+   */
+
 
   run(element) {
     this.$parent.run(element);
   }
+  /**
+   * @param {number} id
+   * @return {boolean}
+   */
+
 
   has(id) {
     return this._els.some(item => item.id === id);
   }
+  /**
+   * @return {fCanvas}
+   */
+
 
   get $parent() {
     const canvas = this._idActiveNow === null ? this._els[this._els.length - 1] : this._els.find(item => item.id === this._idActiveNow);
@@ -965,6 +1383,11 @@ class MyElement {
       return this._els[0];
     }
   }
+  /**
+   * @param {fCanvas} canvas
+   * @return {void}
+   */
+
 
   bind(canvas) {
     if (canvas instanceof fCanvas) {
@@ -975,6 +1398,10 @@ class MyElement {
       console.error("fCanvas: the parameter passed to MyElement.bind() must be a fCanvas object.");
     }
   }
+  /**
+   * @return {CanvasRenderingContext2D}
+   */
+
 
   get $context2d() {
     return this.$parent.$context2d;
@@ -995,58 +1422,122 @@ class MyElement {
   _figureOffset(x, y, width, height) {
     return this.$parent._figureOffset(x, y, width, height);
   }
+  /**
+   * @param {number} angle
+   * @return {number}
+   */
+
 
   sin(angle) {
     return this.$parent.sin(angle);
   }
+  /**
+   * @param {number} sin
+   * @return {number}
+   */
+
 
   asin(sin) {
     return this.$parent.asin(sin);
   }
+  /**
+   * @param {number} angle
+   * @return {number}
+   */
+
 
   cos(angle) {
     return this.$parent.cos(angle);
   }
+  /**
+   * @param {number} cos
+   * @return {number}
+   */
+
 
   acos(cos) {
     return this.$parent.asin(cos);
   }
+  /**
+   * @param {number} angle
+   * @return {number}
+   */
+
 
   tan(angle) {
     return this.$parent.tan(angle);
   }
+  /**
+   * @param {number} tan
+   * @return {number}
+   */
+
 
   atan(tan) {
     return this.$parent.atan(tan);
   }
+  /**
+   * @param {number} y
+   * @param {number} x
+   * @return {number}
+   */
+
 
   atan2(y, x) {
     return this.$parent.atan2(y, x);
   }
+  /**
+   * @return {number | null}
+   */
+
 
   get mouseX() {
     return this.$parent.mouseX;
   }
+  /**
+   * @return {number | null}
+   */
+
 
   get mouseY() {
     return this.$parent.mouseY;
   }
+  /**
+   * @return {boolean}
+   */
+
 
   get interact() {
     return this.$parent.interact;
   }
+  /**
+   * @return {number}
+   */
+
 
   get width() {
     return this.$parent.width;
   }
+  /**
+   * @return {number}
+   */
+
 
   get height() {
     return this.$parent.height;
   }
+  /**
+   * @return {number}
+   */
+
 
   get windowWidth() {
     return this.$parent.windowWidth;
   }
+  /**
+   * @return {number}
+   */
+
 
   get windowHeight() {
     return this.$parent.windowHeight;
@@ -1056,15 +1547,32 @@ class MyElement {
     this.$context2d.fillStyle = this._toRgb(args);
     this.$context2d.fill();
   }
+  /**
+   * @param  {number} red
+   * @param  {number} green
+   * @param  {number} blue
+   * @param  {number} alpha
+   * @returns void
+   */
+
 
   stroke(...args) {
     this.$context2d.strokeStyle = this._toRgb(args);
     this.$context2d.stroke();
   }
+  /**
+   * @return {void}
+   */
+
 
   noFill() {
     this.fill(0, 0, 0, 0);
   }
+  /**
+   * @param {number} value?
+   * @return {number|void}
+   */
+
 
   lineWidth(value) {
     if (value === undefined) {
@@ -1073,6 +1581,11 @@ class MyElement {
       this.$context2d.lineWidth = value;
     }
   }
+  /**
+   * @param {number} value?
+   * @return {number|void}
+   */
+
 
   miterLimit(value) {
     if (value === undefined) {
@@ -1085,6 +1598,12 @@ class MyElement {
       this.$context2d.miterLimit = value;
     }
   }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @return {void|{ x: number, y: number }}
+   */
+
 
   shadowOffset(x, y) {
     if (arguments.length === 0) {
@@ -1096,32 +1615,72 @@ class MyElement {
       [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [x || 0, y || 0];
     }
   }
+  /**
+   * @param {string} text
+   * @return {number}
+   */
+
 
   measureText(text) {
     return this.$context2d.measureText(text).width;
   }
+  /**
+   * @return {void}
+   */
+
 
   begin() {
     this.$context2d.beginPath();
   }
+  /**
+   * @return {void}
+   */
+
 
   close() {
     this.$context2d.closePath();
   }
+  /**
+   * @return {void}
+   */
+
 
   save() {
     this.$parent.save();
   }
+  /**
+   * @return {void}
+   */
+
 
   restore() {
     this.$parent.restore();
   }
+  /**
+   * @param  {number} x
+   * @param  {number} y
+   * @param  {number} radius
+   * @param  {number} astart
+   * @param  {number} astop
+   * @param  {boolean} reverse?
+   * @returns void
+   */
+
 
   arc(x, y, radius, astart, astop, reverse) {
     this.begin();
     this.$context2d.arc(x, y, radius, this._toRadius(astart) - Math.PI / 2, this._toRadius(astop) - Math.PI / 2, reverse);
     this.close();
   }
+  /**
+   * @param  {number} x
+   * @param  {number} y
+   * @param  {number} radius
+   * @param  {number} astart
+   * @param  {number} astop
+   * @param  {boolean} reverse?
+   */
+
 
   pie(x, y, radius, astart, astop, reverse) {
     this.begin();
@@ -1130,25 +1689,67 @@ class MyElement {
     this.to(x, y);
     this.close();
   }
+  /**
+   * @param  {number} x1
+   * @param  {number} y1
+   * @param  {number} x2
+   * @param  {number} y2
+   * @returns void
+   */
+
 
   line(x1, y1, x2, y2) {
     this.move(x1, y1);
     this.to(x2, y2);
   }
+  /**
+   * @param  {number} x
+   * @param  {number} y
+   * @param  {number} radius1
+   * @param  {number} radius2
+   * @param  {number} astart
+   * @param  {number} astop
+   * @param  {number} reverse
+   * @returns void
+   */
+
 
   ellipse(x, y, radius1, radius2, astart, astop, reverse) {
     this.begin();
     this.$context2d.ellipse(x, y, radius1, radius2, this._toRadius(astart) - Math.PI / 2, this._toRadius(astop), reverse);
     this.close();
   }
+  /**
+   * @param  {number} x
+   * @param  {number} y
+   * @param  {number} radius
+   * @returns void
+   */
+
 
   circle(x, y, radius) {
     this.arc(x, y, radius, 0, this.$parent.angleMode() === "degress" ? 360 : Math.PI * 2);
   }
+  /**
+   * @param  {number} x
+   * @param  {number} y
+   * @returns void
+   */
+
 
   point(x, y) {
     this.circle(x, y, 1);
   }
+  /**
+   * @param  {number} x1
+   * @param  {number} y1
+   * @param  {number} x2
+   * @param  {number} y2
+   * @param  {number} x3
+   * @param  {number} y3
+   * @returns void
+   */
+
 
   triange(x1, y1, x2, y2, x3, y3) {
     this.begin();
@@ -1157,15 +1758,23 @@ class MyElement {
     this.to(x3, y3);
     this.close();
   }
+  /**
+   * @param  {CanvasImageSource} image
+   * @param  {number} sx?
+   * @param  {number} sy?
+   * @param  {number} swidth?
+   * @param  {number} sheight?
+   * @param  {number} x
+   * @param  {number} y
+   * @param  {number} width
+   * @param  {number} height
+   * @returns void
+   */
+
 
   drawImage(image, ...args) {
-    if (args.length === 2) {
-      args = this._figureOffset(args[0], args[1], image.width, image.height);
-    } else if (args.length === 6) {
-      [args[5], args[6]] = this._figureOffset(args[0], args[1], args[2], args[3]);
-    }
-
-    this.$context2d.drawImage(image, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+    // @ts-expect-error
+    this.$context2d.drawImage(image, ...args);
   }
 
   rect(x, y, w, h, $1, $2, $3, $4) {
@@ -1186,38 +1795,104 @@ class MyElement {
 
     this.close();
   }
+  /**
+   * @param  {number} cpx
+   * @param  {number} cpy
+   * @param  {number} x
+   * @param  {number} y
+   */
+
 
   quadratic(cpx, cpy, x, y) {
     this.$context2d.quadraticCurveTo(cpx, cpy, x, y);
   }
+  /**
+   * @param {number} cp1x
+   * @param {number} cp1y
+   * @param {number} cp2x
+   * @param {number} cp2y
+   * @param {number} x
+   * @param {number} y
+   * @return {void}
+   */
+
 
   bezier(cp1x, cp1y, cp2x, cp2y, x, y) {
     this.$context2d.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
   }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @return {void}
+   */
+
 
   move(x, y) {
     this.$context2d.moveTo(x, y);
   }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @return {void}
+   */
+
 
   to(x, y) {
     this.$context2d.lineTo(x, y);
   }
+  /**
+   * @param {string} text
+   * @param {number} x
+   * @param {number} y
+   * @param {number} maxWidth?
+   * @return {void}
+   */
+
 
   fillText(text, x, y, maxWidth) {
     this.$context2d.fillText(text, x, y, maxWidth);
   }
+  /**
+   * @param {string} text
+   * @param {number} x
+   * @param {number} y
+   * @param {number} maxWidth?
+   * @return {void}
+   */
+
 
   strokeText(text, x, y, maxWidth) {
     this.$context2d.strokeText(text, x, y, maxWidth);
   }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @return {void}
+   */
+
 
   fillRect(x, y, width, height) {
     this.$context2d.fillRect(x, y, width, height);
   }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @return {void}
+   */
+
 
   strokeRect(x, y, width, height) {
     this.$context2d.strokeRect(x, y, width, height);
   }
+  /**
+   * @param {number} value?
+   * @return {any}
+   */
+
 
   lineDash(value) {
     if (value === undefined) {
@@ -1226,10 +1901,25 @@ class MyElement {
 
     this.$context2d.lineDashOffset = value;
   }
+  /**
+   * @param {number} x1
+   * @param {number} y1
+   * @param {number} x2
+   * @param {number} y2
+   * @param {number} radius
+   * @return {void}
+   */
+
 
   arcTo(x1, y1, x2, y2, radius) {
     this.$context2d.arcTo(x1, y1, x2, y2, radius);
   }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @return {boolean}
+   */
+
 
   isPoint(x, y) {
     return this.$context2d.isPointInPath(x, y);
@@ -1238,10 +1928,29 @@ class MyElement {
   createImageData(width, height) {
     return height ? this.$context2d.createImageData(width, height) : this.$context2d.createImageData(width);
   }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @return {ImageData}
+   */
+
 
   getImageData(x, y, width, height) {
     return this.$context2d.getImageData(x, y, width, height);
   }
+  /**
+   * @param {ImageData} imageData
+   * @param {number} x
+   * @param {number} y
+   * @param {number} xs?
+   * @param {number} ys?
+   * @param {number} width?
+   * @param {number} height?
+   * @return {void}
+   */
+
 
   putImageData(imageData, x, y, xs, ys, width, height) {
     if (arguments.length === 7) {
@@ -1250,18 +1959,47 @@ class MyElement {
       this.$context2d.putImageData(imageData, x, y);
     }
   }
+  /**
+   * @param {CanvasImageSource} image
+   * @param {"repeat"|"repeat-x"|"repeat-y"|"no-repeat"} direction
+   * @return {CanvasPattern | null}
+   */
+
 
   createPattern(image, direction) {
     return this.$context2d.createPattern(image, direction);
   }
+  /**
+   * @param {number} x1
+   * @param {number} y1
+   * @param {number} r1
+   * @param {number} x2
+   * @param {number} y2
+   * @param {number} r2
+   * @return {CanvasGradient}
+   */
+
 
   createRadialGradient(x1, y1, r1, x2, y2, r2) {
     return this.$context2d.createRadialGradient(x1, y1, r1, x2, y2, r2);
   }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @return {CanvasGradient}
+   */
+
 
   createLinearGradient(x, y, width, height) {
     return this.$context2d.createLinearGradient(x, y, width, height);
   }
+  /**
+   * @param {"bevel"|"round"|"miter"} type?
+   * @return {any}
+   */
+
 
   lineJoin(type) {
     if (type !== undefined) {
@@ -1270,6 +2008,11 @@ class MyElement {
       return this.$context2d.lineJoin;
     }
   }
+  /**
+   * @param {"butt"|"round"|"square"} value?
+   * @return {any}
+   */
+
 
   lineCap(value) {
     if (value !== undefined) {
@@ -1278,6 +2021,11 @@ class MyElement {
       return this.$context2d.lineCap;
     }
   }
+  /**
+   * @param {number} opacity?
+   * @return {any}
+   */
+
 
   shadowBlur(opacity) {
     if (opacity === undefined) {
@@ -1286,6 +2034,11 @@ class MyElement {
 
     this.$context2d.shadowBlur = opacity;
   }
+  /**
+   * @param {ParamsToRgb} ...args
+   * @return {void}
+   */
+
 
   shadowColor(...args) {
     this.$context2d.shadowColor = this._toRgb(args);
@@ -1294,6 +2047,10 @@ class MyElement {
 }
 
 class EAnimate extends MyElement {
+  /**
+   * @param {AnimateConfig} animate?
+   * @return {any}
+   */
   constructor(animate) {
     super();
     this.__animate = new Animate();
@@ -1302,98 +2059,210 @@ class EAnimate extends MyElement {
       this.__animate.config(animate);
     }
   }
+  /**
+   * @return {Animate}
+   */
+
 
   get animate() {
     return this.__animate;
   }
+  /**
+   * @return {Emitter}
+   */
+
 
   get $() {
     return this.animate.$;
   }
+  /**
+   * @return {boolean}
+   */
+
 
   get running() {
     return this.animate.running;
   }
+  /**
+   * @return {boolean}
+   */
+
 
   get done() {
     return this.animate.done;
   }
+  /**
+   * @return {number}
+   */
+
 
   get xFrom() {
     return this.animate.xFrom;
   }
+  /**
+   * @return {number}
+   */
+
 
   get yFrom() {
     return this.animate.yFrom;
   }
+  /**
+   * @return {number}
+   */
+
 
   get zFrom() {
     return this.animate.zFrom;
   }
+  /**
+   * @return {number}
+   */
+
 
   get xTo() {
     return this.animate.xTo;
   }
+  /**
+   * @return {number}
+   */
+
 
   get yTo() {
     return this.animate.yTo;
   }
+  /**
+   * @return {number}
+   */
+
 
   get zTo() {
     return this.animate.zTo;
   }
+  /**
+   * @return {number}
+   */
+
 
   get x() {
     return this.animate.x;
   }
+  /**
+   * @return {number}
+   */
+
 
   get y() {
     return this.animate.y;
   }
+  /**
+   * @return {number}
+   */
+
 
   get z() {
     return this.animate.z;
   }
+  /**
+   * @return {number}
+   */
+
 
   get frames() {
     return this.animate.frames;
   }
+  /**
+   * @return {number}
+   */
+
 
   get frame() {
     return this.animate.frame;
   }
+  /**
+   * @param {number} value
+   * @return {any}
+   */
+
 
   set frame(value) {
     this.animate.frame = value;
   }
+  /**
+   * @param {AnimateConfig} animate
+   * @return {void}
+   */
+
 
   config(animate) {
     this.animate.config(animate);
   }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {void}
+   */
+
 
   set(x, y, z) {
     this.animate.set(x, y, z);
   }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {void}
+   */
+
 
   moveTo(x, y, z) {
     this.animate.move(x, y, z);
   }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {Promise<void>}
+   */
+
 
   moveAsync(x, y, z) {
     return this.animate.moveAsync(x, y, z);
   }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {void}
+   */
+
 
   moveImmediate(x, y, z) {
     this.animate.moveImmediate(x, y, z);
   }
+  /**
+   * @return {void}
+   */
+
 
   addFrame() {
     this.animate.addFrame();
   }
+  /**
+   * @param {AnimateType} type
+   * @return {void}
+   */
+
 
   setType(type) {
     this.animate.setType(type);
   }
+  /**
+   * @param {number} time
+   * @return {void}
+   */
+
 
   setTime(time) {
     this.animate.setTime(time);
@@ -1402,6 +2271,10 @@ class EAnimate extends MyElement {
 }
 
 class fCanvas {
+  /**
+   * @param {HTMLCanvasElement} element?
+   * @return {any}
+   */
   constructor(element) {
     this._ENV = {
       angleMode: "degress",
@@ -1458,30 +2331,54 @@ class fCanvas {
     this.$el.addEventListener(isMobile() ? "touchmove" : "mousemove", handlerEvent);
     this.$el.addEventListener(isMobile() ? "touchend" : "mouseout", handlerEvent);
   }
+  /**
+   * @return {number | null}
+   */
+
 
   get mouseX() {
     var _this$touches$;
 
     return ((_this$touches$ = this.touches[0]) === null || _this$touches$ === void 0 ? void 0 : _this$touches$.x) || null;
   }
+  /**
+   * @return {number | null}
+   */
+
 
   get mouseY() {
     var _this$touches$2;
 
     return ((_this$touches$2 = this.touches[0]) === null || _this$touches$2 === void 0 ? void 0 : _this$touches$2.y) || null;
   }
+  /**
+   * @return {boolean}
+   */
+
 
   get interact() {
     return this.touches.length > 0;
   }
+  /**
+   * @return {number}
+   */
+
 
   get id() {
     return this._id;
   }
+  /**
+   * @return {HTMLCanvasElement}
+   */
+
 
   get $el() {
     return this._el;
   }
+  /**
+   * @return {CanvasRenderingContext2D}
+   */
+
 
   get $context2d() {
     if (this._context2dCaching === null) {
@@ -1490,52 +2387,104 @@ class fCanvas {
 
     return this._context2dCaching;
   }
+  /**
+   * @param {HTMLElement=document.body} parent
+   * @return {any}
+   */
+
 
   append(parent = document.body) {
     if (parent.contains(this.$el) === false) {
       parent.appendChild(this.$el);
     }
   }
+  /**
+   * @return {void}
+   */
+
 
   noClear() {
     this._ENV.clear = false;
   }
+  /**
+   * @return {boolean}
+   */
+
 
   get acceptClear() {
     return this._ENV.clear;
   }
+  /**
+   * @param {MyElement} element
+   * @return {void}
+   */
+
 
   run(element) {
     element._run(this);
   }
+  /**
+   * @return {number}
+   */
+
 
   get width() {
     return this.$el.width;
   }
+  /**
+   * @param {number} value
+   * @return {any}
+   */
+
 
   set width(value) {
     this.$el.width = value;
   }
+  /**
+   * @return {number}
+   */
+
 
   get height() {
     return this.$el.height;
   }
+  /**
+   * @param {number} value
+   * @return {any}
+   */
+
 
   set height(value) {
     this.$el.height = value;
   }
+  /**
+   * @return {number}
+   */
+
 
   get windowWidth() {
     return windowSize.windowWidth.get();
   }
+  /**
+   * @return {number}
+   */
+
 
   get windowHeight() {
     return windowSize.windowHeight.get();
   }
+  /**
+   * @return {void}
+   */
+
 
   save() {
     this.$context2d.save();
   }
+  /**
+   * @return {void}
+   */
+
 
   restore() {
     this.$context2d.restore();
@@ -1585,6 +2534,11 @@ class fCanvas {
 
     return [x, y];
   }
+  /**
+   * @param {AngleType} value?
+   * @return {any}
+   */
+
 
   angleMode(value) {
     if (value === undefined) {
@@ -1593,6 +2547,11 @@ class fCanvas {
 
     this._ENV.angleMode = value;
   }
+  /**
+   * @param {AlignType} value?
+   * @return {any}
+   */
+
 
   rectAlign(value) {
     if (value === undefined) {
@@ -1601,6 +2560,11 @@ class fCanvas {
 
     this._ENV.rectAlign = value;
   }
+  /**
+   * @param {ColorType} value?
+   * @return {any}
+   */
+
 
   colorMode(value) {
     if (value === undefined) {
@@ -1609,6 +2573,11 @@ class fCanvas {
 
     this._ENV.colorMode = value;
   }
+  /**
+   * @param {BaselineType} value?
+   * @return {any}
+   */
+
 
   rectBaseline(value) {
     if (value === undefined) {
@@ -1617,6 +2586,11 @@ class fCanvas {
 
     this._ENV.rectBaseline = value;
   }
+  /**
+   * @param {number} value?
+   * @return {any}
+   */
+
 
   fontSize(value) {
     const {
@@ -1632,6 +2606,11 @@ class fCanvas {
       this.font([weight, `${value}px`, family].join(" "));
     }
   }
+  /**
+   * @param {string} value?
+   * @return {any}
+   */
+
 
   fontFamily(value) {
     const {
@@ -1646,6 +2625,11 @@ class fCanvas {
       this.font([weight, `${size}px`, value].join(" "));
     }
   }
+  /**
+   * @param {string} value?
+   * @return {any}
+   */
+
 
   fontWeight(value) {
     const {
@@ -1660,15 +2644,26 @@ class fCanvas {
       this.font([value, `${size}px`, family].join(" "));
     }
   }
+  /**
+   * @param {number=0} x
+   * @param {number=0} y
+   * @param {number=this.width} w
+   * @param {number=this.height} h
+   * @return {void}
+   */
+
 
   clear(x = 0, y = 0, w = this.width, h = this.height) {
     this.$context2d.clearRect(x, y, w, h);
   }
+  /**
+   * @param {ParamsToRgb} ...params
+   * @return {void}
+   */
+
 
   background(...params) {
-    var _params$;
-
-    if (((_params$ = params[0]) === null || _params$ === void 0 ? void 0 : _params$.constructor) === HTMLImageElement) {
+    if (typeof params[0] === "object") {
       this.$context2d.drawImage(params[0], 0, 0, this.width, this.height);
     } else {
       this.$context2d.fillStyle = this._toRgb(params);
@@ -1676,10 +2671,21 @@ class fCanvas {
       this.$context2d.fillRect(0, 0, this.width, this.height);
     }
   }
+  /**
+   * @param {any} type="image/png"
+   * @param {number} scale?
+   * @return {string}
+   */
+
 
   toDataURL(type = "image/png", scale) {
     return this.$el.toDataURL(type, scale);
   }
+  /**
+   * @param {number} value?
+   * @return {any}
+   */
+
 
   rotate(value) {
     if (value === undefined) {
@@ -1688,10 +2694,19 @@ class fCanvas {
       this.$context2d.rotate(this._ENV.rotate = this._toRadius(value));
     }
   }
+  /**
+   * @return {void}
+   */
+
 
   resetTransform() {
     this.setTransform(1, 0, 0, 1, 0, 0);
   }
+  /**
+   * @param {Function} callback
+   * @return {Promise<void>}
+   */
+
 
   async preload(callback) {
     this._existsPreload = true;
@@ -1699,6 +2714,11 @@ class fCanvas {
 
     this._stamentReady.emit("preloaded");
   }
+  /**
+   * @param {Function} callback
+   * @return {Promise<void>}
+   */
+
 
   async setup(callback) {
     if (this._existsPreload) {
@@ -1713,12 +2733,22 @@ class fCanvas {
       this._stamentReady.emit("setuped");
     }
   }
+  /**
+   * @param {Function} callback
+   * @return {void}
+   */
+
 
   draw(callback) {
     this._stamentReady.on("setuped", () => {
       draw(callback, this);
     });
   }
+  /**
+   * @param {string} value?
+   * @return {any}
+   */
+
 
   font(value) {
     if (value === undefined) {
@@ -1727,6 +2757,11 @@ class fCanvas {
 
     this.$context2d.font = value;
   }
+  /**
+   * @param {TextAlignType} value?
+   * @return {any}
+   */
+
 
   textAlign(value) {
     if (value === undefined) {
@@ -1735,6 +2770,11 @@ class fCanvas {
 
     this.$context2d.textAlign = value;
   }
+  /**
+   * @param {TextBaselineType} value?
+   * @return {any}
+   */
+
 
   textBaseline(value) {
     if (value === undefined) {
@@ -1743,6 +2783,11 @@ class fCanvas {
 
     this.$context2d.textBaseline = value;
   }
+  /**
+   * @param {GlobalCompositeOperationType} value?
+   * @return {any}
+   */
+
 
   globalOperation(value) {
     if (value === undefined) {
@@ -1751,6 +2796,12 @@ class fCanvas {
 
     this.$context2d.globalCompositeOperation = value;
   }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @return {any}
+   */
+
 
   translate(x, y) {
     if (arguments.length === 0) {
@@ -1764,10 +2815,20 @@ class fCanvas {
     this.__translate.sumX += x || 0;
     this.__translate.sumY += y || 0;
   }
+  /**
+   * @return {void}
+   */
+
 
   resetTranslate() {
     this.$context2d.translate(-this.__translate.sumX, -this.__translate.sumY);
   }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @return {any}
+   */
+
 
   scale(x, y) {
     if (arguments.length === 0) {
@@ -1781,10 +2842,20 @@ class fCanvas {
     this.__scale.sumX += x || 0;
     this.__scale.sumY += y || 0;
   }
+  /**
+   * @return {void}
+   */
+
 
   resetScale() {
     this.$context2d.translate(-this.__translate.sumX, -this.__translate.sumY);
   }
+  /**
+   * @param {any} fillRule?
+   * @param {any} path?
+   * @return {void}
+   */
+
 
   clip(fillRule, path) {
     if (path === undefined) {
@@ -1793,6 +2864,16 @@ class fCanvas {
 
     this.$context2d.clip(path, fillRule);
   }
+  /**
+   * @param {number|DOMMatrix} m11?
+   * @param {number} m12?
+   * @param {number} m21?
+   * @param {number} m22?
+   * @param {number} dx?
+   * @param {number} dy?
+   * @return {any}
+   */
+
 
   transform(m11, m12, m21, m22, dx, dy) {
     if (arguments.length === 0) {
@@ -1813,6 +2894,16 @@ class fCanvas {
       this.$context2d.transform(m11, m12, m21, m22, dx, dy);
     }
   }
+  /**
+   * @param {number|DOMMatrix} m11
+   * @param {number} m12?
+   * @param {number} m21?
+   * @param {number} m22?
+   * @param {number} dx?
+   * @param {number} dy?
+   * @return {void}
+   */
+
 
   setTransform(m11, m12, m21, m22, dx, dy) {
     if (m11 instanceof DOMMatrix) {
@@ -1829,48 +2920,100 @@ class fCanvas {
       this.$context2d.setTransform(m11, m12, m21, m22, dx, dy);
     }
   }
+  /**
+   * @param {number} angle
+   * @return {number}
+   */
+
 
   sin(angle) {
     return Math.sin(this._toRadius(angle));
   }
+  /**
+   * @param {number} sin
+   * @return {number}
+   */
+
 
   asin(sin) {
     return this._toDegress(Math.asin(sin));
   }
+  /**
+   * @param {number} angle
+   * @return {number}
+   */
+
 
   cos(angle) {
     return Math.cos(this._toRadius(angle));
   }
+  /**
+   * @param {number} cos
+   * @return {number}
+   */
+
 
   acos(cos) {
     return this._toDegress(Math.acos(cos));
   }
+  /**
+   * @param {number} angle
+   * @return {number}
+   */
+
 
   tan(angle) {
     return Math.tan(this._toRadius(angle));
   }
+  /**
+   * @param {number} tan
+   * @return {number}
+   */
+
 
   atan(tan) {
     return this._toDegress(Math.atan(tan));
   }
+  /**
+   * @param {number} y
+   * @param {number} x
+   * @return {number}
+   */
+
 
   atan2(y, x) {
     return this._toDegress(Math.atan2(y, x));
   }
+  /**
+   * @return {void}
+   */
+
 
   cursor() {
     this.$el.style.cursor = "auto";
   }
+  /**
+   * @return {void}
+   */
+
 
   noCursor() {
     this.$el.style.cursor = "none";
   }
+  /**
+   * @return {void}
+   */
+
 
   loop() {
     this._ENV.loop = true;
 
     this._stamentReady.emit("setuped");
   }
+  /**
+   * @return {void}
+   */
+
 
   noLoop() {
     this._ENV.loop = false;
@@ -1879,10 +3022,19 @@ class fCanvas {
       (cancelAnimationFrame || webkitCancelAnimationFrame || clearTimeout)(this.__idFrame);
     }
   }
+  /**
+   * @return {boolean}
+   */
+
 
   get acceptLoop() {
     return this._ENV.loop;
   }
+  /**
+   * @param {CallbackEvent} callback
+   * @return {noop}
+   */
+
 
   keyPressed(callback) {
     this.$el.addEventListener("keypress", callback);
@@ -1890,6 +3042,11 @@ class fCanvas {
       this.$el.removeEventListener("keypress", callback);
     };
   }
+  /**
+   * @param {CallbackEvent} callback
+   * @return {noop}
+   */
+
 
   mouseIn(callback) {
     this.$el.addEventListener("mouseover", callback);
@@ -1897,6 +3054,11 @@ class fCanvas {
       this.$el.removeEventListener("mouseover", callback);
     };
   }
+  /**
+   * @param {CallbackEvent} callback
+   * @return {noop}
+   */
+
 
   mouseOut(callback) {
     this.$el.addEventListener("mouseout", callback);
@@ -1904,6 +3066,11 @@ class fCanvas {
       this.$el.removeEventListener("mouseout", callback);
     };
   }
+  /**
+   * @param {CallbackEvent} callback
+   * @return {noop}
+   */
+
 
   mouseDowned(callback) {
     this.$el.addEventListener("mousedown", callback);
@@ -1911,6 +3078,11 @@ class fCanvas {
       this.$el.removeEventListener("mousedown", callback);
     };
   }
+  /**
+   * @param {CallbackEvent} callback
+   * @return {noop}
+   */
+
 
   touchStarted(callback) {
     this.$el.addEventListener("touchstart", callback);
@@ -1918,6 +3090,11 @@ class fCanvas {
       this.$el.removeEventListener("touchstart", callback);
     };
   }
+  /**
+   * @param {CallbackEvent} callback
+   * @return {noop}
+   */
+
 
   touchMoved(callback) {
     this.$el.addEventListener("touchmove", callback);
@@ -1925,6 +3102,11 @@ class fCanvas {
       this.$el.removeEventListener("touchmove", callback);
     };
   }
+  /**
+   * @param {CallbackEvent} callback
+   * @return {noop}
+   */
+
 
   touchEned(callback) {
     this.$el.addEventListener("touchend", callback);
@@ -1932,6 +3114,11 @@ class fCanvas {
       this.$el.removeEventListener("touchend", callback);
     };
   }
+  /**
+   * @param {CallbackEvent} callback
+   * @return {noop}
+   */
+
 
   mouseMoved(callback) {
     this.$el.addEventListener("mousemove", callback);
@@ -1939,6 +3126,11 @@ class fCanvas {
       this.$el.removeEventListener("mousemove", callback);
     };
   }
+  /**
+   * @param {CallbackEvent} callback
+   * @return {noop}
+   */
+
 
   mouseUped(callback) {
     this.$el.addEventListener("mouseup", callback);
@@ -1946,6 +3138,11 @@ class fCanvas {
       this.$el.removeEventListener("mouseup", callback);
     };
   }
+  /**
+   * @param {CallbackEvent} callback
+   * @return {noop}
+   */
+
 
   mouseClicked(callback) {
     this.$el.addEventListener("click", callback);
@@ -1969,6 +3166,11 @@ function bindEvent(name, callback, element) {
 }
 let inited = false;
 const emitter = new Emitter();
+/**
+ * @param {any} document.readyState==="complete"
+ * @return {any}
+ */
+
 async function setup(callback) {
   if (document.readyState === "complete") {
     //// readyState === "complete"
@@ -1995,6 +3197,12 @@ async function setup(callback) {
     });
   }
 }
+/**
+ * @param {Function} callback
+ * @param {fCanvas} canvas?
+ * @return {void}
+ */
+
 function draw(callback, canvas) {
   if (inited) {
     if (canvas && canvas.acceptClear === true) {
@@ -2012,30 +3220,84 @@ function draw(callback, canvas) {
     });
   }
 }
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+
 function keyPressed(callback, element = window) {
   return bindEvent("keypress", callback, element);
 }
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+
 function changeSize(callback, element = window) {
   return bindEvent("resize", callback, element);
 }
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+
 function mouseWheel(callback, element = window) {
   return bindEvent("wheel", callback, element);
 }
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+
 function mousePressed(callback, element = window) {
   return bindEvent("mousedown", callback, element);
 }
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+
 function mouseClicked(callback, element = window) {
   return bindEvent("click", callback, element);
 }
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+
 function mouseMoved(callback, element = window) {
   return bindEvent("mousemove", callback, element);
 }
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+
 function touchStarted(callback, element = window) {
   return bindEvent("touchstart", callback, element);
 }
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+
 function touchMoved(callback, element = window) {
   return bindEvent("touchmove", callback, element);
 }
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+
 function touchEnded(callback, element = window) {
   return bindEvent("touchend", callback, element);
 }

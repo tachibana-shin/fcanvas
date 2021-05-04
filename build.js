@@ -74,6 +74,37 @@ build(
         runtimeHelpers: true,
         // presets: ["@babel/preset-env"],
         plugins: [
+          // "@babel/plugin-proposal-class-properties",
+          "@babel/plugin-proposal-optional-chaining",
+          // "@babel/plugin-proposal-object-rest-spread",
+          [
+            "@babel/plugin-transform-runtime",
+            {
+              regenerator: true,
+            },
+          ],
+        ],
+        ignore: ["dist/*"],
+      }),
+    ],
+  },
+  {
+    format: "esm",
+    filename: "fcanvas.esm.js",
+  }
+);
+
+build(
+  {
+    input: path.resolve(__dirname, "src/index.js"),
+    plugins: [
+      resolve(),
+      commonjs(),
+      babel({
+        babelrc: false,
+        runtimeHelpers: true,
+        presets: ["@babel/preset-env"],
+        plugins: [
           "@babel/plugin-proposal-class-properties",
           "@babel/plugin-proposal-optional-chaining",
           "@babel/plugin-proposal-object-rest-spread",
@@ -90,6 +121,6 @@ build(
   },
   {
     format: "esm",
-    filename: "fcanvas.esm.js",
+    filename: "fcanvas.node.esm.js",
   }
 );

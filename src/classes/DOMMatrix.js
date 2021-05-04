@@ -1,5 +1,9 @@
 const DOMatrix = window.DOMMatrix ||
     class {
+        /**
+         * @param {string} css
+         * @return {any}
+         */
         constructor(css) {
             this.a = 1;
             this.b = 0;

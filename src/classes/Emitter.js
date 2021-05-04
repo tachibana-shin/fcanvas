@@ -2,6 +2,10 @@ export default class Emitter {
     constructor() {
         this.__events = {};
     }
+    /**
+     * @param {any} typeofcallback==="function"
+     * @return {any}
+     */
     on(name, callback) {
         if (typeof callback === "function") {
             if (name in this.__events) {
@@ -15,6 +19,11 @@ export default class Emitter {
             this.off(name, callback);
         };
     }
+    /**
+     * @param {string} name
+     * @param {CallbackEvent} callback?
+     * @return {void}
+     */
     off(name, callback) {
         if (typeof callback === "function") {
             this.__events[name] = this.__events[name].filter((item) => item !== callback);
@@ -25,7 +34,22 @@ export default class Emitter {
         else {
             delete this.__events[name];
         }
+        /**
+         * @param {string} name
+         * @param {any[]} ...payload
+         * @return {void}
+         */
+        /**
+         * @param {string} name
+         * @param {any[]} ...payload
+         * @return {void}
+         */
     }
+    /**
+     * @param {string} name
+     * @param {any[]} ...payload
+     * @return {void}
+     */
     emit(name, ...payload) {
         if (name in this.__events) {
             for (let index = this.__events[name].length - 1; index > -1; index--) {
@@ -33,6 +57,11 @@ export default class Emitter {
             }
         }
     }
+    /**
+     * @param {string} name
+     * @param {CallbackEvent} callback
+     * @return {void}
+     */
     once(name, callback) {
         const handler = (...args) => {
             callback(...args);

@@ -1,3 +1,7 @@
+/**
+ * @param {any} e
+ * @return {any}
+ */
 export const requestAnimationFrame:
   | (((callback: FrameRequestCallback) => number) &
       typeof globalThis.requestAnimationFrame)
@@ -25,6 +29,11 @@ try {
 
 export const passive: boolean = supportPassive;
 
+
+/**
+ * @param {string} str
+ * @return {string}
+ */
 export function camelCase(str: string): string {
   return str
     .replace(/^-ms-/, "ms-")
@@ -55,6 +64,10 @@ export const windowSize: {
   },
 };
 
+/**
+ * @param {string|number} string
+ * @return {string}
+ */
 export function convertToPx(string: string | number): string {
   if ((string + "").match(/\w/)) {
     return string as string;
@@ -63,6 +76,10 @@ export function convertToPx(string: string | number): string {
   }
 }
 
+/**
+ * @param {string|null} string
+ * @return {string}
+ */
 export function trim(string: string | null): string {
   if (string == null) {
     return "null";
@@ -77,6 +94,10 @@ interface InfoFont {
   weight: string;
 }
 
+/**
+ * @param {string} font
+ * @return {InfoFont}
+ */
 export function fontToArray(font: string): InfoFont {
   const _font = font.split(" ");
   if (_font.length === 2) {
@@ -94,6 +115,12 @@ export function fontToArray(font: string): InfoFont {
   };
 }
 
+/**
+ * @param {string|number} string
+ * @param {number} fi
+ * @param {number} fontSize?
+ * @return {number}
+ */
 export function AutoToPx(
   string: string | number,
   fi: number,
@@ -151,6 +178,11 @@ export interface InfoTouch {
   id: any;
 }
 
+/**
+ * @param {HTMLCanvasElement} element
+ * @param {any[]} touches
+ * @return {InfoTouch[]}
+ */
 export function getTouchInfo(
   element: HTMLCanvasElement,
   touches: any[]
@@ -175,6 +207,9 @@ export function getTouchInfo(
   return _touches;
 }
 
+/**
+ * @return {boolean}
+ */
 export function isMobile(): boolean {
   /// code from https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
   let check = false;

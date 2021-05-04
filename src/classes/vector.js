@@ -20,9 +20,23 @@ function calculateRemainder3D(vector, xComponent, yComponent, zComponent) {
     return vector;
 }
 export default class Vector {
+    /**
+     * @param {number=0} x
+     * @param {number=0} y
+     * @param {number=0} z
+     * @return {any}
+     */
     constructor(x = 0, y = 0, z = 0) {
         [this.x, this.y, this.z] = [x, y, z];
     }
+    /**
+     * @param {Vector|[number?} x?
+     * @param {any} number?
+     * @param {any} number?]|number
+     * @param {number} y?
+     * @param {number} z?
+     * @return {this}
+     */
     set(x, y, z) {
         if (x instanceof Vector) {
             this.x = x.x || 0;
@@ -41,9 +55,20 @@ export default class Vector {
         this.z = z || 0;
         return this;
     }
+    /**
+     * @return {Vector}
+     */
     copy() {
         return new Vector(this.x, this.y, this.z);
     }
+    /**
+     * @param {Vector|[number?} x?
+     * @param {any} number?
+     * @param {any} number?]|number
+     * @param {number} y?
+     * @param {number} z?
+     * @return {this}
+     */
     add(x, y, z) {
         if (x instanceof Vector) {
             this.x += x.x || 0;
@@ -62,6 +87,14 @@ export default class Vector {
         this.z += z || 0;
         return this;
     }
+    /**
+     * @param {Vector|[number} x?
+     * @param {any} number
+     * @param {any} number?]|number
+     * @param {number} y?
+     * @param {number} z?
+     * @return {any}
+     */
     rem(x, y, z) {
         if (x instanceof Vector) {
             if (Number.isFinite(x.x) &&
@@ -114,6 +147,14 @@ export default class Vector {
             }
         }
     }
+    /**
+     * @param {Vector|[number?} x?
+     * @param {any} number?
+     * @param {any} number?]|number
+     * @param {number} y?
+     * @param {number} z?
+     * @return {this}
+     */
     sub(x, y, z) {
         if (x instanceof Vector) {
             this.x -= x.x || 0;
@@ -132,12 +173,20 @@ export default class Vector {
         this.z -= z || 0;
         return this;
     }
+    /**
+     * @param {number} n
+     * @return {this}
+     */
     mult(n) {
         this.x *= n;
         this.y *= n;
         this.z *= n;
         return this;
     }
+    /**
+     * @param {number} n
+     * @return {this}
+     */
     div(n) {
         if (n === 0) {
             console.warn("div:", "divide by 0");
@@ -148,31 +197,54 @@ export default class Vector {
         this.z /= n;
         return this;
     }
+    /**
+     * @return {number}
+     */
     mag() {
         return Math.sqrt(this.magSq());
     }
+    /**
+     * @return {number}
+     */
     magSq() {
         const { x, y, z } = this;
         return x * x + y * y + z * z;
     }
+    /**
+     * @param {Vector|number} x?
+     * @param {number} y?
+     * @param {number} z?
+     * @return {number}
+     */
     dot(x, y, z) {
         if (x instanceof Vector) {
             return this.dot(x.x, x.y, x.z);
         }
         return this.x * (x || 0) + this.y * (y || 0) + this.z * (z || 0);
     }
+    /**
+     * @param {Vector|{x:number;y:number;z:number}} v
+     * @return {Vector}
+     */
     cross(v) {
         var x = this.y * v.z - this.z * v.y;
         var y = this.z * v.x - this.x * v.z;
         var z = this.x * v.y - this.y * v.x;
         return new Vector(x, y, z);
     }
+    /**
+     * @return {this}
+     */
     normalize() {
         const len = this.mag();
         if (len !== 0)
             this.mult(1 / len);
         return this;
     }
+    /**
+     * @param {number} max
+     * @return {this}
+     */
     limit(max) {
         const mSq = this.magSq();
         if (mSq > max * max) {
@@ -181,12 +253,23 @@ export default class Vector {
         }
         return this;
     }
+    /**
+     * @param {number} n
+     * @return {this}
+     */
     setMag(n) {
         return this.normalize().mult(n);
     }
+    /**
+     * @return {number}
+     */
     heading() {
         return Math.atan2(this.y, this.x);
     }
+    /**
+     * @param {number} a
+     * @return {this}
+     */
     rotate(a) {
         var newHeading = this.heading() + a;
         var mag = this.mag();
@@ -194,6 +277,10 @@ export default class Vector {
         this.y = Math.sin(newHeading) * mag;
         return this;
     }
+    /**
+     * @param {Vector} v
+     * @return {number}
+     */
     angleBetween(v) {
         var dotmagmag = this.dot(v) / (this.mag() * v.mag());
         var angle;
@@ -201,6 +288,13 @@ export default class Vector {
         angle = angle * Math.sign(this.cross(v).z || 1);
         return angle;
     }
+    /**
+     * @param {Vector|number} x
+     * @param {number} y?
+     * @param {number} z?
+     * @param {number=1} amt
+     * @return {this}
+     */
     lerp(x, y, z, amt = 1) {
         if (x instanceof Vector) {
             return this.lerp(x.x, x.y, x.z, y || 0);
@@ -210,13 +304,28 @@ export default class Vector {
         this.z += (z || 0 - this.z) * amt || 0;
         return this;
     }
+    /**
+     * @param {Vector} surfaceNormal
+     * @return {this}
+     */
     reflect(surfaceNormal) {
         surfaceNormal.normalize();
         return this.sub(surfaceNormal.mult(2 * this.dot(surfaceNormal)));
     }
+    /**
+     * @return {[number, number, number]}
+     */
     array() {
         return [this.x || 0, this.y || 0, this.z || 0];
     }
+    /**
+     * @param {Vector|[number} x
+     * @param {any} number
+     * @param {any} number]|number
+     * @param {number} y?
+     * @param {number} z?
+     * @return {boolean}
+     */
     equals(x, y, z) {
         var a, b, c;
         if (x instanceof Vector) {
@@ -236,6 +345,9 @@ export default class Vector {
         }
         return this.x === a && this.y === b && this.z === c;
     }
+    /**
+     * @return {string}
+     */
     toString() {
         return "Vector: [" + this.array().join(", ") + "]";
     }

@@ -7,6 +7,10 @@ const DOMatrix =
     d: number = 1;
     e: number = 0;
     f: number = 0;
+    /**
+     * @param {string} css
+     * @return {any}
+     */
     constructor(css: string) {
       const vnode: HTMLDivElement = document.createElement("div");
       vnode.style.opacity = "0";

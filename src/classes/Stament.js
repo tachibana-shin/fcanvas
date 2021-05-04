@@ -3,6 +3,11 @@ class Stament {
     constructor() {
         this.__store = new Store();
     }
+    /**
+     * @param {string} name
+     * @param {CallbackEvent} callback
+     * @return {void}
+     */
     on(name, callback) {
         if (this.__store[name]) {
             callback();
@@ -14,6 +19,10 @@ class Stament {
             });
         }
     }
+    /**
+     * @param {string} name
+     * @return {void}
+     */
     emit(name) {
         this.__store.$set(this.__store, name, true);
     }

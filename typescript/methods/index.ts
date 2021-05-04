@@ -13,6 +13,11 @@ interface Rect extends Object {
   width: number;
   height: number;
 }
+/**
+ * @param {Circle} circle1
+ * @param {Circle} circle2
+ * @return {boolean}
+ */
 
 export function CircleImpact(circle1: Circle, circle2: Circle): boolean {
   return (
@@ -21,6 +26,12 @@ export function CircleImpact(circle1: Circle, circle2: Circle): boolean {
   );
 }
 
+/**
+ * @param {Circle} circle
+ * @param {number} x
+ * @param {number} y
+ * @return {boolean}
+ */
 export function CircleImpactPoint(
   circle: Circle,
   x: number,
@@ -29,6 +40,11 @@ export function CircleImpactPoint(
   return (x - circle.x) ** 2 + (y - circle.y) ** 2 < circle.radius ** 2;
 }
 
+/**
+ * @param {Circle} circle
+ * @param {Rect} rect
+ * @return {boolean}
+ */
 export function CircleImpactRect(circle: Circle, rect: Rect): boolean {
   const x = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
   const y = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
@@ -39,10 +55,20 @@ export function CircleImpactRect(circle: Circle, rect: Rect): boolean {
   return distance < circle.radius ** 2;
 }
 
+/**
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ * @return {number}
+ */
 export function constrain(value: number, min: number, max: number): number {
   return Math.min(Math.max(min, value), max);
 }
 
+/**
+ * @param {string} src
+ * @return {Promise<HTMLImageElement>}
+ */
 export function loadImage(src: string): Promise<HTMLImageElement> {
   const img = new Image();
   img.src = src;
@@ -61,6 +87,14 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
+/**
+ * @param {number} value
+ * @param {number} start
+ * @param {number} stop
+ * @param {number} min
+ * @param {number} max
+ * @return {number}
+ */
 export function map(
   value: number,
   start: number,
@@ -71,10 +105,13 @@ export function map(
   return ((value - start) * (max - min)) / (stop - start) + min;
 }
 
+/**
+ * @param {any[]} ...args
+ * @return {any}
+ */
 function random(value: number): number;
 function random<T>(array: T[]): T;
 function random(start: number, stop: number): number;
-
 function random(...args: any[]): any {
   if (args.length === 1) {
     if (
@@ -94,7 +131,12 @@ function random(...args: any[]): any {
 
 function range(start: number, stop: number, step: number): number;
 function range(start: string, stop: string, step: number): string;
-
+/**
+ * @param {any} start
+ * @param {any} stop
+ * @param {number} step
+ * @return {any}
+ */
 function range(start: any, stop: any, step: number): any {
   step = step || 1;
   const arr = [];
@@ -130,6 +172,11 @@ function range(start: any, stop: any, step: number): any {
 
 export { random, range };
 
+/**
+ * @param {Rect} rect1
+ * @param {Rect} rect2
+ * @return {boolean}
+ */
 export function RectImpact(rect1: Rect, rect2: Rect): boolean {
   return (
     rect1.x <= rect2.x + rect2.width &&
@@ -139,6 +186,12 @@ export function RectImpact(rect1: Rect, rect2: Rect): boolean {
   );
 }
 
+/**
+ * @param {Rect} rect
+ * @param {number} x
+ * @param {number} y
+ * @return {boolean}
+ */
 export function RectImpactPoint(rect: Rect, x: number, y: number): boolean {
   return (
     rect.x < x &&
@@ -148,10 +201,20 @@ export function RectImpactPoint(rect: Rect, x: number, y: number): boolean {
   );
 }
 
+/**
+ * @param {number} start
+ * @param {number} stop
+ * @param {number} amt
+ * @return {number}
+ */
 export function lerp(start: number, stop: number, amt: number): number {
   return amt * (stop - start) + start;
 }
 
+/**
+ * @param {number[]} ...args
+ * @return {number}
+ */
 export const hypot =
   typeof Math.hypot === "function"
     ? Math.hypot
