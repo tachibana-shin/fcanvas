@@ -1,33 +1,4 @@
-function unwrapExports (x) {
-	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-}
-
-function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}
-
-var defineProperty = createCommonjsModule(function (module) {
-  function _defineProperty(obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
-
-    return obj;
-  }
-
-  module.exports = _defineProperty;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-var _defineProperty = unwrapExports(defineProperty);
-
-const requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame || function (e) {
+const requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || function (e) {
   return setTimeout(e, 100 / 6);
 };
 let supportPassive = false;
@@ -38,8 +9,11 @@ try {
       supportPassive = true;
     }
   });
-  window.addEventListener("testPassive", null, opts);
-  window.removeEventListener("testPassive", null, opts);
+
+  function noop() {}
+
+  window.addEventListener("testPassive", noop, opts);
+  window.removeEventListener("testPassive", noop, opts);
 } catch (e) {}
 const windowSize = {
   windowWidth: {
@@ -51,7 +25,7 @@ const windowSize = {
 };
 function trim(string) {
   if (string == null) {
-    return null;
+    return "null";
   } else {
     return string.replace(/^\s+|\s+$/g, "");
   }
@@ -67,16 +41,14 @@ function fontToArray(font) {
     };
   }
 
-  if (_font.length === 3) {
-    return {
-      size: parseFloat(_font[1]),
-      family: trim(_font[2]),
-      weight: trim(_font[0])
-    };
-  }
+  return {
+    size: parseFloat(_font[1]),
+    family: trim(_font[2]),
+    weight: trim(_font[0])
+  };
 }
 function AutoToPx(string, fi, fontSize) {
-  if (typeof string == "string") {
+  if (typeof string === "string") {
     string = trim(string);
     const number = parseFloat(string);
     const dp = (string.match(/[a-z%]+$/i) || [, "px"])[1];
@@ -86,22 +58,22 @@ function AutoToPx(string, fi, fontSize) {
         return number;
 
       case "em":
-        return fontSize * number;
+        return (fontSize || 0) * number;
 
       case "rem":
-        return fontSize * 16;
+        return (fontSize || 0) * 16;
 
       case "vw":
-        return windowSize.windowWidth * number / 100;
+        return windowSize.windowWidth.get() * number / 100;
 
       case "vh":
-        return windowSize.windowHeight * number / 100;
+        return windowSize.windowHeight.get() * number / 100;
 
       case "vmin":
-        return Math.min(windowSize.windowWidth, windowSize.windowHeight) * number / 100;
+        return Math.min(windowSize.windowWidth.get(), windowSize.windowHeight.get()) * number / 100;
 
       case "vmax":
-        return Math.max(windowSize.windowWidth, windowSize.windowHeight) * number / 100;
+        return Math.max(windowSize.windowWidth.get(), windowSize.windowHeight.get()) * number / 100;
 
       case "%":
         return fi / 100 * number;
@@ -110,7 +82,7 @@ function AutoToPx(string, fi, fontSize) {
         return +number;
     }
   } else {
-    return string + "";
+    return parseFloat(string + "");
   }
 }
 function getTouchInfo(element, touches) {
@@ -142,14 +114,14 @@ function isMobile() {
 
   (function (a) {
     if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4))) check = true;
-  })(navigator.userAgent || navigator.vendor || window.opera);
+  })(navigator.userAgent || navigator.vendor);
 
   return check;
 }
 
 class Emitter {
   constructor() {
-    _defineProperty(this, "__events", {});
+    this.__events = {};
   }
 
   on(name, callback) {
@@ -197,6 +169,39 @@ class Emitter {
 
 }
 
+function unwrapExports (x) {
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+}
+
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+var defineProperty = createCommonjsModule(function (module) {
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  module.exports = _defineProperty;
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
+});
+var _defineProperty = unwrapExports(defineProperty);
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 function reactiveDefine(value, callback, parent = []) {
   if (value !== null && typeof value === "object") {
     /// reactive children
@@ -230,7 +235,7 @@ function reactiveDefine(value, callback, parent = []) {
 
       value.forEach((item, index) => {
         if (item !== null && typeof item === "object") {
-          reactiveDefine(item, callback, [...parent, index]);
+          reactiveDefine(item, callback, [...parent, index + ""]);
         }
       });
     } else {
@@ -242,8 +247,7 @@ function reactiveDefine(value, callback, parent = []) {
           writable: true,
           enumerable: false,
           configurable: true,
-          value: { ...value
-          }
+          value: _objectSpread({}, value)
         });
         Object.defineProperty(value, "__reactive", {
           writable: false,
@@ -252,21 +256,28 @@ function reactiveDefine(value, callback, parent = []) {
           value: true
         });
       } else {
-        value.__store = { ...value
-        };
+        value.__store = _objectSpread({}, value);
       }
 
       for (const key in value) {
         Object.defineProperty(value, key, {
           get() {
-            return value.__store[key];
+            var _value$__store;
+
+            return (_value$__store = value.__store) === null || _value$__store === void 0 ? void 0 : _value$__store[key];
           },
 
           enumerable: true,
 
           set(newValue) {
-            const old = value.__store[key];
-            value.__store[key] = newValue;
+            var _value$__store2;
+
+            const old = (_value$__store2 = value.__store) === null || _value$__store2 === void 0 ? void 0 : _value$__store2[key];
+
+            if (value.__store) {
+              value.__store[key] = newValue;
+            }
+
             reactiveDefine(newValue, callback, [...parent, key]);
             callback([...parent, key], old, newValue);
           }
@@ -279,8 +290,8 @@ function reactiveDefine(value, callback, parent = []) {
 }
 
 class Store {
-  constructor(store = {}) {
-    _defineProperty(this, "__emitter", new Emitter());
+  constructor(store) {
+    this.__emitter = new Emitter();
 
     for (const key in store) {
       this[key] = store[key];
@@ -307,7 +318,7 @@ class Store {
 
 class Stament {
   constructor() {
-    _defineProperty(this, "__store", new Store());
+    this.__store = new Store();
   }
 
   on(name, callback) {
@@ -327,32 +338,32 @@ class Stament {
 
 }
 
-function calculateRemainder2D(xComponent, yComponent) {
+function calculateRemainder2D(vector, xComponent, yComponent) {
   if (xComponent !== 0) {
-    this.x = this.x % xComponent;
+    vector.x = vector.x % xComponent;
   }
 
   if (yComponent !== 0) {
-    this.y = this.y % yComponent;
+    vector.y = vector.y % yComponent;
   }
 
-  return this;
+  return vector;
 }
 
-function calculateRemainder3D(xComponent, yComponent, zComponent) {
+function calculateRemainder3D(vector, xComponent, yComponent, zComponent) {
   if (xComponent !== 0) {
-    this.x = this.x % xComponent;
+    vector.x = vector.x % xComponent;
   }
 
   if (yComponent !== 0) {
-    this.y = this.y % yComponent;
+    vector.y = vector.y % yComponent;
   }
 
   if (zComponent !== 0) {
-    this.z = this.z % zComponent;
+    vector.z = vector.z % zComponent;
   }
 
-  return this;
+  return vector;
 }
 
 class Vector {
@@ -382,7 +393,7 @@ class Vector {
   }
 
   copy() {
-    return new Vector([this.x, this.y, this.z]);
+    return new Vector(this.x, this.y, this.z);
   }
 
   add(x, y, z) {
@@ -409,21 +420,21 @@ class Vector {
   rem(x, y, z) {
     if (x instanceof Vector) {
       if (Number.isFinite(x.x) && Number.isFinite(x.y) && Number.isFinite(x.z)) {
-        var xComponent = parseFloat(x.x);
-        var yComponent = parseFloat(x.y);
-        var zComponent = parseFloat(x.z);
-        calculateRemainder3D.call(this, xComponent, yComponent, zComponent);
+        var xComponent = parseFloat(x.x + "");
+        var yComponent = parseFloat(x.y + "");
+        var zComponent = parseFloat(x.z + "");
+        calculateRemainder3D(this, xComponent, yComponent, zComponent);
       }
     } else if (x instanceof Array) {
       if (x.every(function (element) {
         return Number.isFinite(element);
       })) {
         if (x.length === 2) {
-          calculateRemainder2D.call(this, x[0], x[1]);
+          calculateRemainder2D(this, x[0], x[1]);
         }
 
         if (x.length === 3) {
-          calculateRemainder3D.call(this, x[0], x[1], x[2]);
+          calculateRemainder3D(this, x[0], x[1], x[2] || 0);
         }
       }
     } else if (arguments.length === 1) {
@@ -440,7 +451,7 @@ class Vector {
         return Number.isFinite(element);
       })) {
         if (vectorComponents.length === 2) {
-          calculateRemainder2D.call(this, vectorComponents[0], vectorComponents[1]);
+          calculateRemainder2D(this, vectorComponents[0], vectorComponents[1]);
         }
       }
     } else if (arguments.length === 3) {
@@ -450,7 +461,7 @@ class Vector {
         return Number.isFinite(element);
       })) {
         if (_vectorComponents.length === 3) {
-          calculateRemainder3D.call(this, _vectorComponents[0], _vectorComponents[1], _vectorComponents[2]);
+          calculateRemainder3D(this, _vectorComponents[0], _vectorComponents[1], _vectorComponents[2]);
         }
       }
     }
@@ -521,7 +532,7 @@ class Vector {
     var x = this.y * v.z - this.z * v.y;
     var y = this.z * v.x - this.x * v.z;
     var z = this.x * v.y - this.y * v.x;
-    return new Vector([x, y, z]);
+    return new Vector(x, y, z);
   }
 
   normalize() {
@@ -565,14 +576,14 @@ class Vector {
     return angle;
   }
 
-  lerp(x, y, z, amt) {
+  lerp(x, y, z, amt = 1) {
     if (x instanceof Vector) {
-      return this.lerp(x.x, x.y, x.z, y);
+      return this.lerp(x.x, x.y, x.z, y || 0);
     }
 
     this.x += (x - this.x) * amt || 0;
-    this.y += (y - this.y) * amt || 0;
-    this.z += (z - this.z) * amt || 0;
+    this.y += (y || 0 - this.y) * amt || 0;
+    this.z += (z || 0 - this.z) * amt || 0;
     return this;
   }
 
@@ -611,64 +622,20 @@ class Vector {
 
 }
 
-const DOMatrix$1 = window.DOMMatrix || window.WebkitDOMMatix || class {
-  constructor(css) {
-    _defineProperty(this, "a", 1);
-
-    _defineProperty(this, "b", 0);
-
-    _defineProperty(this, "c", 0);
-
-    _defineProperty(this, "d", 1);
-
-    _defineProperty(this, "e", 0);
-
-    _defineProperty(this, "f", 0);
-
-    const vnode = document.createElement("div");
-    vnode.style.opacity = 0;
-    vnode.style.position = "fixed";
-    vnode.style.top = vnode.style.left = -9e99 + "px";
-    vnode.style[TRANSFORM_Prop] = css;
-    document.documentElement.appendChild(vnode);
-    let transform = getComputedStyle(vnode)[TRANSFORM_Prop];
-    if (transform == "none") transform = "1, 0, 0, 1, 0, 0";
-    transform = transform.replace(/^(?:matrix3d|matrix)\(|\s|\)$/g, "").split(",").map(e => +e);
-    document.documentElement.removeChild(vnode);
-    transform._isMatrix = true;
-    [this.a, this.b, this.c, this.d, this.e, this.f] = transform;
-  }
-
-};
-
-function CircleImpact(e, f) {
-  return (f.x - e.x) ** 2 + (f.y - e.y) ** 2 < (e.radius + f.radius) ** 2;
+function CircleImpact(circle1, circle2) {
+  return (circle1.x - circle2.x) ** 2 + (circle1.y - circle2.y) ** 2 < (circle1.radius + circle2.radius) ** 2;
 }
-function CircleImpactPoint(e, x, y) {
-  return (x - e.x) ** 2 + (y - e.y) ** 2 < e.radius ** 2;
+function CircleImpactPoint(circle, x, y) {
+  return (x - circle.x) ** 2 + (y - circle.y) ** 2 < circle.radius ** 2;
 }
-function CircleImpactRect(sphere, box) {
-  const x = Math.max(box.x, Math.min(sphere.x, box.x + box.width));
-  const y = Math.max(box.y, Math.min(sphere.y, box.y + box.height));
-  const distance = (x - sphere.x) * (x - sphere.x) + (y - sphere.y) * (y - sphere.y);
-  return distance < sphere.radius ** 2;
+function CircleImpactRect(circle, rect) {
+  const x = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
+  const y = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
+  const distance = (x - circle.x) * (x - circle.x) + (y - circle.y) * (y - circle.y);
+  return distance < circle.radius ** 2;
 }
 function constrain(value, min, max) {
   return Math.min(Math.max(min, value), max);
-}
-function createMatrix(css) {
-  const {
-    a,
-    b,
-    c,
-    d,
-    e,
-    f
-  } = new DOMatrix$1(css);
-  return [a, b, c, d, e, f];
-}
-function createVector(...argv) {
-  return new Vector(...argv);
 }
 function loadImage(src) {
   const img = new Image();
@@ -679,7 +646,7 @@ function loadImage(src) {
       img.removeEventListener("load", loaded);
     }
 
-    function error() {
+    function error(err) {
       reject(err);
       img.removeEventListener("error", error);
     }
@@ -688,9 +655,10 @@ function loadImage(src) {
     img.addEventListener("error", error);
   });
 }
-function map(a, b, c, d, e) {
-  return (a - b) * (e - d) / (c - b) + d;
+function map(value, start, stop, min, max) {
+  return (value - start) * (max - min) / (stop - start) + min;
 }
+
 function random(...args) {
   if (args.length === 1) {
     if (args[0] !== null && typeof args[0] === "object" && "length" in args[0]) {
@@ -704,47 +672,57 @@ function random(...args) {
     return args[0] + Math.random() * (args[1] - args[0]);
   }
 }
-function range($start, $end, $step) {
-  $step = $step || 1;
+
+function range(start, stop, step) {
+  step = step || 1;
   const arr = [];
   let isChar = false;
-  if ($end === undefined) $end = $start, $start = 1;
+  if (stop === undefined) stop = start, start = 1;
 
-  if (typeof $start == "string") {
-    $start = $start.charCodeAt(0);
-    $end = $end.charCodeAt(0);
+  if (typeof start === "string") {
+    start = start.charCodeAt(0);
+    stop = stop.charCodeAt(0);
     isChar = true;
   }
 
-  if ($start !== $end && Math.abs($end - $start) < Math.abs($step)) throw new Error("range(): step exceeds the specified range.");
+  if (start !== stop && Math.abs(stop - start) < Math.abs(step)) throw new Error("range(): step exceeds the specified range.");
 
-  if ($end > $start) {
-    $step < 0 && ($step *= -1);
+  if (stop > start) {
+    step < 0 && (step *= -1);
 
-    while ($start <= $end) {
-      arr.push(isChar ? String.fromCharCode($start) : $start);
-      $start += $step;
+    while (start <= stop) {
+      arr.push(isChar ? String.fromCharCode(start) : start);
+      start += step;
     }
   } else {
-    $step > 0 && ($step *= -1);
+    step > 0 && (step *= -1);
 
-    while ($start >= $end) {
-      arr.push(isChar ? String.fromCharCode($start) : $start);
-      $start += $step;
+    while (start >= stop) {
+      arr.push(isChar ? String.fromCharCode(start) : start);
+      start += step;
     }
   }
 
   return arr;
 }
-function RectImpact(a, b) {
-  return a.x <= b.x + b.width && a.x + a.width >= b.x && a.y <= b.y + b.height && a.y + a.height >= b.y;
+function RectImpact(rect1, rect2) {
+  return rect1.x <= rect2.x + rect2.width && rect1.x + rect1.width >= rect2.x && rect1.y <= rect2.y + rect2.height && rect1.y + rect1.height >= rect2.y;
 }
-function RectImpactPoint(e, x, y) {
-  return e.x < x && e.x + e.width > x && e.y < y && e.y + e.height > y;
+function RectImpactPoint(rect, x, y) {
+  return rect.x < x && rect.x + rect.width > x && rect.y < y && rect.y + rect.height > y;
 }
 function lerp(start, stop, amt) {
   return amt * (stop - start) + start;
 }
+const hypot = typeof Math.hypot === "function" ? Math.hypot : (...args) => {
+  const len = args.length;
+  let i = 0,
+      result = 0;
+
+  while (i < len) result += Math.pow(args[i++], 2);
+
+  return Math.sqrt(result);
+};
 
 function getAnimate(type, currentProgress, start, distance, steps, power) {
   switch (type) {
@@ -798,26 +776,37 @@ function getValueInFrame(type, start, stop, frame, frames, power = 3) {
 }
 
 class Animate {
+  constructor(config = {
+    time: 0
+  }) {
+    this.$ = new Emitter();
+    this._frame = 1;
+    this.type = "linear";
+    this.time = 0;
+    this.fps = 1000 / 60;
+    this.xFrom = 0;
+    this.xTo = 0;
+    this.yFrom = 0;
+    this.yTo = 0;
+    this.zFrom = 0;
+    this.zTo = 0;
+    this.config(config);
+  }
+
   static getFrames(time, fps = 1000 / 60) {
-    //// time use miniseconds
-    /// 1 frame = 100 / 6
-    /// x frame = time
     return time / fps; /// time * 1 / fps
   }
 
   get x() {
-    const frame = Math.min(this.frame, this.frames);
-    return getValueInFrame(this.type, this.xFrom, this.xTo, frame, this.frames);
+    return getValueInFrame(this.type, this.xFrom, this.xTo, this.frame, this.frames);
   }
 
   get y() {
-    const frame = Math.min(this.frame, this.frames);
-    return getValueInFrame(this.type, this.yFrom, this.yTo, frame, this.frames);
+    return getValueInFrame(this.type, this.yFrom, this.yTo, this.frame, this.frames);
   }
 
   get z() {
-    const frame = Math.min(this.frame, this.frames);
-    return getValueInFrame(this.type, this.zFrom, this.zTo, frame, this.frames);
+    return getValueInFrame(this.type, this.zFrom, this.zTo, this.frame, this.frames);
   }
 
   get frames() {
@@ -844,32 +833,6 @@ class Animate {
     return this.frame === this.frames;
   }
 
-  constructor(config) {
-    _defineProperty(this, "$", new Emitter());
-
-    _defineProperty(this, "_frame", 1);
-
-    _defineProperty(this, "type", "linear");
-
-    _defineProperty(this, "xFrom", 0);
-
-    _defineProperty(this, "xTo", 0);
-
-    _defineProperty(this, "yFrom", 0);
-
-    _defineProperty(this, "yTo", 0);
-
-    _defineProperty(this, "zFrom", 0);
-
-    _defineProperty(this, "zTo", 0);
-
-    _defineProperty(this, "time", 0);
-
-    _defineProperty(this, "fps", 1000 / 60);
-
-    this.config(config);
-  }
-
   config({
     xFrom = 0,
     xTo = 0,
@@ -880,7 +843,7 @@ class Animate {
     type = "linear",
     time,
     fps = 1000 / 60
-  } = {}) {
+  }) {
     [this.xFrom, this.xTo, this.yFrom, this.yTo, this.zFrom, this.zTo] = [xFrom, xTo, yFrom, yTo, zFrom, zTo];
     this.type = type;
     this.time = time;
@@ -888,12 +851,19 @@ class Animate {
   }
 
   set(x, y, z) {
-    [this.xFrom, this.yFrom, this.zFrom] = [x, y, z];
+    [this.xFrom, this.yFrom, this.zFrom] = [x || 0, y || 0, z || 0];
   }
 
   move(x, y, z) {
     this.frame = 1;
-    [this.xTo, this.yTo, this.zTo] = [x, y, z];
+    [this.xTo, this.yTo, this.zTo] = [x || 0, y || 0, z || 0];
+  }
+
+  moveAsync(x, y, z) {
+    this.move(x, y, z);
+    return new Promise(resolve => {
+      this.$.once("done", () => resolve());
+    });
   }
 
   addFrame() {
@@ -904,8 +874,16 @@ class Animate {
     this.type = type;
   }
 
+  getType() {
+    return this.type;
+  }
+
   setTime(time) {
     this.time = time;
+  }
+
+  getTime() {
+    return this.time;
   }
 
   moveImmediate(x, y, z) {
@@ -915,25 +893,13 @@ class Animate {
 
 }
 
-_defineProperty(Animate, "getValueInFrame", getValueInFrame);
+Animate.getValueInFrame = getValueInFrame;
 
 class MyElement {
   constructor(canvas) {
-    _defineProperty(this, "_els", []);
-
-    _defineProperty(this, "_idActiveNow", null);
-
-    _defineProperty(this, "_queue", []);
-
-    _defineProperty(this, "hypot", typeof Math.hypot === "function" ? Math.hypot : (...args) => {
-      const len = args.length;
-      let i = 0,
-          result = 0;
-
-      while (i < len) result += Math.pow(args[i++], 2);
-
-      return Math.sqrt(result);
-    });
+    this._els = [];
+    this._idActiveNow = -1;
+    this._queue = [];
 
     if ((canvas === null || canvas === void 0 ? void 0 : canvas.constructor) === fCanvas) {
       this._els.push(canvas);
@@ -948,7 +914,7 @@ class MyElement {
 
   _run(canvas) {
     this.bind(canvas);
-    this._idActiveNow = canvas._id;
+    this._idActiveNow = canvas.id;
 
     if (typeof this.update === "function") {
       this.update();
@@ -962,12 +928,12 @@ class MyElement {
       }
     }
 
-    this._idActiveNow = null;
+    this._idActiveNow = -1;
   }
 
-  addQueue(canvasElement) {
-    if (canvasElement instanceof MyElement) {
-      this._queue.push(canvasElement);
+  addQueue(element) {
+    if (element instanceof MyElement) {
+      this._queue.push(element);
     } else {
       console.error(`fCanvas: the parameter passed to MyElement.addQueue() must be a fCanvas object.`);
     }
@@ -981,16 +947,16 @@ class MyElement {
     return this._queue[index];
   }
 
-  run(canvasElement) {
-    this.$parent.run(canvasElement);
+  run(element) {
+    this.$parent.run(element);
   }
 
   has(id) {
-    return this._els.some(item => item._id === id);
+    return this._els.some(item => item.id === id);
   }
 
   get $parent() {
-    const canvas = this._idActiveNow === null ? this._els[this._els.length - 1] : this._els.find(item => item._id === this._idActiveNow);
+    const canvas = this._idActiveNow === null ? this._els[this._els.length - 1] : this._els.find(item => item.id === this._idActiveNow);
 
     if (canvas instanceof fCanvas) {
       return canvas;
@@ -1002,7 +968,7 @@ class MyElement {
 
   bind(canvas) {
     if (canvas instanceof fCanvas) {
-      if (this.has(canvas._id) === false) {
+      if (this.has(canvas.id) === false) {
         this._els.push(canvas);
       }
     } else {
@@ -1014,56 +980,48 @@ class MyElement {
     return this.$parent.$context2d;
   }
 
-  _extendsCanvas(name, ...argv) {
-    return this.$parent[name](...argv);
+  _toRadius(value) {
+    return this.$parent._toRadius(value);
   }
 
-  _toRadius(...argv) {
-    return this._extendsCanvas("_toRadius", ...argv);
+  _toDegress(value) {
+    return this.$parent._toDegress(value);
   }
 
-  _toDegress(...argv) {
-    return this._extendsCanvas("_toDegress", ...argv);
+  _toRgb(...params) {
+    return this.$parent._toRgb(params);
   }
 
-  _toRgb(...argv) {
-    return this._extendsCanvas("_toRgb", ...argv);
+  _figureOffset(x, y, width, height) {
+    return this.$parent._figureOffset(x, y, width, height);
   }
 
-  _figureOffset(...argv) {
-    return this._extendsCanvas("_figureOffset", ...argv);
+  sin(angle) {
+    return this.$parent.sin(angle);
   }
 
-  sin(...argv) {
-    return this._extendsCanvas("sin", ...argv);
+  asin(sin) {
+    return this.$parent.asin(sin);
   }
 
-  asin(...argv) {
-    return this._extendsCanvas("asin", ...argv);
+  cos(angle) {
+    return this.$parent.cos(angle);
   }
 
-  cos(...argv) {
-    return this._extendsCanvas("cos", ...argv);
+  acos(cos) {
+    return this.$parent.asin(cos);
   }
 
-  acos(...argv) {
-    return this._extendsCanvas("acos", ...argv);
+  tan(angle) {
+    return this.$parent.tan(angle);
   }
 
-  tan(...argv) {
-    return this._extendsCanvas("tan", ...argv);
+  atan(tan) {
+    return this.$parent.atan(tan);
   }
 
-  atan(...argv) {
-    return this._extendsCanvas("atan", ...argv);
-  }
-
-  tan2(...argv) {
-    return this._extendsCanvas("tan2", ...argv);
-  }
-
-  atan2(...argv) {
-    return this._extendsCanvas("atan2", ...argv);
+  atan2(y, x) {
+    return this.$parent.atan2(y, x);
   }
 
   get mouseX() {
@@ -1094,26 +1052,14 @@ class MyElement {
     return this.$parent.windowHeight;
   }
 
-  _createLinear(type, ...argv) {
-    return this.$context2d[type](...argv);
+  fill(...args) {
+    this.$context2d.fillStyle = this._toRgb(args);
+    this.$context2d.fill();
   }
 
-  fill() {
-    if (arguments.length === 0) {
-      return this.$context2d.fillStyle || "rgba(0, 0, 0, 0)";
-    } else {
-      this.$context2d.fillStyle = this._toRgb(arguments);
-      this.$context2d.fill();
-    }
-  }
-
-  stroke() {
-    if (arguments.length === 0) {
-      return this.$context2d.strokeStyle || "rgba(0, 0, 0, 0)";
-    } else {
-      this.$context2d.strokeStyle = this._toRgb(arguments);
-      this.$context2d.stroke();
-    }
+  stroke(...args) {
+    this.$context2d.strokeStyle = this._toRgb(args);
+    this.$context2d.stroke();
   }
 
   noFill() {
@@ -1136,18 +1082,18 @@ class MyElement {
         this.lineJoin("miter");
       }
 
-      this.$context2d = value;
+      this.$context2d.miterLimit = value;
     }
   }
 
-  shadowOffset(...args) {
-    if (args.length === 0) {
+  shadowOffset(x, y) {
+    if (arguments.length === 0) {
       return {
         x: this.$context2d.shadowOffsetX,
         y: this.$context2d.shadowOffsetY
       };
     } else {
-      [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = args;
+      [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [x || 0, y || 0];
     }
   }
 
@@ -1171,65 +1117,66 @@ class MyElement {
     this.$parent.restore();
   }
 
-  arc(c, t, e, i, n, o) {
+  arc(x, y, radius, astart, astop, reverse) {
     this.begin();
-    this.$context2d.arc(c, t, e, this._toRadius(i) - Math.PI / 2, this._toRadius(n) - Math.PI / 2, o);
+    this.$context2d.arc(x, y, radius, this._toRadius(astart) - Math.PI / 2, this._toRadius(astop) - Math.PI / 2, reverse);
     this.close();
   }
 
-  pie(x, y, r, d1, d2, a) {
+  pie(x, y, radius, astart, astop, reverse) {
     this.begin();
     this.move(x, y);
-    this.arc(x, y, r, d1, d2, a);
+    this.arc(x, y, radius, astart, astop, reverse);
     this.to(x, y);
     this.close();
   }
 
-  line(c, t, e, i) {
-    this.move(c, t);
-    this.to(e, i);
+  line(x1, y1, x2, y2) {
+    this.move(x1, y1);
+    this.to(x2, y2);
   }
 
-  ellipse(c, t, e, i, n, o, r) {
+  ellipse(x, y, radius1, radius2, astart, astop, reverse) {
     this.begin();
-    this.$context2d.ellipse(c, t, e, i, this._toRadius(n) - Math.PI / 2, this._toRadius(o), r === undefined ? !1 : r);
+    this.$context2d.ellipse(x, y, radius1, radius2, this._toRadius(astart) - Math.PI / 2, this._toRadius(astop), reverse);
     this.close();
   }
 
-  circle(x, y, r) {
-    this.arc(x, y, r, 0, 360);
+  circle(x, y, radius) {
+    this.arc(x, y, radius, 0, this.$parent.angleMode() === "degress" ? 360 : Math.PI * 2);
   }
 
   point(x, y) {
     this.circle(x, y, 1);
   }
 
-  triange(a, b, c, d, e, f) {
+  triange(x1, y1, x2, y2, x3, y3) {
     this.begin();
-    this.move(a, b);
-    this.to(c, d);
-    this.to(e, f);
+    this.move(x1, y1);
+    this.to(x2, y2);
+    this.to(x3, y3);
     this.close();
   }
 
   drawImage(image, ...args) {
     if (args.length === 2) {
-      args = this._figureOffset(...args, image.width, image.height);
+      args = this._figureOffset(args[0], args[1], image.width, image.height);
     } else if (args.length === 6) {
-      [args[5], args[6]] = this._figureOffset(...args.slice(3));
+      [args[5], args[6]] = this._figureOffset(args[0], args[1], args[2], args[3]);
     }
 
-    this.$context2d.drawImage(image, ...args);
+    this.$context2d.drawImage(image, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
   }
 
-  rect(x, y, w, h, $1, $2 = $1, $3 = $1, $4 = $2) {
+  rect(x, y, w, h, $1, $2, $3, $4) {
     this.begin();
     [x, y] = this._figureOffset(x, y, w, h);
 
     if (arguments.length < 5) {
       this.$context2d.rect(x, y, w, h);
     } else {
-      const arc = [AutoToPx($1, w), AutoToPx($2, h), AutoToPx($3, w), AutoToPx($4, h)];
+      const fontSize = this.$parent.fontSize();
+      const arc = [AutoToPx($1, w, fontSize), AutoToPx($2, h, fontSize), AutoToPx($3, w, fontSize), AutoToPx($4, h, fontSize)];
       this.move(x, y);
       this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
       this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
@@ -1240,100 +1187,108 @@ class MyElement {
     this.close();
   }
 
-  square(x, y, w, ...radius) {
-    this.rect(x, y, w, w, ...radius);
+  quadratic(cpx, cpy, x, y) {
+    this.$context2d.quadraticCurveTo(cpx, cpy, x, y);
   }
 
-  __functionDefault(property, arg) {
-    if (arg === undefined) {
-      return this.$context2d[property];
+  bezier(cp1x, cp1y, cp2x, cp2y, x, y) {
+    this.$context2d.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+  }
+
+  move(x, y) {
+    this.$context2d.moveTo(x, y);
+  }
+
+  to(x, y) {
+    this.$context2d.lineTo(x, y);
+  }
+
+  fillText(text, x, y, maxWidth) {
+    this.$context2d.fillText(text, x, y, maxWidth);
+  }
+
+  strokeText(text, x, y, maxWidth) {
+    this.$context2d.strokeText(text, x, y, maxWidth);
+  }
+
+  fillRect(x, y, width, height) {
+    this.$context2d.fillRect(x, y, width, height);
+  }
+
+  strokeRect(x, y, width, height) {
+    this.$context2d.strokeRect(x, y, width, height);
+  }
+
+  lineDash(value) {
+    if (value === undefined) {
+      return this.$context2d.lineDashOffset;
+    }
+
+    this.$context2d.lineDashOffset = value;
+  }
+
+  arcTo(x1, y1, x2, y2, radius) {
+    this.$context2d.arcTo(x1, y1, x2, y2, radius);
+  }
+
+  isPoint(x, y) {
+    return this.$context2d.isPointInPath(x, y);
+  }
+
+  createImageData(width, height) {
+    return height ? this.$context2d.createImageData(width, height) : this.$context2d.createImageData(width);
+  }
+
+  getImageData(x, y, width, height) {
+    return this.$context2d.getImageData(x, y, width, height);
+  }
+
+  putImageData(imageData, x, y, xs, ys, width, height) {
+    if (arguments.length === 7) {
+      this.$context2d.putImageData(imageData, x, y, xs, ys, width, height);
     } else {
-      this.$context2d[property] = arg;
+      this.$context2d.putImageData(imageData, x, y);
     }
   }
 
-  __functionDefault2(name, ...argv) {
-    return this.$context2d[name](...argv);
+  createPattern(image, direction) {
+    return this.$context2d.createPattern(image, direction);
   }
 
-  quadratic(...argv) {
-    this.__functionDefault2("quadraticCurveTo", ...argv);
+  createRadialGradient(x1, y1, r1, x2, y2, r2) {
+    return this.$context2d.createRadialGradient(x1, y1, r1, x2, y2, r2);
   }
 
-  bezier(...argv) {
-    this.__functionDefault2("bezierCurveTo", ...argv);
+  createLinearGradient(x, y, width, height) {
+    return this.$context2d.createLinearGradient(x, y, width, height);
   }
 
-  move(...argv) {
-    this.__functionDefault2("moveTo", ...argv);
+  lineJoin(type) {
+    if (type !== undefined) {
+      this.$context2d.lineJoin = type;
+    } else {
+      return this.$context2d.lineJoin;
+    }
   }
 
-  to(...argv) {
-    this.__functionDefault2("lineTo", ...argv);
+  lineCap(value) {
+    if (value !== undefined) {
+      this.$context2d.lineCap = value;
+    } else {
+      return this.$context2d.lineCap;
+    }
   }
 
-  fillText(...argv) {
-    this.__functionDefault2("fillText", ...argv);
+  shadowBlur(opacity) {
+    if (opacity === undefined) {
+      return this.$context2d.shadowBlur;
+    }
+
+    this.$context2d.shadowBlur = opacity;
   }
 
-  strokeText(...argv) {
-    this.__functionDefault2("strokeText", ...argv);
-  }
-
-  fillRect(...argv) {
-    this.__functionDefault2("fillRect", ...argv);
-  }
-
-  strokeRect(...argv) {
-    this.__functionDefault2("strokeRect", ...argv);
-  }
-
-  arcTo(...argv) {
-    this.__functionDefault2("arcTo", ...argv);
-  }
-
-  isPoint(...argv) {
-    this.__functionDefault2("isPointInPath", ...argv);
-  }
-
-  createImageData(...argv) {
-    return this.__functionDefault2("createImageData", ...argv);
-  }
-
-  getImageData(...argv) {
-    return this.__functionDefault2("getImageData", ...argv);
-  }
-
-  putImageData(...argv) {
-    this.__functionDefault2("putImageData", ...argv);
-  }
-
-  createPattern(...argv) {
-    return this.__functionDefault2("createPattern", ...argv);
-  }
-
-  createRadialGradient(...argv) {
-    return this.__functionDefault2("createRadialGradient", ...argv);
-  }
-
-  createLinearGradient(...argv) {
-    return this.__functionDefault2("createLinearGradient", ...argv);
-  }
-
-  lineJoin(argv) {
-    return this.__functionDefault("lineJoin", argv);
-  }
-
-  lineCap(argv) {
-    return this.__functionDefault("lineCap", argv);
-  }
-
-  shadowBlur(argv) {
-    return this.__functionDefault("shadowBlur", argv);
-  }
-
-  shadowColor(argv) {
-    return this.__functionDefault("shadowColor", argv);
+  shadowColor(...args) {
+    this.$context2d.shadowColor = this._toRgb(args);
   }
 
 }
@@ -1341,10 +1296,15 @@ class MyElement {
 class EAnimate extends MyElement {
   constructor(animate) {
     super();
+    this.__animate = new Animate();
 
-    _defineProperty(this, "__animate", null);
+    if (animate) {
+      this.__animate.config(animate);
+    }
+  }
 
-    this.__animate = new Animate(animate);
+  get animate() {
+    return this.__animate;
   }
 
   get $() {
@@ -1357,14 +1317,6 @@ class EAnimate extends MyElement {
 
   get done() {
     return this.animate.done;
-  }
-
-  get animate() {
-    return this.__animate;
-  }
-
-  get type() {
-    return this.animate.type;
   }
 
   get xFrom() {
@@ -1403,10 +1355,6 @@ class EAnimate extends MyElement {
     return this.animate.z;
   }
 
-  get time() {
-    return this.animate.time;
-  }
-
   get frames() {
     return this.animate.frames;
   }
@@ -1431,6 +1379,10 @@ class EAnimate extends MyElement {
     this.animate.move(x, y, z);
   }
 
+  moveAsync(x, y, z) {
+    return this.animate.moveAsync(x, y, z);
+  }
+
   moveImmediate(x, y, z) {
     this.animate.moveImmediate(x, y, z);
   }
@@ -1450,6 +1402,63 @@ class EAnimate extends MyElement {
 }
 
 class fCanvas {
+  constructor(element) {
+    this._ENV = {
+      angleMode: "degress",
+      rectAlign: "left",
+      rectBaseline: "top",
+      colorMode: "rgb",
+      rotate: 0,
+      clear: true,
+      loop: true
+    };
+    this._id = fCanvas.count++;
+    this._el = document.createElement("canvas");
+    this._context2dCaching = null;
+    this._stamentReady = new Stament();
+    this._existsPreload = false;
+    this.__translate = {
+      x: 0,
+      y: 0,
+      sumX: 0,
+      sumY: 0
+    };
+    this.__scale = {
+      x: 0,
+      y: 0,
+      sumX: 0,
+      sumY: 0
+    };
+    this.__idFrame = null;
+    this.preventTouch = false;
+    this.stopTouch = false;
+    this.touches = [];
+    this.changedTouches = [];
+
+    const handlerEvent = event => {
+      try {
+        if (event.type !== "mouseout") {
+          this.touches = getTouchInfo(this.$el, event.touches || [event]);
+          this.changedTouches = getTouchInfo(this.$el, event.changedTouches || [event]);
+        } else {
+          this.touches = [];
+        }
+
+        this.preventTouch && event.preventDefault();
+        this.stopTouch && event.stopPropagation();
+      } catch (e) {// throw e;
+      }
+    };
+
+    if (element instanceof HTMLCanvasElement) {
+      this._el = element;
+    }
+
+    this.$el.addEventListener(isMobile() ? "touchstart" : "mouseover", handlerEvent);
+    this.$el.addEventListener(isMobile() ? "touchmove" : "mousemove", handlerEvent);
+    this.$el.addEventListener(isMobile() ? "touchend" : "mouseout", handlerEvent);
+  }
+
   get mouseX() {
     var _this$touches$;
 
@@ -1466,128 +1475,8 @@ class fCanvas {
     return this.touches.length > 0;
   }
 
-  constructor() {
-    _defineProperty(this, "_ENV", {
-      angleMode: 1,
-      rectAlign: 0,
-      rectBaseline: 0,
-      colorMode: "rgb",
-      rotate: 0,
-      clear: true,
-      loop: true
-    });
-
-    _defineProperty(this, "preventTouch", false);
-
-    _defineProperty(this, "stopTouch", false);
-
-    _defineProperty(this, "touches", []);
-
-    _defineProperty(this, "changedTouches", []);
-
-    _defineProperty(this, "_id", fCanvas.count++);
-
-    _defineProperty(this, "_el", document.createElement("canvas"));
-
-    _defineProperty(this, "_events", {});
-
-    _defineProperty(this, "_context2dCaching", null);
-
-    _defineProperty(this, "_stamentReady", new Stament());
-
-    _defineProperty(this, "_existsPreload", false);
-
-    _defineProperty(this, "_store", {
-      cursor: "auto"
-    });
-
-    const handlerEvent = event => {
-      try {
-        if (event.type !== "mouseout") {
-          this.touches = getTouchInfo(this.$el, event.touches || [event]);
-          this.changedTouches = getTouchInfo(this.$el, event.changedTouches || [event]);
-        } else {
-          this.touches = [];
-        }
-
-        this.preventTouch && event.preventDefault();
-        this.stopTouch && event.stopPropagation();
-      } catch (e) {
-        throw e;
-      }
-    };
-
-    this.$on(isMobile() ? "touchstart" : "mouseover", handlerEvent);
-    this.$on(isMobile() ? "touchmove" : "mousemove", handlerEvent);
-    this.$on(isMobile() ? "touchend" : "mouseout", handlerEvent);
-  }
-
-  $on(name, callback) {
-    if (name in this._events) {
-      if (Array.isArray(this._events[name])) {
-        this._events[name].push(callback);
-      } else {
-        this._events[name] = [callback];
-      }
-    } else {
-      this._events[name] = callback;
-    }
-
-    this.$el.addEventListener(name, callback);
-  }
-
-  $off(name, callback) {
-    if (name in this._events) {
-      if (Array.isArray(this._events[name])) {
-        this._events[name] = this._events[name].filter(item => {
-          if (item === callback) {
-            this.$el.removeEventListener(name, item);
-            return false;
-          }
-
-          return true;
-        });
-      } else {
-        if (this._events[name] === callback) {
-          this.$el.removeEventListener(name, this._events[name]);
-          delete this._events[name];
-        }
-      }
-    }
-  }
-
-  _moveEvent(toEl) {
-    for (const name in this._events) {
-      if (Array.isArray(this._events[name])) {
-        this._events[name].forEach(item => {
-          toEl.addEventListener(name, item);
-          this.$el.removeEventListener(name, item);
-        });
-      } else {
-        toEl.addEventListener(name, this._events[name]);
-        this.$el.removeEventListener(name, this._events[name]);
-      }
-    }
-  }
-
-  append(parent = document.body) {
-    parent.appendChild(this.$el);
-  }
-
-  mount(query) {
-    if (typeof query === "string") {
-      query = document.querySelector(query) || this.$el;
-    }
-
-    [query.width, query.height] = [this.$el.width, this.$el.height];
-
-    this._moveEvent(query);
-
-    this._el = query;
-  }
-
-  noClear() {
-    this._ENV.clear = false;
+  get id() {
+    return this._id;
   }
 
   get $el() {
@@ -1596,10 +1485,24 @@ class fCanvas {
 
   get $context2d() {
     if (this._context2dCaching === null) {
-      return this._context2dCaching = this.$el.getContext("2d");
+      this._context2dCaching = this.$el.getContext("2d");
     }
 
     return this._context2dCaching;
+  }
+
+  append(parent = document.body) {
+    if (parent.contains(this.$el) === false) {
+      parent.appendChild(this.$el);
+    }
+  }
+
+  noClear() {
+    this._ENV.clear = false;
+  }
+
+  get acceptClear() {
+    return this._ENV.clear;
   }
 
   run(element) {
@@ -1638,36 +1541,12 @@ class fCanvas {
     this.$context2d.restore();
   }
 
-  _methodMode(type, value) {
-    if (!(type in this._ENV) || !(type in fCanvas.constants)) {
-      console.warn(`${type}: This method mode don't install.`);
-    } else {
-      if (value === undefined) {
-        return fCanvas.constants[type][this._ENV[type]];
-      } else {
-        let validate = false;
-
-        for (const key in fCanvas.constants[type]) {
-          if (fCanvas.constants[type][key].toLowerCase() === value.toLowerCase()) {
-            this._ENV[type] = key;
-          }
-
-          validate = true;
-        }
-
-        if (validate === false) {
-          console.warn(`${type}: Value't is validate.`);
-        }
-      }
-    }
-  }
-
   _toRadius(value) {
-    return this._ENV.angleMode == 0 ? value * Math.PI / 180 : value;
+    return this._ENV.angleMode === "radial" ? value * Math.PI / 180 : value;
   }
 
   _toDegress(value) {
-    return this._ENV.angleMode == 1 ? value * 180 / Math.PI : value;
+    return this._ENV.angleMode === "degress" ? value * 180 / Math.PI : value;
   }
 
   _toRgb([red = 0, green = red, blue = green, alpha = 1]) {
@@ -1677,29 +1556,29 @@ class fCanvas {
       if (typeof red === "string") {
         return red;
       } else {
-        const after = fCanvas.constants.colorMode[this._ENV.colorMode].match(/hsl|hsb/i) ? "%" : "";
-        return `${fCanvas.constants.colorMode[this._ENV.colorMode]}a(${[red, green + after, blue + after, alpha].join(",")})`;
+        const after = this._ENV.colorMode.match(/hsl|hsb/i) ? "%" : "";
+        return `${this._ENV.colorMode}a(${[red, green + after, blue + after, alpha].join(",")})`;
       }
     }
   }
 
   _figureOffset(x, y, width, height) {
     switch (this._ENV.rectAlign) {
-      case 1:
+      case "center":
         x -= width / 2;
         break;
 
-      case 2:
+      case "right":
         x -= width;
         break;
     }
 
     switch (this._ENV.rectBaseline) {
-      case 1:
+      case "middle":
         y -= height / 2;
         break;
 
-      case 2:
+      case "bottom":
         y -= height;
         break;
     }
@@ -1708,19 +1587,35 @@ class fCanvas {
   }
 
   angleMode(value) {
-    return this._methodMode("angleMode", value);
+    if (value === undefined) {
+      return this._ENV.angleMode;
+    }
+
+    this._ENV.angleMode = value;
   }
 
   rectAlign(value) {
-    return this._methodMode("rectAlign", value);
+    if (value === undefined) {
+      return this._ENV.rectAlign;
+    }
+
+    this._ENV.rectAlign = value;
   }
 
   colorMode(value) {
-    return this._methodMode("colorMode", value);
+    if (value === undefined) {
+      return this._ENV.colorMode;
+    }
+
+    this._ENV.colorMode = value;
   }
 
   rectBaseline(value) {
-    return this._methodMode("rectBaseline", value);
+    if (value === undefined) {
+      return this._ENV.rectBaseline;
+    }
+
+    this._ENV.rectBaseline = value;
   }
 
   fontSize(value) {
@@ -1770,20 +1665,20 @@ class fCanvas {
     this.$context2d.clearRect(x, y, w, h);
   }
 
-  background(...argv) {
-    var _argv$;
+  background(...params) {
+    var _params$;
 
-    if (((_argv$ = argv[0]) === null || _argv$ === void 0 ? void 0 : _argv$.constructor) === HTMLImageElement) {
-      this.$context2d.drawImage(argv[0], 0, 0, this.width, this.height);
+    if (((_params$ = params[0]) === null || _params$ === void 0 ? void 0 : _params$.constructor) === HTMLImageElement) {
+      this.$context2d.drawImage(params[0], 0, 0, this.width, this.height);
     } else {
-      this.$context2d.fillStyle = this._toRgb(argv);
+      this.$context2d.fillStyle = this._toRgb(params);
       this.$context2d.fill();
       this.$context2d.fillRect(0, 0, this.width, this.height);
     }
   }
 
-  toDataURL(...args) {
-    return this.$el.toDataURL(...args);
+  toDataURL(type = "image/png", scale) {
+    return this.$el.toDataURL(type, scale);
   }
 
   rotate(value) {
@@ -1825,48 +1720,86 @@ class fCanvas {
     });
   }
 
-  __functionDefault(property, arg) {
-    if (arg === undefined) {
-      return this.$context2d[property];
-    } else {
-      this.$context2d[property] = arg;
+  font(value) {
+    if (value === undefined) {
+      return this.$context2d.font;
     }
+
+    this.$context2d.font = value;
   }
 
-  __functionDefault2(name, ...argv) {
-    return this.$context2d[name](...argv);
+  textAlign(value) {
+    if (value === undefined) {
+      return this.$context2d.textAlign;
+    }
+
+    this.$context2d.textAlign = value;
   }
 
-  font(argv) {
-    return this.__functionDefault("font", argv);
+  textBaseline(value) {
+    if (value === undefined) {
+      return this.$context2d.textBaseline;
+    }
+
+    this.$context2d.textBaseline = value;
   }
 
-  textAlign(argv) {
-    return this.__functionDefault("textAlign", argv);
+  globalOperation(value) {
+    if (value === undefined) {
+      return this.$context2d.globalCompositeOperation;
+    }
+
+    this.$context2d.globalCompositeOperation = value;
   }
 
-  textBaseline(argv) {
-    return this.__functionDefault("textBaseline", argv);
+  translate(x, y) {
+    if (arguments.length === 0) {
+      return {
+        x: this.__translate.x,
+        y: this.__translate.y
+      };
+    }
+
+    this.$context2d.translate(x, y);
+    this.__translate.sumX += x || 0;
+    this.__translate.sumY += y || 0;
   }
 
-  globalOperation(argv) {
-    return this.__functionDefault("globalCompositeOperation", argv);
+  resetTranslate() {
+    this.$context2d.translate(-this.__translate.sumX, -this.__translate.sumY);
   }
 
-  translate(...argv) {
-    this.__functionDefault2("translate", ...argv);
+  scale(x, y) {
+    if (arguments.length === 0) {
+      return {
+        x: this.__scale.x,
+        y: this.__scale.y
+      };
+    }
+
+    this.$context2d.scale(x, y);
+    this.__scale.sumX += x || 0;
+    this.__scale.sumY += y || 0;
   }
 
-  scale(...argv) {
-    this.__functionDefault2("scale", ...argv);
+  resetScale() {
+    this.$context2d.translate(-this.__translate.sumX, -this.__translate.sumY);
   }
 
-  clip(...argv) {
-    this.__functionDefault2("clip", ...argv);
+  clip(fillRule, path) {
+    if (path === undefined) {
+      this.$context2d.clip(fillRule);
+    }
+
+    this.$context2d.clip(path, fillRule);
   }
 
-  transform(...argv) {
-    if (argv[0] instanceof DOMatrix) {
+  transform(m11, m12, m21, m22, dx, dy) {
+    if (arguments.length === 0) {
+      return this.$context2d.getTransform();
+    }
+
+    if (m11 instanceof DOMMatrix) {
       const {
         a = 1,
         b = 0,
@@ -1874,15 +1807,15 @@ class fCanvas {
         d = 1,
         e = 0,
         f = 0
-      } = argv[0];
+      } = m11;
       this.$context2d.transform(a, b, c, d, e, f);
     } else {
-      this.$context2d.transform(...argv);
+      this.$context2d.transform(m11, m12, m21, m22, dx, dy);
     }
   }
 
-  setTransform(...argv) {
-    if (argv[0] instanceof DOMatrix) {
+  setTransform(m11, m12, m21, m22, dx, dy) {
+    if (m11 instanceof DOMMatrix) {
       const {
         a = 1,
         b = 0,
@@ -1890,192 +1823,148 @@ class fCanvas {
         d = 1,
         e = 0,
         f = 0
-      } = argv[0];
+      } = m11;
       this.$context2d.setTransform(a, b, c, d, e, f);
     } else {
-      this.$context2d.setTransform(...argv);
+      this.$context2d.setTransform(m11, m12, m21, m22, dx, dy);
     }
   }
 
-  sin(deg) {
-    return Math.sin(this._toRadius(deg));
+  sin(angle) {
+    return Math.sin(this._toRadius(angle));
   }
 
-  asin(...argv) {
-    return this._toDegress(Math.asin(...argv));
+  asin(sin) {
+    return this._toDegress(Math.asin(sin));
   }
 
-  cos(deg) {
-    return Math.cos(this._toRadius(deg));
+  cos(angle) {
+    return Math.cos(this._toRadius(angle));
   }
 
-  acos(...argv) {
-    return this._toDegress(Math.acos(...argv));
+  acos(cos) {
+    return this._toDegress(Math.acos(cos));
   }
 
-  tan(deg) {
-    return Math.tan(this._toRadius(deg));
+  tan(angle) {
+    return Math.tan(this._toRadius(angle));
   }
 
-  atan(...argv) {
-    return this._toDegress(Math.atan(...argv));
+  atan(tan) {
+    return this._toDegress(Math.atan(tan));
   }
 
-  tan2(deg) {
-    return Math.tan2(this._toRadius(deg));
-  }
-
-  atan2(...argv) {
-    return this._toDegress(Math.atan2(...argv));
+  atan2(y, x) {
+    return this._toDegress(Math.atan2(y, x));
   }
 
   cursor() {
-    this.$el.style.cursor = this._store.cursor;
+    this.$el.style.cursor = "auto";
   }
 
   noCursor() {
-    this._store.cursor = this.$el.style.cursor || "auto";
     this.$el.style.cursor = "none";
   }
 
   loop() {
     this._ENV.loop = true;
+
+    this._stamentReady.emit("setuped");
   }
 
   noLoop() {
     this._ENV.loop = false;
+
+    if (this.__idFrame) {
+      (cancelAnimationFrame || webkitCancelAnimationFrame || clearTimeout)(this.__idFrame);
+    }
+  }
+
+  get acceptLoop() {
+    return this._ENV.loop;
   }
 
   keyPressed(callback) {
-    this.$on("keypress", callback);
-    return {
-      off: () => {
-        this.$off("keypress", callback);
-      }
+    this.$el.addEventListener("keypress", callback);
+    return () => {
+      this.$el.removeEventListener("keypress", callback);
     };
   }
 
   mouseIn(callback) {
-    this.$on("mouseover", callback);
-    return {
-      off: () => {
-        this.$off("mouseover", callback);
-      }
+    this.$el.addEventListener("mouseover", callback);
+    return () => {
+      this.$el.removeEventListener("mouseover", callback);
     };
   }
 
   mouseOut(callback) {
-    this.$on("mouseout", callback);
-    return {
-      off: () => {
-        this.$off("mouseout", callback);
-      }
+    this.$el.addEventListener("mouseout", callback);
+    return () => {
+      this.$el.removeEventListener("mouseout", callback);
     };
   }
 
   mouseDowned(callback) {
-    this.$on("mousedown", callback);
-    return {
-      off: () => {
-        this.$off("mousedown", callback);
-      }
+    this.$el.addEventListener("mousedown", callback);
+    return () => {
+      this.$el.removeEventListener("mousedown", callback);
     };
   }
 
   touchStarted(callback) {
-    this.$on("touchstart", callback);
-    return {
-      off: () => {
-        this.$off("touchstart", callback);
-      }
+    this.$el.addEventListener("touchstart", callback);
+    return () => {
+      this.$el.removeEventListener("touchstart", callback);
     };
   }
 
   touchMoved(callback) {
-    this.$on("touchmove", callback);
-    return {
-      off: () => {
-        this.$off("touchmove", callback);
-      }
+    this.$el.addEventListener("touchmove", callback);
+    return () => {
+      this.$el.removeEventListener("touchmove", callback);
     };
   }
 
   touchEned(callback) {
-    this.$on("touchend", callback);
-    return {
-      off: () => {
-        this.$off("touchend", callback);
-      }
+    this.$el.addEventListener("touchend", callback);
+    return () => {
+      this.$el.removeEventListener("touchend", callback);
     };
   }
 
   mouseMoved(callback) {
-    this.$on("mousemove", callback);
-    return {
-      off: () => {
-        this.$off("mousemove", callback);
-      }
+    this.$el.addEventListener("mousemove", callback);
+    return () => {
+      this.$el.removeEventListener("mousemove", callback);
     };
   }
 
   mouseUped(callback) {
-    this.$on("mouseup", callback);
-    return {
-      off: () => {
-        this.$off("mouseup", callback);
-      }
+    this.$el.addEventListener("mouseup", callback);
+    return () => {
+      this.$el.removeEventListener("mouseup", callback);
     };
   }
 
   mouseClicked(callback) {
-    this.$on("click", callback);
-    return {
-      off: () => {
-        this.$off("click", callback);
-      }
+    this.$el.addEventListener("click", callback);
+    return () => {
+      this.$el.removeEventListener("click", callback);
     };
   }
 
 }
 
-_defineProperty(fCanvas, "Element", MyElement);
-
-_defineProperty(fCanvas, "EAnimate", EAnimate);
-
-_defineProperty(fCanvas, "constants", {
-  angleMode: {
-    0: "radial",
-    1: "degress"
-  },
-  rectAlign: {
-    0: "left",
-    1: "center",
-    2: "right"
-  },
-  rectBaseline: {
-    0: "top",
-    1: "middle",
-    2: "bottom"
-  },
-  colorMode: {
-    rgb: "rgb",
-    hsl: "hsl",
-    hue: "hue",
-    hsb: "hsb"
-  }
-});
-
-_defineProperty(fCanvas, "count", 0);
-
+fCanvas.Element = MyElement;
+fCanvas.EAnimate = EAnimate;
+fCanvas.count = 0;
 const noopFCanvas = new fCanvas();
 
 function bindEvent(name, callback, element) {
   element.addEventListener(name, callback);
-  return {
-    off() {
-      element.removeEventListener(name, callback);
-    }
-
+  return () => {
+    element.removeEventListener(name, callback);
   };
 }
 let inited = false;
@@ -2108,13 +1997,13 @@ async function setup(callback) {
 }
 function draw(callback, canvas) {
   if (inited) {
-    if ((canvas === null || canvas === void 0 ? void 0 : canvas._ENV.clear) === true) {
+    if (canvas && canvas.acceptClear === true) {
       canvas.clear();
     }
 
     callback();
 
-    if (!canvas || (canvas === null || canvas === void 0 ? void 0 : canvas._ENV.loop) === true) {
+    if (!canvas || canvas.acceptLoop === true) {
       requestAnimationFrame(() => draw(callback, canvas));
     }
   } else {
@@ -2152,4 +2041,4 @@ function touchEnded(callback, element = window) {
 }
 
 export default fCanvas;
-export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, createMatrix, createVector, draw, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, setup, touchEnded, touchMoved, touchStarted };
+export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, draw, hypot, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, setup, touchEnded, touchMoved, touchStarted };

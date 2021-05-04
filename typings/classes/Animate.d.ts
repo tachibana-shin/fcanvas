@@ -1,0 +1,50 @@
+import Emitter from "./Emitter";
+export declare type AnimateType = "ease" | "quadratic" | "sine-ease-in-out" | "quintic-ease" | "exp-ease-in-out" | "linear";
+export interface AnimateConfig {
+    xFrom?: number;
+    xTo?: number;
+    yFrom?: number;
+    yTo?: number;
+    zFrom?: number;
+    zTo?: number;
+    type?: AnimateType;
+    time: number;
+    fps?: number;
+}
+declare function getValueInFrame(type: AnimateType, start: number, stop: number, frame: number, frames: number, power?: number): number;
+declare class Animate {
+    static getFrames(time: number, fps?: number): number;
+    static getValueInFrame: typeof getValueInFrame;
+    $: Emitter;
+    private _frame;
+    private type;
+    private time;
+    private fps;
+    xFrom: number;
+    xTo: number;
+    yFrom: number;
+    yTo: number;
+    zFrom: number;
+    zTo: number;
+    get x(): number;
+    get y(): number;
+    get z(): number;
+    get frames(): number;
+    get frame(): number;
+    set frame(value: number);
+    get running(): boolean;
+    get done(): boolean;
+    constructor(config?: AnimateConfig);
+    config({ xFrom, xTo, yFrom, yTo, zFrom, zTo, type, time, fps, }: AnimateConfig): void;
+    set(x?: number, y?: number, z?: number): void;
+    move(x?: number, y?: number, z?: number): void;
+    moveAsync(x?: number, y?: number, z?: number): Promise<void>;
+    addFrame(): void;
+    setType(type: AnimateType): void;
+    getType(): AnimateType;
+    setTime(time: number): void;
+    getTime(): number;
+    moveImmediate(x?: number, y?: number, z?: number): void;
+}
+export default Animate;
+export { getValueInFrame };

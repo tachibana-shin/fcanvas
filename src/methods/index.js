@@ -1,123 +1,102 @@
-import DOMMatrix from "../classes/DOMMatrix.js";
-import Vector from "../classes/Vector.js";
-
-export function CircleImpact(e, f) {
-  return (f.x - e.x) ** 2 + (f.y - e.y) ** 2 < (e.radius + f.radius) ** 2;
+export function CircleImpact(circle1, circle2) {
+    return ((circle1.x - circle2.x) ** 2 + (circle1.y - circle2.y) ** 2 <
+        (circle1.radius + circle2.radius) ** 2);
 }
-
-export function CircleImpactPoint(e, x, y) {
-  return (x - e.x) ** 2 + (y - e.y) ** 2 < e.radius ** 2;
+export function CircleImpactPoint(circle, x, y) {
+    return (x - circle.x) ** 2 + (y - circle.y) ** 2 < circle.radius ** 2;
 }
-
-export function CircleImpactRect(sphere, box) {
-  const x = Math.max(box.x, Math.min(sphere.x, box.x + box.width));
-  const y = Math.max(box.y, Math.min(sphere.y, box.y + box.height));
-
-  const distance =
-    (x - sphere.x) * (x - sphere.x) + (y - sphere.y) * (y - sphere.y);
-
-  return distance < sphere.radius ** 2;
+export function CircleImpactRect(circle, rect) {
+    const x = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
+    const y = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
+    const distance = (x - circle.x) * (x - circle.x) + (y - circle.y) * (y - circle.y);
+    return distance < circle.radius ** 2;
 }
-
 export function constrain(value, min, max) {
-  return Math.min(Math.max(min, value), max);
+    return Math.min(Math.max(min, value), max);
 }
-
-export function createMatrix(css) {
-  const { a, b, c, d, e, f } = new DOMMatrix(css);
-
-  return [a, b, c, d, e, f];
-}
-
-export function createVector(...argv) {
-  return new Vector(...argv);
-}
-
 export function loadImage(src) {
-  const img = new Image();
-  img.src = src;
-  return new Promise((resolve, reject) => {
-    function loaded() {
-      resolve(img);
-      img.removeEventListener("load", loaded);
+    const img = new Image();
+    img.src = src;
+    return new Promise((resolve, reject) => {
+        function loaded() {
+            resolve(img);
+            img.removeEventListener("load", loaded);
+        }
+        function error(err) {
+            reject(err);
+            img.removeEventListener("error", error);
+        }
+        img.addEventListener("load", loaded);
+        img.addEventListener("error", error);
+    });
+}
+export function map(value, start, stop, min, max) {
+    return ((value - start) * (max - min)) / (stop - start) + min;
+}
+function random(...args) {
+    if (args.length === 1) {
+        if (args[0] !== null &&
+            typeof args[0] === "object" &&
+            "length" in args[0]) {
+            return args[0][Math.floor(Math.random() * args[0].length)];
+        }
+        return Math.random() * args[0];
     }
-
-    function error() {
-      reject(err);
-      img.removeEventListener("error", error);
+    if (args.length === 2) {
+        return args[0] + Math.random() * (args[1] - args[0]);
     }
-    img.addEventListener("load", loaded);
-    img.addEventListener("error", error);
-  });
 }
-
-export function map(a, b, c, d, e) {
-  return ((a - b) * (e - d)) / (c - b) + d;
-}
-
-export function random(...args) {
-  if (args.length === 1) {
-    if (
-      args[0] !== null &&
-      typeof args[0] === "object" &&
-      "length" in args[0]
-    ) {
-      return args[0][Math.floor(Math.random() * args[0].length)];
+function range(start, stop, step) {
+    step = step || 1;
+    const arr = [];
+    let isChar = false;
+    if (stop === undefined)
+        (stop = start), (start = 1);
+    if (typeof start === "string") {
+        start = start.charCodeAt(0);
+        stop = stop.charCodeAt(0);
+        isChar = true;
     }
-
-    return Math.random() * args[0];
-  }
-  if (args.length === 2) {
-    return args[0] + Math.random() * (args[1] - args[0]);
-  }
-}
-
-export function range($start, $end, $step) {
-  $step = $step || 1;
-  const arr = [];
-  let isChar = false;
-
-  if ($end === undefined) ($end = $start), ($start = 1);
-
-  if (typeof $start == "string") {
-    $start = $start.charCodeAt(0);
-    $end = $end.charCodeAt(0);
-    isChar = true;
-  }
-
-  if ($start !== $end && Math.abs($end - $start) < Math.abs($step))
-    throw new Error("range(): step exceeds the specified range.");
-
-  if ($end > $start) {
-    $step < 0 && ($step *= -1);
-    while ($start <= $end) {
-      arr.push(isChar ? String.fromCharCode($start) : $start);
-      $start += $step;
+    if (start !== stop && Math.abs(stop - start) < Math.abs(step))
+        throw new Error("range(): step exceeds the specified range.");
+    if (stop > start) {
+        step < 0 && (step *= -1);
+        while (start <= stop) {
+            arr.push(isChar ? String.fromCharCode(start) : start);
+            start += step;
+        }
     }
-  } else {
-    $step > 0 && ($step *= -1);
-    while ($start >= $end) {
-      arr.push(isChar ? String.fromCharCode($start) : $start);
-      $start += $step;
+    else {
+        step > 0 && (step *= -1);
+        while (start >= stop) {
+            arr.push(isChar ? String.fromCharCode(start) : start);
+            start += step;
+        }
     }
-  }
-
-  return arr;
+    return arr;
 }
-
-export function RectImpact(a, b) {
-  return (
-    a.x <= b.x + b.width &&
-    a.x + a.width >= b.x &&
-    a.y <= b.y + b.height &&
-    a.y + a.height >= b.y
-  );
+export { random, range };
+export function RectImpact(rect1, rect2) {
+    return (rect1.x <= rect2.x + rect2.width &&
+        rect1.x + rect1.width >= rect2.x &&
+        rect1.y <= rect2.y + rect2.height &&
+        rect1.y + rect1.height >= rect2.y);
 }
-
-export function RectImpactPoint(e, x, y) {
-  return e.x < x && e.x + e.width > x && e.y < y && e.y + e.height > y;
+export function RectImpactPoint(rect, x, y) {
+    return (rect.x < x &&
+        rect.x + rect.width > x &&
+        rect.y < y &&
+        rect.y + rect.height > y);
 }
-
 export function lerp(start, stop, amt) {
-  return amt * (stop - start) + start;
+    return amt * (stop - start) + start;
 }
+export const hypot = typeof Math.hypot === "function"
+    ? Math.hypot
+    : (...args) => {
+        const len = args.length;
+        let i = 0, result = 0;
+        while (i < len)
+            result += Math.pow(args[i++], 2);
+        return Math.sqrt(result);
+    };
