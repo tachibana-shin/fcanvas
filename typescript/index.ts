@@ -34,6 +34,10 @@ type GlobalCompositeOperationType =
   | "lighter"
   | "copy"
   | "xor";
+type ParamsDrawImage =
+  | [number, number]
+  | [number, number, number, number]
+  | [number, number, number, number, number, number, number, number];
 
 interface ENV {
   angleMode: AngleType;
@@ -217,7 +221,7 @@ class MyElement {
   fill(color: string): void;
   fill(colors: Array<number>): void;
   fill(gradient: CanvasGradient): void;
-  fill(image: HTMLImageElement): void;
+  fill(image: CanvasImageSource): void;
   fill(color: number): void;
   fill(...args: any[]): void {
     this.$context2d.fillStyle = this._toRgb(args);
@@ -237,7 +241,7 @@ class MyElement {
   stroke(color: string): void;
   stroke(colors: Array<number>): void;
   stroke(gradient: CanvasGradient): void;
-  stroke(image: HTMLImageElement): void;
+  stroke(image: CanvasImageSource): void;
   stroke(color: number): void;
   stroke(...args: any[]): void {
     this.$context2d.strokeStyle = this._toRgb(args);
@@ -387,16 +391,16 @@ class MyElement {
     this.close();
   }
 
-  drawImage(image: HTMLImageElement, x: number, y: number): void;
+  drawImage(image: CanvasImageSource, x: number, y: number): void;
   drawImage(
-    image: HTMLImageElement,
+    image: CanvasImageSource,
     x: number,
     y: number,
     width: number,
     height: number
   ): void;
   drawImage(
-    image: HTMLImageElement,
+    image: CanvasImageSource,
     sx: number,
     sy: number,
     swidth: number,
@@ -406,28 +410,9 @@ class MyElement {
     width: number,
     height: number
   ): void;
-  drawImage(image: HTMLImageElement, ...args: number[]): void {
-    if (args.length === 2) {
-      args = this._figureOffset(args[0], args[1], image.width, image.height);
-    } else if (args.length === 6) {
-      [args[5], args[6]] = this._figureOffset(
-        args[0],
-        args[1],
-        args[2],
-        args[3]
-      );
-    }
-    this.$context2d.drawImage(
-      image,
-      args[0],
-      args[1],
-      args[2],
-      args[3],
-      args[4],
-      args[5],
-      args[6],
-      args[7]
-    );
+  drawImage(image: CanvasImageSource, ...args: number[]): void {
+    // @ts-expect-error
+    this.$context2d.drawImage(image, ...(args as ParamsDrawImage));
   }
   rect(x: number, y: number, width: number, height: number): void;
   rect(
@@ -577,7 +562,7 @@ class MyElement {
     }
   }
   createPattern(
-    image: HTMLImageElement,
+    image: CanvasImageSource,
     direction: "repeat" | "repeat-x" | "repeat-y" | "no-repeat"
   ): CanvasPattern | null {
     return this.$context2d.createPattern(image, direction);
@@ -648,7 +633,7 @@ class MyElement {
   shadowColor(color: string): void;
   shadowColor(colors: Array<number>): void;
   shadowColor(gradient: CanvasGradient): void;
-  shadowColor(image: HTMLImageElement): void;
+  shadowColor(image: CanvasImageSource): void;
   shadowColor(color: number): void;
   shadowColor(...args: ParamsToRgb): void {
     this.$context2d.shadowColor = this._toRgb(args);
@@ -1013,7 +998,7 @@ class fCanvas {
     this.$context2d.clearRect(x, y, w, h);
   }
   background(...params: ParamsToRgb): void {
-    if (params[0]?.constructor === HTMLImageElement) {
+    if (typeof params[0] === "object") {
       this.$context2d.drawImage(params[0], 0, 0, this.width, this.height);
     } else {
       this.$context2d.fillStyle = this._toRgb(params);
