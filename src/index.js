@@ -20,6 +20,8 @@ class MyElement {
         else {
             this._els.push(noopFCanvas);
         }
+    }
+    _initAnimate() {
         if (typeof this.setupAnimate === "function") {
             this._animate = new Animate(this.setupAnimate.call(this));
         }
@@ -28,6 +30,7 @@ class MyElement {
         }
     }
     get animate() {
+        this._initAnimate();
         return this._animate;
     }
     /**

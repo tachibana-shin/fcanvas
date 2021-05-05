@@ -33,6 +33,7 @@ declare class MyElement {
      * @return {any}
      */
     constructor(canvas?: fCanvas);
+    private _initAnimate;
     get animate(): Animate | undefined;
     /**
      * @return {HTMLCanvasElement}

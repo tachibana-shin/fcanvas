@@ -2523,17 +2523,22 @@ var MyElement = /*#__PURE__*/function () {
     } else {
       this._els.push(noopFCanvas);
     }
-
-    if (typeof this.setupAnimate === "function") {
-      this._animate = new Animate(this.setupAnimate.call(this));
-    } else if (this.setupAnimate != null) {
-      this._animate = new Animate(this.setupAnimate);
-    }
   }
 
   _createClass(MyElement, [{
+    key: "_initAnimate",
+    value: function _initAnimate() {
+      if (typeof this.setupAnimate === "function") {
+        this._animate = new Animate(this.setupAnimate.call(this));
+      } else if (this.setupAnimate != null) {
+        this._animate = new Animate(this.setupAnimate);
+      }
+    }
+  }, {
     key: "animate",
     get: function get() {
+      this._initAnimate();
+
       return this._animate;
     }
     /**
