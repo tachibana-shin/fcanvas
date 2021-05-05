@@ -2523,13 +2523,24 @@ var MyElement = /*#__PURE__*/function () {
     } else {
       this._els.push(noopFCanvas);
     }
-  }
-  /**
-   * @return {HTMLCanvasElement}
-   */
 
+    if (typeof this.setupAnimate === "function") {
+      this._animate = new Animate(this.setupAnimate.call(this));
+    } else if (this.setupAnimate != null) {
+      this._animate = new Animate(this.setupAnimate);
+    }
+  }
 
   _createClass(MyElement, [{
+    key: "animate",
+    get: function get() {
+      return this._animate;
+    }
+    /**
+     * @return {HTMLCanvasElement}
+     */
+
+  }, {
     key: "$el",
     get: function get() {
       return this.$parent.$el;

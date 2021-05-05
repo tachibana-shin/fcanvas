@@ -21,14 +21,19 @@ interface LikeMyElement extends MyElement {
 declare class MyElement {
     update: any;
     draw: any;
+    setupAnimate: {
+        (): AnimateConfig;
+    } | undefined | AnimateConfig;
     private _els;
     private _idActiveNow;
     private _queue;
+    private _animate;
     /**
      * @param {fCanvas} canvas?
      * @return {any}
      */
     constructor(canvas?: fCanvas);
+    get animate(): Animate | undefined;
     /**
      * @return {HTMLCanvasElement}
      */

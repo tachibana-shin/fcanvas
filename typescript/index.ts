@@ -65,10 +65,17 @@ interface LikeMyElement extends MyElement {
 class MyElement {
   public update: any;
   public draw: any;
+  public setupAnimate:
+    | {
+        (): AnimateConfig;
+      }
+    | undefined
+    | AnimateConfig;
 
   private _els: fCanvas[] = [];
   private _idActiveNow: number = -1;
   private _queue: LikeMyElement[] = [];
+  private _animate: Animate | undefined;
 
   /**
    * @param {fCanvas} canvas?
@@ -80,6 +87,16 @@ class MyElement {
     } else {
       this._els.push(noopFCanvas);
     }
+
+    if (typeof this.setupAnimate === "function") {
+      this._animate = new Animate(this.setupAnimate.call(this));
+    } else if (this.setupAnimate != null) {
+      this._animate = new Animate(this.setupAnimate);
+    }
+  }
+
+  get animate(): Animate | undefined {
+    return this._animate;
   }
 
   /**

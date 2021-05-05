@@ -20,6 +20,15 @@ class MyElement {
         else {
             this._els.push(noopFCanvas);
         }
+        if (typeof this.setupAnimate === "function") {
+            this._animate = new Animate(this.setupAnimate.call(this));
+        }
+        else if (this.setupAnimate != null) {
+            this._animate = new Animate(this.setupAnimate);
+        }
+    }
+    get animate() {
+        return this._animate;
     }
     /**
      * @return {HTMLCanvasElement}
