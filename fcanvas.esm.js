@@ -1335,8 +1335,16 @@ class MyElement {
     this._idActiveNow = canvas.id;
 
     if (typeof this.update === "function") {
+      if (this.autoDraw === true && typeof this.draw === "function") {
+        this.draw();
+      }
+
       this.update();
-    } else if (typeof this.draw === "function") {
+
+      if (this.animate) {
+        this.animate.addFrame();
+      }
+    } else if (this.autoDraw !== true && typeof this.draw === "function") {
       this.draw();
     }
 
@@ -2546,11 +2554,11 @@ class fCanvas {
   }
 
   _toRadius(value) {
-    return this._ENV.angleMode === "radial" ? value * Math.PI / 180 : value;
+    return this._ENV.angleMode === "degress" ? value * Math.PI / 180 : value;
   }
 
   _toDegress(value) {
-    return this._ENV.angleMode === "degress" ? value * 180 / Math.PI : value;
+    return this._ENV.angleMode === "radial" ? value * 180 / Math.PI : value;
   }
 
   _toRgb([red = 0, green = red, blue = green, alpha = 1]) {
