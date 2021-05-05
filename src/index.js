@@ -11,6 +11,8 @@ class MyElement {
      * @return {any}
      */
     constructor(canvas) {
+        this.autoDraw = true;
+        this.autoFrame = true;
         this._els = [];
         this._idActiveNow = -1;
         this._queue = [];
@@ -49,7 +51,7 @@ class MyElement {
                 this.draw();
             }
             this.update();
-            if (this.animate) {
+            if (this.animate && this.autoFrame === true) {
                 this.animate.addFrame();
             }
         }
@@ -57,8 +59,11 @@ class MyElement {
             this.draw();
         }
         if (this._queue.length > 0) {
-            for (let index = 0, length = this._queue.length; index < length; index++) {
+            const { length } = this._queue;
+            let index = 0;
+            while (index < length) {
                 this.run(this._queue[index]);
+                index++;
             }
         }
         this._idActiveNow = -1;

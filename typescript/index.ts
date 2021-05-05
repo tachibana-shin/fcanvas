@@ -71,7 +71,8 @@ class MyElement {
       }
     | undefined
     | AnimateConfig;
-  public autoDraw: boolean | undefined;
+  public autoDraw: boolean = true;
+  public autoFrame: boolean = true;
 
   private _els: fCanvas[] = [];
   private _idActiveNow: number = -1;
@@ -120,7 +121,7 @@ class MyElement {
       }
       this.update();
 
-      if (this.animate) {
+      if (this.animate && this.autoFrame === true) {
         this.animate.addFrame();
       }
     } else if (this.autoDraw !== true && typeof this.draw === "function") {
@@ -128,12 +129,12 @@ class MyElement {
     }
 
     if (this._queue.length > 0) {
-      for (
-        let index = 0, length = this._queue.length;
-        index < length;
-        index++
-      ) {
+      const { length } = this._queue;
+      let index = 0;
+
+      while (index < length) {
         this.run(this._queue[index]);
+        index++;
       }
     }
 

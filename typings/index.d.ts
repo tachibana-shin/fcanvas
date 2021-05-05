@@ -24,7 +24,8 @@ declare class MyElement {
     setupAnimate: {
         (): AnimateConfig;
     } | undefined | AnimateConfig;
-    autoDraw: boolean | undefined;
+    autoDraw: boolean;
+    autoFrame: boolean;
     private _els;
     private _idActiveNow;
     private _queue;

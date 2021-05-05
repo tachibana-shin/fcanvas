@@ -167,3 +167,19 @@ export const hypot = typeof Math.hypot === "function"
             result += Math.pow(args[i++], 2);
         return Math.sqrt(result);
     };
+export function foreach(object, callback) {
+    if ("length" in object) {
+        const { length } = object;
+        let index = 0;
+        while (index < length) {
+            // @ts-expect-error
+            callback.call(object, object[index], index, object);
+            index++;
+        }
+    }
+    else {
+        for (const index in object) {
+            callback.call(object, object[index], index, object);
+        }
+    }
+}

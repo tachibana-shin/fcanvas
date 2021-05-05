@@ -233,3 +233,29 @@ export const hypot =
         while (i < len) result += Math.pow(args[i++], 2);
         return Math.sqrt(result);
       };
+
+export function foreach(
+  object: ArrayLike<any> | Object,
+  callback: {
+    (
+      value?: any,
+      index?: number | string,
+      object?: ArrayLike<any> | Object
+    ): void;
+  }
+) {
+  if ("length" in object) {
+    const { length } = object;
+    let index: number = 0;
+
+    while (index < length) {
+      // @ts-expect-error
+      callback.call(object, object[index], index, object);
+      index++;
+    }
+  } else {
+    for (const index in object) {
+      callback.call(object, object[index], index, object);
+    }
+  }
+}
