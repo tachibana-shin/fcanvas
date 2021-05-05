@@ -15,6 +15,9 @@ declare type GlobalCompositeOperationType = "source-over" | "source-atop" | "sou
 interface noop {
     (): void;
 }
+interface LikeMyElement extends MyElement {
+    [propName: string]: any;
+}
 declare class MyElement {
     update: any;
     draw: any;
@@ -32,20 +35,20 @@ declare class MyElement {
     get $el(): HTMLCanvasElement;
     _run(canvas: fCanvas): void;
     /**
-     * @param {MyElement} element
+     * @param {LikeMyElement} element
      * @return {void}
      */
-    addQueue(element: MyElement): void;
+    addQueue(element: LikeMyElement): void;
     /**
      * @param {number} index
-     * @return {MyElement | undefined}
+     * @return {LikeMyElement | undefined}
      */
-    getQueue(index: number): MyElement | undefined;
+    getQueue(index: number): LikeMyElement | undefined;
     /**
-     * @param {MyElement} element
+     * @param {LikeMyElement} element
      * @return {void}
      */
-    run(element: MyElement): void;
+    run(element: LikeMyElement): void;
     /**
      * @param {number} id
      * @return {boolean}
@@ -618,10 +621,10 @@ declare class fCanvas {
      */
     get acceptClear(): boolean;
     /**
-     * @param {MyElement} element
+     * @param {LikeMyElement} element
      * @return {void}
      */
-    run(element: MyElement): void;
+    run(element: LikeMyElement): void;
     /**
      * @return {number}
      */

@@ -58,6 +58,9 @@ interface HightTransform {
 interface noop {
   (): void;
 }
+interface LikeMyElement extends MyElement {
+  [propName: string]: any;
+}
 
 class MyElement {
   public update: any;
@@ -65,7 +68,7 @@ class MyElement {
 
   private _els: fCanvas[] = [];
   private _idActiveNow: number = -1;
-  private _queue: MyElement[] = [];
+  private _queue: LikeMyElement[] = [];
 
   /**
    * @param {fCanvas} canvas?
@@ -108,23 +111,23 @@ class MyElement {
     this._idActiveNow = -1;
   }
   /**
-   * @param {MyElement} element
+   * @param {LikeMyElement} element
    * @return {void}
    */
-  addQueue(element: MyElement): void {
-    if (element instanceof MyElement) {
+  addQueue(element: LikeMyElement): void {
+    if (typeof element._run === "function") {
       this._queue.push(element);
     } else {
       console.error(
-        `fCanvas: the parameter passed to MyElement.addQueue() must be a fCanvas object.`
+        `fCanvas: the parameter passed to MyElement.addQueue() must be a like fCanvas.MyElement object.`
       );
     }
   }
   /**
    * @param {number} index
-   * @return {MyElement | undefined}
+   * @return {LikeMyElement | undefined}
    */
-  getQueue(index: number): MyElement | undefined {
+  getQueue(index: number): LikeMyElement | undefined {
     if (index < 0) {
       index += this._queue.length;
     }
@@ -132,10 +135,10 @@ class MyElement {
     return this._queue[index];
   }
   /**
-   * @param {MyElement} element
+   * @param {LikeMyElement} element
    * @return {void}
    */
-  run(element: MyElement): void {
+  run(element: LikeMyElement): void {
     this.$parent.run(element);
   }
   /**
@@ -1338,10 +1341,10 @@ class fCanvas {
   }
 
   /**
-   * @param {MyElement} element
+   * @param {LikeMyElement} element
    * @return {void}
    */
-  run(element: MyElement): void {
+  run(element: LikeMyElement): void {
     element._run(this);
   }
 

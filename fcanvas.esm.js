@@ -1333,21 +1333,21 @@ class MyElement {
     this._idActiveNow = -1;
   }
   /**
-   * @param {MyElement} element
+   * @param {LikeMyElement} element
    * @return {void}
    */
 
 
   addQueue(element) {
-    if (element instanceof MyElement) {
+    if (typeof element._run === "function") {
       this._queue.push(element);
     } else {
-      console.error(`fCanvas: the parameter passed to MyElement.addQueue() must be a fCanvas object.`);
+      console.error(`fCanvas: the parameter passed to MyElement.addQueue() must be a like fCanvas.MyElement object.`);
     }
   }
   /**
    * @param {number} index
-   * @return {MyElement | undefined}
+   * @return {LikeMyElement | undefined}
    */
 
 
@@ -1359,7 +1359,7 @@ class MyElement {
     return this._queue[index];
   }
   /**
-   * @param {MyElement} element
+   * @param {LikeMyElement} element
    * @return {void}
    */
 
@@ -2454,7 +2454,7 @@ class fCanvas {
     return this._ENV.clear;
   }
   /**
-   * @param {MyElement} element
+   * @param {LikeMyElement} element
    * @return {void}
    */
 
