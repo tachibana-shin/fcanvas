@@ -2537,7 +2537,9 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "animate",
     get: function get() {
-      this._initAnimate();
+      if (!this._animate) {
+        this._initAnimate();
+      }
 
       return this._animate;
     }

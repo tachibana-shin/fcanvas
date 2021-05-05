@@ -1315,7 +1315,9 @@ class MyElement {
   }
 
   get animate() {
-    this._initAnimate();
+    if (!this._animate) {
+      this._initAnimate();
+    }
 
     return this._animate;
   }
