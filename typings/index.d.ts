@@ -113,18 +113,6 @@ declare class MyElement {
      */
     get mouseY(): number | null;
     /**
-     * @return {boolean}
-     */
-    get interact(): boolean;
-    /**
-     * @return {number}
-     */
-    get width(): number;
-    /**
-     * @return {number}
-     */
-    get height(): number;
-    /**
      * @return {number}
      */
     get windowWidth(): number;
@@ -531,9 +519,48 @@ declare class EAnimate extends MyElement {
      */
     setTime(time: number): void;
 }
+declare class RectElement extends MyElement {
+    readonly type: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {any}
+     */
+    constructor(x: number, y: number, width: number, height: number);
+    /**
+     * @return {boolean}
+     */
+    get interact(): boolean;
+}
+declare class CircleElement extends MyElement {
+    readonly type: string;
+    x: number;
+    y: number;
+    radius: number;
+    /**
+     * Describe your function
+     * @param {number} x
+     * @param {number} y
+     * @param {number} radius
+     * @return {any}
+     */
+    constructor(x: number, y: number, radius: number);
+    /**
+     * @return {boolean}
+     */
+    get interact(): boolean;
+}
 declare class fCanvas {
     static Element: typeof MyElement;
     static EAnimate: typeof EAnimate;
+    static RectElement: typeof RectElement;
+    static CircleElement: typeof CircleElement;
     static count: number;
     private _ENV;
     private _id;

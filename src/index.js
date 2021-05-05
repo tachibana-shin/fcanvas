@@ -4,6 +4,7 @@ import Stament from "./classes/Stament";
 import Store from "./classes/Store";
 import Vector from "./classes/Vector";
 import Animate from "./classes/Animate";
+import { RectImpactPoint, CircleImpactPoint } from "./methods/index";
 class MyElement {
     /**
      * @param {fCanvas} canvas?
@@ -186,24 +187,6 @@ class MyElement {
      */
     get mouseY() {
         return this.$parent.mouseY;
-    }
-    /**
-     * @return {boolean}
-     */
-    get interact() {
-        return this.$parent.interact;
-    }
-    /**
-     * @return {number}
-     */
-    get width() {
-        return this.$parent.width;
-    }
-    /**
-     * @return {number}
-     */
-    get height() {
-        return this.$parent.height;
     }
     /**
      * @return {number}
@@ -823,6 +806,58 @@ class EAnimate extends MyElement {
      */
     setTime(time) {
         this.animate.setTime(time);
+    }
+}
+class RectElement extends MyElement {
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {any}
+     */
+    constructor(x, y, width, height) {
+        super();
+        this.type = "rect";
+        this.x = 0;
+        this.y = 0;
+        this.width = 0;
+        this.height = 0;
+        [this.x, this.y, this.width, this.height] = [
+            x || 0,
+            y || 0,
+            width || 0,
+            height || 0,
+        ];
+    }
+    /**
+     * @return {boolean}
+     */
+    get interact() {
+        return RectImpactPoint(this, this.mouseX, this.mouseY);
+    }
+}
+class CircleElement extends MyElement {
+    /**
+     * Describe your function
+     * @param {number} x
+     * @param {number} y
+     * @param {number} radius
+     * @return {any}
+     */
+    constructor(x, y, radius) {
+        super();
+        this.type = "circle";
+        this.x = 0;
+        this.y = 0;
+        this.radius = 0;
+        [this.x, this.y, this.radius] = [x || 0, y || 0, radius || 0];
+    }
+    /**
+     * @return {boolean}
+     */
+    get interact() {
+        return CircleImpactPoint(this, this.mouseX, this.mouseY);
     }
 }
 class fCanvas {
@@ -1531,6 +1566,8 @@ class fCanvas {
 }
 fCanvas.Element = MyElement;
 fCanvas.EAnimate = EAnimate;
+fCanvas.RectElement = RectElement;
+fCanvas.CircleElement = CircleElement;
 fCanvas.count = 0;
 const noopFCanvas = new fCanvas();
 function bindEvent(name, callback, element) {

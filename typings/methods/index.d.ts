@@ -1,10 +1,10 @@
 import { Object } from "../types";
-interface Circle extends Object {
+export interface Circle extends Object {
     x: number;
     y: number;
     radius: number;
 }
-interface Rect extends Object {
+export interface Rect extends Object {
     x: number;
     y: number;
     width: number;
@@ -22,7 +22,7 @@ export declare function CircleImpact(circle1: Circle, circle2: Circle): boolean;
  * @param {number} y
  * @return {boolean}
  */
-export declare function CircleImpactPoint(circle: Circle, x: number, y: number): boolean;
+export declare function CircleImpactPoint(circle: Circle, x: number | null, y: number | null): boolean;
 /**
  * @param {Circle} circle
  * @param {Rect} rect
@@ -72,7 +72,7 @@ export declare function RectImpact(rect1: Rect, rect2: Rect): boolean;
  * @param {number} y
  * @return {boolean}
  */
-export declare function RectImpactPoint(rect: Rect, x: number, y: number): boolean;
+export declare function RectImpactPoint(rect: Rect, x: number | null, y: number | null): boolean;
 /**
  * @param {number} start
  * @param {number} stop

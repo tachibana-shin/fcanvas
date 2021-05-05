@@ -12,6 +12,7 @@ import Stament from "./classes/Stament";
 import Store from "./classes/Store";
 import Vector from "./classes/Vector";
 import Animate, { AnimateConfig, AnimateType } from "./classes/Animate";
+import { RectImpactPoint, CircleImpactPoint } from "./methods/index";
 
 ///let noopFCanvas; /// new fCanvas after class fCanvas because error
 
@@ -263,24 +264,6 @@ class MyElement {
    */
   get mouseY(): number | null {
     return this.$parent.mouseY;
-  }
-  /**
-   * @return {boolean}
-   */
-  get interact(): boolean {
-    return this.$parent.interact;
-  }
-  /**
-   * @return {number}
-   */
-  get width(): number {
-    return this.$parent.width;
-  }
-  /**
-   * @return {number}
-   */
-  get height(): number {
-    return this.$parent.height;
   }
   /**
    * @return {number}
@@ -1151,9 +1134,69 @@ class EAnimate extends MyElement {
   }
 }
 
+class RectElement extends MyElement {
+  public readonly type: string = "rect";
+  public x: number = 0;
+  public y: number = 0;
+  public width: number = 0;
+  public height: number = 0;
+
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @return {any}
+   */
+  constructor(x: number, y: number, width: number, height: number) {
+    super();
+    [this.x, this.y, this.width, this.height] = [
+      x || 0,
+      y || 0,
+      width || 0,
+      height || 0,
+    ];
+  }
+
+  /**
+   * @return {boolean}
+   */
+  get interact(): boolean {
+    return RectImpactPoint(this, this.mouseX, this.mouseY);
+  }
+}
+
+class CircleElement extends MyElement {
+  public readonly type: string = "circle";
+  public x: number = 0;
+  public y: number = 0;
+  public radius: number = 0;
+
+  /**
+   * Describe your function
+   * @param {number} x
+   * @param {number} y
+   * @param {number} radius
+   * @return {any}
+   */
+  constructor(x: number, y: number, radius: number) {
+    super();
+    [this.x, this.y, this.radius] = [x || 0, y || 0, radius || 0];
+  }
+
+  /**
+   * @return {boolean}
+   */
+  get interact(): boolean {
+    return CircleImpactPoint(this, this.mouseX, this.mouseY);
+  }
+}
+
 class fCanvas {
   static Element: typeof MyElement = MyElement;
   static EAnimate: typeof EAnimate = EAnimate;
+  static RectElement: typeof RectElement = RectElement;
+  static CircleElement: typeof CircleElement = CircleElement;
   static count: number = 0;
 
   private _ENV: ENV = {

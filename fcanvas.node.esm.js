@@ -1988,6 +1988,10 @@ function CircleImpact(circle1, circle2) {
  */
 
 function CircleImpactPoint(circle, x, y) {
+  if (x == null || y == null) {
+    return false;
+  }
+
   return Math.pow(x - circle.x, 2) + Math.pow(y - circle.y, 2) < Math.pow(circle.radius, 2);
 }
 /**
@@ -2122,6 +2126,10 @@ function RectImpact(rect1, rect2) {
  */
 
 function RectImpactPoint(rect, x, y) {
+  if (x == null || y == null) {
+    return false;
+  }
+
   return rect.x < x && rect.x + rect.width > x && rect.y < y && rect.y + rect.height > y;
 }
 /**
@@ -2753,33 +2761,6 @@ var MyElement = /*#__PURE__*/function () {
     key: "mouseY",
     get: function get() {
       return this.$parent.mouseY;
-    }
-    /**
-     * @return {boolean}
-     */
-
-  }, {
-    key: "interact",
-    get: function get() {
-      return this.$parent.interact;
-    }
-    /**
-     * @return {number}
-     */
-
-  }, {
-    key: "width",
-    get: function get() {
-      return this.$parent.width;
-    }
-    /**
-     * @return {number}
-     */
-
-  }, {
-    key: "height",
-    get: function get() {
-      return this.$parent.height;
     }
     /**
      * @return {number}
@@ -3631,13 +3612,101 @@ var EAnimate = /*#__PURE__*/function (_MyElement) {
   return EAnimate;
 }(MyElement);
 
+var RectElement = /*#__PURE__*/function (_MyElement2) {
+  _inherits(RectElement, _MyElement2);
+
+  var _super2 = _createSuper(RectElement);
+
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @return {any}
+   */
+  function RectElement(x, y, width, height) {
+    var _this3;
+
+    _classCallCheck(this, RectElement);
+
+    _this3 = _super2.call(this);
+    _this3.type = "rect";
+    _this3.x = 0;
+    _this3.y = 0;
+    _this3.width = 0;
+    _this3.height = 0;
+    var _ref2 = [x || 0, y || 0, width || 0, height || 0];
+    _this3.x = _ref2[0];
+    _this3.y = _ref2[1];
+    _this3.width = _ref2[2];
+    _this3.height = _ref2[3];
+    return _this3;
+  }
+  /**
+   * @return {boolean}
+   */
+
+
+  _createClass(RectElement, [{
+    key: "interact",
+    get: function get() {
+      return RectImpactPoint(this, this.mouseX, this.mouseY);
+    }
+  }]);
+
+  return RectElement;
+}(MyElement);
+
+var CircleElement = /*#__PURE__*/function (_MyElement3) {
+  _inherits(CircleElement, _MyElement3);
+
+  var _super3 = _createSuper(CircleElement);
+
+  /**
+   * Describe your function
+   * @param {number} x
+   * @param {number} y
+   * @param {number} radius
+   * @return {any}
+   */
+  function CircleElement(x, y, radius) {
+    var _this4;
+
+    _classCallCheck(this, CircleElement);
+
+    _this4 = _super3.call(this);
+    _this4.type = "circle";
+    _this4.x = 0;
+    _this4.y = 0;
+    _this4.radius = 0;
+    var _ref3 = [x || 0, y || 0, radius || 0];
+    _this4.x = _ref3[0];
+    _this4.y = _ref3[1];
+    _this4.radius = _ref3[2];
+    return _this4;
+  }
+  /**
+   * @return {boolean}
+   */
+
+
+  _createClass(CircleElement, [{
+    key: "interact",
+    get: function get() {
+      return CircleImpactPoint(this, this.mouseX, this.mouseY);
+    }
+  }]);
+
+  return CircleElement;
+}(MyElement);
+
 var fCanvas = /*#__PURE__*/function () {
   /**
    * @param {HTMLCanvasElement} element?
    * @return {any}
    */
   function fCanvas(element) {
-    var _this3 = this;
+    var _this5 = this;
 
     _classCallCheck(this, fCanvas);
 
@@ -3676,14 +3745,14 @@ var fCanvas = /*#__PURE__*/function () {
     var handlerEvent = function handlerEvent(event) {
       try {
         if (event.type !== "mouseout") {
-          _this3.touches = getTouchInfo(_this3.$el, event.touches || [event]);
-          _this3.changedTouches = getTouchInfo(_this3.$el, event.changedTouches || [event]);
+          _this5.touches = getTouchInfo(_this5.$el, event.touches || [event]);
+          _this5.changedTouches = getTouchInfo(_this5.$el, event.changedTouches || [event]);
         } else {
-          _this3.touches = [];
+          _this5.touches = [];
         }
 
-        _this3.preventTouch && event.preventDefault();
-        _this3.stopTouch && event.stopPropagation();
+        _this5.preventTouch && event.preventDefault();
+        _this5.stopTouch && event.stopPropagation();
       } catch (e) {// throw e;
       }
     };
@@ -3883,16 +3952,16 @@ var fCanvas = /*#__PURE__*/function () {
     }
   }, {
     key: "_toRgb",
-    value: function _toRgb(_ref2) {
-      var _ref3 = _slicedToArray(_ref2, 4),
-          _ref3$ = _ref3[0],
-          red = _ref3$ === void 0 ? 0 : _ref3$,
-          _ref3$2 = _ref3[1],
-          green = _ref3$2 === void 0 ? red : _ref3$2,
-          _ref3$3 = _ref3[2],
-          blue = _ref3$3 === void 0 ? green : _ref3$3,
-          _ref3$4 = _ref3[3],
-          alpha = _ref3$4 === void 0 ? 1 : _ref3$4;
+    value: function _toRgb(_ref4) {
+      var _ref5 = _slicedToArray(_ref4, 4),
+          _ref5$ = _ref5[0],
+          red = _ref5$ === void 0 ? 0 : _ref5$,
+          _ref5$2 = _ref5[1],
+          green = _ref5$2 === void 0 ? red : _ref5$2,
+          _ref5$3 = _ref5[2],
+          blue = _ref5$3 === void 0 ? green : _ref5$3,
+          _ref5$4 = _ref5[3],
+          alpha = _ref5$4 === void 0 ? 1 : _ref5$4;
 
       if (Array.isArray(red)) {
         return this._toRgb(red);
@@ -4160,7 +4229,7 @@ var fCanvas = /*#__PURE__*/function () {
     key: "setup",
     value: function () {
       var _setup2 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee3(callback) {
-        var _this4 = this;
+        var _this6 = this;
 
         return regenerator.wrap(function _callee3$(_context3) {
           while (1) {
@@ -4180,7 +4249,7 @@ var fCanvas = /*#__PURE__*/function () {
                           return _setup(callback);
 
                         case 2:
-                          _this4._stamentReady.emit("setuped");
+                          _this6._stamentReady.emit("setuped");
 
                         case 3:
                         case "end":
@@ -4222,10 +4291,10 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "draw",
     value: function draw(callback) {
-      var _this5 = this;
+      var _this7 = this;
 
       this._stamentReady.on("setuped", function () {
-        _draw(callback, _this5);
+        _draw(callback, _this7);
       });
     }
     /**
@@ -4553,11 +4622,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "keyPressed",
     value: function keyPressed(callback) {
-      var _this6 = this;
+      var _this8 = this;
 
       this.$el.addEventListener("keypress", callback);
       return function () {
-        _this6.$el.removeEventListener("keypress", callback);
+        _this8.$el.removeEventListener("keypress", callback);
       };
     }
     /**
@@ -4568,11 +4637,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseIn",
     value: function mouseIn(callback) {
-      var _this7 = this;
+      var _this9 = this;
 
       this.$el.addEventListener("mouseover", callback);
       return function () {
-        _this7.$el.removeEventListener("mouseover", callback);
+        _this9.$el.removeEventListener("mouseover", callback);
       };
     }
     /**
@@ -4583,11 +4652,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseOut",
     value: function mouseOut(callback) {
-      var _this8 = this;
+      var _this10 = this;
 
       this.$el.addEventListener("mouseout", callback);
       return function () {
-        _this8.$el.removeEventListener("mouseout", callback);
+        _this10.$el.removeEventListener("mouseout", callback);
       };
     }
     /**
@@ -4598,11 +4667,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseDowned",
     value: function mouseDowned(callback) {
-      var _this9 = this;
+      var _this11 = this;
 
       this.$el.addEventListener("mousedown", callback);
       return function () {
-        _this9.$el.removeEventListener("mousedown", callback);
+        _this11.$el.removeEventListener("mousedown", callback);
       };
     }
     /**
@@ -4613,11 +4682,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "touchStarted",
     value: function touchStarted(callback) {
-      var _this10 = this;
+      var _this12 = this;
 
       this.$el.addEventListener("touchstart", callback);
       return function () {
-        _this10.$el.removeEventListener("touchstart", callback);
+        _this12.$el.removeEventListener("touchstart", callback);
       };
     }
     /**
@@ -4628,11 +4697,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "touchMoved",
     value: function touchMoved(callback) {
-      var _this11 = this;
+      var _this13 = this;
 
       this.$el.addEventListener("touchmove", callback);
       return function () {
-        _this11.$el.removeEventListener("touchmove", callback);
+        _this13.$el.removeEventListener("touchmove", callback);
       };
     }
     /**
@@ -4643,11 +4712,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "touchEned",
     value: function touchEned(callback) {
-      var _this12 = this;
+      var _this14 = this;
 
       this.$el.addEventListener("touchend", callback);
       return function () {
-        _this12.$el.removeEventListener("touchend", callback);
+        _this14.$el.removeEventListener("touchend", callback);
       };
     }
     /**
@@ -4658,11 +4727,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseMoved",
     value: function mouseMoved(callback) {
-      var _this13 = this;
+      var _this15 = this;
 
       this.$el.addEventListener("mousemove", callback);
       return function () {
-        _this13.$el.removeEventListener("mousemove", callback);
+        _this15.$el.removeEventListener("mousemove", callback);
       };
     }
     /**
@@ -4673,11 +4742,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseUped",
     value: function mouseUped(callback) {
-      var _this14 = this;
+      var _this16 = this;
 
       this.$el.addEventListener("mouseup", callback);
       return function () {
-        _this14.$el.removeEventListener("mouseup", callback);
+        _this16.$el.removeEventListener("mouseup", callback);
       };
     }
     /**
@@ -4688,11 +4757,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseClicked",
     value: function mouseClicked(callback) {
-      var _this15 = this;
+      var _this17 = this;
 
       this.$el.addEventListener("click", callback);
       return function () {
-        _this15.$el.removeEventListener("click", callback);
+        _this17.$el.removeEventListener("click", callback);
       };
     }
   }]);
@@ -4702,6 +4771,8 @@ var fCanvas = /*#__PURE__*/function () {
 
 fCanvas.Element = MyElement;
 fCanvas.EAnimate = EAnimate;
+fCanvas.RectElement = RectElement;
+fCanvas.CircleElement = CircleElement;
 fCanvas.count = 0;
 var noopFCanvas = new fCanvas();
 

@@ -1,13 +1,11 @@
-import DOMMatrix from "../classes/DOMMatrix";
-import Vector from "../classes/Vector";
 import { Object } from "../types";
 
-interface Circle extends Object {
+export interface Circle extends Object {
   x: number;
   y: number;
   radius: number;
 }
-interface Rect extends Object {
+export interface Rect extends Object {
   x: number;
   y: number;
   width: number;
@@ -34,9 +32,12 @@ export function CircleImpact(circle1: Circle, circle2: Circle): boolean {
  */
 export function CircleImpactPoint(
   circle: Circle,
-  x: number,
-  y: number
+  x: number | null,
+  y: number | null
 ): boolean {
+  if (x == null || y == null) {
+    return false;
+  }
   return (x - circle.x) ** 2 + (y - circle.y) ** 2 < circle.radius ** 2;
 }
 
@@ -192,7 +193,14 @@ export function RectImpact(rect1: Rect, rect2: Rect): boolean {
  * @param {number} y
  * @return {boolean}
  */
-export function RectImpactPoint(rect: Rect, x: number, y: number): boolean {
+export function RectImpactPoint(
+  rect: Rect,
+  x: number | null,
+  y: number | null
+): boolean {
+  if (x == null || y == null) {
+    return false;
+  }
   return (
     rect.x < x &&
     rect.x + rect.width > x &&

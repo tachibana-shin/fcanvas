@@ -14,6 +14,9 @@ export function CircleImpact(circle1, circle2) {
  * @return {boolean}
  */
 export function CircleImpactPoint(circle, x, y) {
+    if (x == null || y == null) {
+        return false;
+    }
     return (x - circle.x) ** 2 + (y - circle.y) ** 2 < circle.radius ** 2;
 }
 /**
@@ -134,6 +137,9 @@ export function RectImpact(rect1, rect2) {
  * @return {boolean}
  */
 export function RectImpactPoint(rect, x, y) {
+    if (x == null || y == null) {
+        return false;
+    }
     return (rect.x < x &&
         rect.x + rect.width > x &&
         rect.y < y &&
