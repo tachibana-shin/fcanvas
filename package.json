@@ -34,7 +34,7 @@
     "build:rollup": "node build.js",
     "build": "tsc && npm run build:webpack && npm run build:rollup",
     "prepare": "npm run build",
-    "docs": "typedoc --out ./docs --mode modules ./typescript"
+    "docs": "typedoc ./typescript"
   },
   "author": "Nguyen Thanh",
   "repository": {

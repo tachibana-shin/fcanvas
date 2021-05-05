@@ -2160,6 +2160,22 @@ var hypot = typeof Math.hypot === "function" ? Math.hypot : function () {
 
   return Math.sqrt(result);
 };
+function foreach(object, callback) {
+  if ("length" in object) {
+    var length = object.length;
+    var index = 0;
+
+    while (index < length) {
+      // @ts-expect-error
+      callback.call(object, object[index], index, object);
+      index++;
+    }
+  } else {
+    for (var _index in object) {
+      callback.call(object, object[_index], _index, object);
+    }
+  }
+}
 
 function getAnimate(type, currentProgress, start, distance, steps, power) {
   switch (type) {
@@ -2514,6 +2530,8 @@ var MyElement = /*#__PURE__*/function () {
   function MyElement(canvas) {
     _classCallCheck(this, MyElement);
 
+    this.autoDraw = true;
+    this.autoFrame = true;
     this._els = [];
     this._idActiveNow = -1;
     this._queue = [];
@@ -2565,7 +2583,7 @@ var MyElement = /*#__PURE__*/function () {
 
         this.update();
 
-        if (this.animate) {
+        if (this.animate && this.autoFrame === true) {
           this.animate.addFrame();
         }
       } else if (this.autoDraw !== true && typeof this.draw === "function") {
@@ -2573,8 +2591,12 @@ var MyElement = /*#__PURE__*/function () {
       }
 
       if (this._queue.length > 0) {
-        for (var index = 0, length = this._queue.length; index < length; index++) {
+        var length = this._queue.length;
+        var index = 0;
+
+        while (index < length) {
           this.run(this._queue[index]);
+          index++;
         }
       }
 
@@ -4985,4 +5007,4 @@ function touchEnded(callback) {
 }
 
 export default fCanvas;
-export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, _draw as draw, hypot, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, _setup as setup, touchEnded, touchMoved, touchStarted };
+export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, _draw as draw, foreach, hypot, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, _setup as setup, touchEnded, touchMoved, touchStarted };

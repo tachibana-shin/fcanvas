@@ -999,6 +999,24 @@ const hypot = typeof Math.hypot === "function" ? Math.hypot : (...args) => {
 
   return Math.sqrt(result);
 };
+function foreach(object, callback) {
+  if ("length" in object) {
+    const {
+      length
+    } = object;
+    let index = 0;
+
+    while (index < length) {
+      // @ts-expect-error
+      callback.call(object, object[index], index, object);
+      index++;
+    }
+  } else {
+    for (const index in object) {
+      callback.call(object, object[index], index, object);
+    }
+  }
+}
 
 function getAnimate(type, currentProgress, start, distance, steps, power) {
   switch (type) {
@@ -1295,6 +1313,8 @@ class MyElement {
    * @return {any}
    */
   constructor(canvas) {
+    this.autoDraw = true;
+    this.autoFrame = true;
     this._els = [];
     this._idActiveNow = -1;
     this._queue = [];
@@ -1341,7 +1361,7 @@ class MyElement {
 
       this.update();
 
-      if (this.animate) {
+      if (this.animate && this.autoFrame === true) {
         this.animate.addFrame();
       }
     } else if (this.autoDraw !== true && typeof this.draw === "function") {
@@ -1349,8 +1369,14 @@ class MyElement {
     }
 
     if (this._queue.length > 0) {
-      for (let index = 0, length = this._queue.length; index < length; index++) {
+      const {
+        length
+      } = this._queue;
+      let index = 0;
+
+      while (index < length) {
         this.run(this._queue[index]);
+        index++;
       }
     }
 
@@ -3368,4 +3394,4 @@ function touchEnded(callback, element = window) {
 }
 
 export default fCanvas;
-export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, draw, hypot, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, setup, touchEnded, touchMoved, touchStarted };
+export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, draw, foreach, hypot, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, setup, touchEnded, touchMoved, touchStarted };
