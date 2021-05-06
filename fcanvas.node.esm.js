@@ -2586,7 +2586,7 @@ var MyElement = /*#__PURE__*/function () {
         if (this.animate && this.autoFrame === true) {
           this.animate.addFrame();
         }
-      } else if (this.autoDraw !== true && typeof this.draw === "function") {
+      } else if (typeof this.draw === "function") {
         this.draw();
       }
 

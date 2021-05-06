@@ -55,7 +55,7 @@ class MyElement {
                 this.animate.addFrame();
             }
         }
-        else if (this.autoDraw !== true && typeof this.draw === "function") {
+        else if (typeof this.draw === "function") {
             this.draw();
         }
         if (this._queue.length > 0) {
