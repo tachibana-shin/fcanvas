@@ -1,4 +1,4 @@
-import fCanvas from "../src/index.js";
+import fCanvas from "../fcanvas.esm.js";
 
 const canvas = new fCanvas();
 

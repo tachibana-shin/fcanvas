@@ -1811,7 +1811,7 @@ class MyElement {
     this.$context2d.drawImage(image, ...args);
   }
 
-  rect(x, y, w, h, $1, $2, $3, $4) {
+  rect(x, y, w, h, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft) {
     this.begin();
     [x, y] = this._figureOffset(x, y, w, h);
 
@@ -1819,7 +1819,7 @@ class MyElement {
       this.$context2d.rect(x, y, w, h);
     } else {
       const fontSize = this.$parent.fontSize();
-      const arc = [AutoToPx($1, w, fontSize), AutoToPx($2, h, fontSize), AutoToPx($3, w, fontSize), AutoToPx($4, h, fontSize)];
+      const arc = [AutoToPx(radiusTopLeft, w, fontSize), AutoToPx(radiusTopRight, h, fontSize), AutoToPx(radiusBottomRight, w, fontSize), AutoToPx(radiusBottomLeft, h, fontSize)];
       this.move(x, y);
       this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
       this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
@@ -2359,6 +2359,37 @@ class CircleElement extends MyElement {
 
 }
 
+class Point3D extends MyElement {
+  constructor(x, y, z) {
+    super();
+    this.x = 0;
+    this.y = 0;
+    this.z = 0;
+    [this.x, this.y, this.z] = [x || 0, y || 0, z || 0];
+  }
+
+  rotateX(angle) {
+    this.y = this.y * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
+    this.z = -this.y * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
+  }
+
+  rotateY(angle) {
+    this.x = this.x * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
+    this.z = -this.x * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
+  }
+
+  rotateZ(angle) {
+    this.x = this.x * this.$parent.cos(angle) - this.y * this.$parent.sin(angle);
+    this.y = this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
+  } // @ts-expect-error
+
+
+  draw() {
+    this.point(this.x, this.y);
+  }
+
+}
+
 class fCanvas {
   /**
    * @param {HTMLCanvasElement} element?
@@ -2886,6 +2917,19 @@ class fCanvas {
     this.$context2d.globalCompositeOperation = value;
   }
   /**
+   * @param {number} alpha?
+   * @return {number | void}
+   */
+
+
+  globalAlpha(alpha) {
+    if (alpha === undefined) {
+      return this.$context2d.globalAlpha;
+    }
+
+    this.$context2d.globalAlpha = alpha;
+  }
+  /**
    * @param {number} x?
    * @param {number} y?
    * @return {any}
@@ -3246,6 +3290,7 @@ fCanvas.Element = MyElement;
 fCanvas.EAnimate = EAnimate;
 fCanvas.RectElement = RectElement;
 fCanvas.CircleElement = CircleElement;
+fCanvas.Point3D = Point3D;
 fCanvas.count = 0;
 const noopFCanvas = new fCanvas();
 

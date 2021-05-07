@@ -3099,7 +3099,7 @@ var MyElement = /*#__PURE__*/function () {
     }
   }, {
     key: "rect",
-    value: function rect(x, y, w, h, $1, $2, $3, $4) {
+    value: function rect(x, y, w, h, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft) {
       this.begin();
 
       var _this$_figureOffset = this._figureOffset(x, y, w, h);
@@ -3113,7 +3113,7 @@ var MyElement = /*#__PURE__*/function () {
         this.$context2d.rect(x, y, w, h);
       } else {
         var fontSize = this.$parent.fontSize();
-        var arc = [AutoToPx($1, w, fontSize), AutoToPx($2, h, fontSize), AutoToPx($3, w, fontSize), AutoToPx($4, h, fontSize)];
+        var arc = [AutoToPx(radiusTopLeft, w, fontSize), AutoToPx(radiusTopRight, h, fontSize), AutoToPx(radiusBottomRight, w, fontSize), AutoToPx(radiusBottomLeft, h, fontSize)];
         this.move(x, y);
         this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
         this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
@@ -3748,13 +3748,63 @@ var CircleElement = /*#__PURE__*/function (_MyElement3) {
   return CircleElement;
 }(MyElement);
 
+var Point3D = /*#__PURE__*/function (_MyElement4) {
+  _inherits(Point3D, _MyElement4);
+
+  var _super4 = _createSuper(Point3D);
+
+  function Point3D(x, y, z) {
+    var _this5;
+
+    _classCallCheck(this, Point3D);
+
+    _this5 = _super4.call(this);
+    _this5.x = 0;
+    _this5.y = 0;
+    _this5.z = 0;
+    var _ref4 = [x || 0, y || 0, z || 0];
+    _this5.x = _ref4[0];
+    _this5.y = _ref4[1];
+    _this5.z = _ref4[2];
+    return _this5;
+  }
+
+  _createClass(Point3D, [{
+    key: "rotateX",
+    value: function rotateX(angle) {
+      this.y = this.y * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
+      this.z = -this.y * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
+    }
+  }, {
+    key: "rotateY",
+    value: function rotateY(angle) {
+      this.x = this.x * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
+      this.z = -this.x * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
+    }
+  }, {
+    key: "rotateZ",
+    value: function rotateZ(angle) {
+      this.x = this.x * this.$parent.cos(angle) - this.y * this.$parent.sin(angle);
+      this.y = this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
+    } // @ts-expect-error
+
+  }, {
+    key: "draw",
+    value: function draw() {
+      this.point(this.x, this.y);
+    }
+  }]);
+
+  return Point3D;
+}(MyElement);
+
 var fCanvas = /*#__PURE__*/function () {
   /**
    * @param {HTMLCanvasElement} element?
    * @return {any}
    */
   function fCanvas(element) {
-    var _this5 = this;
+    var _this6 = this;
 
     _classCallCheck(this, fCanvas);
 
@@ -3793,14 +3843,14 @@ var fCanvas = /*#__PURE__*/function () {
     var handlerEvent = function handlerEvent(event) {
       try {
         if (event.type !== "mouseout") {
-          _this5.touches = getTouchInfo(_this5.$el, event.touches || [event]);
-          _this5.changedTouches = getTouchInfo(_this5.$el, event.changedTouches || [event]);
+          _this6.touches = getTouchInfo(_this6.$el, event.touches || [event]);
+          _this6.changedTouches = getTouchInfo(_this6.$el, event.changedTouches || [event]);
         } else {
-          _this5.touches = [];
+          _this6.touches = [];
         }
 
-        _this5.preventTouch && event.preventDefault();
-        _this5.stopTouch && event.stopPropagation();
+        _this6.preventTouch && event.preventDefault();
+        _this6.stopTouch && event.stopPropagation();
       } catch (e) {// throw e;
       }
     };
@@ -4000,16 +4050,16 @@ var fCanvas = /*#__PURE__*/function () {
     }
   }, {
     key: "_toRgb",
-    value: function _toRgb(_ref4) {
-      var _ref5 = _slicedToArray(_ref4, 4),
-          _ref5$ = _ref5[0],
-          red = _ref5$ === void 0 ? 0 : _ref5$,
-          _ref5$2 = _ref5[1],
-          green = _ref5$2 === void 0 ? red : _ref5$2,
-          _ref5$3 = _ref5[2],
-          blue = _ref5$3 === void 0 ? green : _ref5$3,
-          _ref5$4 = _ref5[3],
-          alpha = _ref5$4 === void 0 ? 1 : _ref5$4;
+    value: function _toRgb(_ref5) {
+      var _ref6 = _slicedToArray(_ref5, 4),
+          _ref6$ = _ref6[0],
+          red = _ref6$ === void 0 ? 0 : _ref6$,
+          _ref6$2 = _ref6[1],
+          green = _ref6$2 === void 0 ? red : _ref6$2,
+          _ref6$3 = _ref6[2],
+          blue = _ref6$3 === void 0 ? green : _ref6$3,
+          _ref6$4 = _ref6[3],
+          alpha = _ref6$4 === void 0 ? 1 : _ref6$4;
 
       if (Array.isArray(red)) {
         return this._toRgb(red);
@@ -4277,7 +4327,7 @@ var fCanvas = /*#__PURE__*/function () {
     key: "setup",
     value: function () {
       var _setup2 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee3(callback) {
-        var _this6 = this;
+        var _this7 = this;
 
         return regenerator.wrap(function _callee3$(_context3) {
           while (1) {
@@ -4297,7 +4347,7 @@ var fCanvas = /*#__PURE__*/function () {
                           return _setup(callback);
 
                         case 2:
-                          _this6._stamentReady.emit("setuped");
+                          _this7._stamentReady.emit("setuped");
 
                         case 3:
                         case "end":
@@ -4339,10 +4389,10 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "draw",
     value: function draw(callback) {
-      var _this7 = this;
+      var _this8 = this;
 
       this._stamentReady.on("setuped", function () {
-        _draw(callback, _this7);
+        _draw(callback, _this8);
       });
     }
     /**
@@ -4400,6 +4450,20 @@ var fCanvas = /*#__PURE__*/function () {
       }
 
       this.$context2d.globalCompositeOperation = value;
+    }
+    /**
+     * @param {number} alpha?
+     * @return {number | void}
+     */
+
+  }, {
+    key: "globalAlpha",
+    value: function globalAlpha(alpha) {
+      if (alpha === undefined) {
+        return this.$context2d.globalAlpha;
+      }
+
+      this.$context2d.globalAlpha = alpha;
     }
     /**
      * @param {number} x?
@@ -4670,11 +4734,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "keyPressed",
     value: function keyPressed(callback) {
-      var _this8 = this;
+      var _this9 = this;
 
       this.$el.addEventListener("keypress", callback);
       return function () {
-        _this8.$el.removeEventListener("keypress", callback);
+        _this9.$el.removeEventListener("keypress", callback);
       };
     }
     /**
@@ -4685,11 +4749,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseIn",
     value: function mouseIn(callback) {
-      var _this9 = this;
+      var _this10 = this;
 
       this.$el.addEventListener("mouseover", callback);
       return function () {
-        _this9.$el.removeEventListener("mouseover", callback);
+        _this10.$el.removeEventListener("mouseover", callback);
       };
     }
     /**
@@ -4700,11 +4764,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseOut",
     value: function mouseOut(callback) {
-      var _this10 = this;
+      var _this11 = this;
 
       this.$el.addEventListener("mouseout", callback);
       return function () {
-        _this10.$el.removeEventListener("mouseout", callback);
+        _this11.$el.removeEventListener("mouseout", callback);
       };
     }
     /**
@@ -4715,11 +4779,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseDowned",
     value: function mouseDowned(callback) {
-      var _this11 = this;
+      var _this12 = this;
 
       this.$el.addEventListener("mousedown", callback);
       return function () {
-        _this11.$el.removeEventListener("mousedown", callback);
+        _this12.$el.removeEventListener("mousedown", callback);
       };
     }
     /**
@@ -4730,11 +4794,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "touchStarted",
     value: function touchStarted(callback) {
-      var _this12 = this;
+      var _this13 = this;
 
       this.$el.addEventListener("touchstart", callback);
       return function () {
-        _this12.$el.removeEventListener("touchstart", callback);
+        _this13.$el.removeEventListener("touchstart", callback);
       };
     }
     /**
@@ -4745,11 +4809,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "touchMoved",
     value: function touchMoved(callback) {
-      var _this13 = this;
+      var _this14 = this;
 
       this.$el.addEventListener("touchmove", callback);
       return function () {
-        _this13.$el.removeEventListener("touchmove", callback);
+        _this14.$el.removeEventListener("touchmove", callback);
       };
     }
     /**
@@ -4760,11 +4824,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "touchEned",
     value: function touchEned(callback) {
-      var _this14 = this;
+      var _this15 = this;
 
       this.$el.addEventListener("touchend", callback);
       return function () {
-        _this14.$el.removeEventListener("touchend", callback);
+        _this15.$el.removeEventListener("touchend", callback);
       };
     }
     /**
@@ -4775,11 +4839,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseMoved",
     value: function mouseMoved(callback) {
-      var _this15 = this;
+      var _this16 = this;
 
       this.$el.addEventListener("mousemove", callback);
       return function () {
-        _this15.$el.removeEventListener("mousemove", callback);
+        _this16.$el.removeEventListener("mousemove", callback);
       };
     }
     /**
@@ -4790,11 +4854,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseUped",
     value: function mouseUped(callback) {
-      var _this16 = this;
+      var _this17 = this;
 
       this.$el.addEventListener("mouseup", callback);
       return function () {
-        _this16.$el.removeEventListener("mouseup", callback);
+        _this17.$el.removeEventListener("mouseup", callback);
       };
     }
     /**
@@ -4805,11 +4869,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseClicked",
     value: function mouseClicked(callback) {
-      var _this17 = this;
+      var _this18 = this;
 
       this.$el.addEventListener("click", callback);
       return function () {
-        _this17.$el.removeEventListener("click", callback);
+        _this18.$el.removeEventListener("click", callback);
       };
     }
   }]);
@@ -4821,6 +4885,7 @@ fCanvas.Element = MyElement;
 fCanvas.EAnimate = EAnimate;
 fCanvas.RectElement = RectElement;
 fCanvas.CircleElement = CircleElement;
+fCanvas.Point3D = Point3D;
 fCanvas.count = 0;
 var noopFCanvas = new fCanvas();
 

@@ -18,6 +18,10 @@ interface noop {
 interface LikeMyElement extends MyElement {
     [propName: string]: any;
 }
+interface Offset {
+    x: number;
+    y: number;
+}
 declare class MyElement {
     update: any;
     draw: any;
@@ -168,10 +172,7 @@ declare class MyElement {
     lineWidth(width: number): void;
     miterLimit(): number;
     miterLimit(value: number): void;
-    shadowOffset(): {
-        x: number;
-        y: number;
-    };
+    shadowOffset(): Offset;
     shadowOffset(x: number, y: number): void;
     /**
      * @param {string} text
@@ -567,11 +568,22 @@ declare class CircleElement extends MyElement {
      */
     get interact(): boolean;
 }
+declare class Point3D extends MyElement {
+    x: number;
+    y: number;
+    z: number;
+    constructor(x?: number, y?: number, z?: number);
+    rotateX(angle: number): void;
+    rotateY(angle: number): void;
+    rotateZ(angle: number): void;
+    draw(): void;
+}
 declare class fCanvas {
     static Element: typeof MyElement;
     static EAnimate: typeof EAnimate;
     static RectElement: typeof RectElement;
     static CircleElement: typeof CircleElement;
+    static Point3D: typeof Point3D;
     static count: number;
     private _ENV;
     private _id;
@@ -739,19 +751,15 @@ declare class fCanvas {
     textBaseline(middle: TextBaselineType): void;
     globalOperation(): GlobalCompositeOperationType;
     globalOperation(composite: GlobalCompositeOperationType): void;
-    translate(): {
-        x: number;
-        y: number;
-    };
+    globalAlpha(): number;
+    globalAlpha(alpha: number): void;
+    translate(): Offset;
     translate(x: number, y: number): void;
     /**
      * @return {void}
      */
     resetTranslate(): void;
-    scale(): {
-        x: number;
-        y: number;
-    };
+    scale(): Offset;
     scale(x: number, y: number): void;
     /**
      * @return {void}

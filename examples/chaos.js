@@ -1,4 +1,4 @@
-import fCanvas, { random, Vector } from "../src/index.js";
+import fCanvas, { random, Vector } from "../fcanvas.esm.js";
 
 const canvas = new fCanvas();
 const points = [];

@@ -61,6 +61,10 @@ interface noop {
 interface LikeMyElement extends MyElement {
   [propName: string]: any;
 }
+interface Offset {
+  x: number;
+  y: number;
+}
 
 class MyElement {
   public update: any;
@@ -371,7 +375,7 @@ class MyElement {
    * @param {number} value?
    * @return {number|void}
    */
-  lineWidth(value?: number): any {
+  lineWidth(value?: number): number | void {
     if (value === undefined) {
       return this.$context2d.lineWidth;
     } else {
@@ -384,7 +388,7 @@ class MyElement {
    * @param {number} value?
    * @return {number|void}
    */
-  miterLimit(value?: number): any {
+  miterLimit(value?: number): number | void {
     if (value === undefined) {
       return this.$context2d.miterLimit;
     } else {
@@ -395,17 +399,14 @@ class MyElement {
       this.$context2d.miterLimit = value;
     }
   }
-  shadowOffset(): {
-    x: number;
-    y: number;
-  };
+  shadowOffset(): Offset;
   shadowOffset(x: number, y: number): void;
   /**
    * @param {number} x?
    * @param {number} y?
    * @return {void|{ x: number, y: number }}
    */
-  shadowOffset(x?: number, y?: number): any {
+  shadowOffset(x?: number, y?: number): Offset | void {
     if (arguments.length === 0) {
       return {
         x: this.$context2d.shadowOffsetX,
@@ -665,10 +666,10 @@ class MyElement {
     y: number,
     w: number,
     h: number,
-    $1?: any,
-    $2?: any,
-    $3?: any,
-    $4?: any
+    radiusTopLeft?: any,
+    radiusTopRight?: any,
+    radiusBottomRight?: any,
+    radiusBottomLeft?: any
   ): void {
     this.begin();
     [x, y] = this._figureOffset(x, y, w, h);
@@ -678,10 +679,10 @@ class MyElement {
     } else {
       const fontSize = this.$parent.fontSize();
       const arc = [
-        AutoToPx($1, w, fontSize),
-        AutoToPx($2, h, fontSize),
-        AutoToPx($3, w, fontSize),
-        AutoToPx($4, h, fontSize),
+        AutoToPx(radiusTopLeft, w, fontSize),
+        AutoToPx(radiusTopRight, h, fontSize),
+        AutoToPx(radiusBottomRight, w, fontSize),
+        AutoToPx(radiusBottomLeft, h, fontSize),
       ];
       this.move(x, y);
       this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
@@ -781,7 +782,7 @@ class MyElement {
    * @param {number} value?
    * @return {any}
    */
-  lineDash(value?: number): any {
+  lineDash(value?: number): number | void {
     if (value === undefined) {
       return this.$context2d.lineDashOffset;
     }
@@ -924,7 +925,9 @@ class MyElement {
    * @param {"bevel"|"round"|"miter"} type?
    * @return {any}
    */
-  lineJoin(type?: "bevel" | "round" | "miter"): any {
+  lineJoin(
+    type?: "bevel" | "round" | "miter"
+  ): "bevel" | "round" | "miter" | void {
     if (type !== undefined) {
       this.$context2d.lineJoin = type;
     } else {
@@ -937,7 +940,9 @@ class MyElement {
    * @param {"butt"|"round"|"square"} value?
    * @return {any}
    */
-  lineCap(value?: "butt" | "round" | "square"): any {
+  lineCap(
+    value?: "butt" | "round" | "square"
+  ): "butt" | "round" | "square" | void {
     if (value !== undefined) {
       this.$context2d.lineCap = value;
     } else {
@@ -950,7 +955,7 @@ class MyElement {
    * @param {number} opacity?
    * @return {any}
    */
-  shadowBlur(opacity?: number): any {
+  shadowBlur(opacity?: number): number | void {
     if (opacity === undefined) {
       return this.$context2d.shadowBlur;
     }
@@ -1225,11 +1230,46 @@ class CircleElement extends MyElement {
   }
 }
 
+class Point3D extends MyElement {
+  x: number = 0;
+  y: number = 0;
+  z: number = 0;
+
+  constructor(x?: number, y?: number, z?: number) {
+    super();
+    [this.x, this.y, this.z] = [x || 0, y || 0, z || 0];
+  }
+  rotateX(angle: number): void {
+    this.y =
+      this.y * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
+    this.z =
+      -this.y * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
+  }
+  rotateY(angle: number): void {
+    this.x =
+      this.x * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
+    this.z =
+      -this.x * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
+  }
+  rotateZ(angle: number): void {
+    this.x =
+      this.x * this.$parent.cos(angle) - this.y * this.$parent.sin(angle);
+    this.y =
+      this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
+  }
+
+  // @ts-expect-error
+  draw() {
+    this.point(this.x, this.y);
+  }
+}
+
 class fCanvas {
   static Element: typeof MyElement = MyElement;
   static EAnimate: typeof EAnimate = EAnimate;
   static RectElement: typeof RectElement = RectElement;
   static CircleElement: typeof CircleElement = CircleElement;
+  static Point3D: typeof Point3D = Point3D;
   static count: number = 0;
 
   private _ENV: ENV = {
@@ -1486,7 +1526,7 @@ class fCanvas {
    * @param {AngleType} value?
    * @return {any}
    */
-  angleMode(value?: AngleType): any {
+  angleMode(value?: AngleType): AngleType | void {
     if (value === undefined) {
       return this._ENV.angleMode;
     }
@@ -1499,7 +1539,7 @@ class fCanvas {
    * @param {AlignType} value?
    * @return {any}
    */
-  rectAlign(value?: AlignType): any {
+  rectAlign(value?: AlignType): AlignType | void {
     if (value === undefined) {
       return this._ENV.rectAlign;
     }
@@ -1512,7 +1552,7 @@ class fCanvas {
    * @param {ColorType} value?
    * @return {any}
    */
-  colorMode(value?: ColorType): any {
+  colorMode(value?: ColorType): ColorType | void {
     if (value === undefined) {
       return this._ENV.colorMode;
     }
@@ -1525,7 +1565,7 @@ class fCanvas {
    * @param {BaselineType} value?
    * @return {any}
    */
-  rectBaseline(value?: BaselineType): any {
+  rectBaseline(value?: BaselineType): BaselineType | void {
     if (value === undefined) {
       return this._ENV.rectBaseline;
     }
@@ -1539,7 +1579,7 @@ class fCanvas {
    * @param {number} value?
    * @return {any}
    */
-  fontSize(value?: number): any {
+  fontSize(value?: number): number | void {
     const { size, weight, family } = fontToArray(this.font());
 
     if (value === undefined) {
@@ -1555,7 +1595,7 @@ class fCanvas {
    * @param {string} value?
    * @return {any}
    */
-  fontFamily(value?: string): any {
+  fontFamily(value?: string): string | void {
     const { size, weight, family } = fontToArray(this.font());
 
     if (value === undefined) {
@@ -1570,7 +1610,7 @@ class fCanvas {
    * @param {string} value?
    * @return {any}
    */
-  fontWeight(value?: string): any {
+  fontWeight(value?: string): string | void {
     const { size, weight, family } = fontToArray(this.font());
 
     if (value === undefined) {
@@ -1621,7 +1661,7 @@ class fCanvas {
    * @param {number} value?
    * @return {any}
    */
-  rotate(value?: number): any {
+  rotate(value?: number): number | void {
     if (value === undefined) {
       return this._ENV.rotate;
     } else {
@@ -1679,7 +1719,7 @@ class fCanvas {
    * @param {string} value?
    * @return {any}
    */
-  font(value?: string): any {
+  font(value?: string): string | void {
     if (value === undefined) {
       return this.$context2d.font;
     }
@@ -1692,7 +1732,7 @@ class fCanvas {
    * @param {TextAlignType} value?
    * @return {any}
    */
-  textAlign(value?: TextAlignType): any {
+  textAlign(value?: TextAlignType): TextAlignType | void {
     if (value === undefined) {
       return this.$context2d.textAlign;
     }
@@ -1705,7 +1745,7 @@ class fCanvas {
    * @param {TextBaselineType} value?
    * @return {any}
    */
-  textBaseline(value?: TextBaselineType): any {
+  textBaseline(value?: TextBaselineType): TextBaselineType | void {
     if (value === undefined) {
       return this.$context2d.textBaseline;
     }
@@ -1718,22 +1758,38 @@ class fCanvas {
    * @param {GlobalCompositeOperationType} value?
    * @return {any}
    */
-  globalOperation(value?: GlobalCompositeOperationType): any {
+  globalOperation(
+    value?: GlobalCompositeOperationType
+  ): GlobalCompositeOperationType | void {
     if (value === undefined) {
-      return this.$context2d.globalCompositeOperation;
+      return this.$context2d
+        .globalCompositeOperation as GlobalCompositeOperationType;
     }
 
     this.$context2d.globalCompositeOperation = value;
   }
+  globalAlpha(): number;
+  globalAlpha(alpha: number): void;
+  /**
+   * @param {number} alpha?
+   * @return {number | void}
+   */
+  globalAlpha(alpha?: number): number | void {
+    if (alpha === undefined) {
+      return this.$context2d.globalAlpha;
+    }
 
-  translate(): { x: number; y: number };
+    this.$context2d.globalAlpha = alpha;
+  }
+
+  translate(): Offset;
   translate(x: number, y: number): void;
   /**
    * @param {number} x?
    * @param {number} y?
    * @return {any}
    */
-  translate(x?: number, y?: number): any {
+  translate(x?: number, y?: number): Offset | void {
     if (arguments.length === 0) {
       return {
         x: this.__translate.x,
@@ -1751,14 +1807,14 @@ class fCanvas {
   resetTranslate(): void {
     this.$context2d.translate(-this.__translate.sumX, -this.__translate.sumY);
   }
-  scale(): { x: number; y: number };
+  scale(): Offset;
   scale(x: number, y: number): void;
   /**
    * @param {number} x?
    * @param {number} y?
    * @return {any}
    */
-  scale(x?: number, y?: number): any {
+  scale(x?: number, y?: number): Offset | void {
     if (arguments.length === 0) {
       return {
         x: this.__scale.x,
@@ -1817,7 +1873,7 @@ class fCanvas {
     m22?: number,
     dx?: number,
     dy?: number
-  ): any {
+  ): DOMMatrix | void {
     if (arguments.length === 0) {
       return this.$context2d.getTransform();
     }

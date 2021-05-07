@@ -1,1 +1,1 @@
-import "./animate.js"
+import "./cubier.js"
