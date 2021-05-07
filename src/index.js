@@ -1,4 +1,4 @@
-import { AutoToPx, fontToArray, getTouchInfo, requestAnimationFrame, windowSize, isMobile, } from "./utils/index";
+import { AutoToPx, fontToArray, getTouchInfo, requestAnimationFrame, windowSize, isMobile, isTouch, passive, } from "./utils/index";
 import Emitter from "./classes/Emitter";
 import Stament from "./classes/Stament";
 import Store from "./classes/Store";
@@ -1555,9 +1555,9 @@ class fCanvas {
      * @return {noop}
      */
     keyPressed(callback) {
-        this.$el.addEventListener("keypress", callback);
+        this.$el.addEventListener("keydown", callback);
         return () => {
-            this.$el.removeEventListener("keypress", callback);
+            this.$el.removeEventListener("keydown", callback);
         };
     }
     /**
@@ -1723,7 +1723,7 @@ export function draw(callback, canvas) {
  * @return {{ (): void }}
  */
 export function keyPressed(callback, element = window) {
-    return bindEvent("keypress", callback, element);
+    return bindEvent("keydown", callback, element);
 }
 /**
  * @param {CallbackEvent} callback
@@ -1790,4 +1790,5 @@ export function touchEnded(callback, element = window) {
     return bindEvent("touchend", callback, element);
 }
 export default fCanvas;
+export { requestAnimationFrame, windowSize, isMobile, isTouch, passive, };
 export * from "./methods/index";

@@ -1,4 +1,4 @@
-import { InfoTouch } from "./utils/index";
+import { requestAnimationFrame, windowSize, isMobile, InfoTouch, isTouch, passive } from "./utils/index";
 import Emitter, { CallbackEvent } from "./classes/Emitter";
 import Stament from "./classes/Stament";
 import Store from "./classes/Store";
@@ -992,4 +992,5 @@ export declare function touchEnded(callback: CallbackEvent, element?: Window | H
     (): void;
 };
 export default fCanvas;
+export { requestAnimationFrame, windowSize, isMobile, InfoTouch, isTouch, passive, };
 export * from "./methods/index";

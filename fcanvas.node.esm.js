@@ -1017,6 +1017,7 @@ var regenerator = runtime_1;
 var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || function (e) {
   return setTimeout(e, 100 / 6);
 };
+var isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 var supportPassive = false;
 
 try {
@@ -1030,6 +1031,8 @@ try {
   window.addEventListener("testPassive", noop, opts);
   window.removeEventListener("testPassive", noop, opts);
 } catch (e) {}
+
+var passive = supportPassive;
 var windowSize = {
   windowWidth: {
     get: function get() {
@@ -4747,9 +4750,9 @@ var fCanvas = /*#__PURE__*/function () {
     value: function keyPressed(callback) {
       var _this9 = this;
 
-      this.$el.addEventListener("keypress", callback);
+      this.$el.addEventListener("keydown", callback);
       return function () {
-        _this9.$el.removeEventListener("keypress", callback);
+        _this9.$el.removeEventListener("keydown", callback);
       };
     }
     /**
@@ -4999,7 +5002,7 @@ function _draw(callback, canvas) {
 }
 function keyPressed(callback) {
   var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
-  return bindEvent("keypress", callback, element);
+  return bindEvent("keydown", callback, element);
 }
 /**
  * @param {CallbackEvent} callback
@@ -5083,4 +5086,4 @@ function touchEnded(callback) {
 }
 
 export default fCanvas;
-export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, _draw as draw, hypot, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, _setup as setup, touchEnded, touchMoved, touchStarted };
+export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, _draw as draw, hypot, isMobile, isTouch, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, passive, random, range, requestAnimationFrame, _setup as setup, touchEnded, touchMoved, touchStarted, windowSize };

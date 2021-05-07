@@ -6,6 +6,8 @@ import {
   windowSize,
   isMobile,
   InfoTouch,
+  isTouch,
+  passive,
 } from "./utils/index";
 import Emitter, { CallbackEvent } from "./classes/Emitter";
 import Stament from "./classes/Stament";
@@ -2046,10 +2048,10 @@ class fCanvas {
    * @return {noop}
    */
   keyPressed(callback: CallbackEvent): noop {
-    this.$el.addEventListener("keypress", callback);
+    this.$el.addEventListener("keydown", callback);
 
     return () => {
-      this.$el.removeEventListener("keypress", callback);
+      this.$el.removeEventListener("keydown", callback);
     };
   }
   /**
@@ -2234,7 +2236,7 @@ export function keyPressed(
   callback: CallbackEvent,
   element: Window | HTMLElement = window
 ): { (): void } {
-  return bindEvent("keypress", callback, element);
+  return bindEvent("keydown", callback, element);
 }
 /**
  * @param {CallbackEvent} callback
@@ -2326,4 +2328,12 @@ export function touchEnded(
 }
 
 export default fCanvas;
+export {
+  requestAnimationFrame,
+  windowSize,
+  isMobile,
+  InfoTouch,
+  isTouch,
+  passive,
+};
 export * from "./methods/index";

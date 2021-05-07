@@ -5,6 +5,7 @@
 const requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || function (e) {
   return setTimeout(e, 100 / 6);
 };
+const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 let supportPassive = false;
 
 try {
@@ -19,6 +20,8 @@ try {
   window.addEventListener("testPassive", noop, opts);
   window.removeEventListener("testPassive", noop, opts);
 } catch (e) {}
+
+const passive = supportPassive;
 const windowSize = {
   windowWidth: {
     get: () => window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
@@ -3178,9 +3181,9 @@ class fCanvas {
 
 
   keyPressed(callback) {
-    this.$el.addEventListener("keypress", callback);
+    this.$el.addEventListener("keydown", callback);
     return () => {
-      this.$el.removeEventListener("keypress", callback);
+      this.$el.removeEventListener("keydown", callback);
     };
   }
   /**
@@ -3371,7 +3374,7 @@ function draw(callback, canvas) {
  */
 
 function keyPressed(callback, element = window) {
-  return bindEvent("keypress", callback, element);
+  return bindEvent("keydown", callback, element);
 }
 /**
  * @param {CallbackEvent} callback
@@ -3447,4 +3450,4 @@ function touchEnded(callback, element = window) {
 }
 
 export default fCanvas;
-export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, draw, hypot, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, setup, touchEnded, touchMoved, touchStarted };
+export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, draw, hypot, isMobile, isTouch, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, passive, random, range, requestAnimationFrame, setup, touchEnded, touchMoved, touchStarted, windowSize };
