@@ -1235,22 +1235,40 @@ class Point3D extends MyElement {
   y: number = 0;
   z: number = 0;
 
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {any}
+   */
   constructor(x?: number, y?: number, z?: number) {
     super();
     [this.x, this.y, this.z] = [x || 0, y || 0, z || 0];
   }
+  /**
+   * @param {number} angle
+   * @return {void}
+   */
   rotateX(angle: number): void {
     this.y =
       this.y * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
     this.z =
       -this.y * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
   }
+  /**
+   * @param {number} angle
+   * @return {void}
+   */
   rotateY(angle: number): void {
     this.x =
       this.x * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
     this.z =
       -this.x * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
   }
+  /**
+   * @param {number} angle
+   * @return {void}
+   */
   rotateZ(angle: number): void {
     this.x =
       this.x * this.$parent.cos(angle) - this.y * this.$parent.sin(angle);

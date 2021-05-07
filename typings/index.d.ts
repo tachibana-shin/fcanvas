@@ -572,9 +572,27 @@ declare class Point3D extends MyElement {
     x: number;
     y: number;
     z: number;
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @param {number} z?
+     * @return {any}
+     */
     constructor(x?: number, y?: number, z?: number);
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
     rotateX(angle: number): void;
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
     rotateY(angle: number): void;
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
     rotateZ(angle: number): void;
     draw(): void;
 }

@@ -2160,22 +2160,6 @@ var hypot = typeof Math.hypot === "function" ? Math.hypot : function () {
 
   return Math.sqrt(result);
 };
-function foreach(object, callback) {
-  if ("length" in object) {
-    var length = object.length;
-    var index = 0;
-
-    while (index < length) {
-      // @ts-expect-error
-      callback.call(object, object[index], index, object);
-      index++;
-    }
-  } else {
-    for (var _index in object) {
-      callback.call(object, object[_index], _index, object);
-    }
-  }
-}
 
 function getAnimate(type, currentProgress, start, distance, steps, power) {
   switch (type) {
@@ -3753,6 +3737,12 @@ var Point3D = /*#__PURE__*/function (_MyElement4) {
 
   var _super4 = _createSuper(Point3D);
 
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {any}
+   */
   function Point3D(x, y, z) {
     var _this5;
 
@@ -3768,6 +3758,11 @@ var Point3D = /*#__PURE__*/function (_MyElement4) {
     _this5.z = _ref4[2];
     return _this5;
   }
+  /**
+   * @param {number} angle
+   * @return {void}
+   */
+
 
   _createClass(Point3D, [{
     key: "rotateX",
@@ -3775,12 +3770,22 @@ var Point3D = /*#__PURE__*/function (_MyElement4) {
       this.y = this.y * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
       this.z = -this.y * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
     }
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
+
   }, {
     key: "rotateY",
     value: function rotateY(angle) {
       this.x = this.x * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
       this.z = -this.x * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
     }
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
+
   }, {
     key: "rotateZ",
     value: function rotateZ(angle) {
@@ -5072,4 +5077,4 @@ function touchEnded(callback) {
 }
 
 export default fCanvas;
-export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, _draw as draw, foreach, hypot, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, _setup as setup, touchEnded, touchMoved, touchStarted };
+export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, _draw as draw, hypot, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, _setup as setup, touchEnded, touchMoved, touchStarted };

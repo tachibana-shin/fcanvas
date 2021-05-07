@@ -999,24 +999,6 @@ const hypot = typeof Math.hypot === "function" ? Math.hypot : (...args) => {
 
   return Math.sqrt(result);
 };
-function foreach(object, callback) {
-  if ("length" in object) {
-    const {
-      length
-    } = object;
-    let index = 0;
-
-    while (index < length) {
-      // @ts-expect-error
-      callback.call(object, object[index], index, object);
-      index++;
-    }
-  } else {
-    for (const index in object) {
-      callback.call(object, object[index], index, object);
-    }
-  }
-}
 
 function getAnimate(type, currentProgress, start, distance, steps, power) {
   switch (type) {
@@ -2360,6 +2342,12 @@ class CircleElement extends MyElement {
 }
 
 class Point3D extends MyElement {
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {any}
+   */
   constructor(x, y, z) {
     super();
     this.x = 0;
@@ -2367,16 +2355,31 @@ class Point3D extends MyElement {
     this.z = 0;
     [this.x, this.y, this.z] = [x || 0, y || 0, z || 0];
   }
+  /**
+   * @param {number} angle
+   * @return {void}
+   */
+
 
   rotateX(angle) {
     this.y = this.y * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
     this.z = -this.y * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
   }
+  /**
+   * @param {number} angle
+   * @return {void}
+   */
+
 
   rotateY(angle) {
     this.x = this.x * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
     this.z = -this.x * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
   }
+  /**
+   * @param {number} angle
+   * @return {void}
+   */
+
 
   rotateZ(angle) {
     this.x = this.x * this.$parent.cos(angle) - this.y * this.$parent.sin(angle);
@@ -3439,4 +3442,4 @@ function touchEnded(callback, element = window) {
 }
 
 export default fCanvas;
-export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, draw, foreach, hypot, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, setup, touchEnded, touchMoved, touchStarted };
+export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, draw, hypot, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, random, range, setup, touchEnded, touchMoved, touchStarted };

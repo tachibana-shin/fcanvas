@@ -167,19 +167,59 @@ export const hypot = typeof Math.hypot === "function"
             result += Math.pow(args[i++], 2);
         return Math.sqrt(result);
     };
-export function foreach(object, callback) {
-    if ("length" in object) {
-        const { length } = object;
-        let index = 0;
-        while (index < length) {
-            // @ts-expect-error
-            callback.call(object, object[index], index, object);
-            index++;
+/**
+ * @param {number|ArrayLike<any>|Object} start
+ * @param {number|CallbackForeachObject} stop
+ * @param {number|CallbackForeachObject|CallbackForeachNumber} step?
+ * @param {CallbackForeachNumber|CallbackForeachObject=(} callback
+ * @return {=>}
+ */
+function foreach(start, stop, step, callback = () => { }) {
+    if (typeof start === "number") {
+        if (typeof step === "function") {
+            callback = step;
+            step = 1;
+        }
+        step ||= 1;
+        for (let index = start; index <= stop; index += step) {
+            if (callback(index, start, stop, step) === true) {
+                break;
+            }
         }
     }
     else {
-        for (const index in object) {
-            callback.call(object, object[index], index, object);
+        if (typeof stop === "function") {
+            callback = stop;
+        }
+        if (typeof step === "function") {
+            callback = step;
+        }
+        if ("length" in start) {
+            const { length } = start;
+            let index = 0;
+            if (typeof stop !== "number") {
+                stop = length;
+            }
+            if (stop < 0) {
+                stop += length;
+            }
+            while (index < length) {
+                // @ts-expect-error
+                if (callback.call(object, object[index], index, object) === true) {
+                    break;
+                }
+                if (index > stop) {
+                    break;
+                }
+                index++;
+            }
+        }
+        else {
+            for (const index in start) {
+                if (callback.call(start, start[index], index, start) === true) {
+                    break;
+                }
+            }
         }
     }
 }

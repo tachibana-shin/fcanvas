@@ -886,6 +886,12 @@ class CircleElement extends MyElement {
     }
 }
 class Point3D extends MyElement {
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @param {number} z?
+     * @return {any}
+     */
     constructor(x, y, z) {
         super();
         this.x = 0;
@@ -893,18 +899,30 @@ class Point3D extends MyElement {
         this.z = 0;
         [this.x, this.y, this.z] = [x || 0, y || 0, z || 0];
     }
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
     rotateX(angle) {
         this.y =
             this.y * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
         this.z =
             -this.y * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
     }
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
     rotateY(angle) {
         this.x =
             this.x * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
         this.z =
             -this.x * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
     }
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
     rotateZ(angle) {
         this.x =
             this.x * this.$parent.cos(angle) - this.y * this.$parent.sin(angle);

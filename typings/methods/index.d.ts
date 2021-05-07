@@ -85,6 +85,3 @@ export declare function lerp(start: number, stop: number, amt: number): number;
  * @return {number}
  */
 export declare const hypot: (...values: number[]) => number;
-export declare function foreach(object: ArrayLike<any> | Object, callback: {
-    (value?: any, index?: number | string, object?: ArrayLike<any> | Object): void;
-}): void;
