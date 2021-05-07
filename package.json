@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "0.0.4-b25",
+  "version": "0.0.4-b26",
   "main": "fcanvas.js",
   "module": "fcanvas.node.esm.js",
   "unpkg": "fcanvas.esm.js",
