@@ -48,33 +48,6 @@ var asyncToGenerator = createCommonjsModule(function (module) {
 });
 var _asyncToGenerator = unwrapExports(asyncToGenerator);
 
-var _typeof_1 = createCommonjsModule(function (module) {
-  function _typeof(obj) {
-    "@babel/helpers - typeof";
-
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      module.exports = _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-
-      module.exports["default"] = module.exports, module.exports.__esModule = true;
-    } else {
-      module.exports = _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-
-      module.exports["default"] = module.exports, module.exports.__esModule = true;
-    }
-
-    return _typeof(obj);
-  }
-
-  module.exports = _typeof;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-
-var _typeof = unwrapExports(_typeof_1);
-
 var setPrototypeOf = createCommonjsModule(function (module) {
   function _setPrototypeOf(o, p) {
     module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
@@ -111,6 +84,33 @@ var inherits = createCommonjsModule(function (module) {
   module.exports["default"] = module.exports, module.exports.__esModule = true;
 });
 var _inherits = unwrapExports(inherits);
+
+var _typeof_1 = createCommonjsModule(function (module) {
+  function _typeof(obj) {
+    "@babel/helpers - typeof";
+
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      module.exports = _typeof = function _typeof(obj) {
+        return typeof obj;
+      };
+
+      module.exports["default"] = module.exports, module.exports.__esModule = true;
+    } else {
+      module.exports = _typeof = function _typeof(obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+
+      module.exports["default"] = module.exports, module.exports.__esModule = true;
+    }
+
+    return _typeof(obj);
+  }
+
+  module.exports = _typeof;
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
+});
+
+var _typeof = unwrapExports(_typeof_1);
 
 var assertThisInitialized = createCommonjsModule(function (module) {
   function _assertThisInitialized(self) {
@@ -4245,13 +4245,19 @@ var fCanvas = /*#__PURE__*/function () {
         params[_key6] = arguments[_key6];
       }
 
-      if (_typeof(params[0]) === "object") {
-        this.$context2d.drawImage(params[0], 0, 0, this.width, this.height);
-      } else {
-        this.$context2d.fillStyle = this._toRgb(params);
-        this.$context2d.fill();
-        this.$context2d.fillRect(0, 0, this.width, this.height);
-      }
+      this.$context2d.fillStyle = this._toRgb(params);
+      this.$context2d.fill();
+      this.$context2d.fillRect(0, 0, this.width, this.height);
+    }
+    /**
+     * @param {CanvasImageSource} image
+     * @return {void}
+     */
+
+  }, {
+    key: "backgroundImage",
+    value: function backgroundImage(image) {
+      this.$context2d.drawImage(image, 0, 0, this.width, this.height);
     }
     /**
      * @param {any} type="image/png"

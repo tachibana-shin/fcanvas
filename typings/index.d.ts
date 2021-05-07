@@ -729,6 +729,11 @@ declare class fCanvas {
      */
     background(...params: ParamsToRgb): void;
     /**
+     * @param {CanvasImageSource} image
+     * @return {void}
+     */
+    backgroundImage(image: CanvasImageSource): void;
+    /**
      * @param {any} type="image/png"
      * @param {number} scale?
      * @return {string}

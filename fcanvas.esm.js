@@ -2786,13 +2786,18 @@ class fCanvas {
 
 
   background(...params) {
-    if (typeof params[0] === "object") {
-      this.$context2d.drawImage(params[0], 0, 0, this.width, this.height);
-    } else {
-      this.$context2d.fillStyle = this._toRgb(params);
-      this.$context2d.fill();
-      this.$context2d.fillRect(0, 0, this.width, this.height);
-    }
+    this.$context2d.fillStyle = this._toRgb(params);
+    this.$context2d.fill();
+    this.$context2d.fillRect(0, 0, this.width, this.height);
+  }
+  /**
+   * @param {CanvasImageSource} image
+   * @return {void}
+   */
+
+
+  backgroundImage(image) {
+    this.$context2d.drawImage(image, 0, 0, this.width, this.height);
   }
   /**
    * @param {any} type="image/png"
