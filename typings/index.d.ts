@@ -23,8 +23,9 @@ interface Offset {
     y: number;
 }
 declare class MyElement {
-    update: any;
-    draw: any;
+    update: noop | undefined;
+    draw: noop | undefined;
+    setup: noop | undefined;
     setupAnimate: {
         (): AnimateConfig;
     } | undefined | AnimateConfig;
@@ -34,12 +35,16 @@ declare class MyElement {
     private _idActiveNow;
     private _queue;
     private _animate;
+    private _setuped;
     /**
      * @param {fCanvas} canvas?
      * @return {any}
      */
     constructor(canvas?: fCanvas);
     private _initAnimate;
+    /**
+     * @return {Animate | undefined}
+     */
     get animate(): Animate | undefined;
     /**
      * @return {HTMLCanvasElement}

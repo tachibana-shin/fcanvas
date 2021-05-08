@@ -69,8 +69,9 @@ interface Offset {
 }
 
 class MyElement {
-  public update: any;
-  public draw: any;
+  public update: noop | undefined;
+  public draw: noop | undefined;
+  public setup: noop | undefined;
   public setupAnimate:
     | {
         (): AnimateConfig;
@@ -84,6 +85,7 @@ class MyElement {
   private _idActiveNow: number = -1;
   private _queue: LikeMyElement[] = [];
   private _animate: Animate | undefined;
+  private _setuped: boolean = false;
 
   /**
    * @param {fCanvas} canvas?
@@ -104,6 +106,9 @@ class MyElement {
       this._animate = new Animate(this.setupAnimate);
     }
   }
+  /**
+   * @return {Animate | undefined}
+   */
   get animate(): Animate | undefined {
     if (!this._animate) {
       this._initAnimate();
@@ -120,6 +125,12 @@ class MyElement {
   _run(canvas: fCanvas): void {
     this.bind(canvas);
     this._idActiveNow = canvas.id;
+
+    if (this._setuped === false && typeof this.setup === "function") {
+      this._setuped = true;
+      this.setup();
+      this.setup = this.setup.bind(this);
+    }
 
     if (typeof this.update === "function") {
       if (this.autoDraw === true && typeof this.draw === "function") {
@@ -668,10 +679,10 @@ class MyElement {
     y: number,
     w: number,
     h: number,
-    radiusTopLeft?: any,
-    radiusTopRight?: any,
-    radiusBottomRight?: any,
-    radiusBottomLeft?: any
+    radiusTopLeft?: string | number,
+    radiusTopRight?: string | number,
+    radiusBottomRight?: string | number,
+    radiusBottomLeft?: string | number
   ): void {
     this.begin();
     [x, y] = this._figureOffset(x, y, w, h);
@@ -817,10 +828,10 @@ class MyElement {
    */
   createImageData(height: ImageData): ImageData;
   createImageData(width: number, height: number): ImageData;
-  createImageData(width: any, height?: number): ImageData {
+  createImageData(width: ImageData | number, height?: number): ImageData {
     return height
-      ? this.$context2d.createImageData(width, height)
-      : this.$context2d.createImageData(width);
+      ? this.$context2d.createImageData(width as number, height)
+      : this.$context2d.createImageData(width as ImageData);
   }
   /**
    * @param {number} x

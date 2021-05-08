@@ -2163,6 +2163,72 @@ var hypot = typeof Math.hypot === "function" ? Math.hypot : function () {
 
   return Math.sqrt(result);
 };
+/**
+ * @param {number|ArrayLike<any>|Object} start
+ * @param {number|CallbackForeachObject} stop
+ * @param {number|CallbackForeachObject|CallbackForeachNumber} step?
+ * @param {CallbackForeachNumber|CallbackForeachObject=(} callback
+ * @return {=>}
+ */
+
+function foreach(start, stop, step) {
+  var callback = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : function () {};
+
+  if (typeof start === "number") {
+    if (typeof step === "function") {
+      callback = step;
+      step = 1;
+    }
+
+    step || (step = 1);
+
+    for (var index = start; index <= stop; index += step) {
+      if (callback(index, start, stop, step) === true) {
+        break;
+      }
+    }
+  } else {
+    if (typeof stop === "function") {
+      callback = stop;
+    }
+
+    if (typeof step === "function") {
+      callback = step;
+    }
+
+    if ("length" in start) {
+      var length = start.length;
+      var _index = 0;
+
+      if (typeof stop !== "number") {
+        stop = length;
+      }
+
+      if (stop < 0) {
+        stop += length;
+      }
+
+      while (_index < length) {
+        // @ts-expect-error
+        if (callback.call(object, object[_index], _index, object) === true) {
+          break;
+        }
+
+        if (_index > stop) {
+          break;
+        }
+
+        _index++;
+      }
+    } else {
+      for (var _index2 in start) {
+        if (callback.call(start, start[_index2], _index2, start) === true) {
+          break;
+        }
+      }
+    }
+  }
+}
 
 function getAnimate(type, currentProgress, start, distance, steps, power) {
   switch (type) {
@@ -2522,6 +2588,7 @@ var MyElement = /*#__PURE__*/function () {
     this._els = [];
     this._idActiveNow = -1;
     this._queue = [];
+    this._setuped = false;
 
     if ((canvas === null || canvas === void 0 ? void 0 : canvas.constructor) === fCanvas) {
       this._els.push(canvas);
@@ -2539,6 +2606,10 @@ var MyElement = /*#__PURE__*/function () {
         this._animate = new Animate(this.setupAnimate);
       }
     }
+    /**
+     * @return {Animate | undefined}
+     */
+
   }, {
     key: "animate",
     get: function get() {
@@ -2562,6 +2633,12 @@ var MyElement = /*#__PURE__*/function () {
     value: function _run(canvas) {
       this.bind(canvas);
       this._idActiveNow = canvas.id;
+
+      if (this._setuped === false && typeof this.setup === "function") {
+        this._setuped = true;
+        this.setup();
+        this.setup = this.setup.bind(this);
+      }
 
       if (typeof this.update === "function") {
         if (this.autoDraw === true && typeof this.draw === "function") {
@@ -5086,4 +5163,4 @@ function touchEnded(callback) {
 }
 
 export default fCanvas;
-export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, _draw as draw, hypot, isMobile, isTouch, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, passive, random, range, requestAnimationFrame, _setup as setup, touchEnded, touchMoved, touchStarted, windowSize };
+export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, _draw as draw, foreach, hypot, isMobile, isTouch, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, passive, random, range, requestAnimationFrame, _setup as setup, touchEnded, touchMoved, touchStarted, windowSize };

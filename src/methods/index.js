@@ -223,3 +223,4 @@ function foreach(start, stop, step, callback = () => { }) {
         }
     }
 }
+export { foreach };

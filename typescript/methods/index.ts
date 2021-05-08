@@ -341,3 +341,5 @@ function foreach(
     }
   }
 }
+
+export { foreach };

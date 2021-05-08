@@ -85,3 +85,14 @@ export declare function lerp(start: number, stop: number, amt: number): number;
  * @return {number}
  */
 export declare const hypot: (...values: number[]) => number;
+interface CallbackForeachNumber {
+    (value?: number, start?: number, stop?: number, step?: number): boolean | void;
+}
+interface CallbackForeachObject {
+    (value?: any, index?: number | string, object?: ArrayLike<any> | Object): boolean | void;
+}
+declare function foreach(start: number, stop: number, callback: CallbackForeachNumber): void;
+declare function foreach(start: number, stop: number, step: number, callback: CallbackForeachNumber): void;
+declare function foreach(array: ArrayLike<any>, limit: number, callback: CallbackForeachObject): void;
+declare function foreach(array: ArrayLike<any> | Object, callback: CallbackForeachObject): void;
+export { foreach };

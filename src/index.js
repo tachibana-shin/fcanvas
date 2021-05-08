@@ -16,6 +16,7 @@ class MyElement {
         this._els = [];
         this._idActiveNow = -1;
         this._queue = [];
+        this._setuped = false;
         if (canvas?.constructor === fCanvas) {
             this._els.push(canvas);
         }
@@ -31,6 +32,9 @@ class MyElement {
             this._animate = new Animate(this.setupAnimate);
         }
     }
+    /**
+     * @return {Animate | undefined}
+     */
     get animate() {
         if (!this._animate) {
             this._initAnimate();
@@ -46,6 +50,11 @@ class MyElement {
     _run(canvas) {
         this.bind(canvas);
         this._idActiveNow = canvas.id;
+        if (this._setuped === false && typeof this.setup === "function") {
+            this._setuped = true;
+            this.setup();
+            this.setup = this.setup.bind(this);
+        }
         if (typeof this.update === "function") {
             if (this.autoDraw === true && typeof this.draw === "function") {
                 this.draw();

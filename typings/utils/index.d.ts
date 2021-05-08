@@ -45,7 +45,7 @@ export declare function fontToArray(font: string): InfoFont;
  * @param {number} fontSize?
  * @return {number}
  */
-export declare function AutoToPx(string: string | number, fi: number, fontSize?: number): number;
+export declare function AutoToPx(string: string | number | undefined, fi: number, fontSize?: number): number;
 export interface InfoTouch {
     x: number;
     y: number;

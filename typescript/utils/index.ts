@@ -29,7 +29,6 @@ try {
 
 export const passive: boolean = supportPassive;
 
-
 /**
  * @param {string} str
  * @return {string}
@@ -122,7 +121,7 @@ export function fontToArray(font: string): InfoFont {
  * @return {number}
  */
 export function AutoToPx(
-  string: string | number,
+  string: string | number | undefined,
   fi: number,
   fontSize?: number
 ): number {

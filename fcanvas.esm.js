@@ -1002,6 +1002,72 @@ const hypot = typeof Math.hypot === "function" ? Math.hypot : (...args) => {
 
   return Math.sqrt(result);
 };
+/**
+ * @param {number|ArrayLike<any>|Object} start
+ * @param {number|CallbackForeachObject} stop
+ * @param {number|CallbackForeachObject|CallbackForeachNumber} step?
+ * @param {CallbackForeachNumber|CallbackForeachObject=(} callback
+ * @return {=>}
+ */
+
+function foreach(start, stop, step, callback = () => {}) {
+  if (typeof start === "number") {
+    if (typeof step === "function") {
+      callback = step;
+      step = 1;
+    }
+
+    step ||= 1;
+
+    for (let index = start; index <= stop; index += step) {
+      if (callback(index, start, stop, step) === true) {
+        break;
+      }
+    }
+  } else {
+    if (typeof stop === "function") {
+      callback = stop;
+    }
+
+    if (typeof step === "function") {
+      callback = step;
+    }
+
+    if ("length" in start) {
+      const {
+        length
+      } = start;
+      let index = 0;
+
+      if (typeof stop !== "number") {
+        stop = length;
+      }
+
+      if (stop < 0) {
+        stop += length;
+      }
+
+      while (index < length) {
+        // @ts-expect-error
+        if (callback.call(object, object[index], index, object) === true) {
+          break;
+        }
+
+        if (index > stop) {
+          break;
+        }
+
+        index++;
+      }
+    } else {
+      for (const index in start) {
+        if (callback.call(start, start[index], index, start) === true) {
+          break;
+        }
+      }
+    }
+  }
+}
 
 function getAnimate(type, currentProgress, start, distance, steps, power) {
   switch (type) {
@@ -1303,6 +1369,7 @@ class MyElement {
     this._els = [];
     this._idActiveNow = -1;
     this._queue = [];
+    this._setuped = false;
 
     if ((canvas === null || canvas === void 0 ? void 0 : canvas.constructor) === fCanvas) {
       this._els.push(canvas);
@@ -1318,6 +1385,10 @@ class MyElement {
       this._animate = new Animate(this.setupAnimate);
     }
   }
+  /**
+   * @return {Animate | undefined}
+   */
+
 
   get animate() {
     if (!this._animate) {
@@ -1338,6 +1409,12 @@ class MyElement {
   _run(canvas) {
     this.bind(canvas);
     this._idActiveNow = canvas.id;
+
+    if (this._setuped === false && typeof this.setup === "function") {
+      this._setuped = true;
+      this.setup();
+      this.setup = this.setup.bind(this);
+    }
 
     if (typeof this.update === "function") {
       if (this.autoDraw === true && typeof this.draw === "function") {
@@ -3450,4 +3527,4 @@ function touchEnded(callback, element = window) {
 }
 
 export default fCanvas;
-export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, draw, hypot, isMobile, isTouch, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, passive, random, range, requestAnimationFrame, setup, touchEnded, touchMoved, touchStarted, windowSize };
+export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, draw, foreach, hypot, isMobile, isTouch, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, passive, random, range, requestAnimationFrame, setup, touchEnded, touchMoved, touchStarted, windowSize };
