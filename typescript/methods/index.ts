@@ -1,4 +1,5 @@
 import { Object } from "../types";
+import { extractNumber } from "../utils/index";
 
 export interface Circle extends Object {
   x: number;
@@ -343,3 +344,69 @@ function foreach(
 }
 
 export { foreach };
+/**
+ * @param {number} value
+ * @param {number} max
+ * @param {number} prevent
+ * @return {number}
+ */
+
+export function odd(value: number, max: number, prevent: number): number {
+  if (value === max) {
+    return prevent;
+  }
+
+  return value + 1;
+}
+/**
+ * @param {number} value
+ * @param {number} min
+ * @param {number} prevent
+ * @return {number}
+ */
+
+export function off(value: number, min: number, prevent: number): number {
+  if (value === min) {
+    return prevent;
+  }
+
+  return value - 1;
+}
+
+let virualContext: CanvasRenderingContext2D;
+export function cutImage(
+  image: CanvasImageSource,
+  x: number = 0,
+  y: number = 0,
+  width: number = extractNumber(`${image.width}`),
+  height: number = extractNumber(`${image.height}`)
+): CanvasImageSource {
+  if (virualContext === undefined) {
+    virualContext = document
+      .createElement("canvas")
+      .getContext("2d") as CanvasRenderingContext2D; /// never null
+  }
+
+  const [imageWidth, imageHeight] = [
+    extractNumber(image.width),
+    extractNumber(image.height),
+  ];
+
+  [virualContext.canvas.width, virualContext.canvas.height] = [width, height];
+
+  virualContext.drawImage(image, x, y, width, height, 0, 0, width, height);
+
+  // const imageCuted: CanvasImageSource = virualContext.getImageData(
+  //   0,
+  //   0,
+  //   width,
+  //   height
+  // );
+  const imageCuted = new Image();
+
+  imageCuted.src = virualContext.canvas.toDataURL();
+
+  virualContext.clearRect(0, 0, width, height);
+
+  return imageCuted;
+}

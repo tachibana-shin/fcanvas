@@ -63,4 +63,9 @@ export declare function getTouchInfo(element: HTMLCanvasElement, touches: any[])
  * @return {boolean}
  */
 export declare function isMobile(): boolean;
+/**
+ * @param {number|string|boolean} value
+ * @return {number}
+ */
+export declare function extractNumber(value: any): number;
 export {};

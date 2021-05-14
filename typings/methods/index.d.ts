@@ -96,3 +96,18 @@ declare function foreach(start: number, stop: number, step: number, callback: Ca
 declare function foreach(array: ArrayLike<any>, limit: number, callback: CallbackForeachObject): void;
 declare function foreach(array: ArrayLike<any> | Object, callback: CallbackForeachObject): void;
 export { foreach };
+/**
+ * @param {number} value
+ * @param {number} max
+ * @param {number} prevent
+ * @return {number}
+ */
+export declare function odd(value: number, max: number, prevent: number): number;
+/**
+ * @param {number} value
+ * @param {number} min
+ * @param {number} prevent
+ * @return {number}
+ */
+export declare function off(value: number, min: number, prevent: number): number;
+export declare function cutImage(image: CanvasImageSource, x?: number, y?: number, width?: number, height?: number): CanvasImageSource;

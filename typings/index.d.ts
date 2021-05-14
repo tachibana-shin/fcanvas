@@ -4,6 +4,7 @@ import Stament from "./classes/Stament";
 import Store from "./classes/Store";
 import Vector from "./classes/Vector";
 import Animate, { AnimateConfig, AnimateType } from "./classes/Animate";
+import Camera from "./classes/Camera";
 declare type ColorType = "rgb" | "hsl" | "hue" | "hsb";
 declare type AngleType = "degress" | "radial";
 declare type ParamsToRgb = [any?, any?, any?, number?];
@@ -599,7 +600,7 @@ declare class Point3D extends MyElement {
      * @return {void}
      */
     rotateZ(angle: number): void;
-    draw(): void;
+    draw: noop;
 }
 declare class fCanvas {
     static Element: typeof MyElement;
@@ -738,6 +739,42 @@ declare class fCanvas {
      * @return {void}
      */
     backgroundImage(image: CanvasImageSource): void;
+    createImageData(height: ImageData): ImageData;
+    createImageData(width: number, height: number): ImageData;
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {ImageData}
+     */
+    getImageData(x: number, y: number, width: number, height: number): ImageData;
+    putImageData(imageData: ImageData, x: number, y: number): void;
+    putImageData(imageData: ImageData, x: number, y: number, xs: number, ys: number, width: number, height: number): void;
+    /**
+     * @param {CanvasImageSource} image
+     * @param {"repeat"|"repeat-x"|"repeat-y"|"no-repeat"} direction
+     * @return {CanvasPattern | null}
+     */
+    createPattern(image: CanvasImageSource, direction: "repeat" | "repeat-x" | "repeat-y" | "no-repeat"): CanvasPattern | null;
+    /**
+     * @param {number} x1
+     * @param {number} y1
+     * @param {number} r1
+     * @param {number} x2
+     * @param {number} y2
+     * @param {number} r2
+     * @return {CanvasGradient}
+     */
+    createRadialGradient(x1: number, y1: number, r1: number, x2: number, y2: number, r2: number): CanvasGradient;
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {CanvasGradient}
+     */
+    createLinearGradient(x: number, y: number, width: number, height: number): CanvasGradient;
     /**
      * @param {any} type="image/png"
      * @param {number} scale?
@@ -861,11 +898,6 @@ declare class fCanvas {
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    keyPressed(callback: CallbackEvent): noop;
-    /**
-     * @param {CallbackEvent} callback
-     * @return {noop}
-     */
     mouseIn(callback: CallbackEvent): noop;
     /**
      * @param {CallbackEvent} callback
@@ -876,22 +908,22 @@ declare class fCanvas {
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    mouseDowned(callback: CallbackEvent): noop;
+    mouseDown(callback: CallbackEvent): noop;
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    touchStarted(callback: CallbackEvent): noop;
+    touchStart(callback: CallbackEvent): noop;
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    touchMoved(callback: CallbackEvent): noop;
+    touchMove(callback: CallbackEvent): noop;
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    touchEned(callback: CallbackEvent): noop;
+    touchEnd(callback: CallbackEvent): noop;
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
@@ -908,7 +940,7 @@ declare class fCanvas {
      */
     mouseClicked(callback: CallbackEvent): noop;
 }
-export { Emitter, Stament, Store, Vector, Animate };
+export { Emitter, Stament, Store, Vector, Animate, Camera };
 /**
  * @param {any} document.readyState==="complete"
  * @return {any}
@@ -930,6 +962,14 @@ export declare function draw(callback: {
  * @return {{ (): void }}
  */
 export declare function keyPressed(callback: CallbackEvent, element?: Window | HTMLElement): {
+    (): void;
+};
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+export declare function keyUp(callback: CallbackEvent, element?: Window | HTMLElement): {
     (): void;
 };
 /**
@@ -977,7 +1017,7 @@ export declare function mouseMoved(callback: CallbackEvent, element?: Window | H
  * @param {Window|HTMLElement=window} element
  * @return {{ (): void }}
  */
-export declare function touchStarted(callback: CallbackEvent, element?: Window | HTMLElement): {
+export declare function touchStart(callback: CallbackEvent, element?: Window | HTMLElement): {
     (): void;
 };
 /**
@@ -985,7 +1025,7 @@ export declare function touchStarted(callback: CallbackEvent, element?: Window |
  * @param {Window|HTMLElement=window} element
  * @return {{ (): void }}
  */
-export declare function touchMoved(callback: CallbackEvent, element?: Window | HTMLElement): {
+export declare function touchMove(callback: CallbackEvent, element?: Window | HTMLElement): {
     (): void;
 };
 /**
@@ -993,7 +1033,7 @@ export declare function touchMoved(callback: CallbackEvent, element?: Window | H
  * @param {Window|HTMLElement=window} element
  * @return {{ (): void }}
  */
-export declare function touchEnded(callback: CallbackEvent, element?: Window | HTMLElement): {
+export declare function touchEnd(callback: CallbackEvent, element?: Window | HTMLElement): {
     (): void;
 };
 export default fCanvas;

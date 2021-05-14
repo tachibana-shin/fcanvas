@@ -1,3 +1,4 @@
+import { extractNumber } from "../utils/index";
 /**
  * @param {Circle} circle1
  * @param {Circle} circle2
@@ -224,3 +225,51 @@ function foreach(start, stop, step, callback = () => { }) {
     }
 }
 export { foreach };
+/**
+ * @param {number} value
+ * @param {number} max
+ * @param {number} prevent
+ * @return {number}
+ */
+export function odd(value, max, prevent) {
+    if (value === max) {
+        return prevent;
+    }
+    return value + 1;
+}
+/**
+ * @param {number} value
+ * @param {number} min
+ * @param {number} prevent
+ * @return {number}
+ */
+export function off(value, min, prevent) {
+    if (value === min) {
+        return prevent;
+    }
+    return value - 1;
+}
+let virualContext;
+export function cutImage(image, x = 0, y = 0, width = extractNumber(`${image.width}`), height = extractNumber(`${image.height}`)) {
+    if (virualContext === undefined) {
+        virualContext = document
+            .createElement("canvas")
+            .getContext("2d"); /// never null
+    }
+    const [imageWidth, imageHeight] = [
+        extractNumber(image.width),
+        extractNumber(image.height),
+    ];
+    [virualContext.canvas.width, virualContext.canvas.height] = [width, height];
+    virualContext.drawImage(image, x, y, width, height, 0, 0, width, height);
+    // const imageCuted: CanvasImageSource = virualContext.getImageData(
+    //   0,
+    //   0,
+    //   width,
+    //   height
+    // );
+    const imageCuted = new Image();
+    imageCuted.src = virualContext.canvas.toDataURL();
+    virualContext.clearRect(0, 0, width, height);
+    return imageCuted;
+}

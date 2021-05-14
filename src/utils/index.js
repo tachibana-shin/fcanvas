@@ -161,3 +161,13 @@ export function isMobile() {
     })(navigator.userAgent || navigator.vendor);
     return check;
 }
+/**
+ * @param {number|string|boolean} value
+ * @return {number}
+ */
+export function extractNumber(value) {
+    if (typeof value === "number") {
+        return value;
+    }
+    return parseFloat(`${value}`);
+}

@@ -1167,6 +1167,18 @@ function isMobile() {
 
   return check;
 }
+/**
+ * @param {number|string|boolean} value
+ * @return {number}
+ */
+
+function extractNumber(value) {
+  if (typeof value === "number") {
+    return value;
+  }
+
+  return parseFloat("".concat(value));
+}
 
 var Emitter = /*#__PURE__*/function () {
   function Emitter() {
@@ -1980,6 +1992,7 @@ var Vector = /*#__PURE__*/function () {
  * @param {Circle} circle2
  * @return {boolean}
  */
+
 function CircleImpact(circle1, circle2) {
   return Math.pow(circle1.x - circle2.x, 2) + Math.pow(circle1.y - circle2.y, 2) < Math.pow(circle1.radius + circle2.radius, 2);
 }
@@ -2228,6 +2241,61 @@ function foreach(start, stop, step) {
       }
     }
   }
+}
+/**
+ * @param {number} value
+ * @param {number} max
+ * @param {number} prevent
+ * @return {number}
+ */
+
+function odd(value, max, prevent) {
+  if (value === max) {
+    return prevent;
+  }
+
+  return value + 1;
+}
+/**
+ * @param {number} value
+ * @param {number} min
+ * @param {number} prevent
+ * @return {number}
+ */
+
+function off(value, min, prevent) {
+  if (value === min) {
+    return prevent;
+  }
+
+  return value - 1;
+}
+var virualContext;
+function cutImage(image) {
+  var x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var width = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : extractNumber("".concat(image.width));
+  var height = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : extractNumber("".concat(image.height));
+
+  if (virualContext === undefined) {
+    virualContext = document.createElement("canvas").getContext("2d"); /// never null
+  }
+
+  [extractNumber(image.width), extractNumber(image.height)];
+  var _ref2 = [width, height];
+  virualContext.canvas.width = _ref2[0];
+  virualContext.canvas.height = _ref2[1];
+  virualContext.drawImage(image, x, y, width, height, 0, 0, width, height); // const imageCuted: CanvasImageSource = virualContext.getImageData(
+  //   0,
+  //   0,
+  //   width,
+  //   height
+  // );
+
+  var imageCuted = new Image();
+  imageCuted.src = virualContext.canvas.toDataURL();
+  virualContext.clearRect(0, 0, width, height);
+  return imageCuted;
 }
 
 function getAnimate(type, currentProgress, start, distance, steps, power) {
@@ -2570,6 +2638,294 @@ var Animate = /*#__PURE__*/function () {
 }();
 
 Animate.getValueInFrame = getValueInFrame;
+
+var Camera = /*#__PURE__*/function () {
+  /**
+   * @param {number|Viewport|Config} width
+   * @param {number|ViewBox} height?
+   * @param {number|Cursor|false} x?
+   * @param {number} y?
+   * @param {number} vWidth?
+   * @param {number} vHeight?
+   * @param {number|false} cix?
+   * @param {number} ciy?
+   * @param {number} cwidth?
+   * @param {number} cheight?
+   * @return {any}
+   */
+  function Camera(width, height, x, y, vWidth, vHeight, cix, ciy, cwidth, cheight) {
+    _classCallCheck(this, Camera);
+
+    this.viewport = {
+      width: 0,
+      height: 0
+    }; /// view port 100% frame
+
+    this.viewBox = {
+      mx: 0,
+      my: 0,
+      width: 0,
+      height: 0
+    }; /// view box for full canvas
+
+    this._cx = 0; /// x camera
+
+    this._cy = 0; /// y camera
+
+    this.cursor = {
+      __camera: this,
+      use: true,
+      idealX: 0,
+      idealY: 0,
+      offsetTop: 0,
+      offsetRight: 0,
+      offsetBottom: 0,
+      offsetLeft: 0,
+      width: 0,
+      height: 0,
+
+      get x() {
+        if (this.__camera._cx < -this.__camera.viewBox.mx) {
+          var dx = -this.__camera.viewBox.mx - this.__camera._cx;
+          return this.idealX - dx;
+        }
+
+        if (this.__camera._cx > this.__camera.viewport.width - this.__camera.viewBox.width) {
+          var _dx = this.__camera.viewport.width - this.__camera.viewBox.width - this.__camera._cx;
+
+          return this.idealX - _dx;
+        }
+
+        return this.idealX;
+      },
+
+      set x(x) {
+        if (x < this.idealX) {
+          this.__camera._cx = x - this.idealX - this.__camera.viewBox.mx;
+        }
+
+        if (x > this.idealX) {
+          this.__camera._cx = x - this.idealX + this.__camera.viewport.width - this.__camera.viewBox.width - this.width;
+        }
+      },
+
+      get y() {
+        if (this.__camera._cy < -this.__camera.viewBox.my) {
+          var dy = -this.__camera.viewBox.my - this.__camera._cy;
+          return this.idealY - dy;
+        }
+
+        if (this.__camera._cy > this.__camera.viewport.height - this.__camera.viewBox.height) {
+          var _dy = this.__camera.viewport.height - this.__camera.viewBox.height - this.__camera._cy;
+
+          return this.idealY - _dy;
+        }
+
+        return this.idealY;
+      },
+
+      set y(y) {
+        if (y < this.idealY) {
+          this.__camera._cy = y - this.idealY - this.__camera.viewBox.my;
+        }
+
+        if (y > this.idealY) {
+          this.__camera._cy = y - this.idealY + this.__camera.viewport.height - this.__camera.viewBox.height - this.height;
+        }
+      }
+
+    };
+
+    switch (arguments.length) {
+      case 1:
+        var viewport = width.viewport,
+            viewBox = width.viewBox,
+            cursor = width.cursor;
+        this.setViewport(viewport);
+        this.setViewBox(viewBox);
+        this.setCursor(cursor);
+        break;
+
+      case 2:
+        this.setViewport(width);
+        this.setViewBox(height);
+        this.setCursor(x);
+        break;
+
+      default:
+        this.setViewport(width || 0, height || 0);
+        this.setViewBox(x || 0, y || 0, vWidth || 0, vHeight || 0);
+
+        if (cix === false) {
+          this.setCursor(false);
+        } else {
+          this.setCursor(cix, ciy, cwidth, cheight);
+        }
+
+    }
+  }
+
+  _createClass(Camera, [{
+    key: "cx",
+    get: function get() {
+      return this._cx;
+    },
+    set: function set(x) {
+      if (this.cursor.use) {
+        this._cx = constrain(x, -this.cursor.idealX - this.viewBox.mx - this.cursor.offsetLeft, this.viewport.width - this.viewBox.width + (this.viewBox.width - this.cursor.idealX - this.cursor.width) + this.cursor.offsetRight);
+      } else {
+        this._cx = constrain(x, -this.viewBox.mx, this.viewport.width - this.viewBox.width);
+      }
+    }
+  }, {
+    key: "cy",
+    get: function get() {
+      return this._cy;
+    },
+    set: function set(y) {
+      if (this.cursor.use) {
+        this._cy = constrain(y, -this.cursor.idealY - this.viewBox.my - this.cursor.offsetTop, this.viewport.height - this.viewBox.height + (this.viewBox.height - this.cursor.idealY - this.cursor.height) + this.cursor.offsetBottom);
+      } else {
+        this._cy = constrain(y, -this.viewBox.my, this.viewport.height - this.viewBox.height);
+      }
+    }
+    /**
+     * @param {Viewport|number} width
+     * @param {number} height?
+     * @return {void}
+     */
+
+  }, {
+    key: "setViewport",
+    value: function setViewport(width, height) {
+      if (height === null) {
+        this.viewport.width = width.width || 0;
+        this.viewport.height = width.height || 0;
+      } else {
+        this.viewport.width = width;
+        this.viewport.height = height;
+      }
+    }
+    /**
+     * @param {ViewBox|number} x
+     * @param {number} y?
+     * @param {number} width?
+     * @param {number} height?
+     * @return {void}
+     */
+
+  }, {
+    key: "setViewBox",
+    value: function setViewBox(x, y, width, height) {
+      if (arguments.length === 1) {
+        this.viewBox.mx = x.mx || 0;
+        this.viewBox.my = x.my || 0;
+        this.viewBox.width = x.width || 0;
+        this.viewBox.height = x.height || 0;
+      } else {
+        this.viewBox.mx = x || 0;
+        this.viewBox.my = y || 0;
+        this.viewBox.width = width || 0;
+        this.viewBox.height = height || 0;
+      }
+    }
+    /**
+     * @param {number|CursorOffset|false} idealX
+     * @param {number} idealY?
+     * @param {number} width?
+     * @param {number} height?
+     * @return {void}
+     */
+
+  }, {
+    key: "setCursor",
+    value: function setCursor(idealX, idealY, width, height) {
+      if (arguments.length === 1) {
+        if (idealX === false) {
+          this.cursor.use = false;
+        } else {
+          this.cursor.idealX = idealX.idealX || 0;
+          this.cursor.idealY = idealX.idealY || 0;
+          this.cursor.width = idealX.width || 0;
+          this.cursor.height = idealX.height || 0;
+        }
+      } else {
+        this.cursor.idealX = idealX || 0;
+        this.cursor.idealY = idealY || 0;
+        this.cursor.width = width || 0;
+        this.cursor.height = height || 0;
+      }
+    }
+    /**
+     * @param {number} x
+     * @return {number}
+     */
+
+  }, {
+    key: "followX",
+    value: function followX(x) {
+      return x - constrain(this._cx, -this.viewBox.mx, this.viewport.width - this.viewBox.width);
+    }
+    /**
+     * @param {number} y
+     * @return {number}
+     */
+
+  }, {
+    key: "followY",
+    value: function followY(y) {
+      return y - constrain(this._cy, -this.viewBox.my, this.viewport.height - this.viewBox.height);
+    }
+    /**
+     * @param {Vector} vector
+     * @return {Vector}
+     */
+
+  }, {
+    key: "followVector",
+    value: function followVector(vector) {
+      return vector.set(this.followX(vector.x), this.followY(vector.y));
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {any}
+     */
+
+  }, {
+    key: "follow",
+    value: function follow(x, y) {
+      return {
+        x: this.followX(x),
+        y: this.followY(y)
+      };
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number=0} width
+     * @param {number=0} height
+     * @return {boolean}
+     */
+
+  }, {
+    key: "inViewBox",
+    value: function inViewBox(x, y) {
+      var width = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+      var height = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+      x = this.followX(x);
+      y = this.followY(y);
+
+      if (this.viewBox.mx <= x && this.viewBox.my <= y && this.viewBox.mx + this.viewBox.width >= x + width && this.viewBox.my + this.viewBox.height >= y + height) {
+        return true;
+      }
+
+      return false;
+    }
+  }]);
+
+  return Camera;
+}();
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
@@ -3330,7 +3686,7 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "createImageData",
     value: function createImageData(width, height) {
-      return height ? this.$context2d.createImageData(width, height) : this.$context2d.createImageData(width);
+      return height ? this.$parent.createImageData(width, height) : this.$parent.createImageData(width);
     }
     /**
      * @param {number} x
@@ -3343,7 +3699,7 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "getImageData",
     value: function getImageData(x, y, width, height) {
-      return this.$context2d.getImageData(x, y, width, height);
+      return this.$parent.getImageData(x, y, width, height);
     }
     /**
      * @param {ImageData} imageData
@@ -3360,9 +3716,9 @@ var MyElement = /*#__PURE__*/function () {
     key: "putImageData",
     value: function putImageData(imageData, x, y, xs, ys, width, height) {
       if (arguments.length === 7) {
-        this.$context2d.putImageData(imageData, x, y, xs, ys, width, height);
+        this.$parent.putImageData(imageData, x, y, xs, ys, width, height);
       } else {
-        this.$context2d.putImageData(imageData, x, y);
+        this.$parent.putImageData(imageData, x, y);
       }
     }
     /**
@@ -3374,7 +3730,7 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "createPattern",
     value: function createPattern(image, direction) {
-      return this.$context2d.createPattern(image, direction);
+      return this.$parent.createPattern(image, direction);
     }
     /**
      * @param {number} x1
@@ -3389,7 +3745,7 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "createRadialGradient",
     value: function createRadialGradient(x1, y1, r1, x2, y2, r2) {
-      return this.$context2d.createRadialGradient(x1, y1, r1, x2, y2, r2);
+      return this.$parent.createRadialGradient(x1, y1, r1, x2, y2, r2);
     }
     /**
      * @param {number} x
@@ -3402,7 +3758,7 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "createLinearGradient",
     value: function createLinearGradient(x, y, width, height) {
-      return this.$context2d.createLinearGradient(x, y, width, height);
+      return this.$parent.createLinearGradient(x, y, width, height);
     }
     /**
      * @param {"bevel"|"round"|"miter"} type?
@@ -3832,6 +4188,11 @@ var Point3D = /*#__PURE__*/function (_MyElement4) {
     _this5.x = 0;
     _this5.y = 0;
     _this5.z = 0;
+
+    _this5.draw = function () {
+      _this5.point(_this5.x, _this5.y);
+    };
+
     var _ref4 = [x || 0, y || 0, z || 0];
     _this5.x = _ref4[0];
     _this5.y = _ref4[1];
@@ -3871,12 +4232,6 @@ var Point3D = /*#__PURE__*/function (_MyElement4) {
     value: function rotateZ(angle) {
       this.x = this.x * this.$parent.cos(angle) - this.y * this.$parent.sin(angle);
       this.y = this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
-    } // @ts-expect-error
-
-  }, {
-    key: "draw",
-    value: function draw() {
-      this.point(this.x, this.y);
     }
   }]);
 
@@ -4338,6 +4693,89 @@ var fCanvas = /*#__PURE__*/function () {
     key: "backgroundImage",
     value: function backgroundImage(image) {
       this.$context2d.drawImage(image, 0, 0, this.width, this.height);
+    }
+    /**
+     * @param {ImageData|number} width
+     * @param {number} height?
+     * @return {ImageData}
+     */
+
+  }, {
+    key: "createImageData",
+    value: function createImageData(width, height) {
+      return height ? this.$context2d.createImageData(width, height) : this.$context2d.createImageData(width);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {ImageData}
+     */
+
+  }, {
+    key: "getImageData",
+    value: function getImageData(x, y, width, height) {
+      return this.$context2d.getImageData(x, y, width, height);
+    }
+    /**
+     * @param {ImageData} imageData
+     * @param {number} x
+     * @param {number} y
+     * @param {number} xs?
+     * @param {number} ys?
+     * @param {number} width?
+     * @param {number} height?
+     * @return {void}
+     */
+
+  }, {
+    key: "putImageData",
+    value: function putImageData(imageData, x, y, xs, ys, width, height) {
+      if (arguments.length === 7) {
+        this.$context2d.putImageData(imageData, x, y, xs, ys, width, height);
+      } else {
+        this.$context2d.putImageData(imageData, x, y);
+      }
+    }
+    /**
+     * @param {CanvasImageSource} image
+     * @param {"repeat"|"repeat-x"|"repeat-y"|"no-repeat"} direction
+     * @return {CanvasPattern | null}
+     */
+
+  }, {
+    key: "createPattern",
+    value: function createPattern(image, direction) {
+      return this.$context2d.createPattern(image, direction);
+    }
+    /**
+     * @param {number} x1
+     * @param {number} y1
+     * @param {number} r1
+     * @param {number} x2
+     * @param {number} y2
+     * @param {number} r2
+     * @return {CanvasGradient}
+     */
+
+  }, {
+    key: "createRadialGradient",
+    value: function createRadialGradient(x1, y1, r1, x2, y2, r2) {
+      return this.$context2d.createRadialGradient(x1, y1, r1, x2, y2, r2);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {CanvasGradient}
+     */
+
+  }, {
+    key: "createLinearGradient",
+    value: function createLinearGradient(x, y, width, height) {
+      return this.$context2d.createLinearGradient(x, y, width, height);
     }
     /**
      * @param {any} type="image/png"
@@ -4823,28 +5261,13 @@ var fCanvas = /*#__PURE__*/function () {
      */
 
   }, {
-    key: "keyPressed",
-    value: function keyPressed(callback) {
-      var _this9 = this;
-
-      this.$el.addEventListener("keydown", callback);
-      return function () {
-        _this9.$el.removeEventListener("keydown", callback);
-      };
-    }
-    /**
-     * @param {CallbackEvent} callback
-     * @return {noop}
-     */
-
-  }, {
     key: "mouseIn",
     value: function mouseIn(callback) {
-      var _this10 = this;
+      var _this9 = this;
 
       this.$el.addEventListener("mouseover", callback);
       return function () {
-        _this10.$el.removeEventListener("mouseover", callback);
+        _this9.$el.removeEventListener("mouseover", callback);
       };
     }
     /**
@@ -4855,11 +5278,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseOut",
     value: function mouseOut(callback) {
-      var _this11 = this;
+      var _this10 = this;
 
       this.$el.addEventListener("mouseout", callback);
       return function () {
-        _this11.$el.removeEventListener("mouseout", callback);
+        _this10.$el.removeEventListener("mouseout", callback);
       };
     }
     /**
@@ -4868,13 +5291,13 @@ var fCanvas = /*#__PURE__*/function () {
      */
 
   }, {
-    key: "mouseDowned",
-    value: function mouseDowned(callback) {
-      var _this12 = this;
+    key: "mouseDown",
+    value: function mouseDown(callback) {
+      var _this11 = this;
 
       this.$el.addEventListener("mousedown", callback);
       return function () {
-        _this12.$el.removeEventListener("mousedown", callback);
+        _this11.$el.removeEventListener("mousedown", callback);
       };
     }
     /**
@@ -4883,13 +5306,13 @@ var fCanvas = /*#__PURE__*/function () {
      */
 
   }, {
-    key: "touchStarted",
-    value: function touchStarted(callback) {
-      var _this13 = this;
+    key: "touchStart",
+    value: function touchStart(callback) {
+      var _this12 = this;
 
       this.$el.addEventListener("touchstart", callback);
       return function () {
-        _this13.$el.removeEventListener("touchstart", callback);
+        _this12.$el.removeEventListener("touchstart", callback);
       };
     }
     /**
@@ -4898,13 +5321,13 @@ var fCanvas = /*#__PURE__*/function () {
      */
 
   }, {
-    key: "touchMoved",
-    value: function touchMoved(callback) {
-      var _this14 = this;
+    key: "touchMove",
+    value: function touchMove(callback) {
+      var _this13 = this;
 
       this.$el.addEventListener("touchmove", callback);
       return function () {
-        _this14.$el.removeEventListener("touchmove", callback);
+        _this13.$el.removeEventListener("touchmove", callback);
       };
     }
     /**
@@ -4913,13 +5336,13 @@ var fCanvas = /*#__PURE__*/function () {
      */
 
   }, {
-    key: "touchEned",
-    value: function touchEned(callback) {
-      var _this15 = this;
+    key: "touchEnd",
+    value: function touchEnd(callback) {
+      var _this14 = this;
 
       this.$el.addEventListener("touchend", callback);
       return function () {
-        _this15.$el.removeEventListener("touchend", callback);
+        _this14.$el.removeEventListener("touchend", callback);
       };
     }
     /**
@@ -4930,11 +5353,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseMoved",
     value: function mouseMoved(callback) {
-      var _this16 = this;
+      var _this15 = this;
 
       this.$el.addEventListener("mousemove", callback);
       return function () {
-        _this16.$el.removeEventListener("mousemove", callback);
+        _this15.$el.removeEventListener("mousemove", callback);
       };
     }
     /**
@@ -4945,11 +5368,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseUped",
     value: function mouseUped(callback) {
-      var _this17 = this;
+      var _this16 = this;
 
       this.$el.addEventListener("mouseup", callback);
       return function () {
-        _this17.$el.removeEventListener("mouseup", callback);
+        _this16.$el.removeEventListener("mouseup", callback);
       };
     }
     /**
@@ -4960,11 +5383,11 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseClicked",
     value: function mouseClicked(callback) {
-      var _this18 = this;
+      var _this17 = this;
 
       this.$el.addEventListener("click", callback);
       return function () {
-        _this18.$el.removeEventListener("click", callback);
+        _this17.$el.removeEventListener("click", callback);
       };
     }
   }]);
@@ -5087,6 +5510,16 @@ function keyPressed(callback) {
  * @return {{ (): void }}
  */
 
+function keyUp(callback) {
+  var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
+  return bindEvent("keyup", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+
 function changeSize(callback) {
   var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
   return bindEvent("resize", callback, element);
@@ -5137,7 +5570,7 @@ function mouseMoved(callback) {
  * @return {{ (): void }}
  */
 
-function touchStarted(callback) {
+function touchStart(callback) {
   var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
   return bindEvent("touchstart", callback, element);
 }
@@ -5147,7 +5580,7 @@ function touchStarted(callback) {
  * @return {{ (): void }}
  */
 
-function touchMoved(callback) {
+function touchMove(callback) {
   var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
   return bindEvent("touchmove", callback, element);
 }
@@ -5157,10 +5590,10 @@ function touchMoved(callback) {
  * @return {{ (): void }}
  */
 
-function touchEnded(callback) {
+function touchEnd(callback) {
   var element = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
   return bindEvent("touchend", callback, element);
 }
 
 export default fCanvas;
-export { Animate, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, _draw as draw, foreach, hypot, isMobile, isTouch, keyPressed, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, passive, random, range, requestAnimationFrame, _setup as setup, touchEnded, touchMoved, touchStarted, windowSize };
+export { Animate, Camera, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, cutImage, _draw as draw, foreach, hypot, isMobile, isTouch, keyPressed, keyUp, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, off, passive, random, range, requestAnimationFrame, _setup as setup, touchEnd, touchMove, touchStart, windowSize };

@@ -14,6 +14,7 @@ import Stament from "./classes/Stament";
 import Store from "./classes/Store";
 import Vector from "./classes/Vector";
 import Animate, { AnimateConfig, AnimateType } from "./classes/Animate";
+import Camera from "./classes/Camera";
 import { RectImpactPoint, CircleImpactPoint } from "./methods/index";
 
 ///let noopFCanvas; /// new fCanvas after class fCanvas because error
@@ -830,8 +831,8 @@ class MyElement {
   createImageData(width: number, height: number): ImageData;
   createImageData(width: ImageData | number, height?: number): ImageData {
     return height
-      ? this.$context2d.createImageData(width as number, height)
-      : this.$context2d.createImageData(width as ImageData);
+      ? this.$parent.createImageData(width as number, height)
+      : this.$parent.createImageData(width as ImageData);
   }
   /**
    * @param {number} x
@@ -841,7 +842,7 @@ class MyElement {
    * @return {ImageData}
    */
   getImageData(x: number, y: number, width: number, height: number): ImageData {
-    return this.$context2d.getImageData(x, y, width, height);
+    return this.$parent.getImageData(x, y, width, height);
   }
   putImageData(imageData: ImageData, x: number, y: number): void;
   putImageData(
@@ -873,7 +874,7 @@ class MyElement {
     height?: number
   ): void {
     if (arguments.length === 7) {
-      this.$context2d.putImageData(
+      this.$parent.putImageData(
         imageData,
         x,
         y,
@@ -883,7 +884,7 @@ class MyElement {
         height as number
       );
     } else {
-      this.$context2d.putImageData(imageData, x, y);
+      this.$parent.putImageData(imageData, x, y);
     }
   }
   /**
@@ -895,7 +896,7 @@ class MyElement {
     image: CanvasImageSource,
     direction: "repeat" | "repeat-x" | "repeat-y" | "no-repeat"
   ): CanvasPattern | null {
-    return this.$context2d.createPattern(image, direction);
+    return this.$parent.createPattern(image, direction);
   }
   /**
    * @param {number} x1
@@ -914,7 +915,7 @@ class MyElement {
     y2: number,
     r2: number
   ): CanvasGradient {
-    return this.$context2d.createRadialGradient(x1, y1, r1, x2, y2, r2);
+    return this.$parent.createRadialGradient(x1, y1, r1, x2, y2, r2);
   }
   /**
    * @param {number} x
@@ -929,7 +930,7 @@ class MyElement {
     width: number,
     height: number
   ): CanvasGradient {
-    return this.$context2d.createLinearGradient(x, y, width, height);
+    return this.$parent.createLinearGradient(x, y, width, height);
   }
 
   lineJoin(): "bevel" | "round" | "miter";
@@ -1289,10 +1290,9 @@ class Point3D extends MyElement {
       this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
   }
 
-  // @ts-expect-error
-  draw() {
+  draw: noop = (): void => {
     this.point(this.x, this.y);
-  }
+  };
 }
 
 class fCanvas {
@@ -1681,6 +1681,116 @@ class fCanvas {
   backgroundImage(image: CanvasImageSource): void {
     this.$context2d.drawImage(image, 0, 0, this.width, this.height);
   }
+  createImageData(height: ImageData): ImageData;
+  createImageData(width: number, height: number): ImageData;
+  /**
+   * @param {ImageData|number} width
+   * @param {number} height?
+   * @return {ImageData}
+   */
+  createImageData(width: ImageData | number, height?: number): ImageData {
+    return height
+      ? this.$context2d.createImageData(width as number, height)
+      : this.$context2d.createImageData(width as ImageData);
+  }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @return {ImageData}
+   */
+  getImageData(x: number, y: number, width: number, height: number): ImageData {
+    return this.$context2d.getImageData(x, y, width, height);
+  }
+  putImageData(imageData: ImageData, x: number, y: number): void;
+  putImageData(
+    imageData: ImageData,
+    x: number,
+    y: number,
+    xs: number,
+    ys: number,
+    width: number,
+    height: number
+  ): void;
+  /**
+   * @param {ImageData} imageData
+   * @param {number} x
+   * @param {number} y
+   * @param {number} xs?
+   * @param {number} ys?
+   * @param {number} width?
+   * @param {number} height?
+   * @return {void}
+   */
+  putImageData(
+    imageData: ImageData,
+    x: number,
+    y: number,
+    xs?: number,
+    ys?: number,
+    width?: number,
+    height?: number
+  ): void {
+    if (arguments.length === 7) {
+      this.$context2d.putImageData(
+        imageData,
+        x,
+        y,
+        xs as number,
+        ys as number,
+        width as number,
+        height as number
+      );
+    } else {
+      this.$context2d.putImageData(imageData, x, y);
+    }
+  }
+  /**
+   * @param {CanvasImageSource} image
+   * @param {"repeat"|"repeat-x"|"repeat-y"|"no-repeat"} direction
+   * @return {CanvasPattern | null}
+   */
+  createPattern(
+    image: CanvasImageSource,
+    direction: "repeat" | "repeat-x" | "repeat-y" | "no-repeat"
+  ): CanvasPattern | null {
+    return this.$context2d.createPattern(image, direction);
+  }
+  /**
+   * @param {number} x1
+   * @param {number} y1
+   * @param {number} r1
+   * @param {number} x2
+   * @param {number} y2
+   * @param {number} r2
+   * @return {CanvasGradient}
+   */
+  createRadialGradient(
+    x1: number,
+    y1: number,
+    r1: number,
+    x2: number,
+    y2: number,
+    r2: number
+  ): CanvasGradient {
+    return this.$context2d.createRadialGradient(x1, y1, r1, x2, y2, r2);
+  }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @return {CanvasGradient}
+   */
+  createLinearGradient(
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): CanvasGradient {
+    return this.$context2d.createLinearGradient(x, y, width, height);
+  }
   /**
    * @param {any} type="image/png"
    * @param {number} scale?
@@ -1725,13 +1835,10 @@ class fCanvas {
    */
   async setup(callback: { (): void }): Promise<void> {
     if (this._existsPreload) {
-      this._stamentReady.on(
-        "preloaded",
-        async (): Promise<void> => {
-          await setup(callback);
-          this._stamentReady.emit("setuped");
-        }
-      );
+      this._stamentReady.on("preloaded", async (): Promise<void> => {
+        await setup(callback);
+        this._stamentReady.emit("setuped");
+      });
     } else {
       await setup(callback);
       this._stamentReady.emit("setuped");
@@ -2058,17 +2165,6 @@ class fCanvas {
    * @param {CallbackEvent} callback
    * @return {noop}
    */
-  keyPressed(callback: CallbackEvent): noop {
-    this.$el.addEventListener("keydown", callback);
-
-    return () => {
-      this.$el.removeEventListener("keydown", callback);
-    };
-  }
-  /**
-   * @param {CallbackEvent} callback
-   * @return {noop}
-   */
   mouseIn(callback: CallbackEvent): noop {
     this.$el.addEventListener("mouseover", callback);
 
@@ -2091,7 +2187,7 @@ class fCanvas {
    * @param {CallbackEvent} callback
    * @return {noop}
    */
-  mouseDowned(callback: CallbackEvent): noop {
+  mouseDown(callback: CallbackEvent): noop {
     this.$el.addEventListener("mousedown", callback);
 
     return () => {
@@ -2102,7 +2198,7 @@ class fCanvas {
    * @param {CallbackEvent} callback
    * @return {noop}
    */
-  touchStarted(callback: CallbackEvent): noop {
+  touchStart(callback: CallbackEvent): noop {
     this.$el.addEventListener("touchstart", callback);
 
     return () => {
@@ -2113,7 +2209,7 @@ class fCanvas {
    * @param {CallbackEvent} callback
    * @return {noop}
    */
-  touchMoved(callback: CallbackEvent): noop {
+  touchMove(callback: CallbackEvent): noop {
     this.$el.addEventListener("touchmove", callback);
 
     return () => {
@@ -2124,7 +2220,7 @@ class fCanvas {
    * @param {CallbackEvent} callback
    * @return {noop}
    */
-  touchEned(callback: CallbackEvent): noop {
+  touchEnd(callback: CallbackEvent): noop {
     this.$el.addEventListener("touchend", callback);
 
     return () => {
@@ -2179,7 +2275,7 @@ function bindEvent(
   };
 }
 
-export { Emitter, Stament, Store, Vector, Animate };
+export { Emitter, Stament, Store, Vector, Animate, Camera };
 
 let inited: boolean = false;
 const emitter: Emitter = new Emitter();
@@ -2254,6 +2350,17 @@ export function keyPressed(
  * @param {Window|HTMLElement=window} element
  * @return {{ (): void }}
  */
+export function keyUp(
+  callback: CallbackEvent,
+  element: Window | HTMLElement = window
+): { (): void } {
+  return bindEvent("keyup", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
 export function changeSize(
   callback: CallbackEvent,
   element: Window | HTMLElement = window
@@ -2309,7 +2416,7 @@ export function mouseMoved(
  * @param {Window|HTMLElement=window} element
  * @return {{ (): void }}
  */
-export function touchStarted(
+export function touchStart(
   callback: CallbackEvent,
   element: Window | HTMLElement = window
 ): { (): void } {
@@ -2320,7 +2427,7 @@ export function touchStarted(
  * @param {Window|HTMLElement=window} element
  * @return {{ (): void }}
  */
-export function touchMoved(
+export function touchMove(
   callback: CallbackEvent,
   element: Window | HTMLElement = window
 ): { (): void } {
@@ -2331,7 +2438,7 @@ export function touchMoved(
  * @param {Window|HTMLElement=window} element
  * @return {{ (): void }}
  */
-export function touchEnded(
+export function touchEnd(
   callback: CallbackEvent,
   element: Window | HTMLElement = window
 ): { (): void } {
