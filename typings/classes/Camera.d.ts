@@ -44,6 +44,7 @@ declare class Camera {
     set cy(y: number);
     readonly cursor: Cursor & {
         use: boolean;
+        idealRX: number;
     };
     constructor(width: number, height: number, x?: number, y?: number, vWidth?: number, vHeight?: number, cix?: number | false, ciy?: number, cwidth?: number, cheight?: number);
     constructor(viewport: Viewport, viewBox: ViewBox, cursor: Cursor | false);

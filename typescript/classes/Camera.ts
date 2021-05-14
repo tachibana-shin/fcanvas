@@ -97,11 +97,16 @@ class Camera {
     }
   }
 
-  public readonly cursor: Cursor & { use: boolean } = {
+  public readonly cursor: Cursor & {
+    use: boolean;
+    idealRX: number;
+  } = {
     __camera: this,
     use: true,
     idealX: 0,
     idealY: 0,
+
+    idealRX: 0,
 
     offsetTop: 0,
     offsetRight: 0,
@@ -136,7 +141,7 @@ class Camera {
       if (x < this.idealX) {
         this.__camera._cx = x - this.idealX - this.__camera.viewBox.mx;
       }
-      if (x > this.idealX) {
+      if (x > this.idealX + this.idealRX) {
         this.__camera._cx =
           x -
           this.idealX +

@@ -31,6 +31,7 @@ class Camera {
             use: true,
             idealX: 0,
             idealY: 0,
+            idealRX: 0,
             offsetTop: 0,
             offsetRight: 0,
             offsetBottom: 0,
@@ -55,7 +56,7 @@ class Camera {
                 if (x < this.idealX) {
                     this.__camera._cx = x - this.idealX - this.__camera.viewBox.mx;
                 }
-                if (x > this.idealX) {
+                if (x > this.idealX + this.idealRX) {
                     this.__camera._cx =
                         x -
                             this.idealX +
