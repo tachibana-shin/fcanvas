@@ -37,6 +37,7 @@ declare class MyElement {
     private _queue;
     private _animate;
     private _setuped;
+    private __addEl;
     /**
      * @param {fCanvas} canvas?
      * @return {any}
@@ -647,10 +648,9 @@ declare class fCanvas {
      */
     get $context2d(): CanvasRenderingContext2D;
     /**
-     * @param {HTMLCanvasElement} element?
      * @return {any}
      */
-    constructor(element?: HTMLCanvasElement);
+    constructor();
     /**
      * @param {HTMLElement=document.body} parent
      * @return {any}

@@ -1699,17 +1699,25 @@ class MyElement {
    * @return {any}
    */
   constructor(canvas) {
+    var _canvas;
+
     this.autoDraw = true;
     this.autoFrame = true;
-    this._els = [];
+    this._els = {};
     this._idActiveNow = -1;
     this._queue = [];
     this._setuped = false;
 
-    if ((canvas === null || canvas === void 0 ? void 0 : canvas.constructor) === fCanvas) {
-      this._els.push(canvas);
-    } else {
-      this._els.push(noopFCanvas);
+    if (((_canvas = canvas) === null || _canvas === void 0 ? void 0 : _canvas.constructor) !== fCanvas) {
+      canvas = noopFCanvas;
+    }
+
+    this.__addEl(canvas);
+  }
+
+  __addEl(canvas) {
+    if (canvas.id in this._els === false) {
+      this._els[canvas.id] = canvas;
     }
   }
 
@@ -1821,7 +1829,7 @@ class MyElement {
 
 
   has(id) {
-    return this._els.some(item => item.id === id);
+    return id in this._els;
   }
   /**
    * @return {fCanvas}
@@ -1829,9 +1837,9 @@ class MyElement {
 
 
   get $parent() {
-    const canvas = this._idActiveNow === null ? this._els[this._els.length - 1] : this._els.find(item => item.id === this._idActiveNow);
+    const canvas = this._els[this._idActiveNow === -1 ? 0 : this._idActiveNow];
 
-    if (canvas instanceof fCanvas) {
+    if ((canvas === null || canvas === void 0 ? void 0 : canvas.constructor) === fCanvas) {
       return canvas;
     } else {
       console.warn("fCanvas: The current referenced version of the fCanvas.run function is incorrect.");
@@ -1845,10 +1853,8 @@ class MyElement {
 
 
   bind(canvas) {
-    if (canvas instanceof fCanvas) {
-      if (this.has(canvas.id) === false) {
-        this._els.push(canvas);
-      }
+    if ((canvas === null || canvas === void 0 ? void 0 : canvas.constructor) === fCanvas) {
+      this.__addEl(canvas);
     } else {
       console.error("fCanvas: the parameter passed to MyElement.bind() must be a fCanvas object.");
     }
@@ -2810,10 +2816,9 @@ class Point3D extends MyElement {
 
 class fCanvas {
   /**
-   * @param {HTMLCanvasElement} element?
    * @return {any}
    */
-  constructor(element) {
+  constructor() {
     this._ENV = {
       angleMode: "degress",
       rectAlign: "left",
@@ -2860,10 +2865,6 @@ class fCanvas {
       } catch (e) {// throw e;
       }
     };
-
-    if (element instanceof HTMLCanvasElement) {
-      this._el = element;
-    }
 
     this.$el.addEventListener(isMobile() ? "touchstart" : "mouseover", handlerEvent);
     this.$el.addEventListener(isMobile() ? "touchmove" : "mousemove", handlerEvent);

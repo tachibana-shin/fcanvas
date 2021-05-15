@@ -82,22 +82,29 @@ class MyElement {
   public autoDraw: boolean = true;
   public autoFrame: boolean = true;
 
-  private _els: fCanvas[] = [];
+  private _els: {
+    [propName: string]: fCanvas;
+  } = {};
   private _idActiveNow: number = -1;
   private _queue: LikeMyElement[] = [];
   private _animate: Animate | undefined;
   private _setuped: boolean = false;
 
+  private __addEl(canvas: fCanvas): void {
+    if (canvas.id in this._els === false) {
+      this._els[canvas.id] = canvas;
+    }
+  }
   /**
    * @param {fCanvas} canvas?
    * @return {any}
    */
   constructor(canvas?: fCanvas) {
-    if (canvas?.constructor === fCanvas) {
-      this._els.push(canvas);
-    } else {
-      this._els.push(noopFCanvas);
+    if (canvas?.constructor !== fCanvas) {
+      canvas = noopFCanvas;
     }
+
+    this.__addEl(canvas);
   }
 
   private _initAnimate(): void {
@@ -194,18 +201,15 @@ class MyElement {
    * @return {boolean}
    */
   has(id: number): boolean {
-    return this._els.some((item) => item.id === id);
+    return id in this._els;
   }
   /**
    * @return {fCanvas}
    */
   get $parent(): fCanvas {
-    const canvas =
-      this._idActiveNow === null
-        ? this._els[this._els.length - 1]
-        : this._els.find((item) => item.id === this._idActiveNow);
+    const canvas = this._els[this._idActiveNow === -1 ? 0 : this._idActiveNow];
 
-    if (canvas instanceof fCanvas) {
+    if (canvas?.constructor === fCanvas) {
       return canvas;
     } else {
       console.warn(
@@ -220,10 +224,8 @@ class MyElement {
    * @return {void}
    */
   bind(canvas: fCanvas): void {
-    if (canvas instanceof fCanvas) {
-      if (this.has(canvas.id) === false) {
-        this._els.push(canvas);
-      }
+    if (canvas?.constructor === fCanvas) {
+      this.__addEl(canvas);
     } else {
       console.error(
         "fCanvas: the parameter passed to MyElement.bind() must be a fCanvas object."
@@ -1379,10 +1381,9 @@ class fCanvas {
   }
 
   /**
-   * @param {HTMLCanvasElement} element?
    * @return {any}
    */
-  constructor(element?: HTMLCanvasElement) {
+  constructor() {
     const handlerEvent = (event: any): void => {
       try {
         if (event.type !== "mouseout") {
@@ -1400,10 +1401,6 @@ class fCanvas {
         // throw e;
       }
     };
-
-    if (element instanceof HTMLCanvasElement) {
-      this._el = element;
-    }
 
     this.$el.addEventListener(
       isMobile() ? "touchstart" : "mouseover",

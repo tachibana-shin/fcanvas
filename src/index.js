@@ -14,15 +14,18 @@ class MyElement {
     constructor(canvas) {
         this.autoDraw = true;
         this.autoFrame = true;
-        this._els = [];
+        this._els = {};
         this._idActiveNow = -1;
         this._queue = [];
         this._setuped = false;
-        if (canvas?.constructor === fCanvas) {
-            this._els.push(canvas);
+        if (canvas?.constructor !== fCanvas) {
+            canvas = noopFCanvas;
         }
-        else {
-            this._els.push(noopFCanvas);
+        this.__addEl(canvas);
+    }
+    __addEl(canvas) {
+        if (canvas.id in this._els === false) {
+            this._els[canvas.id] = canvas;
         }
     }
     _initAnimate() {
@@ -112,16 +115,14 @@ class MyElement {
      * @return {boolean}
      */
     has(id) {
-        return this._els.some((item) => item.id === id);
+        return id in this._els;
     }
     /**
      * @return {fCanvas}
      */
     get $parent() {
-        const canvas = this._idActiveNow === null
-            ? this._els[this._els.length - 1]
-            : this._els.find((item) => item.id === this._idActiveNow);
-        if (canvas instanceof fCanvas) {
+        const canvas = this._els[this._idActiveNow === -1 ? 0 : this._idActiveNow];
+        if (canvas?.constructor === fCanvas) {
             return canvas;
         }
         else {
@@ -134,10 +135,8 @@ class MyElement {
      * @return {void}
      */
     bind(canvas) {
-        if (canvas instanceof fCanvas) {
-            if (this.has(canvas.id) === false) {
-                this._els.push(canvas);
-            }
+        if (canvas?.constructor === fCanvas) {
+            this.__addEl(canvas);
         }
         else {
             console.error("fCanvas: the parameter passed to MyElement.bind() must be a fCanvas object.");
@@ -945,10 +944,9 @@ class Point3D extends MyElement {
 }
 class fCanvas {
     /**
-     * @param {HTMLCanvasElement} element?
      * @return {any}
      */
-    constructor(element) {
+    constructor() {
         this._ENV = {
             angleMode: "degress",
             rectAlign: "left",
@@ -996,9 +994,6 @@ class fCanvas {
                 // throw e;
             }
         };
-        if (element instanceof HTMLCanvasElement) {
-            this._el = element;
-        }
         this.$el.addEventListener(isMobile() ? "touchstart" : "mouseover", handlerEvent);
         this.$el.addEventListener(isMobile() ? "touchmove" : "mousemove", handlerEvent);
         this.$el.addEventListener(isMobile() ? "touchend" : "mouseout", handlerEvent);
