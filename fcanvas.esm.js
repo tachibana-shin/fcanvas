@@ -1760,6 +1760,11 @@ class ResourceTile {
     this.image = image;
     this.plist = plist;
   }
+  /**
+   * @param {string} name
+   * @return {any}
+   */
+
 
   get(name) {
     const {
@@ -1767,8 +1772,8 @@ class ResourceTile {
       rotated,
       sourceSize
     } = this.plist.frames[name];
-    const frameArray = frame.replace(/{|}\s/g, "").split(",");
-    const sizeArray = sourceSize.replace(/{|}\s/g, "").split(",");
+    const frameArray = frame.replace(/\{|\}\s/g, "").split(",");
+    const sizeArray = sourceSize.replace(/\{|\}\s/g, "").split(",");
 
     if (name in this.__caching === false) {
       this.__caching[name] = cutImage(this.image, ...frameArray, rotated ? -90 : 0);
@@ -1783,21 +1788,31 @@ class ResourceTile {
       }
     };
   }
+  /*
+   * @param {string} name
+   * @return {boolean}
+   */
+
 
   has(name) {
     return name in this.plist.frames;
   }
 
 }
+/**
+ * @param {string} path
+ * @return {Promise<ResourceTile>}
+ */
 
-async function loadResourceImage (path) {
+
+async function loadResourceImage(path) {
   var _plistJson, _plistJson2;
 
   if (path.match(/\.plist$/) == null) {
     path += `.plist`;
   }
 
-  const plist = await fetch(`./assets/320x480/Object.plist`).then(response => response.text()).then(str => new DOMParser().parseFromString(str, "text/xml"));
+  const plist = await fetch(`${path}`).then(response => response.text()).then(str => new DOMParser().parseFromString(str, "text/xml"));
   let plistJson = {};
   plist.querySelectorAll("plist > dict:first-child > key").forEach(itemKey => {
     plistJson = { ...plistJson,

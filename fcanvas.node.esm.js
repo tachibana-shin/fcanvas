@@ -3006,6 +3006,11 @@ var ResourceTile = /*#__PURE__*/function () {
     this.image = image;
     this.plist = plist;
   }
+  /**
+   * @param {string} name
+   * @return {any}
+   */
+
 
   _createClass(ResourceTile, [{
     key: "get",
@@ -3014,8 +3019,8 @@ var ResourceTile = /*#__PURE__*/function () {
           frame = _this$plist$frames$na.frame,
           rotated = _this$plist$frames$na.rotated,
           sourceSize = _this$plist$frames$na.sourceSize;
-      var frameArray = frame.replace(/{|}\s/g, "").split(",");
-      var sizeArray = sourceSize.replace(/{|}\s/g, "").split(",");
+      var frameArray = frame.replace(/\{|\}\s/g, "").split(",");
+      var sizeArray = sourceSize.replace(/\{|\}\s/g, "").split(",");
 
       if (name in this.__caching === false) {
         this.__caching[name] = cutImage.apply(void 0, [this.image].concat(_toConsumableArray(frameArray), [rotated ? -90 : 0]));
@@ -3030,6 +3035,11 @@ var ResourceTile = /*#__PURE__*/function () {
         }
       };
     }
+    /*
+     * @param {string} name
+     * @return {boolean}
+     */
+
   }, {
     key: "has",
     value: function has(name) {
@@ -3039,13 +3049,18 @@ var ResourceTile = /*#__PURE__*/function () {
 
   return ResourceTile;
 }();
+/**
+ * @param {string} path
+ * @return {Promise<ResourceTile>}
+ */
 
-function loadResourceImage (_x) {
-  return _ref8.apply(this, arguments);
+
+function loadResourceImage(_x) {
+  return _loadResourceImage.apply(this, arguments);
 }
 
-function _ref8() {
-  _ref8 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee(path) {
+function _loadResourceImage() {
+  _loadResourceImage = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee(path) {
     var _plistJson, _plistJson2;
 
     var plist, plistJson, image;
@@ -3058,7 +3073,7 @@ function _ref8() {
             }
 
             _context.next = 3;
-            return fetch("./assets/320x480/Object.plist").then(function (response) {
+            return fetch("".concat(path)).then(function (response) {
               return response.text();
             }).then(function (str) {
               return new DOMParser().parseFromString(str, "text/xml");
@@ -3084,7 +3099,7 @@ function _ref8() {
       }
     }, _callee);
   }));
-  return _ref8.apply(this, arguments);
+  return _loadResourceImage.apply(this, arguments);
 }
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }

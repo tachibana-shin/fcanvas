@@ -7,6 +7,10 @@ declare class ResourceTile {
         [propName: string]: HTMLImageElement;
     };
     constructor(image: HTMLImageElement, plist: object);
+    /**
+     * @param {string} name
+     * @return {any}
+     */
     get(name: string): {
         image: HTMLImageElement;
         size: {
@@ -16,5 +20,9 @@ declare class ResourceTile {
     };
     has(name: string): boolean;
 }
-export default function (path: string): Promise<ResourceTile>;
+/**
+ * @param {string} path
+ * @return {Promise<ResourceTile>}
+ */
+export default function loadResourceImage(path: string): Promise<ResourceTile>;
 export {};
