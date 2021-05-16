@@ -3023,15 +3023,15 @@ var ResourceTile = /*#__PURE__*/function () {
       var sizeArray = sourceSize.replace(/\{|\}|\s/g, "").split(",");
 
       if (name in this.__caching === false) {
-        this.__caching[name] = cutImage.apply(void 0, [this.image].concat(_toConsumableArray(frameArray), [rotated ? -90 : 0]));
+        this.__caching[name] = cutImage(this.image, +frameArray[0], +frameArray[1], +frameArray[2], +frameArray[3], rotated ? -90 : 0);
       }
 
       var imageCuted = this.__caching[name];
       return {
         image: imageCuted,
         size: {
-          width: sizeArray[0],
-          height: sizeArray[1]
+          width: +sizeArray[0],
+          height: +sizeArray[1]
         }
       };
     }
