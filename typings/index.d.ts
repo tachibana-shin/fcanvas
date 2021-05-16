@@ -5,6 +5,7 @@ import Store from "./classes/Store";
 import Vector from "./classes/Vector";
 import Animate, { AnimateConfig } from "./classes/Animate";
 import Camera from "./classes/Camera";
+import loadResourceImage from "./addons/loadResourceImage";
 declare type ColorType = "rgb" | "hsl" | "hue" | "hsb";
 declare type AngleType = "degress" | "radial";
 declare type ParamsToRgb = [any?, any?, any?, number?];
@@ -808,7 +809,7 @@ declare class fCanvas {
      */
     mouseClicked(callback: CallbackEvent): noop;
 }
-export { Emitter, Stament, Store, Vector, Animate, Camera };
+export { Emitter, Stament, Store, Vector, Animate, Camera, loadResourceImage };
 /**
  * @param {any} document.readyState==="complete"
  * @return {any}

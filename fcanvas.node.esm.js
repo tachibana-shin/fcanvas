@@ -1348,9 +1348,9 @@ var toConsumableArray = createCommonjsModule(function (module) {
 });
 var _toConsumableArray = unwrapExports(toConsumableArray);
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function reactiveDefine(value, callback) {
   var parent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
@@ -1397,7 +1397,7 @@ function reactiveDefine(value, callback) {
           writable: true,
           enumerable: false,
           configurable: true,
-          value: _objectSpread({}, value)
+          value: _objectSpread$1({}, value)
         });
         Object.defineProperty(value, "__reactive", {
           writable: false,
@@ -1406,7 +1406,7 @@ function reactiveDefine(value, callback) {
           value: true
         });
       } else {
-        value.__store = _objectSpread({}, value);
+        value.__store = _objectSpread$1({}, value);
       }
 
       var _loop = function _loop(key) {
@@ -2932,6 +2932,160 @@ var Camera = /*#__PURE__*/function () {
 
   return Camera;
 }();
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function convertFieldToJson(keyItem) {
+  var key = keyItem.textContent;
+  var value = keyItem.nextElementSibling;
+
+  if (value == null) {
+    throw new Error("fCanvas<addons/loadResourceImage>: Error because syntax error in file plist.");
+  }
+
+  if (value.tagName === "dict") {
+    var result = {};
+    Array.from(value.childNodes).filter(function (item) {
+      return item.tagName === "key";
+    }).forEach(function (keyItem) {
+      result = _objectSpread(_objectSpread({}, result), convertFieldToJson(keyItem));
+    });
+    return _defineProperty({}, key, result);
+  }
+
+  if (value.tagName === "array") {
+    var _result = [];
+    Array.from(value.childNodes).filter(function (item) {
+      return item.tagName === "key";
+    }).forEach(function (keyItem) {
+      _result.push(convertFieldToJson(keyItem));
+    });
+    return _defineProperty({}, key, _result);
+  }
+
+  if (value.tagName === "string") {
+    return _defineProperty({}, key, value.textContent);
+  }
+
+  if (value.tagName === "integer") {
+    return _defineProperty({}, key, parseInt(value.textContent));
+  }
+
+  if (value.tagName === "float") {
+    return _defineProperty({}, key, parseFloat(value.textContent));
+  }
+
+  if (value.tagName === "true") {
+    return _defineProperty({}, key, true);
+  }
+
+  if (value.tagName === "false") {
+    return _defineProperty({}, key, false);
+  }
+
+  return {};
+}
+
+function resolvePath() {
+  for (var _len = arguments.length, params = new Array(_len), _key = 0; _key < _len; _key++) {
+    params[_key] = arguments[_key];
+  }
+
+  var root = (params[0]).replace(/\/$/, "").split("/");
+  params[0] = root.slice(0, root.length - 1).join("/");
+  return params.join("/");
+}
+
+var ResourceTile = /*#__PURE__*/function () {
+  function ResourceTile(image, plist) {
+    _classCallCheck(this, ResourceTile);
+
+    this.__caching = {};
+    this.image = image;
+    this.plist = plist;
+  }
+
+  _createClass(ResourceTile, [{
+    key: "get",
+    value: function get(name) {
+      var _this$plist$frames$na = this.plist.frames[name],
+          frame = _this$plist$frames$na.frame,
+          rotated = _this$plist$frames$na.rotated,
+          sourceSize = _this$plist$frames$na.sourceSize;
+      var frameArray = frame.replace(/{|}\s/g, "").split(",");
+      var sizeArray = sourceSize.replace(/{|}\s/g, "").split(",");
+
+      if (name in this.__caching === false) {
+        this.__caching[name] = cutImage.apply(void 0, [this.image].concat(_toConsumableArray(frameArray), [rotated ? -90 : 0]));
+      }
+
+      var imageCuted = this.__caching[name];
+      return {
+        image: imageCuted,
+        size: {
+          width: sizeArray[0],
+          height: sizeArray[1]
+        }
+      };
+    }
+  }, {
+    key: "has",
+    value: function has(name) {
+      return name in this.plist.frames;
+    }
+  }]);
+
+  return ResourceTile;
+}();
+
+function loadResourceImage (_x) {
+  return _ref8.apply(this, arguments);
+}
+
+function _ref8() {
+  _ref8 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee(path) {
+    var _plistJson, _plistJson2;
+
+    var plist, plistJson, image;
+    return regenerator.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            if (path.match(/\.plist$/) == null) {
+              path += ".plist";
+            }
+
+            _context.next = 3;
+            return fetch("./assets/320x480/Object.plist").then(function (response) {
+              return response.text();
+            }).then(function (str) {
+              return new DOMParser().parseFromString(str, "text/xml");
+            });
+
+          case 3:
+            plist = _context.sent;
+            plistJson = {};
+            plist.querySelectorAll("plist > dict:first-child > key").forEach(function (itemKey) {
+              plistJson = _objectSpread(_objectSpread({}, plistJson), convertFieldToJson(itemKey));
+            });
+            _context.next = 8;
+            return loadImage(resolvePath(path, ((_plistJson = plistJson) === null || _plistJson === void 0 ? void 0 : _plistJson.metadata.realTextureFileName) || ((_plistJson2 = plistJson) === null || _plistJson2 === void 0 ? void 0 : _plistJson2.metadata.textureFileName)));
+
+          case 8:
+            image = _context.sent;
+            return _context.abrupt("return", new ResourceTile(image, plistJson));
+
+          case 10:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _ref8.apply(this, arguments);
+}
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
@@ -5278,4 +5432,4 @@ function touchEnd(callback) {
 }
 
 export default fCanvas;
-export { Animate, Camera, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, cutImage, _draw as draw, foreach, hypot, isMobile, isTouch, keyPressed, keyUp, lerp, loadImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, off, passive, random, range, requestAnimationFrame, _setup as setup, touchEnd, touchMove, touchStart, windowSize };
+export { Animate, Camera, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, cutImage, _draw as draw, foreach, hypot, isMobile, isTouch, keyPressed, keyUp, lerp, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, off, passive, random, range, requestAnimationFrame, _setup as setup, touchEnd, touchMove, touchStart, windowSize };

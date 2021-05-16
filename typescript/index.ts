@@ -15,6 +15,7 @@ import Store from "./classes/Store";
 import Vector from "./classes/Vector";
 import Animate, { AnimateConfig } from "./classes/Animate";
 import Camera from "./classes/Camera";
+import loadResourceImage from "./addons/loadResourceImage";
 import { RectImpactPoint, CircleImpactPoint } from "./methods/index";
 
 ///let noopFCanvas; /// new fCanvas after class fCanvas because error
@@ -2026,7 +2027,7 @@ function bindEvent(
   };
 }
 
-export { Emitter, Stament, Store, Vector, Animate, Camera };
+export { Emitter, Stament, Store, Vector, Animate, Camera, loadResourceImage };
 
 let inited: boolean = false;
 const emitter: Emitter = new Emitter();

@@ -5,6 +5,7 @@ import Store from "./classes/Store";
 import Vector from "./classes/Vector";
 import Animate from "./classes/Animate";
 import Camera from "./classes/Camera";
+import loadResourceImage from "./addons/loadResourceImage";
 import { RectImpactPoint, CircleImpactPoint } from "./methods/index";
 class MyElement {
     /**
@@ -1500,7 +1501,7 @@ function bindEvent(name, callback, element) {
         element.removeEventListener(name, callback);
     };
 }
-export { Emitter, Stament, Store, Vector, Animate, Camera };
+export { Emitter, Stament, Store, Vector, Animate, Camera, loadResourceImage };
 let inited = false;
 const emitter = new Emitter();
 /**
