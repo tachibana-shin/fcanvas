@@ -3019,8 +3019,8 @@ var ResourceTile = /*#__PURE__*/function () {
           frame = _this$plist$frames$na.frame,
           rotated = _this$plist$frames$na.rotated,
           sourceSize = _this$plist$frames$na.sourceSize;
-      var frameArray = frame.replace(/\{|\}\s/g, "").split(",");
-      var sizeArray = sourceSize.replace(/\{|\}\s/g, "").split(",");
+      var frameArray = frame.replace(/\{|\}|\s/g, "").split(",");
+      var sizeArray = sourceSize.replace(/\{|\}|\s/g, "").split(",");
 
       if (name in this.__caching === false) {
         this.__caching[name] = cutImage.apply(void 0, [this.image].concat(_toConsumableArray(frameArray), [rotated ? -90 : 0]));

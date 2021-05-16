@@ -74,8 +74,8 @@ class ResourceTile {
      */
     get(name) {
         const { frame, rotated, sourceSize } = this.plist.frames[name];
-        const frameArray = frame.replace(/\{|\}\s/g, "").split(",");
-        const sizeArray = sourceSize.replace(/\{|\}\s/g, "").split(",");
+        const frameArray = frame.replace(/\{|\}|\s/g, "").split(",");
+        const sizeArray = sourceSize.replace(/\{|\}|\s/g, "").split(",");
         if (name in this.__caching === false) {
             this.__caching[name] = cutImage(this.image, ...frameArray, rotated ? -90 : 0);
         }
