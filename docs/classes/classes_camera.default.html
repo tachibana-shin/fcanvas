@@ -114,6 +114,8 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="classes_camera.default.html#setcursor" class="tsd-kind-icon">set<wbr>Cursor</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="classes_camera.default.html#setviewbox" class="tsd-kind-icon">set<wbr>View<wbr>Box</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="classes_camera.default.html#setviewport" class="tsd-kind-icon">set<wbr>Viewport</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="classes_camera.default.html#xinviewbox" class="tsd-kind-icon">x<wbr>InView<wbr>Box</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="classes_camera.default.html#yinviewbox" class="tsd-kind-icon">y<wbr>InView<wbr>Box</a></li>
 							</ul>
 						</section>
 					</div>
@@ -125,24 +127,22 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new default<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, x<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, vWidth<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, vHeight<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, cix<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span>, ciy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, cwidth<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, cheight<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="classes_camera.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></li>
-						<li class="tsd-signature tsd-kind-icon">new default<span class="tsd-signature-symbol">(</span>viewport<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Viewport</span>, viewBox<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ViewBox</span>, cursor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Cursor</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="classes_camera.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></li>
-						<li class="tsd-signature tsd-kind-icon">new default<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Config</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="classes_camera.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></li>
+						<li class="tsd-signature tsd-kind-icon">new default<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, x<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, vWidth<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, vHeight<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, cix<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span>, ciy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, cwidth<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, cheight<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="classes_camera.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L187">typescript/classes/Camera.ts:187</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L175">typescript/classes/Camera.ts:175</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>width: <span class="tsd-signature-type">number</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> width: <span class="tsd-signature-type">number</span></h5>
 								</li>
 								<li>
-									<h5>height: <span class="tsd-signature-type">number</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> height: <span class="tsd-signature-type">number</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> x: <span class="tsd-signature-type">number</span></h5>
@@ -171,40 +171,6 @@
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="classes_camera.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h4>
 						</li>
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L200">typescript/classes/Camera.ts:200</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>viewport: <span class="tsd-signature-type">Viewport</span></h5>
-								</li>
-								<li>
-									<h5>viewBox: <span class="tsd-signature-type">ViewBox</span></h5>
-								</li>
-								<li>
-									<h5>cursor: <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Cursor</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="classes_camera.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h4>
-						</li>
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L201">typescript/classes/Camera.ts:201</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>config: <span class="tsd-signature-type">Config</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="classes_camera.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h4>
-						</li>
 					</ul>
 				</section>
 			</section>
@@ -216,7 +182,7 @@
 					<div class="tsd-signature tsd-kind-icon">_cx<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L55">typescript/classes/Camera.ts:55</a></li>
+							<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L43">typescript/classes/Camera.ts:43</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -226,7 +192,7 @@
 					<div class="tsd-signature tsd-kind-icon">_cy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L56">typescript/classes/Camera.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L44">typescript/classes/Camera.ts:44</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -236,7 +202,7 @@
 					<div class="tsd-signature tsd-kind-icon">cursor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Cursor</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>idealRX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>use<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L100">typescript/classes/Camera.ts:100</a></li>
+							<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L88">typescript/classes/Camera.ts:88</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -246,7 +212,7 @@
 					<div class="tsd-signature tsd-kind-icon">view<wbr>Box<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ViewBox</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L49">typescript/classes/Camera.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L37">typescript/classes/Camera.ts:37</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -256,7 +222,7 @@
 					<div class="tsd-signature tsd-kind-icon">viewport<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Viewport</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L45">typescript/classes/Camera.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L33">typescript/classes/Camera.ts:33</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -274,7 +240,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L57">typescript/classes/Camera.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L45">typescript/classes/Camera.ts:45</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -282,7 +248,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L60">typescript/classes/Camera.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L48">typescript/classes/Camera.ts:48</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -306,7 +272,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L78">typescript/classes/Camera.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L66">typescript/classes/Camera.ts:66</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -314,7 +280,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L81">typescript/classes/Camera.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L69">typescript/classes/Camera.ts:69</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -340,7 +306,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L381">typescript/classes/Camera.ts:381</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L310">typescript/classes/Camera.ts:310</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -374,7 +340,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L373">typescript/classes/Camera.ts:373</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L302">typescript/classes/Camera.ts:302</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -397,7 +363,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L345">typescript/classes/Camera.ts:345</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L274">typescript/classes/Camera.ts:274</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -420,7 +386,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L359">typescript/classes/Camera.ts:359</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L288">typescript/classes/Camera.ts:288</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -443,7 +409,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L401">typescript/classes/Camera.ts:401</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L363">typescript/classes/Camera.ts:363</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -470,13 +436,13 @@
 					<h3>set<wbr>Cursor</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">set<wbr>Cursor<span class="tsd-signature-symbol">(</span>idealX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, idealY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, width<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Cursor<span class="tsd-signature-symbol">(</span>cursor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CursorOffset</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Cursor<span class="tsd-signature-symbol">(</span>use<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L305">typescript/classes/Camera.ts:305</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L239">typescript/classes/Camera.ts:239</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -499,13 +465,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L311">typescript/classes/Camera.ts:311</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L245">typescript/classes/Camera.ts:245</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>cursor: <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CursorOffset</span></h5>
+									<h5>use: <span class="tsd-signature-type">false</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -517,13 +483,12 @@
 					<h3>set<wbr>View<wbr>Box</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">set<wbr>View<wbr>Box<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-						<li class="tsd-signature tsd-kind-icon">set<wbr>View<wbr>Box<span class="tsd-signature-symbol">(</span>viewBox<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ViewBox</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L278">typescript/classes/Camera.ts:278</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L233">typescript/classes/Camera.ts:233</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -543,20 +508,6 @@
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L279">typescript/classes/Camera.ts:279</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>viewBox: <span class="tsd-signature-type">ViewBox</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
@@ -564,13 +515,12 @@
 					<h3>set<wbr>Viewport</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">set<wbr>Viewport<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Viewport<span class="tsd-signature-symbol">(</span>viewport<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Viewport</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L262">typescript/classes/Camera.ts:262</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L222">typescript/classes/Camera.ts:222</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -584,19 +534,57 @@
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="xinviewbox" class="tsd-anchor"></a>
+					<h3>x<wbr>InView<wbr>Box</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">x<wbr>InView<wbr>Box<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, width<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/86debbe/typescript/classes/Camera.ts#L263">typescript/classes/Camera.ts:263</a></li>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L327">typescript/classes/Camera.ts:327</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>viewport: <span class="tsd-signature-type">Viewport</span></h5>
+									<h5>x: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>width: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="yinviewbox" class="tsd-anchor"></a>
+					<h3>y<wbr>InView<wbr>Box</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">y<wbr>InView<wbr>Box<span class="tsd-signature-symbol">(</span>y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/b33ba8d/typescript/classes/Camera.ts#L344">typescript/classes/Camera.ts:344</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>y: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>height: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -697,6 +685,12 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="classes_camera.default.html#setviewport" class="tsd-kind-icon">set<wbr>Viewport</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="classes_camera.default.html#xinviewbox" class="tsd-kind-icon">x<wbr>InView<wbr>Box</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="classes_camera.default.html#yinviewbox" class="tsd-kind-icon">y<wbr>InView<wbr>Box</a>
 							</li>
 						</ul>
 					</li>

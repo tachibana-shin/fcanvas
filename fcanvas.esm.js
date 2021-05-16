@@ -1427,9 +1427,9 @@ Animate.getValueInFrame = getValueInFrame;
 
 class Camera {
   /**
-   * @param {number|Viewport|Config} width
-   * @param {number|ViewBox} height?
-   * @param {number|Cursor|false} x?
+   * @param {number} width?
+   * @param {number} height?
+   * @param {number} x?
    * @param {number} y?
    * @param {number} vWidth?
    * @param {number} vHeight?
@@ -1518,35 +1518,13 @@ class Camera {
       }
 
     };
+    this.setViewport(width || 0, height || 0);
+    this.setViewBox(x || 0, y || 0, vWidth || 0, vHeight || 0);
 
-    switch (arguments.length) {
-      case 1:
-        const {
-          viewport,
-          viewBox,
-          cursor
-        } = width;
-        this.setViewport(viewport);
-        this.setViewBox(viewBox);
-        this.setCursor(cursor);
-        break;
-
-      case 2:
-        this.setViewport(width);
-        this.setViewBox(height);
-        this.setCursor(x);
-        break;
-
-      default:
-        this.setViewport(width || 0, height || 0);
-        this.setViewBox(x || 0, y || 0, vWidth || 0, vHeight || 0);
-
-        if (cix === false) {
-          this.setCursor(false);
-        } else {
-          this.setCursor(cix, ciy, cwidth, cheight);
-        }
-
+    if (cix === false) {
+      this.setCursor(false);
+    } else {
+      this.setCursor(cix, ciy, cwidth, cheight);
     }
   }
 
@@ -1574,45 +1552,33 @@ class Camera {
     }
   }
   /**
-   * @param {Viewport|number} width
-   * @param {number} height?
-   * @return {void}
-   */
-
-
-  setViewport(width, height) {
-    if (height === null) {
-      this.viewport.width = width.width || 0;
-      this.viewport.height = width.height || 0;
-    } else {
-      this.viewport.width = width;
-      this.viewport.height = height;
-    }
-  }
-  /**
-   * @param {ViewBox|number} x
-   * @param {number} y?
    * @param {number} width?
    * @param {number} height?
    * @return {void}
    */
 
 
-  setViewBox(x, y, width, height) {
-    if (arguments.length === 1) {
-      this.viewBox.mx = x.mx || 0;
-      this.viewBox.my = x.my || 0;
-      this.viewBox.width = x.width || 0;
-      this.viewBox.height = x.height || 0;
-    } else {
-      this.viewBox.mx = x || 0;
-      this.viewBox.my = y || 0;
-      this.viewBox.width = width || 0;
-      this.viewBox.height = height || 0;
-    }
+  setViewport(width, height) {
+    this.viewport.width = width || 0;
+    this.viewport.height = height || 0;
   }
   /**
-   * @param {number|CursorOffset|false} idealX
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @return {void}
+   */
+
+
+  setViewBox(x, y, width, height) {
+    this.viewBox.mx = x || 0;
+    this.viewBox.my = y || 0;
+    this.viewBox.width = width || 0;
+    this.viewBox.height = height || 0;
+  }
+  /**
+   * @param {number|false} idealX
    * @param {number} idealY?
    * @param {number} width?
    * @param {number} height?
@@ -1624,11 +1590,6 @@ class Camera {
     if (arguments.length === 1) {
       if (idealX === false) {
         this.cursor.use = false;
-      } else {
-        this.cursor.idealX = idealX.idealX || 0;
-        this.cursor.idealY = idealX.idealY || 0;
-        this.cursor.width = idealX.width || 0;
-        this.cursor.height = idealX.height || 0;
       }
     } else {
       this.cursor.idealX = idealX || 0;
@@ -1679,6 +1640,38 @@ class Camera {
   }
   /**
    * @param {number} x
+   * @param {number} width
+   * @return {boolean}
+   */
+
+
+  xInViewBox(x, width = 0) {
+    x = this.followX(x);
+
+    if (this.viewBox.mx <= x - width && this.viewBox.mx + this.viewBox.width >= x) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * @param {number} y
+   * @param {number=0} height
+   * @return {boolean}
+   */
+
+
+  yInViewBox(y, height = 0) {
+    y = this.followY(y);
+
+    if (this.viewBox.my <= y - height && this.viewBox.my + this.viewBox.height >= y) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * @param {number} x
    * @param {number} y
    * @param {number=0} width
    * @param {number=0} height
@@ -1687,14 +1680,7 @@ class Camera {
 
 
   inViewBox(x, y, width = 0, height = 0) {
-    x = this.followX(x);
-    y = this.followY(y);
-
-    if (this.viewBox.mx <= x && this.viewBox.my <= y && this.viewBox.mx + this.viewBox.width >= x + width && this.viewBox.my + this.viewBox.height >= y + height) {
-      return true;
-    }
-
-    return false;
+    return this.xInViewBox(x, width) && this.yInViewBox(y, height);
   }
 
 }
@@ -3529,22 +3515,23 @@ const emitter = new Emitter();
 async function setup(callback) {
   if (document.readyState === "complete") {
     //// readyState === "complete"
-    inited = true;
-    emitter.emit("load");
     const ret = callback();
 
     if (ret && "length" in ret) {
       await ret;
     }
+
+    inited = true;
+    emitter.emit("load");
   } else {
     await new Promise((resolve, reject) => {
       function load() {
         document.removeEventListener("DOMContentLoaded", load);
         window.removeEventListener("load", load);
-        inited = true;
-        emitter.emit("load");
         callback();
         resolve();
+        inited = true;
+        emitter.emit("load");
       }
 
       document.addEventListener("DOMContentLoaded", load);

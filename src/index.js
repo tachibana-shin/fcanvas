@@ -1510,22 +1510,22 @@ const emitter = new Emitter();
 export async function setup(callback) {
     if (document.readyState === "complete") {
         //// readyState === "complete"
-        inited = true;
-        emitter.emit("load");
         const ret = callback();
         if (ret && "length" in ret) {
             await ret;
         }
+        inited = true;
+        emitter.emit("load");
     }
     else {
         await new Promise((resolve, reject) => {
             function load() {
                 document.removeEventListener("DOMContentLoaded", load);
                 window.removeEventListener("load", load);
-                inited = true;
-                emitter.emit("load");
                 callback();
                 resolve();
+                inited = true;
+                emitter.emit("load");
             }
             document.addEventListener("DOMContentLoaded", load);
             window.addEventListener("load", load);

@@ -2654,9 +2654,9 @@ Animate.getValueInFrame = getValueInFrame;
 
 var Camera = /*#__PURE__*/function () {
   /**
-   * @param {number|Viewport|Config} width
-   * @param {number|ViewBox} height?
-   * @param {number|Cursor|false} x?
+   * @param {number} width?
+   * @param {number} height?
+   * @param {number} x?
    * @param {number} y?
    * @param {number} vWidth?
    * @param {number} vHeight?
@@ -2749,33 +2749,13 @@ var Camera = /*#__PURE__*/function () {
       }
 
     };
+    this.setViewport(width || 0, height || 0);
+    this.setViewBox(x || 0, y || 0, vWidth || 0, vHeight || 0);
 
-    switch (arguments.length) {
-      case 1:
-        var viewport = width.viewport,
-            viewBox = width.viewBox,
-            cursor = width.cursor;
-        this.setViewport(viewport);
-        this.setViewBox(viewBox);
-        this.setCursor(cursor);
-        break;
-
-      case 2:
-        this.setViewport(width);
-        this.setViewBox(height);
-        this.setCursor(x);
-        break;
-
-      default:
-        this.setViewport(width || 0, height || 0);
-        this.setViewBox(x || 0, y || 0, vWidth || 0, vHeight || 0);
-
-        if (cix === false) {
-          this.setCursor(false);
-        } else {
-          this.setCursor(cix, ciy, cwidth, cheight);
-        }
-
+    if (cix === false) {
+      this.setCursor(false);
+    } else {
+      this.setCursor(cix, ciy, cwidth, cheight);
     }
   }
 
@@ -2804,7 +2784,7 @@ var Camera = /*#__PURE__*/function () {
       }
     }
     /**
-     * @param {Viewport|number} width
+     * @param {number} width?
      * @param {number} height?
      * @return {void}
      */
@@ -2812,39 +2792,27 @@ var Camera = /*#__PURE__*/function () {
   }, {
     key: "setViewport",
     value: function setViewport(width, height) {
-      if (height === null) {
-        this.viewport.width = width.width || 0;
-        this.viewport.height = width.height || 0;
-      } else {
-        this.viewport.width = width;
-        this.viewport.height = height;
-      }
+      this.viewport.width = width || 0;
+      this.viewport.height = height || 0;
     }
     /**
-     * @param {ViewBox|number} x
-     * @param {number} y?
-     * @param {number} width?
-     * @param {number} height?
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
      * @return {void}
      */
 
   }, {
     key: "setViewBox",
     value: function setViewBox(x, y, width, height) {
-      if (arguments.length === 1) {
-        this.viewBox.mx = x.mx || 0;
-        this.viewBox.my = x.my || 0;
-        this.viewBox.width = x.width || 0;
-        this.viewBox.height = x.height || 0;
-      } else {
-        this.viewBox.mx = x || 0;
-        this.viewBox.my = y || 0;
-        this.viewBox.width = width || 0;
-        this.viewBox.height = height || 0;
-      }
+      this.viewBox.mx = x || 0;
+      this.viewBox.my = y || 0;
+      this.viewBox.width = width || 0;
+      this.viewBox.height = height || 0;
     }
     /**
-     * @param {number|CursorOffset|false} idealX
+     * @param {number|false} idealX
      * @param {number} idealY?
      * @param {number} width?
      * @param {number} height?
@@ -2857,11 +2825,6 @@ var Camera = /*#__PURE__*/function () {
       if (arguments.length === 1) {
         if (idealX === false) {
           this.cursor.use = false;
-        } else {
-          this.cursor.idealX = idealX.idealX || 0;
-          this.cursor.idealY = idealX.idealY || 0;
-          this.cursor.width = idealX.width || 0;
-          this.cursor.height = idealX.height || 0;
         }
       } else {
         this.cursor.idealX = idealX || 0;
@@ -2916,6 +2879,42 @@ var Camera = /*#__PURE__*/function () {
     }
     /**
      * @param {number} x
+     * @param {number} width
+     * @return {boolean}
+     */
+
+  }, {
+    key: "xInViewBox",
+    value: function xInViewBox(x) {
+      var width = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      x = this.followX(x);
+
+      if (this.viewBox.mx <= x - width && this.viewBox.mx + this.viewBox.width >= x) {
+        return true;
+      }
+
+      return false;
+    }
+    /**
+     * @param {number} y
+     * @param {number=0} height
+     * @return {boolean}
+     */
+
+  }, {
+    key: "yInViewBox",
+    value: function yInViewBox(y) {
+      var height = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      y = this.followY(y);
+
+      if (this.viewBox.my <= y - height && this.viewBox.my + this.viewBox.height >= y) {
+        return true;
+      }
+
+      return false;
+    }
+    /**
+     * @param {number} x
      * @param {number} y
      * @param {number=0} width
      * @param {number=0} height
@@ -2927,14 +2926,7 @@ var Camera = /*#__PURE__*/function () {
     value: function inViewBox(x, y) {
       var width = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
       var height = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-      x = this.followX(x);
-      y = this.followY(y);
-
-      if (this.viewBox.mx <= x && this.viewBox.my <= y && this.viewBox.mx + this.viewBox.width >= x + width && this.viewBox.my + this.viewBox.height >= y + height) {
-        return true;
-      }
-
-      return false;
+      return this.xInViewBox(x, width) && this.yInViewBox(y, height);
     }
   }]);
 
@@ -5115,19 +5107,19 @@ function _setup3() {
             }
 
             //// readyState === "complete"
-            inited = true;
-            emitter.emit("load");
             ret = callback();
 
             if (!(ret && "length" in ret)) {
-              _context4.next = 7;
+              _context4.next = 5;
               break;
             }
 
-            _context4.next = 7;
+            _context4.next = 5;
             return ret;
 
-          case 7:
+          case 5:
+            inited = true;
+            emitter.emit("load");
             _context4.next = 11;
             break;
 
@@ -5137,10 +5129,10 @@ function _setup3() {
               function load() {
                 document.removeEventListener("DOMContentLoaded", load);
                 window.removeEventListener("load", load);
-                inited = true;
-                emitter.emit("load");
                 callback();
                 resolve();
+                inited = true;
+                emitter.emit("load");
               }
 
               document.addEventListener("DOMContentLoaded", load);

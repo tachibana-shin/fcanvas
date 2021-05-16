@@ -28,18 +28,6 @@ interface Cursor {
   x: number;
   y: number;
 }
-interface Config {
-  viewport: Viewport;
-  viewBox: ViewBox;
-  cursor: Cursor | false;
-}
-interface CursorOffset {
-  idealX: number;
-  idealY: number;
-
-  width?: number;
-  height?: number;
-}
 
 class Camera {
   public viewport: Viewport = {
@@ -186,24 +174,10 @@ class Camera {
     },
   };
 
-  constructor(
-    width: number,
-    height: number,
-    x?: number,
-    y?: number,
-    vWidth?: number,
-    vHeight?: number,
-    cix?: number | false,
-    ciy?: number,
-    cwidth?: number,
-    cheight?: number
-  );
-  constructor(viewport: Viewport, viewBox: ViewBox, cursor: Cursor | false);
-  constructor(config: Config);
   /**
-   * @param {number|Viewport|Config} width
-   * @param {number|ViewBox} height?
-   * @param {number|Cursor|false} x?
+   * @param {number} width?
+   * @param {number} height?
+   * @param {number} x?
    * @param {number} y?
    * @param {number} vWidth?
    * @param {number} vHeight?
@@ -214,9 +188,9 @@ class Camera {
    * @return {any}
    */
   constructor(
-    width: number | Viewport | Config,
-    height?: number | ViewBox,
-    x?: number | Cursor | false,
+    width?: number,
+    height?: number,
+    x?: number,
     y?: number,
     vWidth?: number,
     vHeight?: number,
@@ -225,82 +199,42 @@ class Camera {
     cwidth?: number,
     cheight?: number
   ) {
-    switch (arguments.length) {
-      case 1:
-        const { viewport, viewBox, cursor } = width as Config;
-        this.setViewport(viewport);
-        this.setViewBox(viewBox);
-        this.setCursor(cursor);
-        break;
-      case 2:
-        this.setViewport(width as Viewport);
-        this.setViewBox(height as ViewBox);
-        this.setCursor(x as Cursor);
-        break;
-      default:
-        this.setViewport((width as number) || 0, (height as number) || 0);
-        this.setViewBox(
-          (x as number) || 0,
-          (y as number) || 0,
-          vWidth || 0,
-          vHeight || 0
-        );
+    this.setViewport(width || 0, height || 0);
+    this.setViewBox(x || 0, y || 0, vWidth || 0, vHeight || 0);
 
-        if (cix === false) {
-          this.setCursor(false);
-        } else {
-          this.setCursor(
-            cix as number,
-            ciy as number,
-            cwidth as number,
-            cheight as number
-          );
-        }
-    }
-  }
-
-  setViewport(width: number, height: number): void;
-  setViewport(viewport: Viewport): void;
-  /**
-   * @param {Viewport|number} width
-   * @param {number} height?
-   * @return {void}
-   */
-  setViewport(width: Viewport | number, height?: number): void {
-    if (height === null) {
-      this.viewport.width = (width as Viewport).width || 0;
-      this.viewport.height = (width as Viewport).height || 0;
+    if (cix === false) {
+      this.setCursor(false);
     } else {
-      this.viewport.width = width as number;
-      this.viewport.height = height as number;
+      this.setCursor(
+        cix as number,
+        ciy as number,
+        cwidth as number,
+        cheight as number
+      );
     }
   }
-  setViewBox(x: number, y: number, width: number, height: number): void;
-  setViewBox(viewBox: ViewBox): void;
+
   /**
-   * @param {ViewBox|number} x
-   * @param {number} y?
    * @param {number} width?
    * @param {number} height?
    * @return {void}
    */
-  setViewBox(
-    x: ViewBox | number,
-    y?: number,
-    width?: number,
-    height?: number
-  ): void {
-    if (arguments.length === 1) {
-      this.viewBox.mx = (x as ViewBox).mx || 0;
-      this.viewBox.my = (x as ViewBox).my || 0;
-      this.viewBox.width = (x as ViewBox).width || 0;
-      this.viewBox.height = (x as ViewBox).height || 0;
-    } else {
-      this.viewBox.mx = (x as number) || 0;
-      this.viewBox.my = y || 0;
-      this.viewBox.width = width || 0;
-      this.viewBox.height = height || 0;
-    }
+  setViewport(width: number, height: number): void {
+    this.viewport.width = width || 0;
+    this.viewport.height = height || 0;
+  }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @return {void}
+   */
+  setViewBox(x: number, y: number, width: number, height: number): void {
+    this.viewBox.mx = x || 0;
+    this.viewBox.my = y || 0;
+    this.viewBox.width = width || 0;
+    this.viewBox.height = height || 0;
   }
   setCursor(
     idealX: number,
@@ -308,16 +242,16 @@ class Camera {
     width?: number,
     height?: number
   ): void;
-  setCursor(cursor: CursorOffset | false): void;
+  setCursor(use: false): void;
   /**
-   * @param {number|CursorOffset|false} idealX
+   * @param {number|false} idealX
    * @param {number} idealY?
    * @param {number} width?
    * @param {number} height?
    * @return {void}
    */
   setCursor(
-    idealX: number | CursorOffset | false,
+    idealX: number | false,
     idealY?: number,
     width?: number,
     height?: number
@@ -325,14 +259,9 @@ class Camera {
     if (arguments.length === 1) {
       if (idealX === false) {
         this.cursor.use = false;
-      } else {
-        this.cursor.idealX = (idealX as CursorOffset).idealX || 0;
-        this.cursor.idealY = (idealX as CursorOffset).idealY || 0;
-        this.cursor.width = (idealX as CursorOffset).width || 0;
-        this.cursor.height = (idealX as CursorOffset).height || 0;
       }
     } else {
-      this.cursor.idealX = (idealX as number) || 0;
+      this.cursor.idealX = idealX || 0;
       this.cursor.idealY = idealY || 0;
       this.cursor.width = width || 0;
       this.cursor.height = height || 0;
@@ -390,7 +319,40 @@ class Camera {
       y: this.followY(y),
     };
   }
+  /**
+   * @param {number} x
+   * @param {number} width
+   * @return {boolean}
+   */
+  xInViewBox(x: number, width: number = 0): boolean {
+    x = this.followX(x);
 
+    if (
+      this.viewBox.mx <= x - width &&
+      this.viewBox.mx + this.viewBox.width >= x
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * @param {number} y
+   * @param {number=0} height
+   * @return {boolean}
+   */
+  yInViewBox(y: number, height: number = 0): boolean {
+    y = this.followY(y);
+
+    if (
+      this.viewBox.my <= y - height &&
+      this.viewBox.my + this.viewBox.height >= y
+    ) {
+      return true;
+    }
+
+    return false;
+  }
   /**
    * @param {number} x
    * @param {number} y
@@ -404,19 +366,7 @@ class Camera {
     width: number = 0,
     height: number = 0
   ): boolean {
-    x = this.followX(x);
-    y = this.followY(y);
-
-    if (
-      this.viewBox.mx <= x &&
-      this.viewBox.my <= y &&
-      this.viewBox.mx + this.viewBox.width >= x + width &&
-      this.viewBox.my + this.viewBox.height >= y + height
-    ) {
-      return true;
-    }
-
-    return false;
+    return this.xInViewBox(x, width) && this.yInViewBox(y, height);
   }
 }
 

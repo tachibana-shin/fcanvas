@@ -22,17 +22,6 @@ interface Cursor {
     x: number;
     y: number;
 }
-interface Config {
-    viewport: Viewport;
-    viewBox: ViewBox;
-    cursor: Cursor | false;
-}
-interface CursorOffset {
-    idealX: number;
-    idealY: number;
-    width?: number;
-    height?: number;
-}
 declare class Camera {
     viewport: Viewport;
     viewBox: ViewBox;
@@ -46,15 +35,36 @@ declare class Camera {
         use: boolean;
         idealRX: number;
     };
-    constructor(width: number, height: number, x?: number, y?: number, vWidth?: number, vHeight?: number, cix?: number | false, ciy?: number, cwidth?: number, cheight?: number);
-    constructor(viewport: Viewport, viewBox: ViewBox, cursor: Cursor | false);
-    constructor(config: Config);
+    /**
+     * @param {number} width?
+     * @param {number} height?
+     * @param {number} x?
+     * @param {number} y?
+     * @param {number} vWidth?
+     * @param {number} vHeight?
+     * @param {number|false} cix?
+     * @param {number} ciy?
+     * @param {number} cwidth?
+     * @param {number} cheight?
+     * @return {any}
+     */
+    constructor(width?: number, height?: number, x?: number, y?: number, vWidth?: number, vHeight?: number, cix?: number | false, ciy?: number, cwidth?: number, cheight?: number);
+    /**
+     * @param {number} width?
+     * @param {number} height?
+     * @return {void}
+     */
     setViewport(width: number, height: number): void;
-    setViewport(viewport: Viewport): void;
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {void}
+     */
     setViewBox(x: number, y: number, width: number, height: number): void;
-    setViewBox(viewBox: ViewBox): void;
     setCursor(idealX: number, idealY: number, width?: number, height?: number): void;
-    setCursor(cursor: CursorOffset | false): void;
+    setCursor(use: false): void;
     /**
      * @param {number} x
      * @return {number}
@@ -79,6 +89,18 @@ declare class Camera {
         x: number;
         y: number;
     };
+    /**
+     * @param {number} x
+     * @param {number} width
+     * @return {boolean}
+     */
+    xInViewBox(x: number, width?: number): boolean;
+    /**
+     * @param {number} y
+     * @param {number=0} height
+     * @return {boolean}
+     */
+    yInViewBox(y: number, height?: number): boolean;
     /**
      * @param {number} x
      * @param {number} y
