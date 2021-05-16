@@ -2269,7 +2269,14 @@ function off(value, min, prevent) {
   }
 
   return value - 1;
+} ///// https://jsfiddle.net/casamia743/xqh48gno/
+
+function calcProjectedRectSizeOfRotatedRect(width, height, rad) {
+  var rectProjectedWidth = Math.abs(width * Math.cos(rad)) + Math.abs(height * Math.sin(rad));
+  var rectProjectedHeight = Math.abs(width * Math.sin(rad)) + Math.abs(height * Math.cos(rad));
+  return [rectProjectedWidth, rectProjectedHeight];
 }
+
 var virualContext;
 function cutImage(image) {
   var x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
@@ -2280,21 +2287,23 @@ function cutImage(image) {
 
   if (virualContext === undefined) {
     virualContext = document.createElement("canvas").getContext("2d"); /// never null
-  }
+  } /// ------------------ draw image canvas -----------------
 
-  var _ref = [width, height];
-  virualContext.canvas.width = _ref[0];
-  virualContext.canvas.height = _ref[1];
+
+  var rad = rotate * Math.PI / 180;
+
+  var _calcProjectedRectSiz = calcProjectedRectSizeOfRotatedRect(width, height, rad),
+      _calcProjectedRectSiz2 = _slicedToArray(_calcProjectedRectSiz, 2),
+      nwidth = _calcProjectedRectSiz2[0],
+      nheight = _calcProjectedRectSiz2[1];
+
+  virualContext.canvas.width = width;
+  virualContext.canvas.height = height;
   virualContext.save();
   virualContext.translate(width / 2, height / 2);
-  virualContext.rotate(rotate * Math.PI / 180);
-  virualContext.drawImage(image, x, y, width, height, -width / 2, -height / 2, width, height);
-  virualContext.restore(); // const imageCuted: CanvasImageSource = virualContext.getImageData(
-  //   0,
-  //   0,
-  //   width,
-  //   height
-  // );
+  virualContext.rotate(-90 * Math.PI / 180);
+  virualContext.drawImage(image, x, y, nwidth, nheight, -nwidth / 2, -nheight / 2, nwidth, nheight);
+  virualContext.restore(); /// -----------------------------------------------------------
 
   var imageCuted = new Image();
   imageCuted.src = virualContext.canvas.toDataURL();

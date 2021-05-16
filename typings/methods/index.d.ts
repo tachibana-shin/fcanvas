@@ -110,4 +110,4 @@ export declare function odd(value: number, max: number, prevent: number): number
  * @return {number}
  */
 export declare function off(value: number, min: number, prevent: number): number;
-export declare function cutImage(image: CanvasImageSource, x?: number, y?: number, width?: number, height?: number, rotate?: number): CanvasImageSource;
+export declare function cutImage(image: CanvasImageSource, x?: number, y?: number, width?: number, height?: number, rotate?: number): HTMLImageElement;

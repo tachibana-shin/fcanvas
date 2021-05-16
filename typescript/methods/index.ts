@@ -373,6 +373,20 @@ export function off(value: number, min: number, prevent: number): number {
   return value - 1;
 }
 
+///// https://jsfiddle.net/casamia743/xqh48gno/
+function calcProjectedRectSizeOfRotatedRect(
+  width: number,
+  height: number,
+  rad: number
+): [number, number] {
+  const rectProjectedWidth: number =
+    Math.abs(width * Math.cos(rad)) + Math.abs(height * Math.sin(rad));
+  const rectProjectedHeight: number =
+    Math.abs(width * Math.sin(rad)) + Math.abs(height * Math.cos(rad));
+
+  return [rectProjectedWidth, rectProjectedHeight];
+}
+
 let virualContext: CanvasRenderingContext2D;
 export function cutImage(
   image: CanvasImageSource,
@@ -381,41 +395,42 @@ export function cutImage(
   width: number = extractNumber(`${image.width}`),
   height: number = extractNumber(`${image.height}`),
   rotate: number = 0
-): CanvasImageSource {
+): HTMLImageElement {
   if (virualContext === undefined) {
     virualContext = document
       .createElement("canvas")
       .getContext("2d") as CanvasRenderingContext2D; /// never null
   }
+  /// ------------------ draw image canvas -----------------
+  const rad: number = (rotate * Math.PI) / 180;
+  const [nwidth, nheight] = calcProjectedRectSizeOfRotatedRect(
+    width,
+    height,
+    rad
+  );
 
-  [virualContext.canvas.width, virualContext.canvas.height] = [width, height];
+  virualContext.canvas.width = width;
+  virualContext.canvas.height = height;
 
   virualContext.save();
   virualContext.translate(width / 2, height / 2);
-  virualContext.rotate((rotate * Math.PI) / 180);
+  virualContext.rotate((-90 * Math.PI) / 180);
   virualContext.drawImage(
     image,
     x,
     y,
-    width,
-    height,
-    -width / 2,
-    -height / 2,
-    width,
-    height
+    nwidth,
+    nheight,
+    -nwidth / 2,
+    -nheight / 2,
+    nwidth,
+    nheight
   );
   virualContext.restore();
-  // const imageCuted: CanvasImageSource = virualContext.getImageData(
-  //   0,
-  //   0,
-  //   width,
-  //   height
-  // );
+  /// -----------------------------------------------------------
+
   const imageCuted = new Image();
-
   imageCuted.src = virualContext.canvas.toDataURL();
-
   virualContext.clearRect(0, 0, width, height);
-
   return imageCuted;
 }
