@@ -2286,9 +2286,9 @@ function cutImage(image) {
   virualContext.canvas.width = _ref[0];
   virualContext.canvas.height = _ref[1];
   virualContext.save();
-  virualContext.translate(-virualContext.canvas.width / 2, -virualContext.canvas.height / 2);
+  virualContext.translate(width / 2, height / 2);
   virualContext.rotate(rotate * Math.PI / 180);
-  virualContext.drawImage(image, x, y, width, height, virualContext.canvas.width / 2, virualContext.canvas.height / 2, width, height);
+  virualContext.drawImage(image, x, y, width, height, -width / 2, -height / 2, width, height);
   virualContext.restore(); // const imageCuted: CanvasImageSource = virualContext.getImageData(
   //   0,
   //   0,
@@ -3312,6 +3312,35 @@ var MyElement = /*#__PURE__*/function () {
     key: "restore",
     value: function restore() {
       this.$parent.restore();
+    }
+    /**
+     * @param {number} angle?
+     * @return {number | void}
+     */
+
+  }, {
+    key: "rotate",
+    value: function rotate(angle) {
+      if (angle === undefined) {
+        return this.$parent.rotate();
+      }
+
+      this.$parent.rotate(angle);
+    }
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @return {any}
+     */
+
+  }, {
+    key: "translate",
+    value: function translate(x, y) {
+      if (arguments.length === 0) {
+        return this.$parent.translate();
+      }
+
+      this.$parent.translate(x, y);
     }
     /**
      * @param  {number} x

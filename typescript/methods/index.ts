@@ -391,10 +391,7 @@ export function cutImage(
   [virualContext.canvas.width, virualContext.canvas.height] = [width, height];
 
   virualContext.save();
-  virualContext.translate(
-    -virualContext.canvas.width / 2,
-    -virualContext.canvas.height / 2
-  );
+  virualContext.translate(width / 2, height / 2);
   virualContext.rotate((rotate * Math.PI) / 180);
   virualContext.drawImage(
     image,
@@ -402,8 +399,8 @@ export function cutImage(
     y,
     width,
     height,
-    virualContext.canvas.width / 2,
-    virualContext.canvas.height / 2,
+    -width / 2,
+    -height / 2,
     width,
     height
   );

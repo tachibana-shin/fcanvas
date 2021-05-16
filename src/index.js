@@ -277,6 +277,27 @@ class MyElement {
         this.$parent.restore();
     }
     /**
+     * @param {number} angle?
+     * @return {number | void}
+     */
+    rotate(angle) {
+        if (angle === undefined) {
+            return this.$parent.rotate();
+        }
+        this.$parent.rotate(angle);
+    }
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @return {any}
+     */
+    translate(x, y) {
+        if (arguments.length === 0) {
+            return this.$parent.translate();
+        }
+        this.$parent.translate(x, y);
+    }
+    /**
      * @param  {number} x
      * @param  {number} y
      * @param  {number} radius

@@ -182,6 +182,10 @@ declare class MyElement {
      * @return {void}
      */
     restore(): void;
+    rotate(): number;
+    rotate(angle: number): void;
+    translate(): Offset;
+    translate(x: number, y: number): void;
     /**
      * @param  {number} x
      * @param  {number} y

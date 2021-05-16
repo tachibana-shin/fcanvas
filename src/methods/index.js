@@ -258,9 +258,9 @@ export function cutImage(image, x = 0, y = 0, width = extractNumber(`${image.wid
     }
     [virualContext.canvas.width, virualContext.canvas.height] = [width, height];
     virualContext.save();
-    virualContext.translate(-virualContext.canvas.width / 2, -virualContext.canvas.height / 2);
+    virualContext.translate(width / 2, height / 2);
     virualContext.rotate((rotate * Math.PI) / 180);
-    virualContext.drawImage(image, x, y, width, height, virualContext.canvas.width / 2, virualContext.canvas.height / 2, width, height);
+    virualContext.drawImage(image, x, y, width, height, -width / 2, -height / 2, width, height);
     virualContext.restore();
     // const imageCuted: CanvasImageSource = virualContext.getImageData(
     //   0,

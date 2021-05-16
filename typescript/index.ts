@@ -399,6 +399,32 @@ class MyElement {
   restore(): void {
     this.$parent.restore();
   }
+  rotate(): number;
+  rotate(angle: number): void;
+  /**
+   * @param {number} angle?
+   * @return {number | void}
+   */
+  rotate(angle?: number): number | void {
+    if (angle === undefined) {
+      return this.$parent.rotate();
+    }
+    this.$parent.rotate(angle);
+  }
+  translate(): Offset;
+  translate(x: number, y: number): void;
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @return {any}
+   */
+  translate(x?: number, y?: number): Offset | void {
+    if (arguments.length === 0) {
+      return this.$parent.translate();
+    }
+
+    this.$parent.translate(x as number, y as number);
+  }
   /**
    * @param  {number} x
    * @param  {number} y
