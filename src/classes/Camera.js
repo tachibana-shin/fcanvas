@@ -213,7 +213,7 @@ class Camera {
      */
     xInViewBox(x, width = 0) {
         x = this.followX(x);
-        if (this.viewBox.mx <= x - width &&
+        if (this.viewBox.mx <= x + width &&
             this.viewBox.mx + this.viewBox.width >= x) {
             return true;
         }
@@ -226,7 +226,7 @@ class Camera {
      */
     yInViewBox(y, height = 0) {
         y = this.followY(y);
-        if (this.viewBox.my <= y - height &&
+        if (this.viewBox.my <= y + height &&
             this.viewBox.my + this.viewBox.height >= y) {
             return true;
         }

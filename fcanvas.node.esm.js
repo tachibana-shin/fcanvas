@@ -2889,7 +2889,7 @@ var Camera = /*#__PURE__*/function () {
       var width = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
       x = this.followX(x);
 
-      if (this.viewBox.mx <= x - width && this.viewBox.mx + this.viewBox.width >= x) {
+      if (this.viewBox.mx <= x + width && this.viewBox.mx + this.viewBox.width >= x) {
         return true;
       }
 
@@ -2907,7 +2907,7 @@ var Camera = /*#__PURE__*/function () {
       var height = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
       y = this.followY(y);
 
-      if (this.viewBox.my <= y - height && this.viewBox.my + this.viewBox.height >= y) {
+      if (this.viewBox.my <= y + height && this.viewBox.my + this.viewBox.height >= y) {
         return true;
       }
 
