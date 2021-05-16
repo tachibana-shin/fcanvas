@@ -414,7 +414,7 @@ export function cutImage(
 
   virualContext.save();
   virualContext.translate(width / 2, height / 2);
-  virualContext.rotate((-90 * Math.PI) / 180);
+  virualContext.rotate((rotate * Math.PI) / 180);
   virualContext.drawImage(
     image,
     x,

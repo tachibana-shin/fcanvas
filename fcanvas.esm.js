@@ -1129,7 +1129,7 @@ function cutImage(image, x = 0, y = 0, width = extractNumber(`${image.width}`), 
   virualContext.canvas.height = height;
   virualContext.save();
   virualContext.translate(width / 2, height / 2);
-  virualContext.rotate(-90 * Math.PI / 180);
+  virualContext.rotate(rotate * Math.PI / 180);
   virualContext.drawImage(image, x, y, nwidth, nheight, -nwidth / 2, -nheight / 2, nwidth, nheight);
   virualContext.restore(); /// -----------------------------------------------------------
 
