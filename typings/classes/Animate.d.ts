@@ -30,7 +30,7 @@ declare class Animate {
      */
     static getFrames(time: number, fps?: number): number;
     static getValueInFrame: typeof getValueInFrame;
-    $: Emitter;
+    event: Emitter;
     private _frame;
     private type;
     private time;
@@ -106,14 +106,14 @@ declare class Animate {
      * @param {number} z?
      * @return {void}
      */
-    move(x?: number, y?: number, z?: number): void;
+    moveTo(x?: number, y?: number, z?: number): void;
     /**
      * @param {number} x?
      * @param {number} y?
      * @param {number} z?
      * @return {Promise<void>}
      */
-    moveAsync(x?: number, y?: number, z?: number): Promise<void>;
+    moveToSync(x?: number, y?: number, z?: number): Promise<void>;
     /**
      * @returns void
      */
@@ -123,15 +123,6 @@ declare class Animate {
      * @returns void
      */
     setType(type: AnimateType): void;
-    /**
-     * @returns AnimateType
-     */
-    getType(): AnimateType;
-    /**
-     * @param  {number} time
-     * @returns void
-     */
-    setTime(time: number): void;
     /**
      * @returns number
      */
@@ -143,6 +134,13 @@ declare class Animate {
      * @return {void}
      */
     moveImmediate(x?: number, y?: number, z?: number): void;
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @param {number} z?
+     * @return {Promise<void>}
+     */
+    moveImmediateSync(x?: number, y?: number, z?: number): Promise<void>;
 }
 export default Animate;
 export { getValueInFrame };

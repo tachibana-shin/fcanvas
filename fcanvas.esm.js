@@ -1030,7 +1030,7 @@ function foreach(start, stop, step, callback = () => {}) {
       step = 1;
     }
 
-    step ||= 1;
+    step = step || 1;
 
     for (let index = start; index <= stop; index += step) {
       if (callback(index, start, stop, step) === true) {
@@ -1115,7 +1115,6 @@ function cutImage(image, x = 0, y = 0, width = extractNumber(`${image.width}`), 
     virualContext = document.createElement("canvas").getContext("2d"); /// never null
   }
 
-  [extractNumber(image.width), extractNumber(image.height)];
   [virualContext.canvas.width, virualContext.canvas.height] = [width, height];
   virualContext.drawImage(image, x, y, width, height, 0, 0, width, height); // const imageCuted: CanvasImageSource = virualContext.getImageData(
   //   0,
@@ -1199,7 +1198,7 @@ class Animate {
   constructor(config = {
     time: 0
   }) {
-    this.$ = new Emitter();
+    this.event = new Emitter();
     this._frame = 1;
     this.type = "linear";
     this.time = 0;
@@ -1273,7 +1272,7 @@ class Animate {
     this._frame = constrain(value, 0, this.frames);
 
     if (this._frame === this.frames) {
-      this.$.emit("done");
+      this.event.emit("done");
     }
   }
   /**
@@ -1342,7 +1341,7 @@ class Animate {
    */
 
 
-  move(x, y, z) {
+  moveTo(x, y, z) {
     this.frame = 1;
     [this.xTo, this.yTo, this.zTo] = [x || 0, y || 0, z || 0];
   }
@@ -1354,10 +1353,10 @@ class Animate {
    */
 
 
-  moveAsync(x, y, z) {
-    this.move(x, y, z);
+  moveToSync(x, y, z) {
+    this.moveTo(x, y, z);
     return new Promise(resolve => {
-      this.$.once("done", () => resolve());
+      this.event.once("done", () => resolve());
     });
   }
   /**
@@ -1378,23 +1377,6 @@ class Animate {
     this.type = type;
   }
   /**
-   * @returns AnimateType
-   */
-
-
-  getType() {
-    return this.type;
-  }
-  /**
-   * @param  {number} time
-   * @returns void
-   */
-
-
-  setTime(time) {
-    this.time = time;
-  }
-  /**
    * @returns number
    */
 
@@ -1412,7 +1394,21 @@ class Animate {
 
   moveImmediate(x, y, z) {
     [this.xFrom, this.yFrom, this.zFrom] = [this.x, this.y, this.z];
-    this.move(x, y, z);
+    this.moveTo(x, y, z);
+  }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {Promise<void>}
+   */
+
+
+  moveImmediateSync(x, y, z) {
+    this.moveImmediate(x, y, z);
+    return new Promise(resolve => {
+      this.event.once("done", () => resolve());
+    });
   }
 
 }
@@ -1701,44 +1697,31 @@ class MyElement {
   constructor(canvas) {
     var _canvas;
 
-    this.autoDraw = true;
-    this.autoFrame = true;
+    this.__autodraw = true;
     this._els = {};
     this._idActiveNow = -1;
     this._queue = [];
-    this._setuped = false;
 
     if (((_canvas = canvas) === null || _canvas === void 0 ? void 0 : _canvas.constructor) !== fCanvas) {
       canvas = noopFCanvas;
     }
 
     this.__addEl(canvas);
+
+    if (typeof this.setup === "function") {
+      const setuped = this.setup();
+      delete this.setup;
+
+      for (const name in setuped) {
+        this[name] = setuped[name];
+      }
+    }
   }
 
   __addEl(canvas) {
     if (canvas.id in this._els === false) {
       this._els[canvas.id] = canvas;
     }
-  }
-
-  _initAnimate() {
-    if (typeof this.setupAnimate === "function") {
-      this._animate = new Animate(this.setupAnimate.call(this));
-    } else if (this.setupAnimate != null) {
-      this._animate = new Animate(this.setupAnimate);
-    }
-  }
-  /**
-   * @return {Animate | undefined}
-   */
-
-
-  get animate() {
-    if (!this._animate) {
-      this._initAnimate();
-    }
-
-    return this._animate;
   }
   /**
    * @return {HTMLCanvasElement}
@@ -1750,25 +1733,16 @@ class MyElement {
   }
 
   _run(canvas) {
-    this.bind(canvas);
+    this.__addEl(canvas);
+
     this._idActiveNow = canvas.id;
 
-    if (this._setuped === false && typeof this.setup === "function") {
-      this._setuped = true;
-      this.setup();
-      this.setup = this.setup.bind(this);
-    }
-
     if (typeof this.update === "function") {
-      if (this.autoDraw === true && typeof this.draw === "function") {
+      if (this.__autodraw === true && typeof this.draw === "function") {
         this.draw();
       }
 
       this.update();
-
-      if (this.animate && this.autoFrame === true) {
-        this.animate.addFrame();
-      }
     } else if (typeof this.draw === "function") {
       this.draw();
     }
@@ -1794,11 +1768,7 @@ class MyElement {
 
 
   addQueue(element) {
-    if (typeof element._run === "function") {
-      this._queue.push(element);
-    } else {
-      console.error(`fCanvas: the parameter passed to MyElement.addQueue() must be a like fCanvas.MyElement object.`);
-    }
+    this._queue.push(element);
   }
   /**
    * @param {number} index
@@ -1823,15 +1793,6 @@ class MyElement {
     this.$parent.run(element);
   }
   /**
-   * @param {number} id
-   * @return {boolean}
-   */
-
-
-  has(id) {
-    return id in this._els;
-  }
-  /**
    * @return {fCanvas}
    */
 
@@ -1847,41 +1808,12 @@ class MyElement {
     }
   }
   /**
-   * @param {fCanvas} canvas
-   * @return {void}
-   */
-
-
-  bind(canvas) {
-    if ((canvas === null || canvas === void 0 ? void 0 : canvas.constructor) === fCanvas) {
-      this.__addEl(canvas);
-    } else {
-      console.error("fCanvas: the parameter passed to MyElement.bind() must be a fCanvas object.");
-    }
-  }
-  /**
    * @return {CanvasRenderingContext2D}
    */
 
 
   get $context2d() {
     return this.$parent.$context2d;
-  }
-
-  _toRadius(value) {
-    return this.$parent._toRadius(value);
-  }
-
-  _toDegress(value) {
-    return this.$parent._toDegress(value);
-  }
-
-  _toRgb(...params) {
-    return this.$parent._toRgb(params);
-  }
-
-  _figureOffset(x, y, width, height) {
-    return this.$parent._figureOffset(x, y, width, height);
   }
   /**
    * @param {number} angle
@@ -1981,7 +1913,7 @@ class MyElement {
   }
 
   fill(...args) {
-    this.$context2d.fillStyle = this._toRgb(args);
+    this.$context2d.fillStyle = this.$parent._toRgb(args);
     this.$context2d.fill();
   }
   /**
@@ -1994,7 +1926,7 @@ class MyElement {
 
 
   stroke(...args) {
-    this.$context2d.strokeStyle = this._toRgb(args);
+    this.$context2d.strokeStyle = this.$parent._toRgb(args);
     this.$context2d.stroke();
   }
   /**
@@ -2106,7 +2038,7 @@ class MyElement {
 
   arc(x, y, radius, astart, astop, reverse) {
     this.begin();
-    this.$context2d.arc(x, y, radius, this._toRadius(astart) - Math.PI / 2, this._toRadius(astop) - Math.PI / 2, reverse);
+    this.$context2d.arc(x, y, radius, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop) - Math.PI / 2, reverse);
     this.close();
   }
   /**
@@ -2153,7 +2085,7 @@ class MyElement {
 
   ellipse(x, y, radius1, radius2, astart, astop, reverse) {
     this.begin();
-    this.$context2d.ellipse(x, y, radius1, radius2, this._toRadius(astart) - Math.PI / 2, this._toRadius(astop), reverse);
+    this.$context2d.ellipse(x, y, radius1, radius2, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop), reverse);
     this.close();
   }
   /**
@@ -2216,7 +2148,7 @@ class MyElement {
 
   rect(x, y, w, h, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft) {
     this.begin();
-    [x, y] = this._figureOffset(x, y, w, h);
+    [x, y] = this.$parent._figureOffset(x, y, w, h);
 
     if (arguments.length < 5) {
       this.$context2d.rect(x, y, w, h);
@@ -2478,231 +2410,19 @@ class MyElement {
 
 
   shadowColor(...args) {
-    this.$context2d.shadowColor = this._toRgb(args);
+    this.$context2d.shadowColor = this.$parent._toRgb(args);
   }
 
 }
 
 class EAnimate extends MyElement {
-  /**
-   * @param {AnimateConfig} animate?
-   * @return {any}
-   */
   constructor(animate) {
     super();
-    this.__animate = new Animate();
+    this.animate = new Animate();
 
     if (animate) {
-      this.__animate.config(animate);
+      this.animate.config(animate);
     }
-  }
-  /**
-   * @return {Animate}
-   */
-
-
-  get animate() {
-    return this.__animate;
-  }
-  /**
-   * @return {Emitter}
-   */
-
-
-  get $() {
-    return this.animate.$;
-  }
-  /**
-   * @return {boolean}
-   */
-
-
-  get running() {
-    return this.animate.running;
-  }
-  /**
-   * @return {boolean}
-   */
-
-
-  get done() {
-    return this.animate.done;
-  }
-  /**
-   * @return {number}
-   */
-
-
-  get xFrom() {
-    return this.animate.xFrom;
-  }
-  /**
-   * @return {number}
-   */
-
-
-  get yFrom() {
-    return this.animate.yFrom;
-  }
-  /**
-   * @return {number}
-   */
-
-
-  get zFrom() {
-    return this.animate.zFrom;
-  }
-  /**
-   * @return {number}
-   */
-
-
-  get xTo() {
-    return this.animate.xTo;
-  }
-  /**
-   * @return {number}
-   */
-
-
-  get yTo() {
-    return this.animate.yTo;
-  }
-  /**
-   * @return {number}
-   */
-
-
-  get zTo() {
-    return this.animate.zTo;
-  }
-  /**
-   * @return {number}
-   */
-
-
-  get x() {
-    return this.animate.x;
-  }
-  /**
-   * @return {number}
-   */
-
-
-  get y() {
-    return this.animate.y;
-  }
-  /**
-   * @return {number}
-   */
-
-
-  get z() {
-    return this.animate.z;
-  }
-  /**
-   * @return {number}
-   */
-
-
-  get frames() {
-    return this.animate.frames;
-  }
-  /**
-   * @return {number}
-   */
-
-
-  get frame() {
-    return this.animate.frame;
-  }
-  /**
-   * @param {number} value
-   * @return {any}
-   */
-
-
-  set frame(value) {
-    this.animate.frame = value;
-  }
-  /**
-   * @param {AnimateConfig} animate
-   * @return {void}
-   */
-
-
-  config(animate) {
-    this.animate.config(animate);
-  }
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @param {number} z?
-   * @return {void}
-   */
-
-
-  set(x, y, z) {
-    this.animate.set(x, y, z);
-  }
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @param {number} z?
-   * @return {void}
-   */
-
-
-  moveTo(x, y, z) {
-    this.animate.move(x, y, z);
-  }
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @param {number} z?
-   * @return {Promise<void>}
-   */
-
-
-  moveAsync(x, y, z) {
-    return this.animate.moveAsync(x, y, z);
-  }
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @param {number} z?
-   * @return {void}
-   */
-
-
-  moveImmediate(x, y, z) {
-    this.animate.moveImmediate(x, y, z);
-  }
-  /**
-   * @return {void}
-   */
-
-
-  addFrame() {
-    this.animate.addFrame();
-  }
-  /**
-   * @param {AnimateType} type
-   * @return {void}
-   */
-
-
-  setType(type) {
-    this.animate.setType(type);
-  }
-  /**
-   * @param {number} time
-   * @return {void}
-   */
-
-
-  setTime(time) {
-    this.animate.setTime(time);
   }
 
 }
@@ -2928,7 +2648,7 @@ class fCanvas {
   }
   /**
    * @param {HTMLElement=document.body} parent
-   * @return {any}
+   * @return {void}
    */
 
 
@@ -3671,10 +3391,7 @@ class fCanvas {
 
 
   mouseIn(callback) {
-    this.$el.addEventListener("mouseover", callback);
-    return () => {
-      this.$el.removeEventListener("mouseover", callback);
-    };
+    return bindEvent("mouseover", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
@@ -3683,10 +3400,7 @@ class fCanvas {
 
 
   mouseOut(callback) {
-    this.$el.addEventListener("mouseout", callback);
-    return () => {
-      this.$el.removeEventListener("mouseout", callback);
-    };
+    return bindEvent("mouseout", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
@@ -3695,10 +3409,7 @@ class fCanvas {
 
 
   mouseDown(callback) {
-    this.$el.addEventListener("mousedown", callback);
-    return () => {
-      this.$el.removeEventListener("mousedown", callback);
-    };
+    return bindEvent("mousedown", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
@@ -3707,10 +3418,7 @@ class fCanvas {
 
 
   touchStart(callback) {
-    this.$el.addEventListener("touchstart", callback);
-    return () => {
-      this.$el.removeEventListener("touchstart", callback);
-    };
+    return bindEvent("touchstart", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
@@ -3719,10 +3427,7 @@ class fCanvas {
 
 
   touchMove(callback) {
-    this.$el.addEventListener("touchmove", callback);
-    return () => {
-      this.$el.removeEventListener("touchmove", callback);
-    };
+    return bindEvent("touchmove", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
@@ -3731,10 +3436,7 @@ class fCanvas {
 
 
   touchEnd(callback) {
-    this.$el.addEventListener("touchend", callback);
-    return () => {
-      this.$el.removeEventListener("touchend", callback);
-    };
+    return bindEvent("touchend", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
@@ -3743,10 +3445,7 @@ class fCanvas {
 
 
   mouseMoved(callback) {
-    this.$el.addEventListener("mousemove", callback);
-    return () => {
-      this.$el.removeEventListener("mousemove", callback);
-    };
+    return bindEvent("mousemove", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
@@ -3755,10 +3454,7 @@ class fCanvas {
 
 
   mouseUped(callback) {
-    this.$el.addEventListener("mouseup", callback);
-    return () => {
-      this.$el.removeEventListener("mouseup", callback);
-    };
+    return bindEvent("mouseup", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
@@ -3767,10 +3463,7 @@ class fCanvas {
 
 
   mouseClicked(callback) {
-    this.$el.addEventListener("click", callback);
-    return () => {
-      this.$el.removeEventListener("click", callback);
-    };
+    return bindEvent("click", callback, this.$el);
   }
 
 }
@@ -3822,22 +3515,31 @@ async function setup(callback) {
     });
   }
 }
+
+function __draw(callback, canvas) {
+  if (canvas.acceptClear === true) {
+    canvas.clear();
+  }
+
+  callback();
+
+  if (canvas.acceptLoop === true) {
+    requestAnimationFrame(() => __draw(callback, canvas));
+  }
+}
 /**
  * @param {Function} callback
  * @param {fCanvas} canvas?
  * @return {void}
  */
 
+
 function draw(callback, canvas) {
   if (inited) {
-    if (canvas && canvas.acceptClear === true) {
-      canvas.clear();
-    }
-
-    callback();
-
-    if (!canvas || canvas.acceptLoop === true) {
-      requestAnimationFrame(() => draw(callback, canvas));
+    if (!canvas) {
+      void callback();
+    } else {
+      void __draw(callback, canvas);
     }
   } else {
     emitter.once("load", () => {

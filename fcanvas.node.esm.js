@@ -2193,7 +2193,7 @@ function foreach(start, stop, step) {
       step = 1;
     }
 
-    step || (step = 1);
+    step = step || 1;
 
     for (var index = start; index <= stop; index += step) {
       if (callback(index, start, stop, step) === true) {
@@ -2281,10 +2281,9 @@ function cutImage(image) {
     virualContext = document.createElement("canvas").getContext("2d"); /// never null
   }
 
-  [extractNumber(image.width), extractNumber(image.height)];
-  var _ref2 = [width, height];
-  virualContext.canvas.width = _ref2[0];
-  virualContext.canvas.height = _ref2[1];
+  var _ref = [width, height];
+  virualContext.canvas.width = _ref[0];
+  virualContext.canvas.height = _ref[1];
   virualContext.drawImage(image, x, y, width, height, 0, 0, width, height); // const imageCuted: CanvasImageSource = virualContext.getImageData(
   //   0,
   //   0,
@@ -2372,7 +2371,7 @@ var Animate = /*#__PURE__*/function () {
 
     _classCallCheck(this, Animate);
 
-    this.$ = new Emitter();
+    this.event = new Emitter();
     this._frame = 1;
     this.type = "linear";
     this.time = 0;
@@ -2447,7 +2446,7 @@ var Animate = /*#__PURE__*/function () {
       this._frame = constrain(value, 0, this.frames);
 
       if (this._frame === this.frames) {
-        this.$.emit("done");
+        this.event.emit("done");
       }
     }
     /**
@@ -2536,8 +2535,8 @@ var Animate = /*#__PURE__*/function () {
      */
 
   }, {
-    key: "move",
-    value: function move(x, y, z) {
+    key: "moveTo",
+    value: function moveTo(x, y, z) {
       this.frame = 1;
       var _ref4 = [x || 0, y || 0, z || 0];
       this.xTo = _ref4[0];
@@ -2552,13 +2551,13 @@ var Animate = /*#__PURE__*/function () {
      */
 
   }, {
-    key: "moveAsync",
-    value: function moveAsync(x, y, z) {
+    key: "moveToSync",
+    value: function moveToSync(x, y, z) {
       var _this = this;
 
-      this.move(x, y, z);
+      this.moveTo(x, y, z);
       return new Promise(function (resolve) {
-        _this.$.once("done", function () {
+        _this.event.once("done", function () {
           return resolve();
         });
       });
@@ -2583,25 +2582,6 @@ var Animate = /*#__PURE__*/function () {
       this.type = type;
     }
     /**
-     * @returns AnimateType
-     */
-
-  }, {
-    key: "getType",
-    value: function getType() {
-      return this.type;
-    }
-    /**
-     * @param  {number} time
-     * @returns void
-     */
-
-  }, {
-    key: "setTime",
-    value: function setTime(time) {
-      this.time = time;
-    }
-    /**
      * @returns number
      */
 
@@ -2624,7 +2604,26 @@ var Animate = /*#__PURE__*/function () {
       this.xFrom = _ref5[0];
       this.yFrom = _ref5[1];
       this.zFrom = _ref5[2];
-      this.move(x, y, z);
+      this.moveTo(x, y, z);
+    }
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @param {number} z?
+     * @return {Promise<void>}
+     */
+
+  }, {
+    key: "moveImmediateSync",
+    value: function moveImmediateSync(x, y, z) {
+      var _this2 = this;
+
+      this.moveImmediate(x, y, z);
+      return new Promise(function (resolve) {
+        _this2.event.once("done", function () {
+          return resolve();
+        });
+      });
     }
   }], [{
     key: "getFrames",
@@ -2942,18 +2941,25 @@ var MyElement = /*#__PURE__*/function () {
 
     _classCallCheck(this, MyElement);
 
-    this.autoDraw = true;
-    this.autoFrame = true;
+    this.__autodraw = true;
     this._els = {};
     this._idActiveNow = -1;
     this._queue = [];
-    this._setuped = false;
 
     if (((_canvas = canvas) === null || _canvas === void 0 ? void 0 : _canvas.constructor) !== fCanvas) {
       canvas = noopFCanvas;
     }
 
     this.__addEl(canvas);
+
+    if (typeof this.setup === "function") {
+      var setuped = this.setup();
+      delete this.setup;
+
+      for (var name in setuped) {
+        this[name] = setuped[name];
+      }
+    }
   }
 
   _createClass(MyElement, [{
@@ -2962,28 +2968,6 @@ var MyElement = /*#__PURE__*/function () {
       if (canvas.id in this._els === false) {
         this._els[canvas.id] = canvas;
       }
-    }
-  }, {
-    key: "_initAnimate",
-    value: function _initAnimate() {
-      if (typeof this.setupAnimate === "function") {
-        this._animate = new Animate(this.setupAnimate.call(this));
-      } else if (this.setupAnimate != null) {
-        this._animate = new Animate(this.setupAnimate);
-      }
-    }
-    /**
-     * @return {Animate | undefined}
-     */
-
-  }, {
-    key: "animate",
-    get: function get() {
-      if (!this._animate) {
-        this._initAnimate();
-      }
-
-      return this._animate;
     }
     /**
      * @return {HTMLCanvasElement}
@@ -2997,25 +2981,16 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "_run",
     value: function _run(canvas) {
-      this.bind(canvas);
+      this.__addEl(canvas);
+
       this._idActiveNow = canvas.id;
 
-      if (this._setuped === false && typeof this.setup === "function") {
-        this._setuped = true;
-        this.setup();
-        this.setup = this.setup.bind(this);
-      }
-
       if (typeof this.update === "function") {
-        if (this.autoDraw === true && typeof this.draw === "function") {
+        if (this.__autodraw === true && typeof this.draw === "function") {
           this.draw();
         }
 
         this.update();
-
-        if (this.animate && this.autoFrame === true) {
-          this.animate.addFrame();
-        }
       } else if (typeof this.draw === "function") {
         this.draw();
       }
@@ -3040,11 +3015,7 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "addQueue",
     value: function addQueue(element) {
-      if (typeof element._run === "function") {
-        this._queue.push(element);
-      } else {
-        console.error("fCanvas: the parameter passed to MyElement.addQueue() must be a like fCanvas.MyElement object.");
-      }
+      this._queue.push(element);
     }
     /**
      * @param {number} index
@@ -3071,16 +3042,6 @@ var MyElement = /*#__PURE__*/function () {
       this.$parent.run(element);
     }
     /**
-     * @param {number} id
-     * @return {boolean}
-     */
-
-  }, {
-    key: "has",
-    value: function has(id) {
-      return id in this._els;
-    }
-    /**
      * @return {fCanvas}
      */
 
@@ -3097,20 +3058,6 @@ var MyElement = /*#__PURE__*/function () {
       }
     }
     /**
-     * @param {fCanvas} canvas
-     * @return {void}
-     */
-
-  }, {
-    key: "bind",
-    value: function bind(canvas) {
-      if ((canvas === null || canvas === void 0 ? void 0 : canvas.constructor) === fCanvas) {
-        this.__addEl(canvas);
-      } else {
-        console.error("fCanvas: the parameter passed to MyElement.bind() must be a fCanvas object.");
-      }
-    }
-    /**
      * @return {CanvasRenderingContext2D}
      */
 
@@ -3118,30 +3065,6 @@ var MyElement = /*#__PURE__*/function () {
     key: "$context2d",
     get: function get() {
       return this.$parent.$context2d;
-    }
-  }, {
-    key: "_toRadius",
-    value: function _toRadius(value) {
-      return this.$parent._toRadius(value);
-    }
-  }, {
-    key: "_toDegress",
-    value: function _toDegress(value) {
-      return this.$parent._toDegress(value);
-    }
-  }, {
-    key: "_toRgb",
-    value: function _toRgb() {
-      for (var _len = arguments.length, params = new Array(_len), _key = 0; _key < _len; _key++) {
-        params[_key] = arguments[_key];
-      }
-
-      return this.$parent._toRgb(params);
-    }
-  }, {
-    key: "_figureOffset",
-    value: function _figureOffset(x, y, width, height) {
-      return this.$parent._figureOffset(x, y, width, height);
     }
     /**
      * @param {number} angle
@@ -3253,11 +3176,11 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "fill",
     value: function fill() {
-      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
       }
 
-      this.$context2d.fillStyle = this._toRgb(args);
+      this.$context2d.fillStyle = this.$parent._toRgb(args);
       this.$context2d.fill();
     }
     /**
@@ -3271,11 +3194,11 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "stroke",
     value: function stroke() {
-      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
+      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
       }
 
-      this.$context2d.strokeStyle = this._toRgb(args);
+      this.$context2d.strokeStyle = this.$parent._toRgb(args);
       this.$context2d.stroke();
     }
     /**
@@ -3399,7 +3322,7 @@ var MyElement = /*#__PURE__*/function () {
     key: "arc",
     value: function arc(x, y, radius, astart, astop, reverse) {
       this.begin();
-      this.$context2d.arc(x, y, radius, this._toRadius(astart) - Math.PI / 2, this._toRadius(astop) - Math.PI / 2, reverse);
+      this.$context2d.arc(x, y, radius, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop) - Math.PI / 2, reverse);
       this.close();
     }
     /**
@@ -3449,7 +3372,7 @@ var MyElement = /*#__PURE__*/function () {
     key: "ellipse",
     value: function ellipse(x, y, radius1, radius2, astart, astop, reverse) {
       this.begin();
-      this.$context2d.ellipse(x, y, radius1, radius2, this._toRadius(astart) - Math.PI / 2, this._toRadius(astop), reverse);
+      this.$context2d.ellipse(x, y, radius1, radius2, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop), reverse);
       this.close();
     }
     /**
@@ -3512,8 +3435,8 @@ var MyElement = /*#__PURE__*/function () {
     value: function drawImage(image) {
       var _this$$context2d;
 
-      for (var _len4 = arguments.length, args = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
-        args[_key4 - 1] = arguments[_key4];
+      for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+        args[_key3 - 1] = arguments[_key3];
       }
 
       // @ts-expect-error
@@ -3524,12 +3447,12 @@ var MyElement = /*#__PURE__*/function () {
     value: function rect(x, y, w, h, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft) {
       this.begin();
 
-      var _this$_figureOffset = this._figureOffset(x, y, w, h);
+      var _this$$parent$_figure = this.$parent._figureOffset(x, y, w, h);
 
-      var _this$_figureOffset2 = _slicedToArray(_this$_figureOffset, 2);
+      var _this$$parent$_figure2 = _slicedToArray(_this$$parent$_figure, 2);
 
-      x = _this$_figureOffset2[0];
-      y = _this$_figureOffset2[1];
+      x = _this$$parent$_figure2[0];
+      y = _this$$parent$_figure2[1];
 
       if (arguments.length < 5) {
         this.$context2d.rect(x, y, w, h);
@@ -3812,11 +3735,11 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "shadowColor",
     value: function shadowColor() {
-      for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-        args[_key5] = arguments[_key5];
+      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        args[_key4] = arguments[_key4];
       }
 
-      this.$context2d.shadowColor = this._toRgb(args);
+      this.$context2d.shadowColor = this.$parent._toRgb(args);
     }
   }]);
 
@@ -3828,256 +3751,20 @@ var EAnimate = /*#__PURE__*/function (_MyElement) {
 
   var _super = _createSuper(EAnimate);
 
-  /**
-   * @param {AnimateConfig} animate?
-   * @return {any}
-   */
   function EAnimate(animate) {
     var _this;
 
     _classCallCheck(this, EAnimate);
 
     _this = _super.call(this);
-    _this.__animate = new Animate();
+    _this.animate = new Animate();
 
     if (animate) {
-      _this.__animate.config(animate);
+      _this.animate.config(animate);
     }
 
     return _this;
   }
-  /**
-   * @return {Animate}
-   */
-
-
-  _createClass(EAnimate, [{
-    key: "animate",
-    get: function get() {
-      return this.__animate;
-    }
-    /**
-     * @return {Emitter}
-     */
-
-  }, {
-    key: "$",
-    get: function get() {
-      return this.animate.$;
-    }
-    /**
-     * @return {boolean}
-     */
-
-  }, {
-    key: "running",
-    get: function get() {
-      return this.animate.running;
-    }
-    /**
-     * @return {boolean}
-     */
-
-  }, {
-    key: "done",
-    get: function get() {
-      return this.animate.done;
-    }
-    /**
-     * @return {number}
-     */
-
-  }, {
-    key: "xFrom",
-    get: function get() {
-      return this.animate.xFrom;
-    }
-    /**
-     * @return {number}
-     */
-
-  }, {
-    key: "yFrom",
-    get: function get() {
-      return this.animate.yFrom;
-    }
-    /**
-     * @return {number}
-     */
-
-  }, {
-    key: "zFrom",
-    get: function get() {
-      return this.animate.zFrom;
-    }
-    /**
-     * @return {number}
-     */
-
-  }, {
-    key: "xTo",
-    get: function get() {
-      return this.animate.xTo;
-    }
-    /**
-     * @return {number}
-     */
-
-  }, {
-    key: "yTo",
-    get: function get() {
-      return this.animate.yTo;
-    }
-    /**
-     * @return {number}
-     */
-
-  }, {
-    key: "zTo",
-    get: function get() {
-      return this.animate.zTo;
-    }
-    /**
-     * @return {number}
-     */
-
-  }, {
-    key: "x",
-    get: function get() {
-      return this.animate.x;
-    }
-    /**
-     * @return {number}
-     */
-
-  }, {
-    key: "y",
-    get: function get() {
-      return this.animate.y;
-    }
-    /**
-     * @return {number}
-     */
-
-  }, {
-    key: "z",
-    get: function get() {
-      return this.animate.z;
-    }
-    /**
-     * @return {number}
-     */
-
-  }, {
-    key: "frames",
-    get: function get() {
-      return this.animate.frames;
-    }
-    /**
-     * @return {number}
-     */
-
-  }, {
-    key: "frame",
-    get: function get() {
-      return this.animate.frame;
-    }
-    /**
-     * @param {number} value
-     * @return {any}
-     */
-    ,
-    set: function set(value) {
-      this.animate.frame = value;
-    }
-    /**
-     * @param {AnimateConfig} animate
-     * @return {void}
-     */
-
-  }, {
-    key: "config",
-    value: function config(animate) {
-      this.animate.config(animate);
-    }
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {void}
-     */
-
-  }, {
-    key: "set",
-    value: function set(x, y, z) {
-      this.animate.set(x, y, z);
-    }
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {void}
-     */
-
-  }, {
-    key: "moveTo",
-    value: function moveTo(x, y, z) {
-      this.animate.move(x, y, z);
-    }
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {Promise<void>}
-     */
-
-  }, {
-    key: "moveAsync",
-    value: function moveAsync(x, y, z) {
-      return this.animate.moveAsync(x, y, z);
-    }
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {void}
-     */
-
-  }, {
-    key: "moveImmediate",
-    value: function moveImmediate(x, y, z) {
-      this.animate.moveImmediate(x, y, z);
-    }
-    /**
-     * @return {void}
-     */
-
-  }, {
-    key: "addFrame",
-    value: function addFrame() {
-      this.animate.addFrame();
-    }
-    /**
-     * @param {AnimateType} type
-     * @return {void}
-     */
-
-  }, {
-    key: "setType",
-    value: function setType(type) {
-      this.animate.setType(type);
-    }
-    /**
-     * @param {number} time
-     * @return {void}
-     */
-
-  }, {
-    key: "setTime",
-    value: function setTime(time) {
-      this.animate.setTime(time);
-    }
-  }]);
 
   return EAnimate;
 }(MyElement);
@@ -4365,7 +4052,7 @@ var fCanvas = /*#__PURE__*/function () {
     }
     /**
      * @param {HTMLElement=document.body} parent
-     * @return {any}
+     * @return {void}
      */
 
   }, {
@@ -4673,8 +4360,8 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "background",
     value: function background() {
-      for (var _len6 = arguments.length, params = new Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-        params[_key6] = arguments[_key6];
+      for (var _len5 = arguments.length, params = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+        params[_key5] = arguments[_key5];
       }
 
       this.$context2d.fillStyle = this._toRgb(params);
@@ -5260,12 +4947,7 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseIn",
     value: function mouseIn(callback) {
-      var _this8 = this;
-
-      this.$el.addEventListener("mouseover", callback);
-      return function () {
-        _this8.$el.removeEventListener("mouseover", callback);
-      };
+      return bindEvent("mouseover", callback, this.$el);
     }
     /**
      * @param {CallbackEvent} callback
@@ -5275,12 +4957,7 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseOut",
     value: function mouseOut(callback) {
-      var _this9 = this;
-
-      this.$el.addEventListener("mouseout", callback);
-      return function () {
-        _this9.$el.removeEventListener("mouseout", callback);
-      };
+      return bindEvent("mouseout", callback, this.$el);
     }
     /**
      * @param {CallbackEvent} callback
@@ -5290,12 +4967,7 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseDown",
     value: function mouseDown(callback) {
-      var _this10 = this;
-
-      this.$el.addEventListener("mousedown", callback);
-      return function () {
-        _this10.$el.removeEventListener("mousedown", callback);
-      };
+      return bindEvent("mousedown", callback, this.$el);
     }
     /**
      * @param {CallbackEvent} callback
@@ -5305,12 +4977,7 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "touchStart",
     value: function touchStart(callback) {
-      var _this11 = this;
-
-      this.$el.addEventListener("touchstart", callback);
-      return function () {
-        _this11.$el.removeEventListener("touchstart", callback);
-      };
+      return bindEvent("touchstart", callback, this.$el);
     }
     /**
      * @param {CallbackEvent} callback
@@ -5320,12 +4987,7 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "touchMove",
     value: function touchMove(callback) {
-      var _this12 = this;
-
-      this.$el.addEventListener("touchmove", callback);
-      return function () {
-        _this12.$el.removeEventListener("touchmove", callback);
-      };
+      return bindEvent("touchmove", callback, this.$el);
     }
     /**
      * @param {CallbackEvent} callback
@@ -5335,12 +4997,7 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "touchEnd",
     value: function touchEnd(callback) {
-      var _this13 = this;
-
-      this.$el.addEventListener("touchend", callback);
-      return function () {
-        _this13.$el.removeEventListener("touchend", callback);
-      };
+      return bindEvent("touchend", callback, this.$el);
     }
     /**
      * @param {CallbackEvent} callback
@@ -5350,12 +5007,7 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseMoved",
     value: function mouseMoved(callback) {
-      var _this14 = this;
-
-      this.$el.addEventListener("mousemove", callback);
-      return function () {
-        _this14.$el.removeEventListener("mousemove", callback);
-      };
+      return bindEvent("mousemove", callback, this.$el);
     }
     /**
      * @param {CallbackEvent} callback
@@ -5365,12 +5017,7 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseUped",
     value: function mouseUped(callback) {
-      var _this15 = this;
-
-      this.$el.addEventListener("mouseup", callback);
-      return function () {
-        _this15.$el.removeEventListener("mouseup", callback);
-      };
+      return bindEvent("mouseup", callback, this.$el);
     }
     /**
      * @param {CallbackEvent} callback
@@ -5380,12 +5027,7 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "mouseClicked",
     value: function mouseClicked(callback) {
-      var _this16 = this;
-
-      this.$el.addEventListener("click", callback);
-      return function () {
-        _this16.$el.removeEventListener("click", callback);
-      };
+      return bindEvent("click", callback, this.$el);
     }
   }]);
 
@@ -5416,12 +5058,6 @@ var emitter = new Emitter();
 function _setup(_x3) {
   return _setup3.apply(this, arguments);
 }
-/**
- * @param {Function} callback
- * @param {fCanvas} canvas?
- * @return {void}
- */
-
 
 function _setup3() {
   _setup3 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee4(callback) {
@@ -5478,18 +5114,32 @@ function _setup3() {
   return _setup3.apply(this, arguments);
 }
 
+function __draw(callback, canvas) {
+  if (canvas.acceptClear === true) {
+    canvas.clear();
+  }
+
+  callback();
+
+  if (canvas.acceptLoop === true) {
+    requestAnimationFrame(function () {
+      return __draw(callback, canvas);
+    });
+  }
+}
+/**
+ * @param {Function} callback
+ * @param {fCanvas} canvas?
+ * @return {void}
+ */
+
+
 function _draw(callback, canvas) {
   if (inited) {
-    if (canvas && canvas.acceptClear === true) {
-      canvas.clear();
-    }
-
-    callback();
-
-    if (!canvas || canvas.acceptLoop === true) {
-      requestAnimationFrame(function () {
-        return _draw(callback, canvas);
-      });
+    if (!canvas) {
+      void callback();
+    } else {
+      void __draw(callback, canvas);
     }
   } else {
     emitter.once("load", function () {

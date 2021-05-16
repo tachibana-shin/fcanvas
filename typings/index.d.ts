@@ -3,7 +3,7 @@ import Emitter, { CallbackEvent } from "./classes/Emitter";
 import Stament from "./classes/Stament";
 import Store from "./classes/Store";
 import Vector from "./classes/Vector";
-import Animate, { AnimateConfig, AnimateType } from "./classes/Animate";
+import Animate, { AnimateConfig } from "./classes/Animate";
 import Camera from "./classes/Camera";
 declare type ColorType = "rgb" | "hsl" | "hue" | "hsb";
 declare type AngleType = "degress" | "radial";
@@ -24,30 +24,24 @@ interface Offset {
     y: number;
 }
 declare class MyElement {
-    update: noop | undefined;
-    draw: noop | undefined;
-    setup: noop | undefined;
-    setupAnimate: {
+    update?: noop;
+    draw?: noop;
+    setup?: {
+        (): any;
+    };
+    setupAnimate?: {
         (): AnimateConfig;
-    } | undefined | AnimateConfig;
-    autoDraw: boolean;
-    autoFrame: boolean;
+    } | AnimateConfig;
+    __autodraw: boolean;
     private _els;
     private _idActiveNow;
     private _queue;
-    private _animate;
-    private _setuped;
     private __addEl;
     /**
      * @param {fCanvas} canvas?
      * @return {any}
      */
     constructor(canvas?: fCanvas);
-    private _initAnimate;
-    /**
-     * @return {Animate | undefined}
-     */
-    get animate(): Animate | undefined;
     /**
      * @return {HTMLCanvasElement}
      */
@@ -69,27 +63,13 @@ declare class MyElement {
      */
     run(element: LikeMyElement): void;
     /**
-     * @param {number} id
-     * @return {boolean}
-     */
-    has(id: number): boolean;
-    /**
      * @return {fCanvas}
      */
     get $parent(): fCanvas;
     /**
-     * @param {fCanvas} canvas
-     * @return {void}
-     */
-    bind(canvas: fCanvas): void;
-    /**
      * @return {CanvasRenderingContext2D}
      */
     get $context2d(): CanvasRenderingContext2D;
-    _toRadius(value: number): number;
-    _toDegress(value: number): number;
-    _toRgb(...params: ParamsToRgb): string;
-    _figureOffset(x: number, y: number, width: number, height: number): [number, number];
     /**
      * @param {number} angle
      * @return {number}
@@ -419,124 +399,8 @@ declare class MyElement {
     shadowColor(color: number): void;
 }
 declare class EAnimate extends MyElement {
-    private __animate;
-    /**
-     * @return {Animate}
-     */
-    get animate(): Animate;
-    /**
-     * @param {AnimateConfig} animate?
-     * @return {any}
-     */
+    animate: Animate;
     constructor(animate?: AnimateConfig);
-    /**
-     * @return {Emitter}
-     */
-    get $(): Emitter;
-    /**
-     * @return {boolean}
-     */
-    get running(): boolean;
-    /**
-     * @return {boolean}
-     */
-    get done(): boolean;
-    /**
-     * @return {number}
-     */
-    get xFrom(): number;
-    /**
-     * @return {number}
-     */
-    get yFrom(): number;
-    /**
-     * @return {number}
-     */
-    get zFrom(): number;
-    /**
-     * @return {number}
-     */
-    get xTo(): number;
-    /**
-     * @return {number}
-     */
-    get yTo(): number;
-    /**
-     * @return {number}
-     */
-    get zTo(): number;
-    /**
-     * @return {number}
-     */
-    get x(): number;
-    /**
-     * @return {number}
-     */
-    get y(): number;
-    /**
-     * @return {number}
-     */
-    get z(): number;
-    /**
-     * @return {number}
-     */
-    get frames(): number;
-    /**
-     * @return {number}
-     */
-    get frame(): number;
-    /**
-     * @param {number} value
-     * @return {any}
-     */
-    set frame(value: number);
-    /**
-     * @param {AnimateConfig} animate
-     * @return {void}
-     */
-    config(animate: AnimateConfig): void;
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {void}
-     */
-    set(x?: number, y?: number, z?: number): void;
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {void}
-     */
-    moveTo(x?: number, y?: number, z?: number): void;
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {Promise<void>}
-     */
-    moveAsync(x?: number, y?: number, z?: number): Promise<void>;
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {void}
-     */
-    moveImmediate(x?: number, y?: number, z?: number): void;
-    /**
-     * @return {void}
-     */
-    addFrame(): void;
-    /**
-     * @param {AnimateType} type
-     * @return {void}
-     */
-    setType(type: AnimateType): void;
-    /**
-     * @param {number} time
-     * @return {void}
-     */
-    setTime(time: number): void;
 }
 declare class RectElement extends MyElement {
     readonly type: string;
@@ -653,7 +517,7 @@ declare class fCanvas {
     constructor();
     /**
      * @param {HTMLElement=document.body} parent
-     * @return {any}
+     * @return {void}
      */
     append(parent?: HTMLElement): void;
     /**

@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "0.0.5-b3",
+  "version": "0.0.5-b4",
   "main": "fcanvas.js",
   "module": "fcanvas.node.esm.js",
   "unpkg": "fcanvas.esm.js",
@@ -38,7 +38,7 @@
     "dev": "node node_modules/webpack/bin/webpack.js --mode development --watch",
     "build:webpack": "node node_modules/webpack/bin/webpack.js --mode production --progress --hide-module",
     "build:rollup": "node build.js",
-    "build": "tsc && npm run build:webpack && npm run build:rollup; npm run docs",
+    "build": "tsc && npm run build:webpack && npm run build:rollup && npm run docs",
     "prepare": "npm run build",
     "docs": "typedoc ./typescript"
   },

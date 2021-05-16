@@ -1182,9 +1182,9 @@ class fCanvas {
 
   /**
    * @param {HTMLElement=document.body} parent
-   * @return {any}
+   * @return {void}
    */
-  append(parent: HTMLElement = document.body) {
+  append(parent: HTMLElement = document.body): void {
     if (parent.contains(this.$el) === false) {
       parent.appendChild(this.$el);
     }
@@ -1927,99 +1927,63 @@ class fCanvas {
    * @return {noop}
    */
   mouseIn(callback: CallbackEvent): noop {
-    this.$el.addEventListener("mouseover", callback);
-
-    return () => {
-      this.$el.removeEventListener("mouseover", callback);
-    };
+    return bindEvent("mouseover", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   mouseOut(callback: CallbackEvent): noop {
-    this.$el.addEventListener("mouseout", callback);
-
-    return () => {
-      this.$el.removeEventListener("mouseout", callback);
-    };
+    return bindEvent("mouseout", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   mouseDown(callback: CallbackEvent): noop {
-    this.$el.addEventListener("mousedown", callback);
-
-    return () => {
-      this.$el.removeEventListener("mousedown", callback);
-    };
+    return bindEvent("mousedown", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   touchStart(callback: CallbackEvent): noop {
-    this.$el.addEventListener("touchstart", callback);
-
-    return () => {
-      this.$el.removeEventListener("touchstart", callback);
-    };
+    return bindEvent("touchstart", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   touchMove(callback: CallbackEvent): noop {
-    this.$el.addEventListener("touchmove", callback);
-
-    return () => {
-      this.$el.removeEventListener("touchmove", callback);
-    };
+    return bindEvent("touchmove", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   touchEnd(callback: CallbackEvent): noop {
-    this.$el.addEventListener("touchend", callback);
-
-    return () => {
-      this.$el.removeEventListener("touchend", callback);
-    };
+    return bindEvent("touchend", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   mouseMoved(callback: CallbackEvent): noop {
-    this.$el.addEventListener("mousemove", callback);
-
-    return () => {
-      this.$el.removeEventListener("mousemove", callback);
-    };
+    return bindEvent("mousemove", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   mouseUped(callback: CallbackEvent): noop {
-    this.$el.addEventListener("mouseup", callback);
-
-    return () => {
-      this.$el.removeEventListener("mouseup", callback);
-    };
+    return bindEvent("mouseup", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   mouseClicked(callback: CallbackEvent): noop {
-    this.$el.addEventListener("click", callback);
-
-    return () => {
-      this.$el.removeEventListener("click", callback);
-    };
+    return bindEvent("click", callback, this.$el);
   }
 }
 

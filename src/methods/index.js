@@ -181,7 +181,7 @@ function foreach(start, stop, step, callback = () => { }) {
             callback = step;
             step = 1;
         }
-        step ||= 1;
+        step = step || 1;
         for (let index = start; index <= stop; index += step) {
             if (callback(index, start, stop, step) === true) {
                 break;
@@ -256,10 +256,6 @@ export function cutImage(image, x = 0, y = 0, width = extractNumber(`${image.wid
             .createElement("canvas")
             .getContext("2d"); /// never null
     }
-    const [imageWidth, imageHeight] = [
-        extractNumber(image.width),
-        extractNumber(image.height),
-    ];
     [virualContext.canvas.width, virualContext.canvas.height] = [width, height];
     virualContext.drawImage(image, x, y, width, height, 0, 0, width, height);
     // const imageCuted: CanvasImageSource = virualContext.getImageData(

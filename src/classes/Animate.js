@@ -56,7 +56,7 @@ class Animate {
      * @return {any}
      */
     constructor(config = { time: 0 }) {
-        this.$ = new Emitter();
+        this.event = new Emitter();
         this._frame = 1;
         this.type = "linear";
         this.time = 0;
@@ -115,7 +115,7 @@ class Animate {
     set frame(value) {
         this._frame = constrain(value, 0, this.frames);
         if (this._frame === this.frames) {
-            this.$.emit("done");
+            this.event.emit("done");
         }
     }
     /**
@@ -171,7 +171,7 @@ class Animate {
      * @param {number} z?
      * @return {void}
      */
-    move(x, y, z) {
+    moveTo(x, y, z) {
         this.frame = 1;
         [this.xTo, this.yTo, this.zTo] = [x || 0, y || 0, z || 0];
     }
@@ -181,10 +181,10 @@ class Animate {
      * @param {number} z?
      * @return {Promise<void>}
      */
-    moveAsync(x, y, z) {
-        this.move(x, y, z);
+    moveToSync(x, y, z) {
+        this.moveTo(x, y, z);
         return new Promise((resolve) => {
-            this.$.once("done", () => resolve());
+            this.event.once("done", () => resolve());
         });
     }
     /**
@@ -201,19 +201,6 @@ class Animate {
         this.type = type;
     }
     /**
-     * @returns AnimateType
-     */
-    getType() {
-        return this.type;
-    }
-    /**
-     * @param  {number} time
-     * @returns void
-     */
-    setTime(time) {
-        this.time = time;
-    }
-    /**
      * @returns number
      */
     getTime() {
@@ -227,7 +214,19 @@ class Animate {
      */
     moveImmediate(x, y, z) {
         [this.xFrom, this.yFrom, this.zFrom] = [this.x, this.y, this.z];
-        this.move(x, y, z);
+        this.moveTo(x, y, z);
+    }
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @param {number} z?
+     * @return {Promise<void>}
+     */
+    moveImmediateSync(x, y, z) {
+        this.moveImmediate(x, y, z);
+        return new Promise((resolve) => {
+            this.event.once("done", () => resolve());
+        });
     }
 }
 Animate.getValueInFrame = getValueInFrame;

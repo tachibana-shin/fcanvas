@@ -284,7 +284,7 @@ function foreach(
       callback = step as CallbackForeachNumber;
       step = 1;
     }
-    step ||= 1;
+    step = step || 1;
 
     for (let index = start; index <= stop; index += step) {
       if (
@@ -386,11 +386,6 @@ export function cutImage(
       .createElement("canvas")
       .getContext("2d") as CanvasRenderingContext2D; /// never null
   }
-
-  const [imageWidth, imageHeight] = [
-    extractNumber(image.width),
-    extractNumber(image.height),
-  ];
 
   [virualContext.canvas.width, virualContext.canvas.height] = [width, height];
 
