@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "0.0.5-b9",
+  "version": "0.0.5-b10",
   "main": "fcanvas.js",
   "module": "fcanvas.node.esm.js",
   "unpkg": "fcanvas.esm.js",
@@ -40,7 +40,8 @@
     "build:rollup": "node build.js",
     "build": "tsc && npm run build:webpack && npm run build:rollup && npm run docs",
     "prepare": "npm run build",
-    "docs": "typedoc ./typescript"
+    "docs": "typedoc ./typescript",
+    "push": "yarn publish && git add . && git commit -m . && git push"
   },
   "author": "Nguyen Thanh",
   "repository": {
