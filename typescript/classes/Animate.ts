@@ -104,7 +104,7 @@ class Animate {
   }
   static getValueInFrame = getValueInFrame;
 
-  public $: Emitter = new Emitter();
+  public event: Emitter = new Emitter();
   private _frame: number = 1;
   private type: AnimateType = "linear";
   private time = 0;
@@ -173,7 +173,7 @@ class Animate {
   set frame(value: number) {
     this._frame = constrain(value, 0, this.frames);
     if (this._frame === this.frames) {
-      this.$.emit("done");
+      this.event.emit("done");
     }
   }
   /**
@@ -249,21 +249,21 @@ class Animate {
    * @param {number} z?
    * @return {void}
    */
-  move(x?: number, y?: number, z?: number): void {
+  moveTo(x?: number, y?: number, z?: number): void {
     this.frame = 1;
     [this.xTo, this.yTo, this.zTo] = [x || 0, y || 0, z || 0];
   }
-  
+
   /**
    * @param {number} x?
    * @param {number} y?
    * @param {number} z?
    * @return {Promise<void>}
    */
-  moveAsync(x?: number, y?: number, z?: number): Promise<void> {
-    this.move(x, y, z);
+  moveToSync(x?: number, y?: number, z?: number): Promise<void> {
+    this.moveTo(x, y, z);
     return new Promise((resolve): void => {
-      this.$.once("done", () => resolve());
+      this.event.once("done", () => resolve());
     });
   }
   /**
@@ -280,19 +280,6 @@ class Animate {
     this.type = type;
   }
   /**
-   * @returns AnimateType
-   */
-  getType(): AnimateType {
-    return this.type;
-  }
-  /**
-   * @param  {number} time
-   * @returns void
-   */
-  setTime(time: number): void {
-    this.time = time;
-  }
-  /**
    * @returns number
    */
   getTime(): number {
@@ -306,7 +293,19 @@ class Animate {
    */
   moveImmediate(x?: number, y?: number, z?: number): void {
     [this.xFrom, this.yFrom, this.zFrom] = [this.x, this.y, this.z];
-    this.move(x, y, z);
+    this.moveTo(x, y, z);
+  }
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {Promise<void>}
+   */
+  moveImmediateSync(x?: number, y?: number, z?: number): Promise<void> {
+    this.moveImmediate(x, y, z);
+    return new Promise((resolve): void => {
+      this.event.once("done", () => resolve());
+    });
   }
 }
 

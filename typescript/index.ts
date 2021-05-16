@@ -13,7 +13,7 @@ import Emitter, { CallbackEvent } from "./classes/Emitter";
 import Stament from "./classes/Stament";
 import Store from "./classes/Store";
 import Vector from "./classes/Vector";
-import Animate, { AnimateConfig, AnimateType } from "./classes/Animate";
+import Animate, { AnimateConfig } from "./classes/Animate";
 import Camera from "./classes/Camera";
 import { RectImpactPoint, CircleImpactPoint } from "./methods/index";
 
@@ -70,25 +70,21 @@ interface Offset {
 }
 
 class MyElement {
-  public update: noop | undefined;
-  public draw: noop | undefined;
-  public setup: noop | undefined;
-  public setupAnimate:
+  public update?: noop;
+  public draw?: noop;
+  public setup?: { (): any }; //// If you don't like the constructor you can use setup() instead
+  public setupAnimate?:
     | {
         (): AnimateConfig;
       }
-    | undefined
     | AnimateConfig;
-  public autoDraw: boolean = true;
-  public autoFrame: boolean = true;
+  public __autodraw: boolean = true;
 
   private _els: {
     [propName: string]: fCanvas;
   } = {};
   private _idActiveNow: number = -1;
   private _queue: LikeMyElement[] = [];
-  private _animate: Animate | undefined;
-  private _setuped: boolean = false;
 
   private __addEl(canvas: fCanvas): void {
     if (canvas.id in this._els === false) {
@@ -105,23 +101,14 @@ class MyElement {
     }
 
     this.__addEl(canvas);
-  }
 
-  private _initAnimate(): void {
-    if (typeof this.setupAnimate === "function") {
-      this._animate = new Animate(this.setupAnimate.call(this));
-    } else if (this.setupAnimate != null) {
-      this._animate = new Animate(this.setupAnimate);
+    if (typeof this.setup === "function") {
+      const setuped = this.setup();
+      delete this.setup;
+      for (const name in setuped) {
+        (this as any)[name] = setuped[name];
+      }
     }
-  }
-  /**
-   * @return {Animate | undefined}
-   */
-  get animate(): Animate | undefined {
-    if (!this._animate) {
-      this._initAnimate();
-    }
-    return this._animate;
   }
 
   /**
@@ -131,24 +118,14 @@ class MyElement {
     return this.$parent.$el;
   }
   _run(canvas: fCanvas): void {
-    this.bind(canvas);
+    this.__addEl(canvas);
     this._idActiveNow = canvas.id;
 
-    if (this._setuped === false && typeof this.setup === "function") {
-      this._setuped = true;
-      this.setup();
-      this.setup = this.setup.bind(this);
-    }
-
     if (typeof this.update === "function") {
-      if (this.autoDraw === true && typeof this.draw === "function") {
+      if (this.__autodraw === true && typeof this.draw === "function") {
         this.draw();
       }
       this.update();
-
-      if (this.animate && this.autoFrame === true) {
-        this.animate.addFrame();
-      }
     } else if (typeof this.draw === "function") {
       this.draw();
     }
@@ -170,13 +147,7 @@ class MyElement {
    * @return {void}
    */
   addQueue(element: LikeMyElement): void {
-    if (typeof element._run === "function") {
-      this._queue.push(element);
-    } else {
-      console.error(
-        `fCanvas: the parameter passed to MyElement.addQueue() must be a like fCanvas.MyElement object.`
-      );
-    }
+    this._queue.push(element);
   }
   /**
    * @param {number} index
@@ -197,13 +168,6 @@ class MyElement {
     this.$parent.run(element);
   }
   /**
-   * @param {number} id
-   * @return {boolean}
-   */
-  has(id: number): boolean {
-    return id in this._els;
-  }
-  /**
    * @return {fCanvas}
    */
   get $parent(): fCanvas {
@@ -220,41 +184,10 @@ class MyElement {
   }
 
   /**
-   * @param {fCanvas} canvas
-   * @return {void}
-   */
-  bind(canvas: fCanvas): void {
-    if (canvas?.constructor === fCanvas) {
-      this.__addEl(canvas);
-    } else {
-      console.error(
-        "fCanvas: the parameter passed to MyElement.bind() must be a fCanvas object."
-      );
-    }
-  }
-  /**
    * @return {CanvasRenderingContext2D}
    */
   get $context2d(): CanvasRenderingContext2D {
     return this.$parent.$context2d;
-  }
-
-  _toRadius(value: number): number {
-    return this.$parent._toRadius(value);
-  }
-  _toDegress(value: number): number {
-    return this.$parent._toDegress(value);
-  }
-  _toRgb(...params: ParamsToRgb): string {
-    return this.$parent._toRgb(params);
-  }
-  _figureOffset(
-    x: number,
-    y: number,
-    width: number,
-    height: number
-  ): [number, number] {
-    return this.$parent._figureOffset(x, y, width, height);
   }
   /**
    * @param {number} angle
@@ -349,7 +282,7 @@ class MyElement {
   fill(image: CanvasImageSource): void;
   fill(color: number): void;
   fill(...args: any[]): void {
-    this.$context2d.fillStyle = this._toRgb(args);
+    this.$context2d.fillStyle = this.$parent._toRgb(args as ParamsToRgb);
     this.$context2d.fill();
   }
   stroke(hue: number, saturation: number, lightness: number): void;
@@ -376,7 +309,7 @@ class MyElement {
    * @returns void
    */
   stroke(...args: any[]): void {
-    this.$context2d.strokeStyle = this._toRgb(args);
+    this.$context2d.strokeStyle = this.$parent._toRgb(args as ParamsToRgb);
     this.$context2d.stroke();
   }
   /**
@@ -488,8 +421,8 @@ class MyElement {
       x,
       y,
       radius,
-      this._toRadius(astart) - Math.PI / 2,
-      this._toRadius(astop) - Math.PI / 2,
+      this.$parent._toRadius(astart) - Math.PI / 2,
+      this.$parent._toRadius(astop) - Math.PI / 2,
       reverse
     );
     this.close();
@@ -552,8 +485,8 @@ class MyElement {
       y,
       radius1,
       radius2,
-      this._toRadius(astart) - Math.PI / 2,
-      this._toRadius(astop),
+      this.$parent._toRadius(astart) - Math.PI / 2,
+      this.$parent._toRadius(astop),
       reverse
     );
     this.close();
@@ -688,7 +621,7 @@ class MyElement {
     radiusBottomLeft?: string | number
   ): void {
     this.begin();
-    [x, y] = this._figureOffset(x, y, w, h);
+    [x, y] = this.$parent._figureOffset(x, y, w, h);
 
     if (arguments.length < 5) {
       this.$context2d.rect(x, y, w, h);
@@ -1005,186 +938,17 @@ class MyElement {
    * @return {void}
    */
   shadowColor(...args: ParamsToRgb): void {
-    this.$context2d.shadowColor = this._toRgb(args);
+    this.$context2d.shadowColor = this.$parent._toRgb(args);
   }
 }
 
 class EAnimate extends MyElement {
-  private __animate: Animate = new Animate();
-  /**
-   * @return {Animate}
-   */
-  public get animate(): Animate {
-    return this.__animate;
-  }
-  /**
-   * @param {AnimateConfig} animate?
-   * @return {any}
-   */
+  public animate: Animate = new Animate();
   constructor(animate?: AnimateConfig) {
     super();
     if (animate) {
-      this.__animate.config(animate);
+      this.animate.config(animate);
     }
-  }
-
-  /**
-   * @return {Emitter}
-   */
-  get $(): Emitter {
-    return this.animate.$;
-  }
-  /**
-   * @return {boolean}
-   */
-  get running(): boolean {
-    return this.animate.running;
-  }
-  /**
-   * @return {boolean}
-   */
-  get done(): boolean {
-    return this.animate.done;
-  }
-  /**
-   * @return {number}
-   */
-  get xFrom(): number {
-    return this.animate.xFrom;
-  }
-  /**
-   * @return {number}
-   */
-  get yFrom(): number {
-    return this.animate.yFrom;
-  }
-  /**
-   * @return {number}
-   */
-  get zFrom(): number {
-    return this.animate.zFrom;
-  }
-
-  /**
-   * @return {number}
-   */
-  get xTo(): number {
-    return this.animate.xTo;
-  }
-  /**
-   * @return {number}
-   */
-  get yTo(): number {
-    return this.animate.yTo;
-  }
-  /**
-   * @return {number}
-   */
-  get zTo(): number {
-    return this.animate.zTo;
-  }
-
-  /**
-   * @return {number}
-   */
-  get x(): number {
-    return this.animate.x;
-  }
-  /**
-   * @return {number}
-   */
-  get y(): number {
-    return this.animate.y;
-  }
-  /**
-   * @return {number}
-   */
-  get z(): number {
-    return this.animate.z;
-  }
-
-  /**
-   * @return {number}
-   */
-  get frames(): number {
-    return this.animate.frames;
-  }
-  /**
-   * @return {number}
-   */
-  get frame(): number {
-    return this.animate.frame;
-  }
-  /**
-   * @param {number} value
-   * @return {any}
-   */
-  set frame(value: number) {
-    this.animate.frame = value;
-  }
-
-  /**
-   * @param {AnimateConfig} animate
-   * @return {void}
-   */
-  config(animate: AnimateConfig): void {
-    this.animate.config(animate);
-  }
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @param {number} z?
-   * @return {void}
-   */
-  set(x?: number, y?: number, z?: number): void {
-    this.animate.set(x, y, z);
-  }
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @param {number} z?
-   * @return {void}
-   */
-  moveTo(x?: number, y?: number, z?: number): void {
-    this.animate.move(x, y, z);
-  }
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @param {number} z?
-   * @return {Promise<void>}
-   */
-  moveAsync(x?: number, y?: number, z?: number): Promise<void> {
-    return this.animate.moveAsync(x, y, z);
-  }
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @param {number} z?
-   * @return {void}
-   */
-  moveImmediate(x?: number, y?: number, z?: number): void {
-    this.animate.moveImmediate(x, y, z);
-  }
-  /**
-   * @return {void}
-   */
-  addFrame(): void {
-    this.animate.addFrame();
-  }
-  /**
-   * @param {AnimateType} type
-   * @return {void}
-   */
-  setType(type: AnimateType): void {
-    this.animate.setType(type);
-  }
-  /**
-   * @param {number} time
-   * @return {void}
-   */
-  setTime(time: number): void {
-    this.animate.setTime(time);
   }
 }
 
@@ -2311,6 +2075,17 @@ export async function setup(callback: {
     });
   }
 }
+
+function __draw(callback: { (): void }, canvas: fCanvas): void {
+  if (canvas.acceptClear === true) {
+    canvas.clear();
+  }
+  callback();
+  if (canvas.acceptLoop === true) {
+    requestAnimationFrame(() => __draw(callback, canvas));
+  }
+}
+
 /**
  * @param {Function} callback
  * @param {fCanvas} canvas?
@@ -2318,12 +2093,10 @@ export async function setup(callback: {
  */
 export function draw(callback: { (): void }, canvas?: fCanvas): void {
   if (inited) {
-    if (canvas && canvas.acceptClear === true) {
-      canvas.clear();
-    }
-    callback();
-    if (!canvas || canvas.acceptLoop === true) {
-      requestAnimationFrame(() => draw(callback, canvas));
+    if (!canvas) {
+      void callback();
+    } else {
+      void __draw(callback, canvas);
     }
   } else {
     emitter.once("load", (): void => {
