@@ -250,14 +250,18 @@ export function off(value, min, prevent) {
     return value - 1;
 }
 let virualContext;
-export function cutImage(image, x = 0, y = 0, width = extractNumber(`${image.width}`), height = extractNumber(`${image.height}`)) {
+export function cutImage(image, x = 0, y = 0, width = extractNumber(`${image.width}`), height = extractNumber(`${image.height}`), rotate = 0) {
     if (virualContext === undefined) {
         virualContext = document
             .createElement("canvas")
             .getContext("2d"); /// never null
     }
     [virualContext.canvas.width, virualContext.canvas.height] = [width, height];
-    virualContext.drawImage(image, x, y, width, height, 0, 0, width, height);
+    virualContext.save();
+    virualContext.translate(-virualContext.canvas.width / 2, -virualContext.canvas.height / 2);
+    virualContext.rotate((rotate * Math.PI) / 180);
+    virualContext.drawImage(image, x, y, width, height, virualContext.canvas.width / 2, virualContext.canvas.height / 2, width, height);
+    virualContext.restore();
     // const imageCuted: CanvasImageSource = virualContext.getImageData(
     //   0,
     //   0,

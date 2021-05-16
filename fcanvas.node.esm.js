@@ -2276,6 +2276,7 @@ function cutImage(image) {
   var y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   var width = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : extractNumber("".concat(image.width));
   var height = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : extractNumber("".concat(image.height));
+  var rotate = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
 
   if (virualContext === undefined) {
     virualContext = document.createElement("canvas").getContext("2d"); /// never null
@@ -2284,7 +2285,11 @@ function cutImage(image) {
   var _ref = [width, height];
   virualContext.canvas.width = _ref[0];
   virualContext.canvas.height = _ref[1];
-  virualContext.drawImage(image, x, y, width, height, 0, 0, width, height); // const imageCuted: CanvasImageSource = virualContext.getImageData(
+  virualContext.save();
+  virualContext.translate(-virualContext.canvas.width / 2, -virualContext.canvas.height / 2);
+  virualContext.rotate(rotate * Math.PI / 180);
+  virualContext.drawImage(image, x, y, width, height, virualContext.canvas.width / 2, virualContext.canvas.height / 2, width, height);
+  virualContext.restore(); // const imageCuted: CanvasImageSource = virualContext.getImageData(
   //   0,
   //   0,
   //   width,
