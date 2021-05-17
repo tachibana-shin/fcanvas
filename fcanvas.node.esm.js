@@ -2835,51 +2835,64 @@ var Camera = /*#__PURE__*/function () {
     }
     /**
      * @param {number} x
+     * @param {number=1} scale
      * @return {number}
      */
 
   }, {
     key: "followX",
     value: function followX(x) {
-      return x - constrain(this._cx, -this.viewBox.mx, this.viewport.width - this.viewBox.width);
+      var scale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+      return x - constrain(this._cx * scale, -this.viewBox.mx, this.viewport.width - this.viewBox.width);
     }
     /**
      * @param {number} y
+     * @param {number=1} scale
      * @return {number}
      */
 
   }, {
     key: "followY",
     value: function followY(y) {
-      return y - constrain(this._cy, -this.viewBox.my, this.viewport.height - this.viewBox.height);
+      var scale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+      return y - constrain(this._cy * scale, -this.viewBox.my, this.viewport.height - this.viewBox.height);
     }
     /**
      * @param {Vector} vector
+     * @param {number=1} scaleX
+     * @param {number=scaleX} scaleY
      * @return {Vector}
      */
 
   }, {
     key: "followVector",
     value: function followVector(vector) {
-      return vector.set(this.followX(vector.x), this.followY(vector.y));
+      var scaleX = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+      var scaleY = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : scaleX;
+      return vector.set(this.followX(vector.x, scaleX), this.followY(vector.y, scaleY));
     }
     /**
      * @param {number} x
      * @param {number} y
+     * @param {number=1} scaleX
+     * @param {number=scaleX} scaleY
      * @return {any}
      */
 
   }, {
     key: "follow",
     value: function follow(x, y) {
+      var scaleX = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+      var scaleY = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : scaleX;
       return {
-        x: this.followX(x),
-        y: this.followY(y)
+        x: this.followX(x, scaleX),
+        y: this.followY(y, scaleY)
       };
     }
     /**
      * @param {number} x
-     * @param {number} width
+     * @param {number=0} width
+     * @param {number=1} scale
      * @return {boolean}
      */
 
@@ -2887,7 +2900,8 @@ var Camera = /*#__PURE__*/function () {
     key: "xInViewBox",
     value: function xInViewBox(x) {
       var width = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-      x = this.followX(x);
+      var scale = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+      x = this.followX(x, scale);
 
       if (this.viewBox.mx <= x + width && this.viewBox.mx + this.viewBox.width >= x) {
         return true;
@@ -2898,6 +2912,7 @@ var Camera = /*#__PURE__*/function () {
     /**
      * @param {number} y
      * @param {number=0} height
+     * @param {number=1} scale
      * @return {boolean}
      */
 
@@ -2905,7 +2920,8 @@ var Camera = /*#__PURE__*/function () {
     key: "yInViewBox",
     value: function yInViewBox(y) {
       var height = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-      y = this.followY(y);
+      var scale = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+      y = this.followY(y, scale);
 
       if (this.viewBox.my <= y + height && this.viewBox.my + this.viewBox.height >= y) {
         return true;
@@ -2918,6 +2934,8 @@ var Camera = /*#__PURE__*/function () {
      * @param {number} y
      * @param {number=0} width
      * @param {number=0} height
+     * @param {number=1} scaleX
+     * @param {number=scaleX} scaleY
      * @return {boolean}
      */
 
@@ -2926,7 +2944,9 @@ var Camera = /*#__PURE__*/function () {
     value: function inViewBox(x, y) {
       var width = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
       var height = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-      return this.xInViewBox(x, width) && this.yInViewBox(y, height);
+      var scaleX = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+      var scaleY = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : scaleX;
+      return this.xInViewBox(x, width, scaleX) && this.yInViewBox(y, height, scaleY);
     }
   }]);
 

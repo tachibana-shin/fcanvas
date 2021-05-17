@@ -174,45 +174,52 @@ class Camera {
     }
     /**
      * @param {number} x
+     * @param {number=1} scale
      * @return {number}
      */
-    followX(x) {
+    followX(x, scale = 1) {
         return (x -
-            constrain(this._cx, -this.viewBox.mx, this.viewport.width - this.viewBox.width));
+            constrain(this._cx * scale, -this.viewBox.mx, this.viewport.width - this.viewBox.width));
     }
     /**
      * @param {number} y
+     * @param {number=1} scale
      * @return {number}
      */
-    followY(y) {
+    followY(y, scale = 1) {
         return (y -
-            constrain(this._cy, -this.viewBox.my, this.viewport.height - this.viewBox.height));
+            constrain(this._cy * scale, -this.viewBox.my, this.viewport.height - this.viewBox.height));
     }
     /**
      * @param {Vector} vector
+     * @param {number=1} scaleX
+     * @param {number=scaleX} scaleY
      * @return {Vector}
      */
-    followVector(vector) {
-        return vector.set(this.followX(vector.x), this.followY(vector.y));
+    followVector(vector, scaleX = 1, scaleY = scaleX) {
+        return vector.set(this.followX(vector.x, scaleX), this.followY(vector.y, scaleY));
     }
     /**
      * @param {number} x
      * @param {number} y
+     * @param {number=1} scaleX
+     * @param {number=scaleX} scaleY
      * @return {any}
      */
-    follow(x, y) {
+    follow(x, y, scaleX = 1, scaleY = scaleX) {
         return {
-            x: this.followX(x),
-            y: this.followY(y),
+            x: this.followX(x, scaleX),
+            y: this.followY(y, scaleY),
         };
     }
     /**
      * @param {number} x
-     * @param {number} width
+     * @param {number=0} width
+     * @param {number=1} scale
      * @return {boolean}
      */
-    xInViewBox(x, width = 0) {
-        x = this.followX(x);
+    xInViewBox(x, width = 0, scale = 1) {
+        x = this.followX(x, scale);
         if (this.viewBox.mx <= x + width &&
             this.viewBox.mx + this.viewBox.width >= x) {
             return true;
@@ -222,10 +229,11 @@ class Camera {
     /**
      * @param {number} y
      * @param {number=0} height
+     * @param {number=1} scale
      * @return {boolean}
      */
-    yInViewBox(y, height = 0) {
-        y = this.followY(y);
+    yInViewBox(y, height = 0, scale = 1) {
+        y = this.followY(y, scale);
         if (this.viewBox.my <= y + height &&
             this.viewBox.my + this.viewBox.height >= y) {
             return true;
@@ -237,10 +245,12 @@ class Camera {
      * @param {number} y
      * @param {number=0} width
      * @param {number=0} height
+     * @param {number=1} scaleX
+     * @param {number=scaleX} scaleY
      * @return {boolean}
      */
-    inViewBox(x, y, width = 0, height = 0) {
-        return this.xInViewBox(x, width) && this.yInViewBox(y, height);
+    inViewBox(x, y, width = 0, height = 0, scaleX = 1, scaleY = scaleX) {
+        return (this.xInViewBox(x, width, scaleX) && this.yInViewBox(y, height, scaleY));
     }
 }
 export default Camera;

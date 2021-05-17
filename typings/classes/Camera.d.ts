@@ -67,47 +67,57 @@ declare class Camera {
     setCursor(use: false): void;
     /**
      * @param {number} x
+     * @param {number=1} scale
      * @return {number}
      */
-    followX(x: number): number;
+    followX(x: number, scale?: number): number;
     /**
      * @param {number} y
+     * @param {number=1} scale
      * @return {number}
      */
-    followY(y: number): number;
+    followY(y: number, scale?: number): number;
     /**
      * @param {Vector} vector
+     * @param {number=1} scaleX
+     * @param {number=scaleX} scaleY
      * @return {Vector}
      */
-    followVector(vector: Vector): Vector;
+    followVector(vector: Vector, scaleX?: number, scaleY?: number): Vector;
     /**
      * @param {number} x
      * @param {number} y
+     * @param {number=1} scaleX
+     * @param {number=scaleX} scaleY
      * @return {any}
      */
-    follow(x: number, y: number): {
+    follow(x: number, y: number, scaleX?: number, scaleY?: number): {
         x: number;
         y: number;
     };
     /**
      * @param {number} x
-     * @param {number} width
+     * @param {number=0} width
+     * @param {number=1} scale
      * @return {boolean}
      */
-    xInViewBox(x: number, width?: number): boolean;
+    xInViewBox(x: number, width?: number, scale?: number): boolean;
     /**
      * @param {number} y
      * @param {number=0} height
+     * @param {number=1} scale
      * @return {boolean}
      */
-    yInViewBox(y: number, height?: number): boolean;
+    yInViewBox(y: number, height?: number, scale?: number): boolean;
     /**
      * @param {number} x
      * @param {number} y
      * @param {number=0} width
      * @param {number=0} height
+     * @param {number=1} scaleX
+     * @param {number=scaleX} scaleY
      * @return {boolean}
      */
-    inViewBox(x: number, y: number, width?: number, height?: number): boolean;
+    inViewBox(x: number, y: number, width?: number, height?: number, scaleX?: number, scaleY?: number): boolean;
 }
 export default Camera;
