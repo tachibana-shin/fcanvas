@@ -131,6 +131,16 @@ function random(...args: any[]): any {
   }
 }
 
+function randomInt(value: number): number;
+function randomInt(start: number, stop: number): number;
+function randomInt(start: number, stop?: number): number {
+  if (stop === undefined) {
+    return Math.round(random(start));
+  }
+
+  return Math.round(random(start, stop));
+}
+
 function range(start: number, stop: number, step: number): number;
 function range(start: string, stop: string, step: number): string;
 /**
@@ -172,7 +182,7 @@ function range(start: any, stop: any, step: number): any {
   return arr;
 }
 
-export { random, range };
+export { random, randomInt, range };
 
 /**
  * @param {Rect} rect1

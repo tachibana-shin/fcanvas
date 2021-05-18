@@ -84,6 +84,12 @@ function random(...args) {
         return args[0] + Math.random() * (args[1] - args[0]);
     }
 }
+function randomInt(start, stop) {
+    if (stop === undefined) {
+        return Math.round(random(start));
+    }
+    return Math.round(random(start, stop));
+}
 /**
  * @param {any} start
  * @param {any} stop
@@ -119,7 +125,7 @@ function range(start, stop, step) {
     }
     return arr;
 }
-export { random, range };
+export { random, randomInt, range };
 /**
  * @param {Rect} rect1
  * @param {Rect} rect2

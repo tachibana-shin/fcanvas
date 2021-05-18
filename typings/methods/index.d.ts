@@ -57,9 +57,11 @@ export declare function map(value: number, start: number, stop: number, min: num
 declare function random(value: number): number;
 declare function random<T>(array: T[]): T;
 declare function random(start: number, stop: number): number;
+declare function randomInt(value: number): number;
+declare function randomInt(start: number, stop: number): number;
 declare function range(start: number, stop: number, step: number): number;
 declare function range(start: string, stop: string, step: number): string;
-export { random, range };
+export { random, randomInt, range };
 /**
  * @param {Rect} rect1
  * @param {Rect} rect2

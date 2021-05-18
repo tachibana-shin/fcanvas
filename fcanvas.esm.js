@@ -928,6 +928,14 @@ function random(...args) {
     return args[0] + Math.random() * (args[1] - args[0]);
   }
 }
+
+function randomInt(start, stop) {
+  if (stop === undefined) {
+    return Math.round(random(start));
+  }
+
+  return Math.round(random(start, stop));
+}
 /**
  * @param {any} start
  * @param {any} stop
@@ -1691,6 +1699,102 @@ class Camera {
 
   inViewBox(x, y, width = 0, height = 0, scaleX = 1, scaleY = scaleX) {
     return this.xInViewBox(x, width, scaleX) && this.yInViewBox(y, height, scaleY);
+  }
+  /**
+   * @param {number} x
+   * @param {number=0} width
+   * @param {number=1} scale
+   * @return {boolean}
+   */
+
+
+  xAfterViewBox(x, width = 0, scale = 1) {
+    x = this.followX(x, scale);
+
+    if (this.viewBox.mx >= x + width) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * @param {number} y
+   * @param {number=0} height
+   * @param {number=1} scale
+   * @return {boolean}
+   */
+
+
+  yAfterViewBox(y, height = 0, scale = 1) {
+    y = this.followY(y, scale);
+
+    if (this.viewBox.my >= y + height) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number=0} width
+   * @param {number=0} height
+   * @param {number=1} scaleX
+   * @param {number=scaleX} scaleY
+   * @return {boolean}
+   */
+
+
+  afterViewBox(x, y, width = 0, height = 0, scaleX = 1, scaleY = scaleX) {
+    return this.xAfterViewBox(x, width, scaleX) && this.yAfterViewBox(y, height, scaleY);
+  }
+  /**
+   * @param {number} x
+   * @param {number=0} width
+   * @param {number=1} scale
+   * @return {boolean}
+   */
+
+
+  xBeforeViewBox(x, width = 0, scale = 1) {
+    x = this.followX(x, scale);
+
+    if (this.viewBox.mx + this.viewBox.width <= x) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * @param {number} y
+   * @param {number=0} height
+   * @param {number=1} scale
+   * @return {boolean}
+   */
+
+
+  yBeforeViewBox(y, height = 0, scale = 1) {
+    y = this.followY(y, scale);
+
+    if (this.viewBox.my + this.viewBox.height <= y) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number=0} width
+   * @param {number=0} height
+   * @param {number=1} scaleX
+   * @param {number=scaleX} scaleY
+   * @return {boolean}
+   */
+
+
+  beforeViewBox(x, y, width = 0, height = 0, scaleX = 1, scaleY = scaleX) {
+    return this.xBeforeViewBox(x, width, scaleX) && this.yBeforeViewBox(y, height, scaleY);
   }
 
 }
@@ -3802,4 +3906,4 @@ function touchEnd(callback, element = window) {
 }
 
 export default fCanvas;
-export { Animate, Camera, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, cutImage, draw, foreach, hypot, isMobile, isTouch, keyPressed, keyUp, lerp, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, off, passive, random, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, windowSize };
+export { Animate, Camera, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, cutImage, draw, foreach, hypot, isMobile, isTouch, keyPressed, keyUp, lerp, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, off, passive, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, windowSize };

@@ -394,6 +394,112 @@ class Camera {
       this.xInViewBox(x, width, scaleX) && this.yInViewBox(y, height, scaleY)
     );
   }
+  /**
+   * @param {number} x
+   * @param {number=0} width
+   * @param {number=1} scale
+   * @return {boolean}
+   */
+  xAfterViewBox(x: number, width: number = 0, scale: number = 1): boolean {
+    x = this.followX(x, scale);
+
+    if (this.viewBox.mx >= x + width) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * @param {number} y
+   * @param {number=0} height
+   * @param {number=1} scale
+   * @return {boolean}
+   */
+  yAfterViewBox(y: number, height: number = 0, scale: number = 1): boolean {
+    y = this.followY(y, scale);
+
+    if (this.viewBox.my >= y + height) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number=0} width
+   * @param {number=0} height
+   * @param {number=1} scaleX
+   * @param {number=scaleX} scaleY
+   * @return {boolean}
+   */
+  afterViewBox(
+    x: number,
+    y: number,
+    width: number = 0,
+    height: number = 0,
+    scaleX: number = 1,
+    scaleY: number = scaleX
+  ): boolean {
+    return (
+      this.xAfterViewBox(x, width, scaleX) && this.yAfterViewBox(y, height, scaleY)
+    );
+  }
+  /**
+   * @param {number} x
+   * @param {number=0} width
+   * @param {number=1} scale
+   * @return {boolean}
+   */
+  xBeforeViewBox(x: number, width: number = 0, scale: number = 1): boolean {
+    x = this.followX(x, scale);
+
+    if (
+      this.viewBox.mx + this.viewBox.width <= x
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * @param {number} y
+   * @param {number=0} height
+   * @param {number=1} scale
+   * @return {boolean}
+   */
+  yBeforeViewBox(y: number, height: number = 0, scale: number = 1): boolean {
+    y = this.followY(y, scale);
+
+    if (
+      this.viewBox.my + this.viewBox.height <= y
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number=0} width
+   * @param {number=0} height
+   * @param {number=1} scaleX
+   * @param {number=scaleX} scaleY
+   * @return {boolean}
+   */
+  beforeViewBox(
+    x: number,
+    y: number,
+    width: number = 0,
+    height: number = 0,
+    scaleX: number = 1,
+    scaleY: number = scaleX
+  ): boolean {
+    return (
+      this.xBeforeViewBox(x, width, scaleX) && this.yBeforeViewBox(y, height, scaleY)
+    );
+  }
 }
 
 export default Camera;
