@@ -347,8 +347,8 @@ class Camera {
     x = this.followX(x, scale);
 
     if (
-      this.viewBox.mx <= x + width &&
-      this.viewBox.mx + this.viewBox.width >= x
+      this.viewBox.mx < x + width &&
+      this.viewBox.mx + this.viewBox.width > x
     ) {
       return true;
     }
@@ -365,8 +365,8 @@ class Camera {
     y = this.followY(y, scale);
 
     if (
-      this.viewBox.my <= y + height &&
-      this.viewBox.my + this.viewBox.height >= y
+      this.viewBox.my < y + height &&
+      this.viewBox.my + this.viewBox.height > y
     ) {
       return true;
     }

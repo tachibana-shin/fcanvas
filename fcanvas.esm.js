@@ -1655,7 +1655,7 @@ class Camera {
   xInViewBox(x, width = 0, scale = 1) {
     x = this.followX(x, scale);
 
-    if (this.viewBox.mx <= x + width && this.viewBox.mx + this.viewBox.width >= x) {
+    if (this.viewBox.mx < x + width && this.viewBox.mx + this.viewBox.width > x) {
       return true;
     }
 
@@ -1672,7 +1672,7 @@ class Camera {
   yInViewBox(y, height = 0, scale = 1) {
     y = this.followY(y, scale);
 
-    if (this.viewBox.my <= y + height && this.viewBox.my + this.viewBox.height >= y) {
+    if (this.viewBox.my < y + height && this.viewBox.my + this.viewBox.height > y) {
       return true;
     }
 
@@ -1853,7 +1853,7 @@ class MyElement {
     this.__addEl(canvas);
 
     if (typeof this.setup === "function") {
-      const setuped = this.setup();
+      const setuped = this.setup.bind(this)();
       delete this.setup;
 
       for (const name in setuped) {

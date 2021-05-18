@@ -220,8 +220,8 @@ class Camera {
      */
     xInViewBox(x, width = 0, scale = 1) {
         x = this.followX(x, scale);
-        if (this.viewBox.mx <= x + width &&
-            this.viewBox.mx + this.viewBox.width >= x) {
+        if (this.viewBox.mx < x + width &&
+            this.viewBox.mx + this.viewBox.width > x) {
             return true;
         }
         return false;
@@ -234,8 +234,8 @@ class Camera {
      */
     yInViewBox(y, height = 0, scale = 1) {
         y = this.followY(y, scale);
-        if (this.viewBox.my <= y + height &&
-            this.viewBox.my + this.viewBox.height >= y) {
+        if (this.viewBox.my < y + height &&
+            this.viewBox.my + this.viewBox.height > y) {
             return true;
         }
         return false;

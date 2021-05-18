@@ -22,7 +22,7 @@ class MyElement {
         }
         this.__addEl(canvas);
         if (typeof this.setup === "function") {
-            const setuped = this.setup();
+            const setuped = this.setup.bind(this)();
             delete this.setup;
             for (const name in setuped) {
                 this[name] = setuped[name];

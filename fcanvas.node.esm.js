@@ -2903,7 +2903,7 @@ var Camera = /*#__PURE__*/function () {
       var scale = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
       x = this.followX(x, scale);
 
-      if (this.viewBox.mx <= x + width && this.viewBox.mx + this.viewBox.width >= x) {
+      if (this.viewBox.mx < x + width && this.viewBox.mx + this.viewBox.width > x) {
         return true;
       }
 
@@ -2923,7 +2923,7 @@ var Camera = /*#__PURE__*/function () {
       var scale = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
       y = this.followY(y, scale);
 
-      if (this.viewBox.my <= y + height && this.viewBox.my + this.viewBox.height >= y) {
+      if (this.viewBox.my < y + height && this.viewBox.my + this.viewBox.height > y) {
         return true;
       }
 
@@ -3148,7 +3148,7 @@ var MyElement = /*#__PURE__*/function () {
     this.__addEl(canvas);
 
     if (typeof this.setup === "function") {
-      var setuped = this.setup();
+      var setuped = this.setup.bind(this)();
       delete this.setup;
 
       for (var name in setuped) {
