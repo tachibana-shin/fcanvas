@@ -1062,7 +1062,7 @@ function foreach(start, stop, step, callback = () => {}) {
 
       while (index < length) {
         // @ts-expect-error
-        if (callback.call(object, object[index], index, object) === true) {
+        if (callback.call(start, start[index], index, start) === true) {
           break;
         }
 
@@ -1851,15 +1851,6 @@ class MyElement {
     }
 
     this.__addEl(canvas);
-
-    if (typeof this.setup === "function") {
-      const setuped = this.setup.bind(this)();
-      delete this.setup;
-
-      for (const name in setuped) {
-        this[name] = setuped[name];
-      }
-    }
   }
 
   __addEl(canvas) {

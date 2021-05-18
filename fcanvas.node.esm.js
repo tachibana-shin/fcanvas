@@ -2223,7 +2223,7 @@ function foreach(start, stop, step) {
 
       while (_index < length) {
         // @ts-expect-error
-        if (callback.call(object, object[_index], _index, object) === true) {
+        if (callback.call(start, start[_index], _index, start) === true) {
           break;
         }
 
@@ -3146,15 +3146,6 @@ var MyElement = /*#__PURE__*/function () {
     }
 
     this.__addEl(canvas);
-
-    if (typeof this.setup === "function") {
-      var setuped = this.setup.bind(this)();
-      delete this.setup;
-
-      for (var name in setuped) {
-        this[name] = setuped[name];
-      }
-    }
   }
 
   _createClass(MyElement, [{

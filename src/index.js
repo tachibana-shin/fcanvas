@@ -21,13 +21,6 @@ class MyElement {
             canvas = noopFCanvas;
         }
         this.__addEl(canvas);
-        if (typeof this.setup === "function") {
-            const setuped = this.setup.bind(this)();
-            delete this.setup;
-            for (const name in setuped) {
-                this[name] = setuped[name];
-            }
-        }
     }
     __addEl(canvas) {
         if (canvas.id in this._els === false) {

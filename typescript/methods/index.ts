@@ -318,7 +318,7 @@ function foreach(
 
       while (index < length) {
         // @ts-expect-error
-        if (callback.call(object, object[index], index, object) === true) {
+        if (callback.call(start, start[index], index, start) === true) {
           break;
         }
         if (index > stop) {
