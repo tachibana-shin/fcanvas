@@ -1422,14 +1422,12 @@ function reactiveDefine(value, callback) {
 
             var old = (_value$__store2 = value.__store) === null || _value$__store2 === void 0 ? void 0 : _value$__store2[key];
 
-            if (newValue !== old) {
-              if (value.__store) {
-                value.__store[key] = newValue;
-              }
-
-              reactiveDefine(newValue, callback, [].concat(_toConsumableArray(parent), [key]));
-              callback([].concat(_toConsumableArray(parent), [key]), old, newValue);
+            if (value.__store) {
+              value.__store[key] = newValue;
             }
+
+            reactiveDefine(newValue, callback, [].concat(_toConsumableArray(parent), [key]));
+            callback([].concat(_toConsumableArray(parent), [key]), old, newValue);
           }
         });
         reactiveDefine(value[key], callback, [].concat(_toConsumableArray(parent), [key]));

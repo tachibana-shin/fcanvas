@@ -62,13 +62,11 @@ function reactiveDefine(value, callback, parent = []) {
                     enumerable: true,
                     set(newValue) {
                         const old = value.__store?.[key];
-                        if (newValue !== old) {
-                            if (value.__store) {
-                                value.__store[key] = newValue;
-                            }
-                            reactiveDefine(newValue, callback, [...parent, key]);
-                            callback([...parent, key], old, newValue);
+                        if (value.__store) {
+                            value.__store[key] = newValue;
                         }
+                        reactiveDefine(newValue, callback, [...parent, key]);
+                        callback([...parent, key], old, newValue);
                     },
                 });
                 reactiveDefine(value[key], callback, [...parent, key]);

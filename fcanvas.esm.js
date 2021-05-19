@@ -324,14 +324,12 @@ function reactiveDefine(value, callback, parent = []) {
 
             const old = (_value$__store2 = value.__store) === null || _value$__store2 === void 0 ? void 0 : _value$__store2[key];
 
-            if (newValue !== old) {
-              if (value.__store) {
-                value.__store[key] = newValue;
-              }
-
-              reactiveDefine(newValue, callback, [...parent, key]);
-              callback([...parent, key], old, newValue);
+            if (value.__store) {
+              value.__store[key] = newValue;
             }
+
+            reactiveDefine(newValue, callback, [...parent, key]);
+            callback([...parent, key], old, newValue);
           }
 
         });
