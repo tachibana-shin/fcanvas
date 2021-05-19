@@ -1,5 +1,5 @@
-import { Object } from "../types.js";
-import { CallbackEvent } from "./Emitter.js";
+import { Object } from "../types";
+import { CallbackEvent } from "./Emitter";
 declare class Store {
     [propName: string]: any;
     private __emitter;

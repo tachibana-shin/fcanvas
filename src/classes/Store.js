@@ -1,4 +1,4 @@
-import Emitter from "./Emitter.js";
+import Emitter from "./Emitter";
 function reactiveDefine(value, callback, parent = []) {
     if (value !== null && typeof value === "object") {
         /// reactive children
@@ -62,11 +62,13 @@ function reactiveDefine(value, callback, parent = []) {
                     enumerable: true,
                     set(newValue) {
                         const old = value.__store?.[key];
-                        if (value.__store) {
-                            value.__store[key] = newValue;
+                        if (newValue !== old) {
+                            if (value.__store) {
+                                value.__store[key] = newValue;
+                            }
+                            reactiveDefine(newValue, callback, [...parent, key]);
+                            callback([...parent, key], old, newValue);
                         }
-                        reactiveDefine(newValue, callback, [...parent, key]);
-                        callback([...parent, key], old, newValue);
                     },
                 });
                 reactiveDefine(value[key], callback, [...parent, key]);

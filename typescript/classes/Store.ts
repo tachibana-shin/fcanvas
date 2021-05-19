@@ -1,5 +1,5 @@
-import { Object } from "../types.js";
-import Emitter, { CallbackEvent } from "./Emitter.js";
+import { Object } from "../types";
+import Emitter, { CallbackEvent } from "./Emitter";
 
 interface ValueType extends Object {
   __reactive?: boolean;
@@ -80,11 +80,14 @@ function reactiveDefine(
           enumerable: true,
           set(newValue: any): void {
             const old = value.__store?.[key];
-            if (value.__store) {
-              value.__store[key] = newValue;
+
+            if (newValue !== old) {
+              if (value.__store) {
+                value.__store[key] = newValue;
+              }
+              reactiveDefine(newValue, callback, [...parent, key]);
+              callback([...parent, key], old, newValue);
             }
-            reactiveDefine(newValue, callback, [...parent, key]);
-            callback([...parent, key], old, newValue);
           },
         });
         reactiveDefine(value[key], callback, [...parent, key]);

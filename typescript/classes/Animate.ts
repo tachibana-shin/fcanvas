@@ -1,4 +1,4 @@
-import { constrain } from "../methods/index";
+import { constrain } from "../functions/index";
 import Emitter from "./Emitter";
 
 export type AnimateType =
@@ -93,6 +93,7 @@ function getValueInFrame(
 }
 
 class Animate {
+  
   /**
    * Get frames from time
    * @param {number} time

@@ -1,4 +1,9 @@
 /// <reference types="node" />
+interface InfoFont {
+    size: number;
+    family: string;
+    weight: string;
+}
 /**
  * @param {any} e
  * @return {any}
@@ -29,11 +34,6 @@ export declare function convertToPx(string: string | number): string;
  * @return {string}
  */
 export declare function trim(string: string | null): string;
-interface InfoFont {
-    size: number;
-    family: string;
-    weight: string;
-}
 /**
  * @param {string} font
  * @return {InfoFont}

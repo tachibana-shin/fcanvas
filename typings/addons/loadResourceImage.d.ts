@@ -1,23 +1,20 @@
+interface ImageAndSize extends HTMLImageElement {
+    image?: HTMLImageElement;
+    size: {
+        width: number;
+        height: number;
+    };
+}
 declare class ResourceTile {
-    image: HTMLImageElement;
-    plist: {
-        [propName: string]: any;
-    };
-    __caching: {
-        [propName: string]: HTMLImageElement;
-    };
+    private image;
+    private plist;
+    private __caching;
     constructor(image: HTMLImageElement, plist: object);
     /**
      * @param {string} name
      * @return {any}
      */
-    get(name: string): {
-        image: HTMLImageElement;
-        size: {
-            width: number;
-            height: number;
-        };
-    };
+    get(name: string): ImageAndSize;
     has(name: string): boolean;
 }
 /**

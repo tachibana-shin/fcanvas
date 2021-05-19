@@ -10,6 +10,12 @@ export interface Rect extends Object {
     width: number;
     height: number;
 }
+interface CallbackForeachNumber {
+    (value?: number, start?: number, stop?: number, step?: number): boolean | void;
+}
+interface CallbackForeachObject {
+    (value?: any, index?: number | string, object?: ArrayLike<any> | Object): boolean | void;
+}
 /**
  * @param {Circle} circle1
  * @param {Circle} circle2
@@ -41,6 +47,11 @@ export declare function constrain(value: number, min: number, max: number): numb
  * @return {Promise<HTMLImageElement>}
  */
 export declare function loadImage(src: string): Promise<HTMLImageElement>;
+/**
+ * @param {string} src
+ * @return {Promise<HTMLAudioElement>}
+ */
+export declare function loadAudio(src: string): Promise<HTMLAudioElement>;
 /**
  * @param {number} value
  * @param {number} start
@@ -87,12 +98,6 @@ export declare function lerp(start: number, stop: number, amt: number): number;
  * @return {number}
  */
 export declare const hypot: (...values: number[]) => number;
-interface CallbackForeachNumber {
-    (value?: number, start?: number, stop?: number, step?: number): boolean | void;
-}
-interface CallbackForeachObject {
-    (value?: any, index?: number | string, object?: ArrayLike<any> | Object): boolean | void;
-}
 declare function foreach(start: number, stop: number, callback: CallbackForeachNumber): void;
 declare function foreach(start: number, stop: number, step: number, callback: CallbackForeachNumber): void;
 declare function foreach(array: ArrayLike<any>, limit: number, callback: CallbackForeachObject): void;

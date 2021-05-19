@@ -1,4 +1,12 @@
-import { cutImage, loadImage } from "../methods/index";
+import { cutImage, loadImage } from "../functions/index";
+
+interface ImageAndSize extends HTMLImageElement {
+  image?: HTMLImageElement;
+  size: {
+    width: number;
+    height: number;
+  };
+}
 
 function convertFieldToJson(keyItem: any): object {
   const key = keyItem.textContent;
@@ -73,11 +81,11 @@ function resolvePath(...params: string[]): string {
 }
 
 class ResourceTile {
-  image: HTMLImageElement;
-  plist: {
+  private image: HTMLImageElement;
+  private plist: {
     [propName: string]: any;
   };
-  __caching: {
+  private __caching: {
     [propName: string]: HTMLImageElement;
   } = {};
 
@@ -89,13 +97,7 @@ class ResourceTile {
    * @param {string} name
    * @return {any}
    */
-  get(name: string): {
-    image: HTMLImageElement;
-    size: {
-      width: number;
-      height: number;
-    };
-  } {
+  get(name: string): ImageAndSize {
     const { frame, rotated, sourceSize } = this.plist.frames[name];
     const frameArray = frame.replace(/\{|\}|\s/g, "").split(",");
     const sizeArray = sourceSize.replace(/\{|\}|\s/g, "").split(",");
@@ -111,15 +113,15 @@ class ResourceTile {
       );
     }
 
-    const imageCuted = this.__caching[name];
-
-    return {
-      image: imageCuted,
+    const imageCuted = Object.assign(this.__caching[name], {
+      image: this.__caching[name],
       size: {
         width: +sizeArray[0],
         height: +sizeArray[1],
       },
-    };
+    });
+
+    return imageCuted;
   }
   /*
    * @param {string} name

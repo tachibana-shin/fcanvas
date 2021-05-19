@@ -16,7 +16,7 @@ import Vector from "./classes/Vector";
 import Animate, { AnimateConfig } from "./classes/Animate";
 import Camera from "./classes/Camera";
 import loadResourceImage from "./addons/loadResourceImage";
-import { RectImpactPoint, CircleImpactPoint } from "./methods/index";
+import { RectImpactPoint, CircleImpactPoint } from "./functions/index";
 
 ///let noopFCanvas; /// new fCanvas after class fCanvas because error
 
@@ -146,7 +146,7 @@ class MyElement {
    * @param {number} index
    * @return {LikeMyElement | undefined}
    */
-  getQueue(index: number): LikeMyElement | undefined {
+  getQueue(index: number): LikeMyElement | void {
     if (index < 0) {
       index += this._queue.length;
     }
@@ -744,18 +744,32 @@ class MyElement {
   strokeRect(x: number, y: number, width: number, height: number): void {
     this.$context2d.strokeRect(x, y, width, height);
   }
-  lineDash(): number;
-  lineDash(value: number): void;
+  lineDashOffset(): number;
+  lineDashOffset(value: number): void;
   /**
    * @param {number} value?
    * @return {any}
    */
-  lineDash(value?: number): number | void {
+  lineDashOffset(value?: number): number | void {
     if (value === undefined) {
       return this.$context2d.lineDashOffset;
     }
 
     this.$context2d.lineDashOffset = value;
+  }
+  lineDash(): number[];
+  lineDash(segments: number[]): void;
+  lineDash(...segments: number[]): void;
+  lineDash(...segments: Array<number[] | number>): number[] | void {
+    if (segments.length === 0) {
+      return this.$context2d.getLineDash();
+    }
+
+    if (Array.isArray(segments[0])) {
+      this.$context2d.setLineDash(segments[0]);
+    }
+
+    this.$context2d.setLineDash(segments as number[]);
   }
   /**
    * @param {number} x1
@@ -959,6 +973,15 @@ class MyElement {
   shadowColor(...args: ParamsToRgb): void {
     this.$context2d.shadowColor = this.$parent._toRgb(args);
   }
+  drawFocusIfNeeded(element: Element): void;
+  drawFocusIfNeeded(path: Path2D, element: Element): void;
+  drawFocusIfNeeded(path: Element | Path2D, element?: Element): void {
+    if (element === undefined) {
+      this.$context2d.drawFocusIfNeeded(path as Element);
+    } else {
+      this.$context2d.drawFocusIfNeeded(path as Path2D, element);
+    }
+  }
 }
 
 class EAnimate extends MyElement {
@@ -1116,6 +1139,13 @@ class fCanvas {
     sumY: 0,
   };
   private __idFrame: number | null = null;
+  private __attributeContext: {
+    alpha: boolean;
+    desynchronized: boolean;
+  } = {
+    alpha: true,
+    desynchronized: false,
+  };
 
   public preventTouch: boolean = false;
   public stopTouch: boolean = false;
@@ -1152,12 +1182,62 @@ class fCanvas {
   get $el(): HTMLCanvasElement {
     return this._el;
   }
+  private _createNewContext2d(): void {
+    this._context2dCaching = this.$el.getContext(
+      "2d",
+      this.__attributeContext
+    ) as CanvasRenderingContext2D;
+  }
+  /**
+   * @return {boolean}
+   */
+  acceptBlur(): boolean {
+    return this.__attributeContext.alpha;
+  }
+  /**
+   * @return {void}
+   */
+  blur(): void {
+    this.__attributeContext.alpha = true;
+    this._createNewContext2d();
+  }
+  /**
+   * @return {void}
+   */
+  noBlur(): void {
+    this.__attributeContext.alpha = false;
+    this._createNewContext2d();
+  }
+  /**
+   * Describe your function
+   * @return {boolean}
+   */
+  acceptDesync(): boolean {
+    return this.__attributeContext.desynchronized;
+  }
+  /**
+   * Describe your function
+   * @return {void}
+   */
+  desync(): void {
+    this.__attributeContext.desynchronized = true;
+    this._createNewContext2d();
+  }
+  /**
+   * Describe your function
+   * @return {void}
+   */
+  noDesync(): void {
+    this.__attributeContext.desynchronized = false;
+    this._createNewContext2d();
+  }
+
   /**
    * @return {CanvasRenderingContext2D}
    */
   get $context2d(): CanvasRenderingContext2D {
     if (this._context2dCaching === null) {
-      this._context2dCaching = this.$el.getContext("2d");
+      this._createNewContext2d();
     }
 
     return this._context2dCaching as CanvasRenderingContext2D;
@@ -1673,13 +1753,13 @@ class fCanvas {
 
     this.$context2d.textBaseline = value;
   }
-  globalOperation(): GlobalCompositeOperationType;
-  globalOperation(composite: GlobalCompositeOperationType): void;
+  operation(): GlobalCompositeOperationType;
+  operation(composite: GlobalCompositeOperationType): void;
   /**
    * @param {GlobalCompositeOperationType} value?
    * @return {any}
    */
-  globalOperation(
+  operation(
     value?: GlobalCompositeOperationType
   ): GlobalCompositeOperationType | void {
     if (value === undefined) {
@@ -1689,13 +1769,13 @@ class fCanvas {
 
     this.$context2d.globalCompositeOperation = value;
   }
-  globalAlpha(): number;
-  globalAlpha(alpha: number): void;
+  alpha(): number;
+  alpha(alpha: number): void;
   /**
    * @param {number} alpha?
    * @return {number | void}
    */
-  globalAlpha(alpha?: number): number | void {
+  alpha(alpha?: number): number | void {
     if (alpha === undefined) {
       return this.$context2d.globalAlpha;
     }
@@ -2208,4 +2288,4 @@ export {
   isTouch,
   passive,
 };
-export * from "./methods/index";
+export * from "./functions/index";

@@ -6,7 +6,7 @@ import Vector from "./classes/Vector";
 import Animate from "./classes/Animate";
 import Camera from "./classes/Camera";
 import loadResourceImage from "./addons/loadResourceImage";
-import { RectImpactPoint, CircleImpactPoint } from "./methods/index";
+import { RectImpactPoint, CircleImpactPoint } from "./functions/index";
 class MyElement {
     /**
      * @param {fCanvas} canvas?
@@ -498,11 +498,20 @@ class MyElement {
      * @param {number} value?
      * @return {any}
      */
-    lineDash(value) {
+    lineDashOffset(value) {
         if (value === undefined) {
             return this.$context2d.lineDashOffset;
         }
         this.$context2d.lineDashOffset = value;
+    }
+    lineDash(...segments) {
+        if (segments.length === 0) {
+            return this.$context2d.getLineDash();
+        }
+        if (Array.isArray(segments[0])) {
+            this.$context2d.setLineDash(segments[0]);
+        }
+        this.$context2d.setLineDash(segments);
     }
     /**
      * @param {number} x1
@@ -626,6 +635,14 @@ class MyElement {
      */
     shadowColor(...args) {
         this.$context2d.shadowColor = this.$parent._toRgb(args);
+    }
+    drawFocusIfNeeded(path, element) {
+        if (element === undefined) {
+            this.$context2d.drawFocusIfNeeded(path);
+        }
+        else {
+            this.$context2d.drawFocusIfNeeded(path, element);
+        }
     }
 }
 class EAnimate extends MyElement {
@@ -769,6 +786,10 @@ class fCanvas {
             sumY: 0,
         };
         this.__idFrame = null;
+        this.__attributeContext = {
+            alpha: true,
+            desynchronized: false,
+        };
         this.preventTouch = false;
         this.stopTouch = false;
         this.touches = [];
@@ -823,12 +844,58 @@ class fCanvas {
     get $el() {
         return this._el;
     }
+    _createNewContext2d() {
+        this._context2dCaching = this.$el.getContext("2d", this.__attributeContext);
+    }
+    /**
+     * @return {boolean}
+     */
+    acceptBlur() {
+        return this.__attributeContext.alpha;
+    }
+    /**
+     * @return {void}
+     */
+    blur() {
+        this.__attributeContext.alpha = true;
+        this._createNewContext2d();
+    }
+    /**
+     * @return {void}
+     */
+    noBlur() {
+        this.__attributeContext.alpha = false;
+        this._createNewContext2d();
+    }
+    /**
+     * Describe your function
+     * @return {boolean}
+     */
+    acceptDesync() {
+        return this.__attributeContext.desynchronized;
+    }
+    /**
+     * Describe your function
+     * @return {void}
+     */
+    desync() {
+        this.__attributeContext.desynchronized = true;
+        this._createNewContext2d();
+    }
+    /**
+     * Describe your function
+     * @return {void}
+     */
+    noDesync() {
+        this.__attributeContext.desynchronized = false;
+        this._createNewContext2d();
+    }
     /**
      * @return {CanvasRenderingContext2D}
      */
     get $context2d() {
         if (this._context2dCaching === null) {
-            this._context2dCaching = this.$el.getContext("2d");
+            this._createNewContext2d();
         }
         return this._context2dCaching;
     }
@@ -1222,7 +1289,7 @@ class fCanvas {
      * @param {GlobalCompositeOperationType} value?
      * @return {any}
      */
-    globalOperation(value) {
+    operation(value) {
         if (value === undefined) {
             return this.$context2d
                 .globalCompositeOperation;
@@ -1233,7 +1300,7 @@ class fCanvas {
      * @param {number} alpha?
      * @return {number | void}
      */
-    globalAlpha(alpha) {
+    alpha(alpha) {
         if (alpha === undefined) {
             return this.$context2d.globalAlpha;
         }
@@ -1637,4 +1704,4 @@ export function touchEnd(callback, element = window) {
 }
 export default fCanvas;
 export { requestAnimationFrame, windowSize, isMobile, isTouch, passive, };
-export * from "./methods/index";
+export * from "./functions/index";

@@ -1422,12 +1422,14 @@ function reactiveDefine(value, callback) {
 
             var old = (_value$__store2 = value.__store) === null || _value$__store2 === void 0 ? void 0 : _value$__store2[key];
 
-            if (value.__store) {
-              value.__store[key] = newValue;
-            }
+            if (newValue !== old) {
+              if (value.__store) {
+                value.__store[key] = newValue;
+              }
 
-            reactiveDefine(newValue, callback, [].concat(_toConsumableArray(parent), [key]));
-            callback([].concat(_toConsumableArray(parent), [key]), old, newValue);
+              reactiveDefine(newValue, callback, [].concat(_toConsumableArray(parent), [key]));
+              callback([].concat(_toConsumableArray(parent), [key]), old, newValue);
+            }
           }
         });
         reactiveDefine(value[key], callback, [].concat(_toConsumableArray(parent), [key]));
@@ -2056,6 +2058,29 @@ function loadImage(src) {
   });
 }
 /**
+ * @param {string} src
+ * @return {Promise<HTMLAudioElement>}
+ */
+
+function loadAudio(src) {
+  var audio = new Audio();
+  audio.src = src;
+  return new Promise(function (resolve, reject) {
+    function loaded() {
+      resolve(audio);
+      audio.removeEventListener("load", loaded);
+    }
+
+    function error(err) {
+      reject(err);
+      audio.removeEventListener("error", error);
+    }
+
+    audio.addEventListener("load", loaded);
+    audio.addEventListener("error", error);
+  });
+}
+/**
  * @param {number} value
  * @param {number} start
  * @param {number} stop
@@ -2085,6 +2110,12 @@ function random() {
     return args[0] + Math.random() * (args[1] - args[0]);
   }
 }
+/**
+ * @param {number} start
+ * @param {number} stop?
+ * @return {number}
+ */
+
 
 function randomInt(start, stop) {
   if (stop === undefined) {
@@ -3170,14 +3201,14 @@ var ResourceTile = /*#__PURE__*/function () {
         this.__caching[name] = cutImage(this.image, +frameArray[0], +frameArray[1], +frameArray[2], +frameArray[3], rotated ? -90 : 0);
       }
 
-      var imageCuted = this.__caching[name];
-      return {
-        image: imageCuted,
+      var imageCuted = Object.assign(this.__caching[name], {
+        image: this.__caching[name],
         size: {
           width: +sizeArray[0],
           height: +sizeArray[1]
         }
-      };
+      });
+      return imageCuted;
     }
     /*
      * @param {string} name
@@ -3914,13 +3945,30 @@ var MyElement = /*#__PURE__*/function () {
      */
 
   }, {
-    key: "lineDash",
-    value: function lineDash(value) {
+    key: "lineDashOffset",
+    value: function lineDashOffset(value) {
       if (value === undefined) {
         return this.$context2d.lineDashOffset;
       }
 
       this.$context2d.lineDashOffset = value;
+    }
+  }, {
+    key: "lineDash",
+    value: function lineDash() {
+      for (var _len4 = arguments.length, segments = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        segments[_key4] = arguments[_key4];
+      }
+
+      if (segments.length === 0) {
+        return this.$context2d.getLineDash();
+      }
+
+      if (Array.isArray(segments[0])) {
+        this.$context2d.setLineDash(segments[0]);
+      }
+
+      this.$context2d.setLineDash(segments);
     }
     /**
      * @param {number} x1
@@ -4074,11 +4122,20 @@ var MyElement = /*#__PURE__*/function () {
   }, {
     key: "shadowColor",
     value: function shadowColor() {
-      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        args[_key4] = arguments[_key4];
+      for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+        args[_key5] = arguments[_key5];
       }
 
       this.$context2d.shadowColor = this.$parent._toRgb(args);
+    }
+  }, {
+    key: "drawFocusIfNeeded",
+    value: function drawFocusIfNeeded(path, element) {
+      if (element === undefined) {
+        this.$context2d.drawFocusIfNeeded(path);
+      } else {
+        this.$context2d.drawFocusIfNeeded(path, element);
+      }
     }
   }]);
 
@@ -4302,6 +4359,10 @@ var fCanvas = /*#__PURE__*/function () {
       sumY: 0
     };
     this.__idFrame = null;
+    this.__attributeContext = {
+      alpha: true,
+      desynchronized: false
+    };
     this.preventTouch = false;
     this.stopTouch = false;
     this.touches = [];
@@ -4376,6 +4437,76 @@ var fCanvas = /*#__PURE__*/function () {
     get: function get() {
       return this._el;
     }
+  }, {
+    key: "_createNewContext2d",
+    value: function _createNewContext2d() {
+      this._context2dCaching = this.$el.getContext("2d", this.__attributeContext);
+    }
+    /**
+     * @return {boolean}
+     */
+
+  }, {
+    key: "acceptBlur",
+    value: function acceptBlur() {
+      return this.__attributeContext.alpha;
+    }
+    /**
+     * @return {void}
+     */
+
+  }, {
+    key: "blur",
+    value: function blur() {
+      this.__attributeContext.alpha = true;
+
+      this._createNewContext2d();
+    }
+    /**
+     * @return {void}
+     */
+
+  }, {
+    key: "noBlur",
+    value: function noBlur() {
+      this.__attributeContext.alpha = false;
+
+      this._createNewContext2d();
+    }
+    /**
+     * Describe your function
+     * @return {boolean}
+     */
+
+  }, {
+    key: "acceptDesync",
+    value: function acceptDesync() {
+      return this.__attributeContext.desynchronized;
+    }
+    /**
+     * Describe your function
+     * @return {void}
+     */
+
+  }, {
+    key: "desync",
+    value: function desync() {
+      this.__attributeContext.desynchronized = true;
+
+      this._createNewContext2d();
+    }
+    /**
+     * Describe your function
+     * @return {void}
+     */
+
+  }, {
+    key: "noDesync",
+    value: function noDesync() {
+      this.__attributeContext.desynchronized = false;
+
+      this._createNewContext2d();
+    }
     /**
      * @return {CanvasRenderingContext2D}
      */
@@ -4384,7 +4515,7 @@ var fCanvas = /*#__PURE__*/function () {
     key: "$context2d",
     get: function get() {
       if (this._context2dCaching === null) {
-        this._context2dCaching = this.$el.getContext("2d");
+        this._createNewContext2d();
       }
 
       return this._context2dCaching;
@@ -4699,8 +4830,8 @@ var fCanvas = /*#__PURE__*/function () {
   }, {
     key: "background",
     value: function background() {
-      for (var _len5 = arguments.length, params = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-        params[_key5] = arguments[_key5];
+      for (var _len6 = arguments.length, params = new Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+        params[_key6] = arguments[_key6];
       }
 
       this.$context2d.fillStyle = this._toRgb(params);
@@ -4995,8 +5126,8 @@ var fCanvas = /*#__PURE__*/function () {
      */
 
   }, {
-    key: "globalOperation",
-    value: function globalOperation(value) {
+    key: "operation",
+    value: function operation(value) {
       if (value === undefined) {
         return this.$context2d.globalCompositeOperation;
       }
@@ -5009,13 +5140,13 @@ var fCanvas = /*#__PURE__*/function () {
      */
 
   }, {
-    key: "globalAlpha",
-    value: function globalAlpha(alpha) {
-      if (alpha === undefined) {
+    key: "alpha",
+    value: function alpha(_alpha) {
+      if (_alpha === undefined) {
         return this.$context2d.globalAlpha;
       }
 
-      this.$context2d.globalAlpha = alpha;
+      this.$context2d.globalAlpha = _alpha;
     }
     /**
      * @param {number} x?
@@ -5582,4 +5713,4 @@ function touchEnd(callback) {
 }
 
 export default fCanvas;
-export { Animate, Camera, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, cutImage, _draw as draw, foreach, hypot, isMobile, isTouch, keyPressed, keyUp, lerp, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, off, passive, random, randomInt, range, requestAnimationFrame, _setup as setup, touchEnd, touchMove, touchStart, windowSize };
+export { Animate, Camera, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, cutImage, _draw as draw, foreach, hypot, isMobile, isTouch, keyPressed, keyUp, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, off, passive, random, randomInt, range, requestAnimationFrame, _setup as setup, touchEnd, touchMove, touchStart, windowSize };

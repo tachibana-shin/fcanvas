@@ -12,19 +12,28 @@ export interface Rect extends Object {
   width: number;
   height: number;
 }
+
+interface CallbackForeachNumber {
+  (value?: number, start?: number, stop?: number, step?: number):
+    | boolean
+    | void;
+}
+interface CallbackForeachObject {
+  (value?: any, index?: number | string, object?: ArrayLike<any> | Object):
+    | boolean
+    | void;
+}
 /**
  * @param {Circle} circle1
  * @param {Circle} circle2
  * @return {boolean}
  */
-
 export function CircleImpact(circle1: Circle, circle2: Circle): boolean {
   return (
     (circle1.x - circle2.x) ** 2 + (circle1.y - circle2.y) ** 2 <
     (circle1.radius + circle2.radius) ** 2
   );
 }
-
 /**
  * @param {Circle} circle
  * @param {number} x
@@ -41,7 +50,6 @@ export function CircleImpactPoint(
   }
   return (x - circle.x) ** 2 + (y - circle.y) ** 2 < circle.radius ** 2;
 }
-
 /**
  * @param {Circle} circle
  * @param {Rect} rect
@@ -56,7 +64,6 @@ export function CircleImpactRect(circle: Circle, rect: Rect): boolean {
 
   return distance < circle.radius ** 2;
 }
-
 /**
  * @param {number} value
  * @param {number} min
@@ -66,7 +73,6 @@ export function CircleImpactRect(circle: Circle, rect: Rect): boolean {
 export function constrain(value: number, min: number, max: number): number {
   return Math.min(Math.max(min, value), max);
 }
-
 /**
  * @param {string} src
  * @return {Promise<HTMLImageElement>}
@@ -74,7 +80,7 @@ export function constrain(value: number, min: number, max: number): number {
 export function loadImage(src: string): Promise<HTMLImageElement> {
   const img = new Image();
   img.src = src;
-  return new Promise((resolve, reject) => {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
     function loaded() {
       resolve(img);
       img.removeEventListener("load", loaded);
@@ -88,7 +94,26 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
     img.addEventListener("error", error);
   });
 }
-
+/**
+ * @param {string} src
+ * @return {Promise<HTMLAudioElement>}
+ */
+export function loadAudio(src: string): Promise<HTMLAudioElement> {
+  const audio = new Audio();
+  audio.src = src;
+  return new Promise<HTMLAudioElement>((resolve, reject) => {
+    function loaded() {
+      resolve(audio);
+      audio.removeEventListener("load", loaded);
+    }
+    function error(err: any) {
+      reject(err);
+      audio.removeEventListener("error", error);
+    }
+    audio.addEventListener("load", loaded);
+    audio.addEventListener("error", error);
+  });
+}
 /**
  * @param {number} value
  * @param {number} start
@@ -106,7 +131,6 @@ export function map(
 ): number {
   return ((value - start) * (max - min)) / (stop - start) + min;
 }
-
 /**
  * @param {any[]} ...args
  * @return {any}
@@ -133,6 +157,11 @@ function random(...args: any[]): any {
 
 function randomInt(value: number): number;
 function randomInt(start: number, stop: number): number;
+/**
+ * @param {number} start
+ * @param {number} stop?
+ * @return {number}
+ */
 function randomInt(start: number, stop?: number): number {
   if (stop === undefined) {
     return Math.round(random(start));
@@ -245,16 +274,6 @@ export const hypot =
         return Math.sqrt(result);
       };
 
-interface CallbackForeachNumber {
-  (value?: number, start?: number, stop?: number, step?: number):
-    | boolean
-    | void;
-}
-interface CallbackForeachObject {
-  (value?: any, index?: number | string, object?: ArrayLike<any> | Object):
-    | boolean
-    | void;
-}
 function foreach(
   start: number,
   stop: number,
@@ -360,7 +379,6 @@ export { foreach };
  * @param {number} prevent
  * @return {number}
  */
-
 export function odd(value: number, max: number, prevent: number): number {
   if (value === max) {
     return prevent;
@@ -374,7 +392,6 @@ export function odd(value: number, max: number, prevent: number): number {
  * @param {number} prevent
  * @return {number}
  */
-
 export function off(value: number, min: number, prevent: number): number {
   if (value === min) {
     return prevent;

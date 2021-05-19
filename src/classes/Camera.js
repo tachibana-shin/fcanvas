@@ -1,4 +1,4 @@
-import { constrain } from "../methods/index";
+import { constrain } from "../functions/index";
 class Camera {
     /**
      * @param {number} width?

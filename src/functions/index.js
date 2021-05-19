@@ -61,6 +61,26 @@ export function loadImage(src) {
     });
 }
 /**
+ * @param {string} src
+ * @return {Promise<HTMLAudioElement>}
+ */
+export function loadAudio(src) {
+    const audio = new Audio();
+    audio.src = src;
+    return new Promise((resolve, reject) => {
+        function loaded() {
+            resolve(audio);
+            audio.removeEventListener("load", loaded);
+        }
+        function error(err) {
+            reject(err);
+            audio.removeEventListener("error", error);
+        }
+        audio.addEventListener("load", loaded);
+        audio.addEventListener("error", error);
+    });
+}
+/**
  * @param {number} value
  * @param {number} start
  * @param {number} stop
@@ -84,6 +104,11 @@ function random(...args) {
         return args[0] + Math.random() * (args[1] - args[0]);
     }
 }
+/**
+ * @param {number} start
+ * @param {number} stop?
+ * @return {number}
+ */
 function randomInt(start, stop) {
     if (stop === undefined) {
         return Math.round(random(start));

@@ -1,4 +1,4 @@
-import { cutImage, loadImage } from "../methods/index";
+import { cutImage, loadImage } from "../functions/index";
 function convertFieldToJson(keyItem) {
     const key = keyItem.textContent;
     let value = keyItem.nextElementSibling;
@@ -79,14 +79,14 @@ class ResourceTile {
         if (name in this.__caching === false) {
             this.__caching[name] = cutImage(this.image, +frameArray[0], +frameArray[1], +frameArray[2], +frameArray[3], rotated ? -90 : 0);
         }
-        const imageCuted = this.__caching[name];
-        return {
-            image: imageCuted,
+        const imageCuted = Object.assign(this.__caching[name], {
+            image: this.__caching[name],
             size: {
                 width: +sizeArray[0],
                 height: +sizeArray[1],
             },
-        };
+        });
+        return imageCuted;
     }
     /*
      * @param {string} name

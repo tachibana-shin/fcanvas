@@ -1,4 +1,4 @@
-import { constrain } from "../methods/index";
+import { constrain } from "../functions/index";
 import Emitter from "./Emitter";
 function getAnimate(type, currentProgress, start, distance, steps, power) {
     switch (type) {

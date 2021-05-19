@@ -324,12 +324,14 @@ function reactiveDefine(value, callback, parent = []) {
 
             const old = (_value$__store2 = value.__store) === null || _value$__store2 === void 0 ? void 0 : _value$__store2[key];
 
-            if (value.__store) {
-              value.__store[key] = newValue;
-            }
+            if (newValue !== old) {
+              if (value.__store) {
+                value.__store[key] = newValue;
+              }
 
-            reactiveDefine(newValue, callback, [...parent, key]);
-            callback([...parent, key], old, newValue);
+              reactiveDefine(newValue, callback, [...parent, key]);
+              callback([...parent, key], old, newValue);
+            }
           }
 
         });
@@ -903,6 +905,29 @@ function loadImage(src) {
   });
 }
 /**
+ * @param {string} src
+ * @return {Promise<HTMLAudioElement>}
+ */
+
+function loadAudio(src) {
+  const audio = new Audio();
+  audio.src = src;
+  return new Promise((resolve, reject) => {
+    function loaded() {
+      resolve(audio);
+      audio.removeEventListener("load", loaded);
+    }
+
+    function error(err) {
+      reject(err);
+      audio.removeEventListener("error", error);
+    }
+
+    audio.addEventListener("load", loaded);
+    audio.addEventListener("error", error);
+  });
+}
+/**
  * @param {number} value
  * @param {number} start
  * @param {number} stop
@@ -928,6 +953,12 @@ function random(...args) {
     return args[0] + Math.random() * (args[1] - args[0]);
   }
 }
+/**
+ * @param {number} start
+ * @param {number} stop?
+ * @return {number}
+ */
+
 
 function randomInt(start, stop) {
   if (stop === undefined) {
@@ -1893,14 +1924,14 @@ class ResourceTile {
       this.__caching[name] = cutImage(this.image, +frameArray[0], +frameArray[1], +frameArray[2], +frameArray[3], rotated ? -90 : 0);
     }
 
-    const imageCuted = this.__caching[name];
-    return {
-      image: imageCuted,
+    const imageCuted = Object.assign(this.__caching[name], {
+      image: this.__caching[name],
       size: {
         width: +sizeArray[0],
         height: +sizeArray[1]
       }
-    };
+    });
+    return imageCuted;
   }
   /*
    * @param {string} name
@@ -2529,12 +2560,24 @@ class MyElement {
    */
 
 
-  lineDash(value) {
+  lineDashOffset(value) {
     if (value === undefined) {
       return this.$context2d.lineDashOffset;
     }
 
     this.$context2d.lineDashOffset = value;
+  }
+
+  lineDash(...segments) {
+    if (segments.length === 0) {
+      return this.$context2d.getLineDash();
+    }
+
+    if (Array.isArray(segments[0])) {
+      this.$context2d.setLineDash(segments[0]);
+    }
+
+    this.$context2d.setLineDash(segments);
   }
   /**
    * @param {number} x1
@@ -2677,6 +2720,14 @@ class MyElement {
 
   shadowColor(...args) {
     this.$context2d.shadowColor = this.$parent._toRgb(args);
+  }
+
+  drawFocusIfNeeded(path, element) {
+    if (element === undefined) {
+      this.$context2d.drawFocusIfNeeded(path);
+    } else {
+      this.$context2d.drawFocusIfNeeded(path, element);
+    }
   }
 
 }
@@ -2832,6 +2883,10 @@ class fCanvas {
       sumY: 0
     };
     this.__idFrame = null;
+    this.__attributeContext = {
+      alpha: true,
+      desynchronized: false
+    };
     this.preventTouch = false;
     this.stopTouch = false;
     this.touches = [];
@@ -2900,6 +2955,69 @@ class fCanvas {
   get $el() {
     return this._el;
   }
+
+  _createNewContext2d() {
+    this._context2dCaching = this.$el.getContext("2d", this.__attributeContext);
+  }
+  /**
+   * @return {boolean}
+   */
+
+
+  acceptBlur() {
+    return this.__attributeContext.alpha;
+  }
+  /**
+   * @return {void}
+   */
+
+
+  blur() {
+    this.__attributeContext.alpha = true;
+
+    this._createNewContext2d();
+  }
+  /**
+   * @return {void}
+   */
+
+
+  noBlur() {
+    this.__attributeContext.alpha = false;
+
+    this._createNewContext2d();
+  }
+  /**
+   * Describe your function
+   * @return {boolean}
+   */
+
+
+  acceptDesync() {
+    return this.__attributeContext.desynchronized;
+  }
+  /**
+   * Describe your function
+   * @return {void}
+   */
+
+
+  desync() {
+    this.__attributeContext.desynchronized = true;
+
+    this._createNewContext2d();
+  }
+  /**
+   * Describe your function
+   * @return {void}
+   */
+
+
+  noDesync() {
+    this.__attributeContext.desynchronized = false;
+
+    this._createNewContext2d();
+  }
   /**
    * @return {CanvasRenderingContext2D}
    */
@@ -2907,7 +3025,7 @@ class fCanvas {
 
   get $context2d() {
     if (this._context2dCaching === null) {
-      this._context2dCaching = this.$el.getContext("2d");
+      this._createNewContext2d();
     }
 
     return this._context2dCaching;
@@ -3396,7 +3514,7 @@ class fCanvas {
    */
 
 
-  globalOperation(value) {
+  operation(value) {
     if (value === undefined) {
       return this.$context2d.globalCompositeOperation;
     }
@@ -3409,7 +3527,7 @@ class fCanvas {
    */
 
 
-  globalAlpha(alpha) {
+  alpha(alpha) {
     if (alpha === undefined) {
       return this.$context2d.globalAlpha;
     }
@@ -3906,4 +4024,4 @@ function touchEnd(callback, element = window) {
 }
 
 export default fCanvas;
-export { Animate, Camera, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, cutImage, draw, foreach, hypot, isMobile, isTouch, keyPressed, keyUp, lerp, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, off, passive, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, windowSize };
+export { Animate, Camera, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, changeSize, constrain, cutImage, draw, foreach, hypot, isMobile, isTouch, keyPressed, keyUp, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, off, passive, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, windowSize };

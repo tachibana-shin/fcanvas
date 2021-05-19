@@ -1,4 +1,4 @@
-import { constrain } from "../methods/index";
+import { constrain } from "../functions/index";
 import Vector from "./Vector";
 
 interface ViewBox {

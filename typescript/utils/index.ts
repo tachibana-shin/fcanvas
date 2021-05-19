@@ -1,3 +1,9 @@
+interface InfoFont {
+  size: number;
+  family: string;
+  weight: string;
+}
+
 /**
  * @param {any} e
  * @return {any}
@@ -85,12 +91,6 @@ export function trim(string: string | null): string {
   } else {
     return string.replace(/^\s+|\s+$/g, "");
   }
-}
-
-interface InfoFont {
-  size: number;
-  family: string;
-  weight: string;
 }
 
 /**
@@ -230,9 +230,7 @@ export function isMobile(): boolean {
  * @param {number|string|boolean} value
  * @return {number}
  */
-export function extractNumber(
-  value: any
-): number {
+export function extractNumber(value: any): number {
   if (typeof value === "number") {
     return value;
   }

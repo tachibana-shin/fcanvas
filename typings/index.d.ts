@@ -57,7 +57,7 @@ declare class MyElement {
      * @param {number} index
      * @return {LikeMyElement | undefined}
      */
-    getQueue(index: number): LikeMyElement | undefined;
+    getQueue(index: number): LikeMyElement | void;
     /**
      * @param {LikeMyElement} element
      * @return {void}
@@ -327,8 +327,11 @@ declare class MyElement {
      * @return {void}
      */
     strokeRect(x: number, y: number, width: number, height: number): void;
-    lineDash(): number;
-    lineDash(value: number): void;
+    lineDashOffset(): number;
+    lineDashOffset(value: number): void;
+    lineDash(): number[];
+    lineDash(segments: number[]): void;
+    lineDash(...segments: number[]): void;
     /**
      * @param {number} x1
      * @param {number} y1
@@ -402,6 +405,8 @@ declare class MyElement {
     shadowColor(gradient: CanvasGradient): void;
     shadowColor(image: CanvasImageSource): void;
     shadowColor(color: number): void;
+    drawFocusIfNeeded(element: Element): void;
+    drawFocusIfNeeded(path: Path2D, element: Element): void;
 }
 declare class EAnimate extends MyElement {
     animate: Animate;
@@ -488,6 +493,7 @@ declare class fCanvas {
     private __translate;
     private __scale;
     private __idFrame;
+    private __attributeContext;
     preventTouch: boolean;
     stopTouch: boolean;
     touches: InfoTouch[];
@@ -512,6 +518,34 @@ declare class fCanvas {
      * @return {HTMLCanvasElement}
      */
     get $el(): HTMLCanvasElement;
+    private _createNewContext2d;
+    /**
+     * @return {boolean}
+     */
+    acceptBlur(): boolean;
+    /**
+     * @return {void}
+     */
+    blur(): void;
+    /**
+     * @return {void}
+     */
+    noBlur(): void;
+    /**
+     * Describe your function
+     * @return {boolean}
+     */
+    acceptDesync(): boolean;
+    /**
+     * Describe your function
+     * @return {void}
+     */
+    desync(): void;
+    /**
+     * Describe your function
+     * @return {void}
+     */
+    noDesync(): void;
     /**
      * @return {CanvasRenderingContext2D}
      */
@@ -683,10 +717,10 @@ declare class fCanvas {
     textAlign(type: TextAlignType): void;
     textBaseline(): TextBaselineType;
     textBaseline(middle: TextBaselineType): void;
-    globalOperation(): GlobalCompositeOperationType;
-    globalOperation(composite: GlobalCompositeOperationType): void;
-    globalAlpha(): number;
-    globalAlpha(alpha: number): void;
+    operation(): GlobalCompositeOperationType;
+    operation(composite: GlobalCompositeOperationType): void;
+    alpha(): number;
+    alpha(alpha: number): void;
     translate(): Offset;
     translate(x: number, y: number): void;
     /**
@@ -907,4 +941,4 @@ export declare function touchEnd(callback: CallbackEvent, element?: Window | HTM
 };
 export default fCanvas;
 export { requestAnimationFrame, windowSize, isMobile, InfoTouch, isTouch, passive, };
-export * from "./methods/index";
+export * from "./functions/index";
