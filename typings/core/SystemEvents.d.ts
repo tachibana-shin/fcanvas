@@ -1,8 +1,5 @@
 import { CallbackEvent } from "../classes/Emitter";
 import fCanvas from "./fCanvas";
-export declare function bindEvent(name: string, callback: any, element: Element | Window | typeof globalThis): {
-    (): void;
-};
 /**
  * @param {any} document.readyState==="complete"
  * @return {any}

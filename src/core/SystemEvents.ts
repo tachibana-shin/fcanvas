@@ -1,20 +1,9 @@
-import { requestAnimationFrame } from "../utils/index";
+import { requestAnimationFrame, bindEvent } from "../utils/index";
 import Emitter, { CallbackEvent } from "../classes/Emitter";
 import fCanvas from "./fCanvas";
 
 let inited: boolean = false;
 const emitter: Emitter = new Emitter();
-
-export function bindEvent(
-  name: string,
-  callback: any,
-  element: Element | Window | typeof globalThis
-): { (): void } {
-  element.addEventListener(name, callback);
-  return () => {
-    element.removeEventListener(name, callback);
-  };
-}
 
 /**
  * @param {any} document.readyState==="complete"

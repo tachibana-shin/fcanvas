@@ -253,3 +253,14 @@ export function extractNumber(value: any): number {
 
   return parseFloat(`${value}`);
 }
+
+export function bindEvent(
+  name: string,
+  callback: any,
+  element: Element | Window | typeof globalThis
+): { (): void } {
+  element.addEventListener(name, callback);
+  return () => {
+    element.removeEventListener(name, callback);
+  };
+}

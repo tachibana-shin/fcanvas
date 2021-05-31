@@ -156,6 +156,12 @@ function extractNumber(value) {
     }
     return parseFloat(`${value}`);
 }
+function bindEvent(name, callback, element) {
+    element.addEventListener(name, callback);
+    return () => {
+        element.removeEventListener(name, callback);
+    };
+}
 
 class Emitter {
     constructor() {
@@ -2463,12 +2469,6 @@ class Point3D extends MyElement {
 
 let inited = false;
 const emitter = new Emitter();
-function bindEvent(name, callback, element) {
-    element.addEventListener(name, callback);
-    return () => {
-        element.removeEventListener(name, callback);
-    };
-}
 /**
  * @param {any} document.readyState==="complete"
  * @return {any}
@@ -2526,6 +2526,86 @@ function draw(callback, canvas) {
             draw(callback, canvas);
         });
     }
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function keyPressed(callback, element = window) {
+    return bindEvent("keydown", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function keyUp(callback, element = window) {
+    return bindEvent("keyup", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function changeSize(callback, element = window) {
+    return bindEvent("resize", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function mouseWheel(callback, element = window) {
+    return bindEvent("wheel", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function mousePressed(callback, element = window) {
+    return bindEvent("mousedown", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function mouseClicked(callback, element = window) {
+    return bindEvent("click", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function mouseMoved(callback, element = window) {
+    return bindEvent("mousemove", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function touchStart(callback, element = window) {
+    return bindEvent("touchstart", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function touchMove(callback, element = window) {
+    return bindEvent("touchmove", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function touchEnd(callback, element = window) {
+    return bindEvent("touchend", callback, element);
 }
 
 class fCanvas {
@@ -3344,4 +3424,4 @@ fCanvas.count = 0;
 const noopFCanvas = new fCanvas();
 
 export default fCanvas;
-export { Animate, Camera, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, cancelAnimationFrame, constrain, cutImage, hypot, isMobile, isTouch, lerp, loadAudio, loadImage, loadResourceImage, map, odd, off, passive, random, randomInt, range, requestAnimationFrame, windowSize };
+export { Animate, Camera, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, cancelAnimationFrame, changeSize, constrain, cutImage, draw, hypot, isMobile, isTouch, keyPressed, keyUp, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, off, passive, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, windowSize };

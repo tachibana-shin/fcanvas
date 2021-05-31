@@ -14,10 +14,11 @@ import {
   InfoTouch,
   noop,
   Offset,
-  cancelAnimationFrame
+  cancelAnimationFrame,
+  bindEvent,
 } from "../utils/index";
 import Stament from "../classes/Stament";
-import { setup, draw, bindEvent } from "./SystemEvents";
+import { setup, draw } from "./SystemEvents";
 import { CallbackEvent } from "../classes/Emitter";
 
 type AngleType = "degress" | "radial";

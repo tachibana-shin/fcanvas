@@ -74,4 +74,7 @@ export declare function isMobile(): boolean;
  * @return {number}
  */
 export declare function extractNumber(value: any): number;
+export declare function bindEvent(name: string, callback: any, element: Element | Window | typeof globalThis): {
+    (): void;
+};
 export {};

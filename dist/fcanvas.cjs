@@ -160,6 +160,12 @@ function extractNumber(value) {
     }
     return parseFloat(`${value}`);
 }
+function bindEvent(name, callback, element) {
+    element.addEventListener(name, callback);
+    return () => {
+        element.removeEventListener(name, callback);
+    };
+}
 
 class Emitter {
     constructor() {
@@ -2467,12 +2473,6 @@ class Point3D extends MyElement {
 
 let inited = false;
 const emitter = new Emitter();
-function bindEvent(name, callback, element) {
-    element.addEventListener(name, callback);
-    return () => {
-        element.removeEventListener(name, callback);
-    };
-}
 /**
  * @param {any} document.readyState==="complete"
  * @return {any}
@@ -2530,6 +2530,86 @@ function draw(callback, canvas) {
             draw(callback, canvas);
         });
     }
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function keyPressed(callback, element = window) {
+    return bindEvent("keydown", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function keyUp(callback, element = window) {
+    return bindEvent("keyup", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function changeSize(callback, element = window) {
+    return bindEvent("resize", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function mouseWheel(callback, element = window) {
+    return bindEvent("wheel", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function mousePressed(callback, element = window) {
+    return bindEvent("mousedown", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function mouseClicked(callback, element = window) {
+    return bindEvent("click", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function mouseMoved(callback, element = window) {
+    return bindEvent("mousemove", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function touchStart(callback, element = window) {
+    return bindEvent("touchstart", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function touchMove(callback, element = window) {
+    return bindEvent("touchmove", callback, element);
+}
+/**
+ * @param {CallbackEvent} callback
+ * @param {Window|HTMLElement=window} element
+ * @return {{ (): void }}
+ */
+function touchEnd(callback, element = window) {
+    return bindEvent("touchend", callback, element);
 }
 
 class fCanvas {
@@ -3359,17 +3439,25 @@ exports.Stament = Stament;
 exports.Store = Store;
 exports.Vector = Vector;
 exports.cancelAnimationFrame = cancelAnimationFrame;
+exports.changeSize = changeSize;
 exports.constrain = constrain;
 exports.cutImage = cutImage;
 exports.default = fCanvas;
+exports.draw = draw;
 exports.hypot = hypot;
 exports.isMobile = isMobile;
 exports.isTouch = isTouch;
+exports.keyPressed = keyPressed;
+exports.keyUp = keyUp;
 exports.lerp = lerp;
 exports.loadAudio = loadAudio;
 exports.loadImage = loadImage;
 exports.loadResourceImage = loadResourceImage;
 exports.map = map;
+exports.mouseClicked = mouseClicked;
+exports.mouseMoved = mouseMoved;
+exports.mousePressed = mousePressed;
+exports.mouseWheel = mouseWheel;
 exports.odd = odd;
 exports.off = off;
 exports.passive = passive;
@@ -3377,4 +3465,8 @@ exports.random = random;
 exports.randomInt = randomInt;
 exports.range = range;
 exports.requestAnimationFrame = requestAnimationFrame;
+exports.setup = setup;
+exports.touchEnd = touchEnd;
+exports.touchMove = touchMove;
+exports.touchStart = touchStart;
 exports.windowSize = windowSize;
