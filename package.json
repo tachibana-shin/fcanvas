@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "0.0.5-b20",
+  "version": "0.0.5-b21",
   "main": "dist/fcanvas.js",
   "exports": {
     ".": {
@@ -44,7 +44,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript": "^1.0.1",
     "rollup-plugin-typescript2": "^0.30.0",
-    "typescript": "^4.3.2"
+    "typescript": "4.2.4"
   },
   "scripts": {
     "build:rollup": "node build.js",
