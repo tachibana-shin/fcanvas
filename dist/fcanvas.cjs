@@ -846,6 +846,17 @@ function loadAudio(src) {
 function map(value, start, stop, min, max) {
     return ((value - start) * (max - min)) / (stop - start) + min;
 }
+function aspectRatio(ratio, width, height) {
+    /// ratio = width / height => height = width / ratio
+    const nwidth = ratio * height;
+    const nheight = width / ratio;
+    if (width < nwidth) {
+        return [width, nheight];
+    }
+    else {
+        return [nwidth, height];
+    }
+}
 function random(...args) {
     if (args.length === 1) {
         if (args[0] !== null &&
@@ -3373,13 +3384,6 @@ class fCanvas {
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    mouseDown(callback) {
-        return bindEvent("mousedown", callback, this.$el);
-    }
-    /**
-     * @param {CallbackEvent} callback
-     * @return {noop}
-     */
     touchStart(callback) {
         return bindEvent("touchstart", callback, this.$el);
     }
@@ -3401,15 +3405,22 @@ class fCanvas {
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    mouseMoved(callback) {
+    mouseMove(callback) {
         return bindEvent("mousemove", callback, this.$el);
     }
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    mouseUped(callback) {
+    mouseUp(callback) {
         return bindEvent("mouseup", callback, this.$el);
+    }
+    /**
+     * @param {CallbackEvent} callback
+     * @return {noop}
+     */
+    mouseDown(callback) {
+        return bindEvent("mousedown", callback, this.$el);
     }
     /**
      * @param {CallbackEvent} callback
@@ -3438,6 +3449,7 @@ exports.RectImpactPoint = RectImpactPoint;
 exports.Stament = Stament;
 exports.Store = Store;
 exports.Vector = Vector;
+exports.aspectRatio = aspectRatio;
 exports.cancelAnimationFrame = cancelAnimationFrame;
 exports.changeSize = changeSize;
 exports.constrain = constrain;

@@ -1000,13 +1000,6 @@ export default class fCanvas {
    * @param {CallbackEvent} callback
    * @return {noop}
    */
-  mouseDown(callback: CallbackEvent): noop {
-    return bindEvent("mousedown", callback, this.$el);
-  }
-  /**
-   * @param {CallbackEvent} callback
-   * @return {noop}
-   */
   touchStart(callback: CallbackEvent): noop {
     return bindEvent("touchstart", callback, this.$el);
   }
@@ -1028,15 +1021,22 @@ export default class fCanvas {
    * @param {CallbackEvent} callback
    * @return {noop}
    */
-  mouseMoved(callback: CallbackEvent): noop {
+  mouseMove(callback: CallbackEvent): noop {
     return bindEvent("mousemove", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
-  mouseUped(callback: CallbackEvent): noop {
+  mouseUp(callback: CallbackEvent): noop {
     return bindEvent("mouseup", callback, this.$el);
+  }
+  /**
+   * @param {CallbackEvent} callback
+   * @return {noop}
+   */
+  mouseDown(callback: CallbackEvent): noop {
+    return bindEvent("mousedown", callback, this.$el);
   }
   /**
    * @param {CallbackEvent} callback

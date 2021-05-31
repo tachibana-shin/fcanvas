@@ -120,6 +120,21 @@ export function map(
 ): number {
   return ((value - start) * (max - min)) / (stop - start) + min;
 }
+export function aspectRatio(
+  ratio: number,
+  width: number,
+  height: number
+): [number, number] {
+  /// ratio = width / height => height = width / ratio
+  const nwidth = ratio * height;
+  const nheight = width / ratio;
+
+  if (width < nwidth) {
+    return [width, nheight];
+  } else {
+    return [nwidth, height];
+  }
+}
 /**
  * @param {any[]} ...args
  * @return {any}

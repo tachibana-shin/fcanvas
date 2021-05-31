@@ -349,11 +349,6 @@ export default class fCanvas {
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    mouseDown(callback: CallbackEvent): noop;
-    /**
-     * @param {CallbackEvent} callback
-     * @return {noop}
-     */
     touchStart(callback: CallbackEvent): noop;
     /**
      * @param {CallbackEvent} callback
@@ -369,12 +364,17 @@ export default class fCanvas {
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    mouseMoved(callback: CallbackEvent): noop;
+    mouseMove(callback: CallbackEvent): noop;
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    mouseUped(callback: CallbackEvent): noop;
+    mouseUp(callback: CallbackEvent): noop;
+    /**
+     * @param {CallbackEvent} callback
+     * @return {noop}
+     */
+    mouseDown(callback: CallbackEvent): noop;
     /**
      * @param {CallbackEvent} callback
      * @return {noop}

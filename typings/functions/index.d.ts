@@ -54,6 +54,7 @@ export declare function loadAudio(src: string): Promise<HTMLAudioElement>;
  * @return {number}
  */
 export declare function map(value: number, start: number, stop: number, min: number, max: number): number;
+export declare function aspectRatio(ratio: number, width: number, height: number): [number, number];
 /**
  * @param {any[]} ...args
  * @return {any}

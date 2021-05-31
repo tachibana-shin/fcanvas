@@ -842,6 +842,17 @@ function loadAudio(src) {
 function map(value, start, stop, min, max) {
     return ((value - start) * (max - min)) / (stop - start) + min;
 }
+function aspectRatio(ratio, width, height) {
+    /// ratio = width / height => height = width / ratio
+    const nwidth = ratio * height;
+    const nheight = width / ratio;
+    if (width < nwidth) {
+        return [width, nheight];
+    }
+    else {
+        return [nwidth, height];
+    }
+}
 function random(...args) {
     if (args.length === 1) {
         if (args[0] !== null &&
@@ -3369,13 +3380,6 @@ class fCanvas {
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    mouseDown(callback) {
-        return bindEvent("mousedown", callback, this.$el);
-    }
-    /**
-     * @param {CallbackEvent} callback
-     * @return {noop}
-     */
     touchStart(callback) {
         return bindEvent("touchstart", callback, this.$el);
     }
@@ -3397,15 +3401,22 @@ class fCanvas {
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    mouseMoved(callback) {
+    mouseMove(callback) {
         return bindEvent("mousemove", callback, this.$el);
     }
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
-    mouseUped(callback) {
+    mouseUp(callback) {
         return bindEvent("mouseup", callback, this.$el);
+    }
+    /**
+     * @param {CallbackEvent} callback
+     * @return {noop}
+     */
+    mouseDown(callback) {
+        return bindEvent("mousedown", callback, this.$el);
     }
     /**
      * @param {CallbackEvent} callback
@@ -3424,4 +3435,4 @@ fCanvas.count = 0;
 const noopFCanvas = new fCanvas();
 
 export default fCanvas;
-export { Animate, Camera, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, cancelAnimationFrame, changeSize, constrain, cutImage, draw, hypot, isMobile, isTouch, keyPressed, keyUp, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, off, passive, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, windowSize };
+export { Animate, Camera, CircleImpact, CircleImpactPoint, CircleImpactRect, Emitter, RectImpact, RectImpactPoint, Stament, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, cutImage, draw, hypot, isMobile, isTouch, keyPressed, keyUp, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, off, passive, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, windowSize };
