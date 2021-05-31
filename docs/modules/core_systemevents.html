@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>classes/Store | fcanvas</title>
+	<title>core/SystemEvents | fcanvas</title>
 	<meta name="description" content="Documentation for fcanvas">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">:root {
@@ -2704,8 +2704,44 @@ img {
 </header>
 <nav class="tsd-navigation secondary">
 	<ul>
-		<li class=" tsd-kind-class tsd-parent-kind-module">
-			<a href="../classes/classes_store.default.html" class="tsd-kind-icon">default</a>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="core_systemevents.html#bindevent" class="tsd-kind-icon">bind<wbr>Event</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="core_systemevents.html#changesize" class="tsd-kind-icon">change<wbr>Size</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="core_systemevents.html#draw" class="tsd-kind-icon">draw</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="core_systemevents.html#keypressed" class="tsd-kind-icon">key<wbr>Pressed</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="core_systemevents.html#keyup" class="tsd-kind-icon">key<wbr>Up</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="core_systemevents.html#mouseclicked" class="tsd-kind-icon">mouse<wbr>Clicked</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="core_systemevents.html#mousemoved" class="tsd-kind-icon">mouse<wbr>Moved</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="core_systemevents.html#mousepressed" class="tsd-kind-icon">mouse<wbr>Pressed</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="core_systemevents.html#mousewheel" class="tsd-kind-icon">mouse<wbr>Wheel</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="core_systemevents.html#setup" class="tsd-kind-icon">setup</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="core_systemevents.html#touchend" class="tsd-kind-icon">touch<wbr>End</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="core_systemevents.html#touchmove" class="tsd-kind-icon">touch<wbr>Move</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="core_systemevents.html#touchstart" class="tsd-kind-icon">touch<wbr>Start</a>
 		</li>
 	</ul>
 </nav>
@@ -2716,12 +2752,521 @@ img {
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
 					<section class="tsd-index-section ">
-						<h3>Classes</h3>
+						<h3>Functions</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/classes_store.default.html" class="tsd-kind-icon">default</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#bindevent" class="tsd-kind-icon">bind<wbr>Event</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#changesize" class="tsd-kind-icon">change<wbr>Size</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#draw" class="tsd-kind-icon">draw</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#keypressed" class="tsd-kind-icon">key<wbr>Pressed</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#keyup" class="tsd-kind-icon">key<wbr>Up</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#mouseclicked" class="tsd-kind-icon">mouse<wbr>Clicked</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#mousemoved" class="tsd-kind-icon">mouse<wbr>Moved</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#mousepressed" class="tsd-kind-icon">mouse<wbr>Pressed</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#mousewheel" class="tsd-kind-icon">mouse<wbr>Wheel</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#setup" class="tsd-kind-icon">setup</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#touchend" class="tsd-kind-icon">touch<wbr>End</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#touchmove" class="tsd-kind-icon">touch<wbr>Move</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#touchstart" class="tsd-kind-icon">touch<wbr>Start</a></li>
 						</ul>
 					</section>
 				</div>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Functions</h2>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="bindevent" class="tsd-anchor"></a>
+				<h3>bind<wbr>Event</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">bind<wbr>Event<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Element</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">typeof </span><span class="tsd-signature-type">globalThis</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/core/SystemEvents.ts:8</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>name: <span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li>
+								<h5>callback: <span class="tsd-signature-type">any</span></h5>
+							</li>
+							<li>
+								<h5>element: <span class="tsd-signature-type">Element</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">typeof </span><span class="tsd-signature-type">globalThis</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="changesize" class="tsd-anchor"></a>
+				<h3>change<wbr>Size</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">change<wbr>Size<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/core/SystemEvents.ts:111</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>callback: <a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a></h5>
+							</li>
+							<li>
+								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="draw" class="tsd-anchor"></a>
+				<h3>draw</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">draw<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span>, canvas<span class="tsd-signature-symbol">?: </span><a href="../classes/core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/core/SystemEvents.ts:71</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>callback: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h5>
+								<ul class="tsd-parameters">
+									<li class="tsd-parameter-signature">
+										<ul class="tsd-signatures tsd-kind-type-literal">
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+										</ul>
+										<ul class="tsd-descriptions">
+											<li class="tsd-description">
+												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> canvas: <a href="../classes/core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="keypressed" class="tsd-anchor"></a>
+				<h3>key<wbr>Pressed</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">key<wbr>Pressed<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/core/SystemEvents.ts:89</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>callback: <a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a></h5>
+							</li>
+							<li>
+								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="keyup" class="tsd-anchor"></a>
+				<h3>key<wbr>Up</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">key<wbr>Up<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/core/SystemEvents.ts:100</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>callback: <a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a></h5>
+							</li>
+							<li>
+								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="mouseclicked" class="tsd-anchor"></a>
+				<h3>mouse<wbr>Clicked</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">mouse<wbr>Clicked<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/core/SystemEvents.ts:144</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>callback: <a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a></h5>
+							</li>
+							<li>
+								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="mousemoved" class="tsd-anchor"></a>
+				<h3>mouse<wbr>Moved</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">mouse<wbr>Moved<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/core/SystemEvents.ts:155</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>callback: <a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a></h5>
+							</li>
+							<li>
+								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="mousepressed" class="tsd-anchor"></a>
+				<h3>mouse<wbr>Pressed</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">mouse<wbr>Pressed<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/core/SystemEvents.ts:133</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>callback: <a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a></h5>
+							</li>
+							<li>
+								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="mousewheel" class="tsd-anchor"></a>
+				<h3>mouse<wbr>Wheel</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">mouse<wbr>Wheel<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/core/SystemEvents.ts:122</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>callback: <a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a></h5>
+							</li>
+							<li>
+								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="setup" class="tsd-anchor"></a>
+				<h3>setup</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">setup<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/core/SystemEvents.ts:24</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>callback: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								<ul class="tsd-parameters">
+									<li class="tsd-parameter-signature">
+										<ul class="tsd-signatures tsd-kind-type-literal">
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+										</ul>
+										<ul class="tsd-descriptions">
+											<li class="tsd-description">
+												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="touchend" class="tsd-anchor"></a>
+				<h3>touch<wbr>End</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">touch<wbr>End<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/core/SystemEvents.ts:188</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>callback: <a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a></h5>
+							</li>
+							<li>
+								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="touchmove" class="tsd-anchor"></a>
+				<h3>touch<wbr>Move</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">touch<wbr>Move<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/core/SystemEvents.ts:177</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>callback: <a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a></h5>
+							</li>
+							<li>
+								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="touchstart" class="tsd-anchor"></a>
+				<h3>touch<wbr>Start</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">touch<wbr>Start<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/core/SystemEvents.ts:166</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>callback: <a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a></h5>
+							</li>
+							<li>
+								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
 			</section>
 		</section>
 		<footer class="with-border-bottom">

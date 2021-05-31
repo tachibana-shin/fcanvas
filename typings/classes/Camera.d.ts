@@ -149,14 +149,14 @@ declare class Camera {
      * @param {number=1} scale
      * @return {boolean}
      */
-    xBeforeViewBox(x: number, width?: number, scale?: number): boolean;
+    xBeforeViewBox(x: number, scale?: number): boolean;
     /**
      * @param {number} y
      * @param {number=0} height
      * @param {number=1} scale
      * @return {boolean}
      */
-    yBeforeViewBox(y: number, height?: number, scale?: number): boolean;
+    yBeforeViewBox(y: number, scale?: number): boolean;
     /**
      * @param {number} x
      * @param {number} y
@@ -166,6 +166,6 @@ declare class Camera {
      * @param {number=scaleX} scaleY
      * @return {boolean}
      */
-    beforeViewBox(x: number, y: number, width?: number, height?: number, scaleX?: number, scaleY?: number): boolean;
+    beforeViewBox(x: number, y: number, scaleX?: number, scaleY?: number): boolean;
 }
 export default Camera;

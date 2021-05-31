@@ -4,11 +4,15 @@ interface InfoFont {
     family: string;
     weight: string;
 }
+export interface noop {
+    (): void;
+}
 /**
  * @param {any} e
  * @return {any}
  */
-export declare const requestAnimationFrame: (((callback: FrameRequestCallback) => number) & typeof globalThis.requestAnimationFrame) | typeof globalThis.setTimeout;
+export declare const requestAnimationFrame: typeof globalThis.requestAnimationFrame | typeof globalThis.setTimeout;
+export declare const cancelAnimationFrame: typeof globalThis.cancelAnimationFrame | typeof globalThis.clearTimeout;
 export declare const isTouch: boolean;
 export declare const passive: boolean;
 /**
@@ -46,9 +50,11 @@ export declare function fontToArray(font: string): InfoFont;
  * @return {number}
  */
 export declare function AutoToPx(string: string | number | undefined, fi: number, fontSize?: number): number;
-export interface InfoTouch {
+export interface Offset {
     x: number;
     y: number;
+}
+export interface InfoTouch extends Offset {
     winX: number;
     winY: number;
     id: any;

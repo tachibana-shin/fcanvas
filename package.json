@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "0.0.5-b21",
+  "version": "0.0.5-b22",
   "main": "dist/fcanvas.js",
   "exports": {
     ".": {
@@ -44,7 +44,7 @@
     "build:rollup": "node build.js",
     "build": "npm run build:rollup && npm run docs",
     "prepare": "npm run build",
-    "docs": "typedoc src",
+    "docs": "typedoc --disableOutputCheck --theme minimal src",
     "push": "yarn publish && git add . && git commit -m . && git push"
   },
   "author": "Nguyen Thanh",

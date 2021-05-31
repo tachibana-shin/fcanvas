@@ -8,22 +8,30 @@ Object.defineProperty(exports, '__esModule', { value: true });
  */
 const requestAnimationFrame = window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
-    function (e) {
-        return setTimeout(e, 100 / 6);
+    function (callback) {
+        return setTimeout(callback, 100 / 6);
+    };
+const cancelAnimationFrame = window.cancelAnimationFrame ||
+    window.webkitCancelAnimationFrame ||
+    function (timeoutId) {
+        clearTimeout(timeoutId);
     };
 const isTouch = "ontouchstart" in window || "onmsgesturechange" in window;
 let supportPassive = false;
+function noop() { }
 try {
     let opts = Object.defineProperty({}, "passive", {
-        get: function () {
+        get() {
             supportPassive = true;
+            return false;
         },
     });
-    function noop() { }
     window.addEventListener("testPassive", noop, opts);
     window.removeEventListener("testPassive", noop, opts);
 }
-catch { }
+catch {
+    supportPassive = false;
+}
 const passive = supportPassive;
 const windowSize = {
     windowWidth: {
@@ -78,7 +86,7 @@ function AutoToPx(string, fi, fontSize) {
     if (typeof string === "string") {
         string = trim(string);
         const number = parseFloat(string);
-        const dp = (string.match(/[a-z%]+$/i) || [, "px"])[1];
+        const dp = string.match(/[a-z%]+$/i)?.[1] || "px";
         switch (dp) {
             case "px":
                 return number;
@@ -135,14 +143,12 @@ function getTouchInfo(element, touches) {
  * @return {boolean}
  */
 function isMobile() {
+    const agent = typeof navigator === "undefined"
+        ? ""
+        : navigator.userAgent || navigator.vendor;
     /// code from https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
-    let check = false;
-    (function (a) {
-        if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a) ||
-            /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4)))
-            check = true;
-    })(navigator.userAgent || navigator.vendor);
-    return check;
+    return (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(agent) ||
+        /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw-(n|u)|c55\/|capi|ccwa|cdm-|cell|chtm|cldc|cmd-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc-s|devi|dica|dmob|do(c|p)o|ds(12|-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(-|_)|g1 u|g560|gene|gf-5|g-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd-(m|p|t)|hei-|hi(pt|ta)|hp( i|ip)|hs-c|ht(c(-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i-(20|go|ma)|i230|iac( |-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|-[a-w])|libw|lynx|m1-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|-([1-8]|c))|phil|pire|pl(ay|uc)|pn-2|po(ck|rt|se)|prox|psio|pt-g|qa-a|qc(07|12|21|32|60|-[2-7]|i-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h-|oo|p-)|sdk\/|se(c(-|0|1)|47|mc|nd|ri)|sgh-|shar|sie(-|m)|sk-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h-|v-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl-|tdg-|tel(i|m)|tim-|t-mo|to(pl|sh)|ts(70|m-|m3|m5)|tx-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas-|your|zeto|zte-/i.test(agent.substr(0, 4)));
 }
 /**
  * @param {number|string|boolean} value
@@ -337,35 +343,6 @@ class Store {
      */
     $watch(key, callback) {
         return this.__emitter.on(key, callback);
-    }
-}
-
-class Stament {
-    constructor() {
-        this.__store = new Store();
-    }
-    /**
-     * @param {string} name
-     * @param {CallbackEvent} callback
-     * @return {void}
-     */
-    on(name, callback) {
-        if (this.__store[name]) {
-            callback();
-        }
-        else {
-            const watcher = this.__store.$watch(name, () => {
-                callback();
-                watcher();
-            });
-        }
-    }
-    /**
-     * @param {string} name
-     * @return {void}
-     */
-    emit(name) {
-        this.__store.$set(this.__store, name, true);
     }
 }
 
@@ -1552,7 +1529,7 @@ class Camera {
      * @param {number=1} scale
      * @return {boolean}
      */
-    xBeforeViewBox(x, width = 0, scale = 1) {
+    xBeforeViewBox(x, scale = 1) {
         x = this.followX(x, scale);
         if (this.viewBox.mx + this.viewBox.width <= x) {
             return true;
@@ -1565,7 +1542,7 @@ class Camera {
      * @param {number=1} scale
      * @return {boolean}
      */
-    yBeforeViewBox(y, height = 0, scale = 1) {
+    yBeforeViewBox(y, scale = 1) {
         y = this.followY(y, scale);
         if (this.viewBox.my + this.viewBox.height <= y) {
             return true;
@@ -1581,8 +1558,37 @@ class Camera {
      * @param {number=scaleX} scaleY
      * @return {boolean}
      */
-    beforeViewBox(x, y, width = 0, height = 0, scaleX = 1, scaleY = scaleX) {
-        return (this.xBeforeViewBox(x, width, scaleX) && this.yBeforeViewBox(y, height, scaleY));
+    beforeViewBox(x, y, scaleX = 1, scaleY = scaleX) {
+        return (this.xBeforeViewBox(x, scaleX) && this.yBeforeViewBox(y, scaleY));
+    }
+}
+
+class Stament {
+    constructor() {
+        this.__store = new Store();
+    }
+    /**
+     * @param {string} name
+     * @param {CallbackEvent} callback
+     * @return {void}
+     */
+    on(name, callback) {
+        if (this.__store[name]) {
+            callback();
+        }
+        else {
+            const watcher = this.__store.$watch(name, () => {
+                callback();
+                watcher();
+            });
+        }
+    }
+    /**
+     * @param {string} name
+     * @return {void}
+     */
+    emit(name) {
+        this.__store.$set(this.__store, name, true);
     }
 }
 
@@ -2458,6 +2464,74 @@ class Point3D extends MyElement {
             this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
     }
 }
+
+let inited = false;
+const emitter = new Emitter();
+function bindEvent(name, callback, element) {
+    element.addEventListener(name, callback);
+    return () => {
+        element.removeEventListener(name, callback);
+    };
+}
+/**
+ * @param {any} document.readyState==="complete"
+ * @return {any}
+ */
+async function setup(callback) {
+    if (document.readyState === "complete") {
+        //// readyState === "complete"
+        const ret = callback();
+        if (ret && "length" in ret) {
+            await ret;
+        }
+        inited = true;
+        emitter.emit("load");
+    }
+    else {
+        await new Promise((resolve) => {
+            function load() {
+                document.removeEventListener("DOMContentLoaded", load);
+                window.removeEventListener("load", load);
+                callback();
+                resolve();
+                inited = true;
+                emitter.emit("load");
+            }
+            document.addEventListener("DOMContentLoaded", load);
+            window.addEventListener("load", load);
+        });
+    }
+}
+function __draw(callback, canvas) {
+    if (canvas.acceptClear === true) {
+        canvas.clear();
+    }
+    callback();
+    if (canvas.acceptLoop === true) {
+        requestAnimationFrame(() => __draw(callback, canvas));
+    }
+}
+/**
+ * @param {Function} callback
+ * @param {fCanvas} canvas?
+ * @return {void}
+ */
+function draw(callback, canvas) {
+    if (inited) {
+        if (!canvas) {
+            void callback();
+        }
+        else {
+            void __draw(callback, canvas);
+        }
+    }
+    else {
+        emitter.once("load", () => {
+            draw(callback, canvas);
+        });
+    }
+}
+
 class fCanvas {
     /**
      * @return {any}
@@ -3192,7 +3266,7 @@ class fCanvas {
     noLoop() {
         this._ENV.loop = false;
         if (this.__idFrame) {
-            (cancelAnimationFrame || webkitCancelAnimationFrame || clearTimeout)(this.__idFrame);
+            cancelAnimationFrame(this.__idFrame);
         }
     }
     /**
@@ -3272,152 +3346,6 @@ fCanvas.CircleElement = CircleElement;
 fCanvas.Point3D = Point3D;
 fCanvas.count = 0;
 const noopFCanvas = new fCanvas();
-function bindEvent(name, callback, element) {
-    element.addEventListener(name, callback);
-    return () => {
-        element.removeEventListener(name, callback);
-    };
-}
-let inited = false;
-const emitter = new Emitter();
-/**
- * @param {any} document.readyState==="complete"
- * @return {any}
- */
-async function setup(callback) {
-    if (document.readyState === "complete") {
-        //// readyState === "complete"
-        const ret = callback();
-        if (ret && "length" in ret) {
-            await ret;
-        }
-        inited = true;
-        emitter.emit("load");
-    }
-    else {
-        await new Promise((resolve, reject) => {
-            function load() {
-                document.removeEventListener("DOMContentLoaded", load);
-                window.removeEventListener("load", load);
-                callback();
-                resolve();
-                inited = true;
-                emitter.emit("load");
-            }
-            document.addEventListener("DOMContentLoaded", load);
-            window.addEventListener("load", load);
-        });
-    }
-}
-function __draw(callback, canvas) {
-    if (canvas.acceptClear === true) {
-        canvas.clear();
-    }
-    callback();
-    if (canvas.acceptLoop === true) {
-        requestAnimationFrame(() => __draw(callback, canvas));
-    }
-}
-/**
- * @param {Function} callback
- * @param {fCanvas} canvas?
- * @return {void}
- */
-function draw(callback, canvas) {
-    if (inited) {
-        if (!canvas) {
-            void callback();
-        }
-        else {
-            void __draw(callback, canvas);
-        }
-    }
-    else {
-        emitter.once("load", () => {
-            draw(callback, canvas);
-        });
-    }
-}
-/**
- * @param {CallbackEvent} callback
- * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
- */
-function keyPressed(callback, element = window) {
-    return bindEvent("keydown", callback, element);
-}
-/**
- * @param {CallbackEvent} callback
- * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
- */
-function keyUp(callback, element = window) {
-    return bindEvent("keyup", callback, element);
-}
-/**
- * @param {CallbackEvent} callback
- * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
- */
-function changeSize(callback, element = window) {
-    return bindEvent("resize", callback, element);
-}
-/**
- * @param {CallbackEvent} callback
- * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
- */
-function mouseWheel(callback, element = window) {
-    return bindEvent("wheel", callback, element);
-}
-/**
- * @param {CallbackEvent} callback
- * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
- */
-function mousePressed(callback, element = window) {
-    return bindEvent("mousedown", callback, element);
-}
-/**
- * @param {CallbackEvent} callback
- * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
- */
-function mouseClicked(callback, element = window) {
-    return bindEvent("click", callback, element);
-}
-/**
- * @param {CallbackEvent} callback
- * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
- */
-function mouseMoved(callback, element = window) {
-    return bindEvent("mousemove", callback, element);
-}
-/**
- * @param {CallbackEvent} callback
- * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
- */
-function touchStart(callback, element = window) {
-    return bindEvent("touchstart", callback, element);
-}
-/**
- * @param {CallbackEvent} callback
- * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
- */
-function touchMove(callback, element = window) {
-    return bindEvent("touchmove", callback, element);
-}
-/**
- * @param {CallbackEvent} callback
- * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
- */
-function touchEnd(callback, element = window) {
-    return bindEvent("touchend", callback, element);
-}
 
 exports.Animate = Animate;
 exports.Camera = Camera;
@@ -3430,25 +3358,18 @@ exports.RectImpactPoint = RectImpactPoint;
 exports.Stament = Stament;
 exports.Store = Store;
 exports.Vector = Vector;
-exports.changeSize = changeSize;
+exports.cancelAnimationFrame = cancelAnimationFrame;
 exports.constrain = constrain;
 exports.cutImage = cutImage;
 exports.default = fCanvas;
-exports.draw = draw;
 exports.hypot = hypot;
 exports.isMobile = isMobile;
 exports.isTouch = isTouch;
-exports.keyPressed = keyPressed;
-exports.keyUp = keyUp;
 exports.lerp = lerp;
 exports.loadAudio = loadAudio;
 exports.loadImage = loadImage;
 exports.loadResourceImage = loadResourceImage;
 exports.map = map;
-exports.mouseClicked = mouseClicked;
-exports.mouseMoved = mouseMoved;
-exports.mousePressed = mousePressed;
-exports.mouseWheel = mouseWheel;
 exports.odd = odd;
 exports.off = off;
 exports.passive = passive;
@@ -3456,8 +3377,4 @@ exports.random = random;
 exports.randomInt = randomInt;
 exports.range = range;
 exports.requestAnimationFrame = requestAnimationFrame;
-exports.setup = setup;
-exports.touchEnd = touchEnd;
-exports.touchMove = touchMove;
-exports.touchStart = touchStart;
 exports.windowSize = windowSize;

@@ -451,7 +451,7 @@ class Camera {
    * @param {number=1} scale
    * @return {boolean}
    */
-  xBeforeViewBox(x: number, width: number = 0, scale: number = 1): boolean {
+  xBeforeViewBox(x: number, scale: number = 1): boolean {
     x = this.followX(x, scale);
 
     if (
@@ -468,7 +468,7 @@ class Camera {
    * @param {number=1} scale
    * @return {boolean}
    */
-  yBeforeViewBox(y: number, height: number = 0, scale: number = 1): boolean {
+  yBeforeViewBox(y: number, scale: number = 1): boolean {
     y = this.followY(y, scale);
 
     if (
@@ -491,13 +491,11 @@ class Camera {
   beforeViewBox(
     x: number,
     y: number,
-    width: number = 0,
-    height: number = 0,
     scaleX: number = 1,
     scaleY: number = scaleX
   ): boolean {
     return (
-      this.xBeforeViewBox(x, width, scaleX) && this.yBeforeViewBox(y, height, scaleY)
+      this.xBeforeViewBox(x, scaleX) && this.yBeforeViewBox(y, scaleY)
     );
   }
 }
