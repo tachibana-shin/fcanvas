@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "0.0.5-b22",
+  "version": "0.0.5-b23",
   "main": "dist/fcanvas.js",
   "exports": {
     ".": {
@@ -16,7 +16,7 @@
   "typings": "typings/index.d.ts",
   "files": [
     "dist",
-    "typings/index.d.ts"
+    "typings"
   ],
   "license": "MIT",
   "devDependencies": {
