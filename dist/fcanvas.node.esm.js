@@ -152,7 +152,9 @@ function extractNumber(value) {
 }
 
 class Emitter {
-    __events = {};
+    constructor() {
+        this.__events = {};
+    }
     /**
      * @param {any} typeofcallback==="function"
      * @return {any}
@@ -298,12 +300,12 @@ function reactiveDefine(value, callback, parent = []) {
     }
 }
 class Store {
-    __emitter = new Emitter();
     /**
      * @param {Object} store?
      * @return {any}
      */
     constructor(store) {
+        this.__emitter = new Emitter();
         for (const key in store) {
             this[key] = store[key];
         }
@@ -335,7 +337,9 @@ class Store {
 }
 
 class Stament {
-    __store = new Store();
+    constructor() {
+        this.__store = new Store();
+    }
     /**
      * @param {string} name
      * @param {CallbackEvent} callback
@@ -361,7 +365,7 @@ class Stament {
     }
 }
 
-function calculateRemainder2D(vector, xComponent, yComponent) {
+function calculateRemainder2D(xComponent, yComponent, vector) {
     if (xComponent !== 0) {
         vector.x = vector.x % xComponent;
     }
@@ -370,7 +374,7 @@ function calculateRemainder2D(vector, xComponent, yComponent) {
     }
     return vector;
 }
-function calculateRemainder3D(vector, xComponent, yComponent, zComponent) {
+function calculateRemainder3D(xComponent, yComponent, zComponent, vector) {
     if (xComponent !== 0) {
         vector.x = vector.x % xComponent;
     }
@@ -383,25 +387,24 @@ function calculateRemainder3D(vector, xComponent, yComponent, zComponent) {
     return vector;
 }
 class Vector {
-    x;
-    y;
-    z;
     /**
-     * @param {number=0} x
-     * @param {number=0} y
-     * @param {number=0} z
-     * @return {any}
+     * Creates an instance of Vector.
+     * @param {number} [x=0]
+     * @param {number} [y=0]
+     * @param {number} [z=0]
+     * @memberof Vector
      */
     constructor(x = 0, y = 0, z = 0) {
         [this.x, this.y, this.z] = [x, y, z];
     }
     /**
-     * @param {Vector|[number?} x?
-     * @param {any} number?
-     * @param {any} number?]|number
-     * @param {number} y?
-     * @param {number} z?
-     * @return {this}
+     *
+     *
+     * @param {(Vector | [number?, number?, number?] | number)} x
+     * @param {number} [y]
+     * @param {number} [z]
+     * @return {*}  {this}
+     * @memberof Vector
      */
     set(x, y, z) {
         if (x instanceof Vector) {
@@ -422,18 +425,22 @@ class Vector {
         return this;
     }
     /**
-     * @return {Vector}
+     *
+     *
+     * @return {*}  {Vector}
+     * @memberof Vector
      */
     copy() {
         return new Vector(this.x, this.y, this.z);
     }
     /**
-     * @param {Vector|[number?} x?
-     * @param {any} number?
-     * @param {any} number?]|number
-     * @param {number} y?
-     * @param {number} z?
-     * @return {this}
+     *
+     *
+     * @param {(Vector | [number?, number?, number?] | number)} x
+     * @param {number} [y]
+     * @param {number} [z]
+     * @return {*}  {this}
+     * @memberof Vector
      */
     add(x, y, z) {
         if (x instanceof Vector) {
@@ -454,22 +461,17 @@ class Vector {
         return this;
     }
     /**
-     * @param {Vector|[number} x?
-     * @param {any} number
-     * @param {any} number?]|number
-     * @param {number} y?
-     * @param {number} z?
-     * @return {any}
+     *
+     *
+     * @param {(Vector | [number, number?, number?])} x
+     * @memberof Vector
      */
-    rem(x, y, z) {
+    rem(x) {
         if (x instanceof Vector) {
             if (Number.isFinite(x.x) &&
                 Number.isFinite(x.y) &&
                 Number.isFinite(x.z)) {
-                var xComponent = parseFloat(x.x + "");
-                var yComponent = parseFloat(x.y + "");
-                var zComponent = parseFloat(x.z + "");
-                calculateRemainder3D(this, xComponent, yComponent, zComponent);
+                calculateRemainder3D(x.x, x.y, x.z, this);
             }
         }
         else if (x instanceof Array) {
@@ -477,10 +479,10 @@ class Vector {
                 return Number.isFinite(element);
             })) {
                 if (x.length === 2) {
-                    calculateRemainder2D(this, x[0], x[1]);
+                    calculateRemainder2D(x[0], x[1], this);
                 }
                 if (x.length === 3) {
-                    calculateRemainder3D(this, x[0], x[1], x[2] || 0);
+                    calculateRemainder3D(x[0], x[1], x[2], this);
                 }
             }
         }
@@ -489,16 +491,15 @@ class Vector {
                 this.x = this.x % arguments[0];
                 this.y = this.y % arguments[0];
                 this.z = this.z % arguments[0];
-                return this;
             }
         }
         else if (arguments.length === 2) {
-            var vectorComponents = [].slice.call(arguments);
+            const vectorComponents = [].slice.call(arguments);
             if (vectorComponents.every(function (element) {
                 return Number.isFinite(element);
             })) {
                 if (vectorComponents.length === 2) {
-                    calculateRemainder2D(this, vectorComponents[0], vectorComponents[1]);
+                    calculateRemainder2D(vectorComponents[0], vectorComponents[1], this);
                 }
             }
         }
@@ -508,18 +509,19 @@ class Vector {
                 return Number.isFinite(element);
             })) {
                 if (_vectorComponents.length === 3) {
-                    calculateRemainder3D(this, _vectorComponents[0], _vectorComponents[1], _vectorComponents[2]);
+                    calculateRemainder3D(_vectorComponents[0], _vectorComponents[1], _vectorComponents[2], this);
                 }
             }
         }
     }
     /**
-     * @param {Vector|[number?} x?
-     * @param {any} number?
-     * @param {any} number?]|number
-     * @param {number} y?
-     * @param {number} z?
-     * @return {this}
+     *
+     *
+     * @param {(Vector | [number?, number?, number?] | number)} x
+     * @param {number} [y]
+     * @param {number} [z]
+     * @return {*}  {this}
+     * @memberof Vector
      */
     sub(x, y, z) {
         if (x instanceof Vector) {
@@ -540,8 +542,11 @@ class Vector {
         return this;
     }
     /**
+     *
+     *
      * @param {number} n
-     * @return {this}
+     * @return {*}  {this}
+     * @memberof Vector
      */
     mult(n) {
         this.x *= n;
@@ -550,8 +555,11 @@ class Vector {
         return this;
     }
     /**
+     *
+     *
      * @param {number} n
-     * @return {this}
+     * @return {*}  {this}
+     * @memberof Vector
      */
     div(n) {
         if (n === 0) {
@@ -564,23 +572,32 @@ class Vector {
         return this;
     }
     /**
-     * @return {number}
+     *
+     *
+     * @return {*}  {number}
+     * @memberof Vector
      */
     mag() {
         return Math.sqrt(this.magSq());
     }
     /**
-     * @return {number}
+     *
+     *
+     * @return {*}  {number}
+     * @memberof Vector
      */
     magSq() {
         const { x, y, z } = this;
         return x * x + y * y + z * z;
     }
     /**
-     * @param {Vector|number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {number}
+     *
+     *
+     * @param {(number | Vector)} [x]
+     * @param {number} [y]
+     * @param {number} [z]
+     * @return {*}  {number}
+     * @memberof Vector
      */
     dot(x, y, z) {
         if (x instanceof Vector) {
@@ -589,111 +606,139 @@ class Vector {
         return this.x * (x || 0) + this.y * (y || 0) + this.z * (z || 0);
     }
     /**
-     * @param {Vector|{x:number;y:number;z:number}} v
-     * @return {Vector}
+     *
+     *
+     * @param {Vector} v
+     * @return {*}  {Vector}
+     * @memberof Vector
      */
     cross(v) {
-        var x = this.y * v.z - this.z * v.y;
-        var y = this.z * v.x - this.x * v.z;
-        var z = this.x * v.y - this.y * v.x;
-        return new Vector(x, y, z);
+        return new Vector(this.y * v.z - this.z * v.y, this.z * v.x - this.x * v.z, this.x * v.y - this.y * v.x);
     }
     /**
-     * @return {this}
+     *
+     *
+     * @return {*}  {this}
+     * @memberof Vector
      */
     normalize() {
         const len = this.mag();
-        if (len !== 0)
+        if (len !== 0) {
             this.mult(1 / len);
+        }
         return this;
     }
     /**
+     *
+     *
      * @param {number} max
-     * @return {this}
+     * @return {*}  {this}
+     * @memberof Vector
      */
     limit(max) {
         const mSq = this.magSq();
-        if (mSq > max * max) {
+        if (mSq > max ** 2) {
             this.div(Math.sqrt(mSq)) //normalize it
                 .mult(max);
         }
         return this;
     }
     /**
+     *
+     *
      * @param {number} n
-     * @return {this}
+     * @return {*}  {this}
+     * @memberof Vector
      */
     setMag(n) {
         return this.normalize().mult(n);
     }
     /**
-     * @return {number}
+     *
+     *
+     * @return {*}  {number}
+     * @memberof Vector
      */
     heading() {
         return Math.atan2(this.y, this.x);
     }
     /**
-     * @param {number} a
-     * @return {this}
+     *
+     *
+     * @param {number} angle
+     * @return {*}  {this}
+     * @memberof Vector
      */
-    rotate(a) {
-        var newHeading = this.heading() + a;
-        var mag = this.mag();
+    rotate(angle) {
+        const newHeading = this.heading() + angle;
+        const mag = this.mag();
         this.x = Math.cos(newHeading) * mag;
         this.y = Math.sin(newHeading) * mag;
         return this;
     }
     /**
-     * @param {Vector} v
-     * @return {number}
+     *
+     *
+     * @param {Vector} vector
+     * @return {*}  {number}
+     * @memberof Vector
      */
-    angleBetween(v) {
-        var dotmagmag = this.dot(v) / (this.mag() * v.mag());
-        var angle;
-        angle = Math.acos(Math.min(1, Math.max(-1, dotmagmag)));
-        angle = angle * Math.sign(this.cross(v).z || 1);
+    angleBetween(vector) {
+        const dotmagmag = this.dot(vector) / (this.mag() * vector.mag());
+        const angle = Math.acos(Math.min(1, Math.max(-1, dotmagmag))) *
+            Math.sign(this.cross(vector).z || 1);
         return angle;
     }
     /**
-     * @param {Vector|number} x
-     * @param {number} y?
-     * @param {number} z?
-     * @param {number=1} amt
-     * @return {this}
+     *
+     *
+     * @param {(Vector | number)} [x=0]
+     * @param {number} [y=0]
+     * @param {number} [z=0]
+     * @param {number} [amt=0]
+     * @return {*}  {this}
+     * @memberof Vector
      */
-    lerp(x, y, z, amt = 1) {
+    lerp(x = 0, y = 0, z = 0, amt = 0) {
         if (x instanceof Vector) {
-            return this.lerp(x.x, x.y, x.z, y || 0);
+            return this.lerp(x.x, x.y, x.z, y);
         }
         this.x += (x - this.x) * amt || 0;
-        this.y += (y || 0 - this.y) * amt || 0;
-        this.z += (z || 0 - this.z) * amt || 0;
+        this.y += (y - this.y) * amt || 0;
+        this.z += (z - this.z) * amt || 0;
         return this;
     }
     /**
+     *
+     *
      * @param {Vector} surfaceNormal
-     * @return {this}
+     * @return {*}  {this}
+     * @memberof Vector
      */
     reflect(surfaceNormal) {
         surfaceNormal.normalize();
         return this.sub(surfaceNormal.mult(2 * this.dot(surfaceNormal)));
     }
     /**
-     * @return {[number, number, number]}
+     *
+     *
+     * @return {*}  {[number, number, number]}
+     * @memberof Vector
      */
     array() {
         return [this.x || 0, this.y || 0, this.z || 0];
     }
     /**
-     * @param {Vector|[number} x
-     * @param {any} number
-     * @param {any} number]|number
-     * @param {number} y?
-     * @param {number} z?
-     * @return {boolean}
+     *
+     *
+     * @param {(Vector | [number?, number?, number?] | number)} [x]
+     * @param {number} [y]
+     * @param {number} [z]
+     * @return {*}  {boolean}
+     * @memberof Vector
      */
     equals(x, y, z) {
-        var a, b, c;
+        let a, b, c;
         if (x instanceof Vector) {
             a = x.x || 0;
             b = x.y || 0;
@@ -712,7 +757,10 @@ class Vector {
         return this.x === a && this.y === b && this.z === c;
     }
     /**
-     * @return {string}
+     *
+     *
+     * @return {*}  {string}
+     * @memberof Vector
      */
     toString() {
         return "Vector: [" + this.array().join(", ") + "]";
@@ -1080,6 +1128,24 @@ function getValueInFrame(type, start, stop, frame, frames, power = 3) {
 }
 class Animate {
     /**
+     * @param {AnimateConfig={time:0}} config
+     * @return {any}
+     */
+    constructor(config = { time: 0 }) {
+        this.event = new Emitter();
+        this._frame = 1;
+        this.type = "linear";
+        this.time = 0;
+        this.fps = 1000 / 60;
+        this.xFrom = 0;
+        this.xTo = 0;
+        this.yFrom = 0;
+        this.yTo = 0;
+        this.zFrom = 0;
+        this.zTo = 0;
+        this.config(config);
+    }
+    /**
      * Get frames from time
      * @param {number} time
      * @param {number=1000/60} fps
@@ -1088,18 +1154,6 @@ class Animate {
     static getFrames(time, fps = 1000 / 60) {
         return time / fps; /// time * 1 / fps
     }
-    static getValueInFrame = getValueInFrame;
-    event = new Emitter();
-    _frame = 1;
-    type = "linear";
-    time = 0;
-    fps = 1000 / 60;
-    xFrom = 0;
-    xTo = 0;
-    yFrom = 0;
-    yTo = 0;
-    zFrom = 0;
-    zTo = 0;
     /**
      * @return {number}
      */
@@ -1151,13 +1205,6 @@ class Animate {
      */
     get done() {
         return this.frame === this.frames;
-    }
-    /**
-     * @param {AnimateConfig={time:0}} config
-     * @return {any}
-     */
-    constructor(config = { time: 0 }) {
-        this.config(config);
     }
     /**
      * @param {any} {xFrom=0
@@ -1258,20 +1305,111 @@ class Animate {
         });
     }
 }
+Animate.getValueInFrame = getValueInFrame;
 
 class Camera {
-    viewport = {
-        width: 0,
-        height: 0,
-    }; /// view port 100% frame
-    viewBox = {
-        mx: 0,
-        my: 0,
-        width: 0,
-        height: 0,
-    }; /// view box for full canvas
-    _cx = 0; /// x camera
-    _cy = 0; /// y camera
+    /**
+     * @param {number} width?
+     * @param {number} height?
+     * @param {number} x?
+     * @param {number} y?
+     * @param {number} vWidth?
+     * @param {number} vHeight?
+     * @param {number|false} cix?
+     * @param {number} ciy?
+     * @param {number} cwidth?
+     * @param {number} cheight?
+     * @return {any}
+     */
+    constructor(width, height, x, y, vWidth, vHeight, cix, ciy, cwidth, cheight) {
+        this.viewport = {
+            width: 0,
+            height: 0,
+        }; /// view port 100% frame
+        this.viewBox = {
+            mx: 0,
+            my: 0,
+            width: 0,
+            height: 0,
+        }; /// view box for full canvas
+        this._cx = 0; /// x camera
+        this._cy = 0; /// y camera
+        this.cursor = {
+            __camera: this,
+            use: true,
+            idealX: 0,
+            idealY: 0,
+            idealRX: 0,
+            offsetTop: 0,
+            offsetRight: 0,
+            offsetBottom: 0,
+            offsetLeft: 0,
+            width: 0,
+            height: 0,
+            get x() {
+                if (this.__camera._cx < -this.__camera.viewBox.mx) {
+                    const dx = -this.__camera.viewBox.mx - this.__camera._cx;
+                    return this.idealX - dx;
+                }
+                if (this.__camera._cx >
+                    this.__camera.viewport.width - this.__camera.viewBox.width) {
+                    const dx = this.__camera.viewport.width -
+                        this.__camera.viewBox.width -
+                        this.__camera._cx;
+                    return this.idealX - dx;
+                }
+                return this.idealX;
+            },
+            set x(x) {
+                if (x < this.idealX) {
+                    this.__camera._cx = x - this.idealX - this.__camera.viewBox.mx;
+                }
+                if (x > this.idealX + this.idealRX) {
+                    this.__camera._cx =
+                        x -
+                            this.idealX +
+                            this.__camera.viewport.width -
+                            this.__camera.viewBox.width -
+                            this.width;
+                }
+            },
+            get y() {
+                if (this.__camera._cy < -this.__camera.viewBox.my) {
+                    const dy = -this.__camera.viewBox.my - this.__camera._cy;
+                    return this.idealY - dy;
+                }
+                if (this.__camera._cy >
+                    this.__camera.viewport.height - this.__camera.viewBox.height) {
+                    const dy = this.__camera.viewport.height -
+                        this.__camera.viewBox.height -
+                        this.__camera._cy;
+                    return this.idealY - dy;
+                }
+                return this.idealY;
+            },
+            set y(y) {
+                if (y < this.idealY) {
+                    this.__camera._cy = y - this.idealY - this.__camera.viewBox.my;
+                }
+                if (y > this.idealY) {
+                    this.__camera._cy =
+                        y -
+                            this.idealY +
+                            this.__camera.viewport.height -
+                            this.__camera.viewBox.height -
+                            this.height;
+                }
+            },
+        };
+        this.setViewport(width || 0, height || 0);
+        this.setViewBox(x || 0, y || 0, vWidth || 0, vHeight || 0);
+        if (cix === false) {
+            this.setCursor(false);
+        }
+        else {
+            this.setCursor(cix, ciy, cwidth, cheight);
+        }
+    }
     get cx() {
         return this._cx;
     }
@@ -1298,96 +1436,6 @@ class Camera {
         }
         else {
             this._cy = constrain(y, -this.viewBox.my, this.viewport.height - this.viewBox.height);
-        }
-    }
-    cursor = {
-        __camera: this,
-        use: true,
-        idealX: 0,
-        idealY: 0,
-        idealRX: 0,
-        offsetTop: 0,
-        offsetRight: 0,
-        offsetBottom: 0,
-        offsetLeft: 0,
-        width: 0,
-        height: 0,
-        get x() {
-            if (this.__camera._cx < -this.__camera.viewBox.mx) {
-                const dx = -this.__camera.viewBox.mx - this.__camera._cx;
-                return this.idealX - dx;
-            }
-            if (this.__camera._cx >
-                this.__camera.viewport.width - this.__camera.viewBox.width) {
-                const dx = this.__camera.viewport.width -
-                    this.__camera.viewBox.width -
-                    this.__camera._cx;
-                return this.idealX - dx;
-            }
-            return this.idealX;
-        },
-        set x(x) {
-            if (x < this.idealX) {
-                this.__camera._cx = x - this.idealX - this.__camera.viewBox.mx;
-            }
-            if (x > this.idealX + this.idealRX) {
-                this.__camera._cx =
-                    x -
-                        this.idealX +
-                        this.__camera.viewport.width -
-                        this.__camera.viewBox.width -
-                        this.width;
-            }
-        },
-        get y() {
-            if (this.__camera._cy < -this.__camera.viewBox.my) {
-                const dy = -this.__camera.viewBox.my - this.__camera._cy;
-                return this.idealY - dy;
-            }
-            if (this.__camera._cy >
-                this.__camera.viewport.height - this.__camera.viewBox.height) {
-                const dy = this.__camera.viewport.height -
-                    this.__camera.viewBox.height -
-                    this.__camera._cy;
-                return this.idealY - dy;
-            }
-            return this.idealY;
-        },
-        set y(y) {
-            if (y < this.idealY) {
-                this.__camera._cy = y - this.idealY - this.__camera.viewBox.my;
-            }
-            if (y > this.idealY) {
-                this.__camera._cy =
-                    y -
-                        this.idealY +
-                        this.__camera.viewport.height -
-                        this.__camera.viewBox.height -
-                        this.height;
-            }
-        },
-    };
-    /**
-     * @param {number} width?
-     * @param {number} height?
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} vWidth?
-     * @param {number} vHeight?
-     * @param {number|false} cix?
-     * @param {number} ciy?
-     * @param {number} cwidth?
-     * @param {number} cheight?
-     * @return {any}
-     */
-    constructor(width, height, x, y, vWidth, vHeight, cix, ciy, cwidth, cheight) {
-        this.setViewport(width || 0, height || 0);
-        this.setViewBox(x || 0, y || 0, vWidth || 0, vHeight || 0);
-        if (cix === false) {
-            this.setCursor(false);
-        }
-        else {
-            this.setCursor(cix, ciy, cwidth, cheight);
         }
     }
     /**
@@ -1654,10 +1702,8 @@ function resolvePath(...params) {
     return params.join("/");
 }
 class ResourceTile {
-    image;
-    plist;
-    __caching = {};
     constructor(image, plist) {
+        this.__caching = {};
         this.image = image;
         this.plist = plist;
     }
@@ -1716,28 +1762,24 @@ async function loadResourceImage(path) {
 }
 
 class MyElement {
-    update;
-    draw;
-    setup; //// If you don't like the constructor you can use setup() instead
-    setupAnimate;
-    __autodraw = true;
-    _els = {};
-    _idActiveNow = -1;
-    _queue = [];
-    __addEl(canvas) {
-        if (canvas.id in this._els === false) {
-            this._els[canvas.id] = canvas;
-        }
-    }
     /**
      * @param {fCanvas} canvas?
      * @return {any}
      */
     constructor(canvas) {
+        this.__autodraw = true;
+        this._els = {};
+        this._idActiveNow = -1;
+        this._queue = [];
         if (canvas?.constructor !== fCanvas) {
             canvas = noopFCanvas;
         }
         this.__addEl(canvas);
+    }
+    __addEl(canvas) {
+        if (canvas.id in this._els === false) {
+            this._els[canvas.id] = canvas;
+        }
     }
     /**
      * @return {HTMLCanvasElement}
@@ -2358,20 +2400,15 @@ class MyElement {
     }
 }
 class EAnimate extends MyElement {
-    animate = new Animate();
     constructor(animate) {
         super();
+        this.animate = new Animate();
         if (animate) {
             this.animate.config(animate);
         }
     }
 }
 class RectElement extends MyElement {
-    type = "rect";
-    x = 0;
-    y = 0;
-    width = 0;
-    height = 0;
     /**
      * @param {number} x
      * @param {number} y
@@ -2381,6 +2418,11 @@ class RectElement extends MyElement {
      */
     constructor(x, y, width, height) {
         super();
+        this.type = "rect";
+        this.x = 0;
+        this.y = 0;
+        this.width = 0;
+        this.height = 0;
         [this.x, this.y, this.width, this.height] = [
             x || 0,
             y || 0,
@@ -2396,10 +2438,6 @@ class RectElement extends MyElement {
     }
 }
 class CircleElement extends MyElement {
-    type = "circle";
-    x = 0;
-    y = 0;
-    radius = 0;
     /**
      * Describe your function
      * @param {number} x
@@ -2409,6 +2447,10 @@ class CircleElement extends MyElement {
      */
     constructor(x, y, radius) {
         super();
+        this.type = "circle";
+        this.x = 0;
+        this.y = 0;
+        this.radius = 0;
         [this.x, this.y, this.radius] = [x || 0, y || 0, radius || 0];
     }
     /**
@@ -2419,9 +2461,6 @@ class CircleElement extends MyElement {
     }
 }
 class Point3D extends MyElement {
-    x = 0;
-    y = 0;
-    z = 0;
     /**
      * @param {number} x?
      * @param {number} y?
@@ -2430,6 +2469,12 @@ class Point3D extends MyElement {
      */
     constructor(x, y, z) {
         super();
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        this.draw = () => {
+            this.point(this.x, this.y);
+        };
         [this.x, this.y, this.z] = [x || 0, y || 0, z || 0];
     }
     /**
@@ -2462,52 +2507,67 @@ class Point3D extends MyElement {
         this.y =
             this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
     }
-    draw = () => {
-        this.point(this.x, this.y);
-    };
 }
 class fCanvas {
-    static Element = MyElement;
-    static EAnimate = EAnimate;
-    static RectElement = RectElement;
-    static CircleElement = CircleElement;
-    static Point3D = Point3D;
-    static count = 0;
-    _ENV = {
-        angleMode: "degress",
-        rectAlign: "left",
-        rectBaseline: "top",
-        colorMode: "rgb",
-        rotate: 0,
-        clear: true,
-        loop: true,
-    };
-    _id = fCanvas.count++;
-    _el = document.createElement("canvas");
-    _context2dCaching = null;
-    _stamentReady = new Stament();
-    _existsPreload = false;
-    __translate = {
-        x: 0,
-        y: 0,
-        sumX: 0,
-        sumY: 0,
-    };
-    __scale = {
-        x: 0,
-        y: 0,
-        sumX: 0,
-        sumY: 0,
-    };
-    __idFrame = null;
-    __attributeContext = {
-        alpha: true,
-        desynchronized: false,
-    };
-    preventTouch = false;
-    stopTouch = false;
-    touches = [];
-    changedTouches = [];
+    /**
+     * @return {any}
+     */
+    constructor() {
+        this._ENV = {
+            angleMode: "degress",
+            rectAlign: "left",
+            rectBaseline: "top",
+            colorMode: "rgb",
+            rotate: 0,
+            clear: true,
+            loop: true,
+        };
+        this._id = fCanvas.count++;
+        this._el = document.createElement("canvas");
+        this._context2dCaching = null;
+        this._stamentReady = new Stament();
+        this._existsPreload = false;
+        this.__translate = {
+            x: 0,
+            y: 0,
+            sumX: 0,
+            sumY: 0,
+        };
+        this.__scale = {
+            x: 0,
+            y: 0,
+            sumX: 0,
+            sumY: 0,
+        };
+        this.__idFrame = null;
+        this.__attributeContext = {
+            alpha: true,
+            desynchronized: false,
+        };
+        this.preventTouch = false;
+        this.stopTouch = false;
+        this.touches = [];
+        this.changedTouches = [];
+        const handlerEvent = (event) => {
+            try {
+                if (event.type !== "mouseout") {
+                    this.touches = getTouchInfo(this.$el, event.touches || [event]);
+                    this.changedTouches = getTouchInfo(this.$el, event.changedTouches || [event]);
+                }
+                else {
+                    this.touches = [];
+                }
+                this.preventTouch && event.preventDefault();
+                this.stopTouch && event.stopPropagation();
+            }
+            catch (e) {
+                // throw e;
+            }
+        };
+        this.$el.addEventListener(isMobile() ? "touchstart" : "mouseover", handlerEvent);
+        this.$el.addEventListener(isMobile() ? "touchmove" : "mousemove", handlerEvent);
+        this.$el.addEventListener(isMobile() ? "touchend" : "mouseout", handlerEvent);
+    }
     /**
      * @return {number | null}
      */
@@ -2592,30 +2652,6 @@ class fCanvas {
             this._createNewContext2d();
         }
         return this._context2dCaching;
-    }
-    /**
-     * @return {any}
-     */
-    constructor() {
-        const handlerEvent = (event) => {
-            try {
-                if (event.type !== "mouseout") {
-                    this.touches = getTouchInfo(this.$el, event.touches || [event]);
-                    this.changedTouches = getTouchInfo(this.$el, event.changedTouches || [event]);
-                }
-                else {
-                    this.touches = [];
-                }
-                this.preventTouch && event.preventDefault();
-                this.stopTouch && event.stopPropagation();
-            }
-            catch (e) {
-                // throw e;
-            }
-        };
-        this.$el.addEventListener(isMobile() ? "touchstart" : "mouseover", handlerEvent);
-        this.$el.addEventListener(isMobile() ? "touchmove" : "mousemove", handlerEvent);
-        this.$el.addEventListener(isMobile() ? "touchend" : "mouseout", handlerEvent);
     }
     /**
      * @param {HTMLElement=document.body} parent
@@ -3266,6 +3302,12 @@ class fCanvas {
         return bindEvent("click", callback, this.$el);
     }
 }
+fCanvas.Element = MyElement;
+fCanvas.EAnimate = EAnimate;
+fCanvas.RectElement = RectElement;
+fCanvas.CircleElement = CircleElement;
+fCanvas.Point3D = Point3D;
+fCanvas.count = 0;
 const noopFCanvas = new fCanvas();
 function bindEvent(name, callback, element) {
     element.addEventListener(name, callback);

@@ -1,8 +1,8 @@
 function calculateRemainder2D(
-  vector: Vector,
   xComponent: number,
-  yComponent: number
-): Vector {
+  yComponent: number,
+  vector: Vector
+): typeof vector {
   if (xComponent !== 0) {
     vector.x = vector.x % xComponent;
   }
@@ -15,11 +15,11 @@ function calculateRemainder2D(
 }
 
 function calculateRemainder3D(
-  vector: Vector,
   xComponent: number,
   yComponent: number,
-  zComponent: number
-): Vector {
+  zComponent: number,
+  vector: Vector
+): typeof vector {
   if (xComponent !== 0) {
     vector.x = vector.x % xComponent;
   }
@@ -36,29 +36,31 @@ function calculateRemainder3D(
 }
 
 export default class Vector {
-  public x: number;
-  public y: number;
-  public z: number;
-
+  x: number;
+  y: number;
+  z: number;
   /**
-   * @param {number=0} x
-   * @param {number=0} y
-   * @param {number=0} z
-   * @return {any}
+   * Creates an instance of Vector.
+   * @param {number} [x=0]
+   * @param {number} [y=0]
+   * @param {number} [z=0]
+   * @memberof Vector
    */
   constructor(x: number = 0, y: number = 0, z: number = 0) {
     [this.x, this.y, this.z] = [x, y, z];
   }
+
   set(vector: Vector): this;
-  set(params: [number, number, number?]): this;
+  set(offset: [number?, number?, number?]): this;
   set(x?: number, y?: number, z?: number): this;
   /**
-   * @param {Vector|[number?} x?
-   * @param {any} number?
-   * @param {any} number?]|number
-   * @param {number} y?
-   * @param {number} z?
-   * @return {this}
+   *
+   *
+   * @param {(Vector | [number?, number?, number?] | number)} x
+   * @param {number} [y]
+   * @param {number} [z]
+   * @return {*}  {this}
+   * @memberof Vector
    */
   set(
     x?: Vector | [number?, number?, number?] | number,
@@ -84,25 +86,31 @@ export default class Vector {
     this.z = z || 0;
     return this;
   }
+
   /**
-   * @return {Vector}
+   *
+   *
+   * @return {*}  {Vector}
+   * @memberof Vector
    */
   copy(): Vector {
     return new Vector(this.x, this.y, this.z);
   }
+
   add(vector: Vector): this;
-  add(params?: [number?, number?, number?]): this;
-  add(x?: number, y?: number, z?: number): this;
+  add(offset: [number?, number?, number?]): this;
+  add(x: number, y: number, z: number): this;
   /**
-   * @param {Vector|[number?} x?
-   * @param {any} number?
-   * @param {any} number?]|number
-   * @param {number} y?
-   * @param {number} z?
-   * @return {this}
+   *
+   *
+   * @param {(Vector | [number?, number?, number?] | number)} x
+   * @param {number} [y]
+   * @param {number} [z]
+   * @return {*}  {this}
+   * @memberof Vector
    */
   add(
-    x?: Vector | [number?, number?, number?] | number,
+    x: Vector | [number?, number?, number?] | number,
     y?: number,
     z?: number
   ): this {
@@ -125,32 +133,23 @@ export default class Vector {
     this.z += z || 0;
     return this;
   }
-  rem(vector: Vector): this | void;
-  rem(params: [number, number, number?]): this | void;
-  rem(x?: number, y?: number, z?: number): this | void;
+
+  rem(vector: Vector): void;
+  rem(params: [number, number?, number?]): void;
   /**
-   * @param {Vector|[number} x?
-   * @param {any} number
-   * @param {any} number?]|number
-   * @param {number} y?
-   * @param {number} z?
-   * @return {any}
+   *
+   *
+   * @param {(Vector | [number, number?, number?])} x
+   * @memberof Vector
    */
-  rem(
-    x?: Vector | [number, number, number?] | number,
-    y?: number,
-    z?: number
-  ): any {
+  rem(x: Vector | [number, number?, number?]): void {
     if (x instanceof Vector) {
       if (
         Number.isFinite(x.x) &&
         Number.isFinite(x.y) &&
         Number.isFinite(x.z)
       ) {
-        var xComponent = parseFloat(x.x + "");
-        var yComponent = parseFloat(x.y + "");
-        var zComponent = parseFloat(x.z + "");
-        calculateRemainder3D(this, xComponent, yComponent, zComponent);
+        calculateRemainder3D(x.x, x.y, x.z, this);
       }
     } else if (x instanceof Array) {
       if (
@@ -159,11 +158,11 @@ export default class Vector {
         })
       ) {
         if (x.length === 2) {
-          calculateRemainder2D(this, x[0], x[1]);
+          calculateRemainder2D(x[0], x[1] as number, this);
         }
 
         if (x.length === 3) {
-          calculateRemainder3D(this, x[0], x[1], x[2] || 0);
+          calculateRemainder3D(x[0], x[1] as number, x[2] as number, this);
         }
       }
     } else if (arguments.length === 1) {
@@ -171,10 +170,9 @@ export default class Vector {
         this.x = this.x % arguments[0];
         this.y = this.y % arguments[0];
         this.z = this.z % arguments[0];
-        return this;
       }
     } else if (arguments.length === 2) {
-      var vectorComponents = [].slice.call(arguments);
+      const vectorComponents = [].slice.call(arguments);
 
       if (
         vectorComponents.every(function (element) {
@@ -182,7 +180,7 @@ export default class Vector {
         })
       ) {
         if (vectorComponents.length === 2) {
-          calculateRemainder2D(this, vectorComponents[0], vectorComponents[1]);
+          calculateRemainder2D(vectorComponents[0], vectorComponents[1], this);
         }
       }
     } else if (arguments.length === 3) {
@@ -195,28 +193,30 @@ export default class Vector {
       ) {
         if (_vectorComponents.length === 3) {
           calculateRemainder3D(
-            this,
             _vectorComponents[0],
             _vectorComponents[1],
-            _vectorComponents[2]
+            _vectorComponents[2],
+            this
           );
         }
       }
     }
   }
+
   sub(vector: Vector): this;
-  sub(params?: [number?, number?, number?]): this;
-  sub(x?: number, y?: number, z?: number): this;
+  sub(offset: [number?, number?, number?]): this;
+  sub(x: number, y: number, z: number): this;
   /**
-   * @param {Vector|[number?} x?
-   * @param {any} number?
-   * @param {any} number?]|number
-   * @param {number} y?
-   * @param {number} z?
-   * @return {this}
+   *
+   *
+   * @param {(Vector | [number?, number?, number?] | number)} x
+   * @param {number} [y]
+   * @param {number} [z]
+   * @return {*}  {this}
+   * @memberof Vector
    */
   sub(
-    x?: Vector | [number?, number?, number?] | number,
+    x: Vector | [number?, number?, number?] | number,
     y?: number,
     z?: number
   ): this {
@@ -239,9 +239,13 @@ export default class Vector {
     this.z -= z || 0;
     return this;
   }
+
   /**
+   *
+   *
    * @param {number} n
-   * @return {this}
+   * @return {*}  {this}
+   * @memberof Vector
    */
   mult(n: number): this {
     this.x *= n;
@@ -249,9 +253,13 @@ export default class Vector {
     this.z *= n;
     return this;
   }
+
   /**
+   *
+   *
    * @param {number} n
-   * @return {this}
+   * @return {*}  {this}
+   * @memberof Vector
    */
   div(n: number): this {
     if (n === 0) {
@@ -264,154 +272,213 @@ export default class Vector {
     this.z /= n;
     return this;
   }
+
   /**
-   * @return {number}
+   *
+   *
+   * @return {*}  {number}
+   * @memberof Vector
    */
   mag(): number {
     return Math.sqrt(this.magSq());
   }
+
   /**
-   * @return {number}
+   *
+   *
+   * @return {*}  {number}
+   * @memberof Vector
    */
   magSq(): number {
     const { x, y, z } = this;
     return x * x + y * y + z * z;
   }
-  /**
-   * @param  {Vector} vector
-   * @returns number
-   */
+
   dot(vector: Vector): number;
   dot(x?: number, y?: number, z?: number): number;
   /**
-   * @param {Vector|number} x?
-   * @param {number} y?
-   * @param {number} z?
-   * @return {number}
+   *
+   *
+   * @param {(number | Vector)} [x]
+   * @param {number} [y]
+   * @param {number} [z]
+   * @return {*}  {number}
+   * @memberof Vector
    */
-  dot(x?: Vector | number, y?: number, z?: number): number {
+  dot(x?: number | Vector, y?: number, z?: number): number {
     if (x instanceof Vector) {
       return this.dot(x.x, x.y, x.z);
     }
 
     return this.x * (x || 0) + this.y * (y || 0) + this.z * (z || 0);
   }
-  /**
-   * @param {Vector|{x:number;y:number;z:number}} v
-   * @return {Vector}
-   */
-  cross(v: Vector | { x: number; y: number; z: number }): Vector {
-    var x: number = this.y * v.z - this.z * v.y;
-    var y: number = this.z * v.x - this.x * v.z;
-    var z: number = this.x * v.y - this.y * v.x;
 
-    return new Vector(x, y, z);
-  }
   /**
-   * @return {this}
+   *
+   *
+   * @param {Vector} v
+   * @return {*}  {Vector}
+   * @memberof Vector
+   */
+  cross(v: Vector): Vector {
+    return new Vector(
+      this.y * v.z - this.z * v.y,
+      this.z * v.x - this.x * v.z,
+      this.x * v.y - this.y * v.x
+    );
+  }
+
+  /**
+   *
+   *
+   * @return {*}  {this}
+   * @memberof Vector
    */
   normalize(): this {
     const len = this.mag();
-    if (len !== 0) this.mult(1 / len);
+    if (len !== 0) {
+      this.mult(1 / len);
+    }
     return this;
   }
+
   /**
+   *
+   *
    * @param {number} max
-   * @return {this}
+   * @return {*}  {this}
+   * @memberof Vector
    */
   limit(max: number): this {
-    const mSq = this.magSq();
+    const mSq: number = this.magSq();
 
-    if (mSq > max * max) {
+    if (mSq > max ** 2) {
       this.div(Math.sqrt(mSq)) //normalize it
         .mult(max);
     }
 
     return this;
   }
+
   /**
+   *
+   *
    * @param {number} n
-   * @return {this}
+   * @return {*}  {this}
+   * @memberof Vector
    */
   setMag(n: number): this {
     return this.normalize().mult(n);
   }
+
   /**
-   * @return {number}
+   *
+   *
+   * @return {*}  {number}
+   * @memberof Vector
    */
   heading(): number {
     return Math.atan2(this.y, this.x);
   }
+
   /**
-   * @param {number} a
-   * @return {this}
+   *
+   *
+   * @param {number} angle
+   * @return {*}  {this}
+   * @memberof Vector
    */
-  rotate(a: number): this {
-    var newHeading = this.heading() + a;
-    var mag = this.mag();
+  rotate(angle: number): this {
+    const newHeading: number = this.heading() + angle;
+    const mag: number = this.mag();
     this.x = Math.cos(newHeading) * mag;
     this.y = Math.sin(newHeading) * mag;
     return this;
   }
-  /**
-   * @param {Vector} v
-   * @return {number}
-   */
-  angleBetween(v: Vector): number {
-    var dotmagmag = this.dot(v) / (this.mag() * v.mag());
-    var angle;
-    angle = Math.acos(Math.min(1, Math.max(-1, dotmagmag)));
-    angle = angle * Math.sign(this.cross(v).z || 1);
 
+  /**
+   *
+   *
+   * @param {Vector} vector
+   * @return {*}  {number}
+   * @memberof Vector
+   */
+  angleBetween(vector: Vector): number {
+    const dotmagmag = this.dot(vector) / (this.mag() * vector.mag());
+    const angle =
+      Math.acos(Math.min(1, Math.max(-1, dotmagmag))) *
+      Math.sign(this.cross(vector).z || 1);
     return angle;
   }
-  lerp(vector: Vector, amt: number): this;
-  lerp(x: number, y: number, z: number, amt: number): this;
+
+  lerp(vector: Vector, amt?: number): this;
+  lerp(x?: number, y?: number, z?: number, amt?: number): this;
   /**
-   * @param {Vector|number} x
-   * @param {number} y?
-   * @param {number} z?
-   * @param {number=1} amt
-   * @return {this}
+   *
+   *
+   * @param {(Vector | number)} [x=0]
+   * @param {number} [y=0]
+   * @param {number} [z=0]
+   * @param {number} [amt=0]
+   * @return {*}  {this}
+   * @memberof Vector
    */
-  lerp(x: Vector | number, y?: number, z?: number, amt: number = 1): this {
+  lerp(
+    x: Vector | number = 0,
+    y: number = 0,
+    z: number = 0,
+    amt: number = 0
+  ): this {
     if (x instanceof Vector) {
-      return this.lerp(x.x, x.y, x.z, y || 0);
+      return this.lerp(x.x, x.y, x.z, y);
     }
 
     this.x += (x - this.x) * amt || 0;
-    this.y += (y || 0 - this.y) * amt || 0;
-    this.z += (z || 0 - this.z) * amt || 0;
+    this.y += (y - this.y) * amt || 0;
+    this.z += (z - this.z) * amt || 0;
     return this;
   }
+
   /**
+   *
+   *
    * @param {Vector} surfaceNormal
-   * @return {this}
+   * @return {*}  {this}
+   * @memberof Vector
    */
   reflect(surfaceNormal: Vector): this {
     surfaceNormal.normalize();
     return this.sub(surfaceNormal.mult(2 * this.dot(surfaceNormal)));
   }
+
   /**
-   * @return {[number, number, number]}
+   *
+   *
+   * @return {*}  {[number, number, number]}
+   * @memberof Vector
    */
   array(): [number, number, number] {
     return [this.x || 0, this.y || 0, this.z || 0];
   }
+
+  equals(vector: Vector): boolean;
+  equals(params: [number?, number?, number?]): boolean;
+  equals(x?: number, y?: number, z?: number): boolean;
   /**
-   * @param {Vector|[number} x
-   * @param {any} number
-   * @param {any} number]|number
-   * @param {number} y?
-   * @param {number} z?
-   * @return {boolean}
+   *
+   *
+   * @param {(Vector | [number?, number?, number?] | number)} [x]
+   * @param {number} [y]
+   * @param {number} [z]
+   * @return {*}  {boolean}
+   * @memberof Vector
    */
   equals(
-    x: Vector | [number, number, number] | number,
+    x?: Vector | [number?, number?, number?] | number,
     y?: number,
     z?: number
   ): boolean {
-    var a, b, c;
+    let a, b, c;
 
     if (x instanceof Vector) {
       a = x.x || 0;
@@ -429,8 +496,12 @@ export default class Vector {
 
     return this.x === a && this.y === b && this.z === c;
   }
+
   /**
-   * @return {string}
+   *
+   *
+   * @return {*}  {string}
+   * @memberof Vector
    */
   toString(): string {
     return "Vector: [" + this.array().join(", ") + "]";

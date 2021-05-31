@@ -1,4 +1,4 @@
-import fCanvas, { lerp, random, Vector } from "../../dist/fcanvas.esm.js";
+import fCanvas, { random, Vector } from "../../dist/fcanvas.esm.js";
 
 const canvas = new fCanvas();
 const points = [];
@@ -35,6 +35,7 @@ function reset() {
   canvas.background(0);
   canvas.save();
 
+  canvas.fontSize(20);
   canvas.translate(canvas.width / 2, canvas.height / 2);
 
   // canvas.restore();

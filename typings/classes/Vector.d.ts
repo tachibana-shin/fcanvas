@@ -3,111 +3,142 @@ export default class Vector {
     y: number;
     z: number;
     /**
-     * @param {number=0} x
-     * @param {number=0} y
-     * @param {number=0} z
-     * @return {any}
+     * Creates an instance of Vector.
+     * @param {number} [x=0]
+     * @param {number} [y=0]
+     * @param {number} [z=0]
+     * @memberof Vector
      */
     constructor(x?: number, y?: number, z?: number);
     set(vector: Vector): this;
-    set(params: [number, number, number?]): this;
+    set(offset: [number?, number?, number?]): this;
     set(x?: number, y?: number, z?: number): this;
     /**
-     * @return {Vector}
+     *
+     *
+     * @return {*}  {Vector}
+     * @memberof Vector
      */
     copy(): Vector;
     add(vector: Vector): this;
-    add(params?: [number?, number?, number?]): this;
-    add(x?: number, y?: number, z?: number): this;
-    rem(vector: Vector): this | void;
-    rem(params: [number, number, number?]): this | void;
-    rem(x?: number, y?: number, z?: number): this | void;
+    add(offset: [number?, number?, number?]): this;
+    add(x: number, y: number, z: number): this;
+    rem(vector: Vector): void;
+    rem(params: [number, number?, number?]): void;
     sub(vector: Vector): this;
-    sub(params?: [number?, number?, number?]): this;
-    sub(x?: number, y?: number, z?: number): this;
+    sub(offset: [number?, number?, number?]): this;
+    sub(x: number, y: number, z: number): this;
     /**
+     *
+     *
      * @param {number} n
-     * @return {this}
+     * @return {*}  {this}
+     * @memberof Vector
      */
     mult(n: number): this;
     /**
+     *
+     *
      * @param {number} n
-     * @return {this}
+     * @return {*}  {this}
+     * @memberof Vector
      */
     div(n: number): this;
     /**
-     * @return {number}
+     *
+     *
+     * @return {*}  {number}
+     * @memberof Vector
      */
     mag(): number;
     /**
-     * @return {number}
+     *
+     *
+     * @return {*}  {number}
+     * @memberof Vector
      */
     magSq(): number;
-    /**
-     * @param  {Vector} vector
-     * @returns number
-     */
     dot(vector: Vector): number;
     dot(x?: number, y?: number, z?: number): number;
     /**
-     * @param {Vector|{x:number;y:number;z:number}} v
-     * @return {Vector}
+     *
+     *
+     * @param {Vector} v
+     * @return {*}  {Vector}
+     * @memberof Vector
      */
-    cross(v: Vector | {
-        x: number;
-        y: number;
-        z: number;
-    }): Vector;
+    cross(v: Vector): Vector;
     /**
-     * @return {this}
+     *
+     *
+     * @return {*}  {this}
+     * @memberof Vector
      */
     normalize(): this;
     /**
+     *
+     *
      * @param {number} max
-     * @return {this}
+     * @return {*}  {this}
+     * @memberof Vector
      */
     limit(max: number): this;
     /**
+     *
+     *
      * @param {number} n
-     * @return {this}
+     * @return {*}  {this}
+     * @memberof Vector
      */
     setMag(n: number): this;
     /**
-     * @return {number}
+     *
+     *
+     * @return {*}  {number}
+     * @memberof Vector
      */
     heading(): number;
     /**
-     * @param {number} a
-     * @return {this}
+     *
+     *
+     * @param {number} angle
+     * @return {*}  {this}
+     * @memberof Vector
      */
-    rotate(a: number): this;
+    rotate(angle: number): this;
     /**
-     * @param {Vector} v
-     * @return {number}
+     *
+     *
+     * @param {Vector} vector
+     * @return {*}  {number}
+     * @memberof Vector
      */
-    angleBetween(v: Vector): number;
-    lerp(vector: Vector, amt: number): this;
-    lerp(x: number, y: number, z: number, amt: number): this;
+    angleBetween(vector: Vector): number;
+    lerp(vector: Vector, amt?: number): this;
+    lerp(x?: number, y?: number, z?: number, amt?: number): this;
     /**
+     *
+     *
      * @param {Vector} surfaceNormal
-     * @return {this}
+     * @return {*}  {this}
+     * @memberof Vector
      */
     reflect(surfaceNormal: Vector): this;
     /**
-     * @return {[number, number, number]}
+     *
+     *
+     * @return {*}  {[number, number, number]}
+     * @memberof Vector
      */
     array(): [number, number, number];
+    equals(vector: Vector): boolean;
+    equals(params: [number?, number?, number?]): boolean;
+    equals(x?: number, y?: number, z?: number): boolean;
     /**
-     * @param {Vector|[number} x
-     * @param {any} number
-     * @param {any} number]|number
-     * @param {number} y?
-     * @param {number} z?
-     * @return {boolean}
-     */
-    equals(x: Vector | [number, number, number] | number, y?: number, z?: number): boolean;
-    /**
-     * @return {string}
+     *
+     *
+     * @return {*}  {string}
+     * @memberof Vector
      */
     toString(): string;
 }
