@@ -4,6 +4,7 @@ const babel = require("rollup-plugin-babel");
 const { terser } = require("rollup-plugin-terser");
 const resolve = require("rollup-plugin-node-resolve");
 const commonjs = require("rollup-plugin-commonjs");
+const typescript = require("rollup-plugin-typescript2");
 
 async function build(options, _outputOptions) {
   try {
@@ -33,9 +34,15 @@ function blue(str) {
 
 build(
   {
-    input: path.resolve(__dirname, "src/index.js"),
+    input: path.resolve(__dirname, "src/index.ts"),
     plugins: [
       resolve(),
+      typescript({
+        clean: true,
+        declarationDir: path.resolve(__dirname, "typings"),
+        tsconfig: "./tsconfig.json",
+        useTsconfigDeclarationDir: true,
+      }),
       commonjs(),
       babel({
         babelrc: false,
@@ -59,15 +66,21 @@ build(
   },
   {
     format: "umd",
-    filename: "fcanvas.js",
+    filename: "dist/fcanvas.js",
   }
 );
 
 build(
   {
-    input: path.resolve(__dirname, "src/index.js"),
+    input: path.resolve(__dirname, "src/index.ts"),
     plugins: [
       resolve(),
+      typescript({
+        clean: true,
+        declarationDir: path.resolve(__dirname, "typings"),
+        tsconfig: "./tsconfig.json",
+        useTsconfigDeclarationDir: true,
+      }),
       commonjs(),
       babel({
         babelrc: false,
@@ -90,15 +103,21 @@ build(
   },
   {
     format: "esm",
-    filename: "fcanvas.esm.js",
+    filename: "dist/fcanvas.esm.js",
   }
 );
 
 build(
   {
-    input: path.resolve(__dirname, "src/index.js"),
+    input: path.resolve(__dirname, "src/index.ts"),
     plugins: [
       resolve(),
+      typescript({
+        clean: true,
+        declarationDir: path.resolve(__dirname, "typings"),
+        tsconfig: "./tsconfig.json",
+        useTsconfigDeclarationDir: true,
+      }),
       commonjs(),
       babel({
         babelrc: false,
@@ -121,6 +140,43 @@ build(
   },
   {
     format: "esm",
-    filename: "fcanvas.node.esm.js",
+    filename: "dist/fcanvas.node.esm.js",
+  }
+);
+
+build(
+  {
+    input: path.resolve(__dirname, "src/index.ts"),
+    plugins: [
+      resolve(),
+      typescript({
+        clean: true,
+        declarationDir: path.resolve(__dirname, "typings"),
+        tsconfig: "./tsconfig.json",
+        useTsconfigDeclarationDir: true,
+      }),
+      commonjs(),
+      babel({
+        babelrc: false,
+        runtimeHelpers: true,
+        presets: ["@babel/preset-env"],
+        plugins: [
+          "@babel/plugin-proposal-class-properties",
+          "@babel/plugin-proposal-optional-chaining",
+          "@babel/plugin-proposal-object-rest-spread",
+          [
+            "@babel/plugin-transform-runtime",
+            {
+              regenerator: true,
+            },
+          ],
+        ],
+        ignore: ["dist/*"],
+      }),
+    ],
+  },
+  {
+    format: "cjs",
+    filename: "dist/fcanvas.cjs",
   }
 );

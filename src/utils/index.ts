@@ -14,7 +14,7 @@ export const requestAnimationFrame:
   | typeof globalThis.setTimeout =
   window.requestAnimationFrame ||
   window.webkitRequestAnimationFrame ||
-  function (e) {
+  function (e: Function) {
     return setTimeout(e, 100 / 6);
   };
 

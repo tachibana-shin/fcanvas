@@ -1,4 +1,4 @@
-import fCanvas, { hypot, keyPressed, random } from "../fcanvas.esm.js";
+import fCanvas, { hypot, keyPressed, random } from "../../dist/fcanvas.esm.js";
 const canvas = new fCanvas();
 
 const camera = {

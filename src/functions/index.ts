@@ -1,4 +1,3 @@
-import { Object } from "../types";
 import { extractNumber } from "../utils/index";
 
 export interface Circle extends Object {
@@ -336,7 +335,7 @@ function foreach(
     }
 
     if ("length" in (start as Object)) {
-      const { length } = start;
+      const { length } = start as { length: number };
       let index: number = 0;
       if (typeof stop !== "number") {
         stop = length;
@@ -360,7 +359,7 @@ function foreach(
         if (
           (callback as CallbackForeachObject).call(
             start,
-            (start as Object)[index as string],
+            (start as any)[index as any],
             index,
             start as Object
           ) === true

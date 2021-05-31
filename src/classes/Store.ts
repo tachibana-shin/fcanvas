@@ -1,9 +1,12 @@
-import { Object } from "../types";
+
 import Emitter, { CallbackEvent } from "./Emitter";
 
-interface ValueType extends Object {
+interface ValueType {
   __reactive?: boolean;
-  __store?: Object;
+  __store?: {
+    [propName: string]: any
+  };
+  [propName: string]: any
 }
 
 function reactiveDefine(
@@ -75,20 +78,20 @@ function reactiveDefine(
       for (const key in value) {
         Object.defineProperty(value, key, {
           get(): any {
-            return value.__store?.[key];
+            return value.__store?.[key as string];
           },
           enumerable: true,
           set(newValue: any): void {
-            const old = value.__store?.[key];
+            const old = value.__store?.[key as string];
 
             if (value.__store) {
-              value.__store[key] = newValue;
+              value.__store[key as string] = newValue;
             }
             reactiveDefine(newValue, callback, [...parent, key]);
             callback([...parent, key], old, newValue);
           },
         });
-        reactiveDefine(value[key], callback, [...parent, key]);
+        reactiveDefine(value[key as string], callback, [...parent, key]);
       }
     }
   }
@@ -101,7 +104,9 @@ class Store {
    * @param {Object} store?
    * @return {any}
    */
-  constructor(store?: Object) {
+  constructor(store?: {
+    [propName: string]: any
+  }) {
     for (const key in store) {
       this[key] = store[key];
     }
@@ -116,7 +121,9 @@ class Store {
    * @param {any} value
    * @return {void}
    */
-  $set(object: Store | Object, key: string, value: any): void {
+  $set(object: Store | {
+    [propName: string]: any;
+  }, key: string, value: any): void {
     object[key] = value;
     reactiveDefine(
       object,

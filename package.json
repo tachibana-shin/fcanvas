@@ -1,10 +1,23 @@
 {
   "name": "fcanvas",
   "version": "0.0.5-b20",
-  "main": "fcanvas.js",
-  "module": "fcanvas.node.esm.js",
-  "unpkg": "fcanvas.esm.js",
+  "main": "dist/fcanvas.js",
+  "exports": {
+    ".": {
+      "module": "./dist/fcanvas.esm.js",
+      "require": "./dist/fcanvas.js",
+      "import": "./dist/fcanvas.cjs"
+    },
+    "./": "./"
+  },
+  "module": "dist/fcanvas.node.esm.js",
+  "unpkg": "dist/fcanvas.esm.js",
   "types": "typings/index.d.ts",
+  "typings": "typings/index.d.ts",
+  "files": [
+    "dist",
+    "typings/index.d.ts"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.0.0-rc.1",
@@ -29,18 +42,15 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
-    "ts-jsdoc": "^3.2.0",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "rollup-plugin-typescript": "^1.0.1",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "typescript": "^4.3.2"
   },
   "scripts": {
-    "dev": "node node_modules/webpack/bin/webpack.js --mode development --watch",
-    "build:webpack": "node node_modules/webpack/bin/webpack.js --mode production --progress --hide-module",
     "build:rollup": "node build.js",
-    "build": "tsc && npm run build:webpack && npm run build:rollup && npm run docs",
+    "build": "npm run build:rollup && npm run docs",
     "prepare": "npm run build",
-    "docs": "typedoc ./typescript",
+    "docs": "typedoc src",
     "push": "yarn publish && git add . && git commit -m . && git push"
   },
   "author": "Nguyen Thanh",

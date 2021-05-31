@@ -1,4 +1,3 @@
-import { Object } from "../types";
 export interface Circle extends Object {
     x: number;
     y: number;

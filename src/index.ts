@@ -2284,7 +2284,6 @@ export {
   requestAnimationFrame,
   windowSize,
   isMobile,
-  InfoTouch,
   isTouch,
   passive,
 };

@@ -940,5 +940,5 @@ export declare function touchEnd(callback: CallbackEvent, element?: Window | HTM
     (): void;
 };
 export default fCanvas;
-export { requestAnimationFrame, windowSize, isMobile, InfoTouch, isTouch, passive, };
+export { requestAnimationFrame, windowSize, isMobile, isTouch, passive, };
 export * from "./functions/index";

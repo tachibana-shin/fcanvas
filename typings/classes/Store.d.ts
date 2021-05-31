@@ -1,4 +1,3 @@
-import { Object } from "../types";
 import { CallbackEvent } from "./Emitter";
 declare class Store {
     [propName: string]: any;
@@ -7,14 +6,18 @@ declare class Store {
      * @param {Object} store?
      * @return {any}
      */
-    constructor(store?: Object);
+    constructor(store?: {
+        [propName: string]: any;
+    });
     /**
      * @param {Store|Object} object
      * @param {string} key
      * @param {any} value
      * @return {void}
      */
-    $set(object: Store | Object, key: string, value: any): void;
+    $set(object: Store | {
+        [propName: string]: any;
+    }, key: string, value: any): void;
     /**
      * @param {string} key
      * @param {CallbackEvent} callback
