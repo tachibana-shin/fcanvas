@@ -23,7 +23,7 @@ try {
     window.addEventListener("testPassive", noop, opts);
     window.removeEventListener("testPassive", noop, opts);
 }
-catch (e) { }
+catch { }
 const passive = supportPassive;
 const windowSize = {
     windowWidth: {
@@ -157,7 +157,7 @@ function extractNumber(value) {
 
 class Emitter {
     constructor() {
-        this.__events = {};
+        this.__events = Object.create(null);
     }
     /**
      * @param {any} typeofcallback==="function"
@@ -971,62 +971,6 @@ const hypot = typeof Math.hypot === "function"
         return Math.sqrt(result);
     };
 /**
- * @param {number|ArrayLike<any>|Object} start
- * @param {number|CallbackForeachObject} stop
- * @param {number|CallbackForeachObject|CallbackForeachNumber} step?
- * @param {CallbackForeachNumber|CallbackForeachObject=(} callback
- * @return {=>}
- */
-function foreach(start, stop, step, callback = () => { }) {
-    if (typeof start === "number") {
-        if (typeof step === "function") {
-            callback = step;
-            step = 1;
-        }
-        step = step || 1;
-        for (let index = start; index <= stop; index += step) {
-            if (callback(index, start, stop, step) === true) {
-                break;
-            }
-        }
-    }
-    else {
-        if (typeof stop === "function") {
-            callback = stop;
-        }
-        if (typeof step === "function") {
-            callback = step;
-        }
-        if ("length" in start) {
-            const { length } = start;
-            let index = 0;
-            if (typeof stop !== "number") {
-                stop = length;
-            }
-            if (stop < 0) {
-                stop += length;
-            }
-            while (index < length) {
-                // @ts-expect-error
-                if (callback.call(start, start[index], index, start) === true) {
-                    break;
-                }
-                if (index > stop) {
-                    break;
-                }
-                index++;
-            }
-        }
-        else {
-            for (const index in start) {
-                if (callback.call(start, start[index], index, start) === true) {
-                    break;
-                }
-            }
-        }
-    }
-}
-/**
  * @param {number} value
  * @param {number} max
  * @param {number} prevent
@@ -1707,7 +1651,7 @@ function resolvePath(...params) {
 }
 class ResourceTile {
     constructor(image, plist) {
-        this.__caching = {};
+        this.__caching = Object.create(null);
         this.image = image;
         this.plist = plist;
     }
@@ -1772,7 +1716,7 @@ class MyElement {
      */
     constructor(canvas) {
         this.__autodraw = true;
-        this._els = {};
+        this._els = Object.create(null);
         this._idActiveNow = -1;
         this._queue = [];
         if (canvas?.constructor !== fCanvas) {
@@ -2086,8 +2030,10 @@ class MyElement {
      * @returns void
      */
     line(x1, y1, x2, y2) {
+        this.begin();
         this.move(x1, y1);
         this.to(x2, y2);
+        this.close();
     }
     /**
      * @param  {number} x
@@ -2980,6 +2926,19 @@ class fCanvas {
         this.setTransform(1, 0, 0, 1, 0, 0);
     }
     /**
+     * @param {noop} callback
+     * @return {*}  {MyElement}
+     * @memberof fCanvas
+     */
+    createElement(callback) {
+        return new (class extends MyElement {
+            constructor() {
+                super(...arguments);
+                this.draw = callback;
+            }
+        })();
+    }
+    /**
      * @param {Function} callback
      * @return {Promise<void>}
      */
@@ -3476,7 +3435,6 @@ exports.constrain = constrain;
 exports.cutImage = cutImage;
 exports.default = fCanvas;
 exports.draw = draw;
-exports.foreach = foreach;
 exports.hypot = hypot;
 exports.isMobile = isMobile;
 exports.isTouch = isTouch;

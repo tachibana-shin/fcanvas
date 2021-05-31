@@ -5,7 +5,7 @@ export interface CallbackEvent {
 export default class Emitter {
   private __events: {
     [name: string]: Array<CallbackEvent>;
-  } = {};
+  } = Object.create(null);
   /**
    * @param {any} typeofcallback==="function"
    * @return {any}
@@ -45,16 +45,16 @@ export default class Emitter {
     } else {
       delete this.__events[name];
     }
-  /**
-   * @param {string} name
-   * @param {any[]} ...payload
-   * @return {void}
-   */
-  /**
-   * @param {string} name
-   * @param {any[]} ...payload
-   * @return {void}
-   */
+    /**
+     * @param {string} name
+     * @param {any[]} ...payload
+     * @return {void}
+     */
+    /**
+     * @param {string} name
+     * @param {any[]} ...payload
+     * @return {void}
+     */
   }
   /**
    * @param {string} name

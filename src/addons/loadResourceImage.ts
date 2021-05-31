@@ -87,7 +87,7 @@ class ResourceTile {
   };
   private __caching: {
     [propName: string]: HTMLImageElement;
-  } = {};
+  } = Object.create(null);
 
   constructor(image: HTMLImageElement, plist: object) {
     this.image = image;

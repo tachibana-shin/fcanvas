@@ -691,6 +691,12 @@ declare class fCanvas {
      */
     resetTransform(): void;
     /**
+     * @param {noop} callback
+     * @return {*}  {MyElement}
+     * @memberof fCanvas
+     */
+    createElement(callback: noop): MyElement;
+    /**
      * @param {Function} callback
      * @return {Promise<void>}
      */
@@ -940,5 +946,5 @@ export declare function touchEnd(callback: CallbackEvent, element?: Window | HTM
     (): void;
 };
 export default fCanvas;
-export { requestAnimationFrame, windowSize, isMobile, isTouch, passive, };
+export { requestAnimationFrame, windowSize, isMobile, isTouch, passive };
 export * from "./functions/index";

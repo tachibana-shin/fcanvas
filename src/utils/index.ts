@@ -31,7 +31,7 @@ try {
   function noop() {}
   window.addEventListener("testPassive", noop, opts);
   window.removeEventListener("testPassive", noop, opts);
-} catch (e) {}
+} catch {}
 
 export const passive: boolean = supportPassive;
 

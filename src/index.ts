@@ -83,7 +83,7 @@ class MyElement {
 
   private _els: {
     [propName: string]: fCanvas;
-  } = {};
+  } = Object.create(null);
   private _idActiveNow: number = -1;
   private _queue: LikeMyElement[] = [];
 
@@ -476,8 +476,10 @@ class MyElement {
    * @returns void
    */
   line(x1: number, y1: number, x2: number, y2: number): void {
+    this.begin();
     this.move(x1, y1);
     this.to(x2, y2);
+    this.close();
   }
   /**
    * @param  {number} x
@@ -1678,7 +1680,16 @@ class fCanvas {
   resetTransform(): void {
     this.setTransform(1, 0, 0, 1, 0, 0);
   }
-
+  /**
+   * @param {noop} callback
+   * @return {*}  {MyElement}
+   * @memberof fCanvas
+   */
+  createElement(callback: noop): MyElement {
+    return new (class extends MyElement {
+      draw = callback;
+    })();
+  }
   /**
    * @param {Function} callback
    * @return {Promise<void>}
@@ -2280,11 +2291,5 @@ export function touchEnd(
 }
 
 export default fCanvas;
-export {
-  requestAnimationFrame,
-  windowSize,
-  isMobile,
-  isTouch,
-  passive,
-};
+export { requestAnimationFrame, windowSize, isMobile, isTouch, passive };
 export * from "./functions/index";

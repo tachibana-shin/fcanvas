@@ -12,16 +12,6 @@ export interface Rect extends Object {
   height: number;
 }
 
-interface CallbackForeachNumber {
-  (value?: number, start?: number, stop?: number, step?: number):
-    | boolean
-    | void;
-}
-interface CallbackForeachObject {
-  (value?: any, index?: number | string, object?: ArrayLike<any> | Object):
-    | boolean
-    | void;
-}
 /**
  * @param {Circle} circle1
  * @param {Circle} circle2
@@ -273,105 +263,6 @@ export const hypot =
         return Math.sqrt(result);
       };
 
-function foreach(
-  start: number,
-  stop: number,
-  callback: CallbackForeachNumber
-): void;
-function foreach(
-  start: number,
-  stop: number,
-  step: number,
-  callback: CallbackForeachNumber
-): void;
-function foreach(
-  array: ArrayLike<any>,
-  limit: number,
-  callback: CallbackForeachObject
-): void;
-function foreach(
-  array: ArrayLike<any> | Object,
-  callback: CallbackForeachObject
-): void;
-
-/**
- * @param {number|ArrayLike<any>|Object} start
- * @param {number|CallbackForeachObject} stop
- * @param {number|CallbackForeachObject|CallbackForeachNumber} step?
- * @param {CallbackForeachNumber|CallbackForeachObject=(} callback
- * @return {=>}
- */
-function foreach(
-  start: number | ArrayLike<any> | Object,
-  stop: number | CallbackForeachObject,
-  step?: number | CallbackForeachObject | CallbackForeachNumber,
-  callback: CallbackForeachNumber | CallbackForeachObject = () => {}
-): void {
-  if (typeof start === "number") {
-    if (typeof step === "function") {
-      callback = step as CallbackForeachNumber;
-      step = 1;
-    }
-    step = step || 1;
-
-    for (let index = start; index <= stop; index += step) {
-      if (
-        (callback as CallbackForeachNumber)(
-          index,
-          start,
-          stop as number,
-          step
-        ) === true
-      ) {
-        break;
-      }
-    }
-  } else {
-    if (typeof stop === "function") {
-      callback = stop as CallbackForeachObject;
-    }
-    if (typeof step === "function") {
-      callback = step as CallbackForeachObject;
-    }
-
-    if ("length" in (start as Object)) {
-      const { length } = start as { length: number };
-      let index: number = 0;
-      if (typeof stop !== "number") {
-        stop = length;
-      }
-      if (stop < 0) {
-        stop += length;
-      }
-
-      while (index < length) {
-        // @ts-expect-error
-        if (callback.call(start, start[index], index, start) === true) {
-          break;
-        }
-        if (index > stop) {
-          break;
-        }
-        index++;
-      }
-    } else {
-      for (const index in start) {
-        if (
-          (callback as CallbackForeachObject).call(
-            start,
-            (start as any)[index as any],
-            index,
-            start as Object
-          ) === true
-        ) {
-          break;
-        }
-      }
-    }
-  }
-}
-
-export { foreach };
 /**
  * @param {number} value
  * @param {number} max
