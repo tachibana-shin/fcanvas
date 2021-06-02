@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "0.0.5-b25",
+  "version": "0.0.5-b26",
   "main": "dist/fcanvas.js",
   "exports": {
     ".": {
