@@ -1748,7 +1748,6 @@ class MyElement {
      * @return {any}
      */
     constructor(canvas) {
-        this.__autodraw = true;
         this._els = Object.create(null);
         this._idActiveNow = -1;
         this._queue = [];
@@ -1772,7 +1771,7 @@ class MyElement {
         this.__addEl(canvas);
         this._idActiveNow = canvas.id;
         if (typeof this.update === "function") {
-            if (this.__autodraw === true && typeof this.draw === "function") {
+            if (typeof this.draw === "function") {
                 this.draw();
             }
             this.update();
@@ -1794,18 +1793,8 @@ class MyElement {
      * @param {LikeMyElement} element
      * @return {void}
      */
-    addQueue(element) {
-        this._queue.push(element);
-    }
-    /**
-     * @param {number} index
-     * @return {LikeMyElement | undefined}
-     */
-    getQueue(index) {
-        if (index < 0) {
-            index += this._queue.length;
-        }
-        return this._queue[index];
+    add(...elements) {
+        this._queue.push(...elements);
     }
     /**
      * @param {LikeMyElement} element
@@ -2063,10 +2052,10 @@ class MyElement {
      * @returns void
      */
     line(x1, y1, x2, y2) {
-        this.begin();
+        // this.begin();
         this.move(x1, y1);
         this.to(x2, y2);
-        this.close();
+        // this.close();
     }
     /**
      * @param  {number} x
@@ -2446,9 +2435,6 @@ class Point3D extends MyElement {
         this.x = 0;
         this.y = 0;
         this.z = 0;
-        this.draw = () => {
-            this.point(this.x, this.y);
-        };
         [this.x, this.y, this.z] = [x || 0, y || 0, z || 0];
     }
     /**
@@ -2482,6 +2468,48 @@ class Point3D extends MyElement {
             this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
     }
 }
+class Point3DCenter extends MyElement {
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @param {number} z?
+     * @return {any}
+     */
+    constructor(x, y, z) {
+        super();
+        this.__z = 0;
+        [this.__x, this.__y, this.__z] = [x, y, z || 0];
+    }
+    get scale() {
+        return Point3DCenter.persistent / (Point3DCenter.persistent + this.__z);
+    }
+    get x() {
+        return ((this.__x - this.$parent.width / 2) * this.scale + this.$parent.width / 2);
+    }
+    set x(value) {
+        this.__x = value;
+    }
+    get y() {
+        return ((this.__y - this.$parent.height / 2) * this.scale +
+            this.$parent.height / 2);
+    }
+    set y(value) {
+        this.__y = value;
+    }
+    get z() {
+        return this.__z;
+    }
+    set z(value) {
+        this.__z = value;
+    }
+    get(prop) {
+        if (typeof prop === "number") {
+            return this.scale * prop;
+        }
+        return this.scale * this[prop];
+    }
+}
+Point3DCenter.persistent = 1000;
 
 let inited = false;
 const emitter = new Emitter();
@@ -2629,37 +2657,40 @@ class fCanvas {
      * @return {any}
      */
     constructor() {
-        this._ENV = {
+        this._ENV = Object.create({
             angleMode: "degress",
             rectAlign: "left",
             rectBaseline: "top",
             colorMode: "rgb",
-            rotate: 0,
             clear: true,
             loop: true,
-        };
+        });
         this._id = fCanvas.count++;
         this._el = document.createElement("canvas");
         this._context2dCaching = null;
         this._stamentReady = new Stament();
         this._existsPreload = false;
-        this.__translate = {
+        this.__translate = Object.create({
             x: 0,
             y: 0,
             sumX: 0,
             sumY: 0,
-        };
-        this.__scale = {
+        });
+        this.__scale = Object.create({
             x: 0,
             y: 0,
             sumX: 0,
             sumY: 0,
-        };
+        });
+        this.__rotate = Object.create({
+            now: 0,
+            sum: 0,
+        });
         this.__idFrame = null;
-        this.__attributeContext = {
+        this.__attributeContext = Object.create({
             alpha: true,
             desynchronized: false,
-        };
+        });
         this.preventTouch = false;
         this.stopTouch = false;
         this.touches = [];
@@ -3079,11 +3110,21 @@ class fCanvas {
      */
     rotate(value) {
         if (value === undefined) {
-            return this._ENV.rotate;
+            return this.__rotate.now;
         }
         else {
-            this.$context2d.rotate((this._ENV.rotate = this._toRadius(value)));
+            this.$context2d.rotate((this.__rotate.now = this._toRadius(value)));
+            this.__rotate.sum += this.__rotate.now % 360;
         }
+    }
+    /**
+     *
+     *
+     * @memberof fCanvas
+     * @return {void}
+     */
+    resetRotate() {
+        this.rotate(-this.__rotate.sum);
     }
     /**
      * @return {void}
@@ -3189,6 +3230,9 @@ class fCanvas {
         }
         this.$context2d.globalAlpha = alpha;
     }
+    resetAlpha() {
+        this.alpha(1);
+    }
     /**
      * @param {number} x?
      * @param {number} y?
@@ -3231,7 +3275,7 @@ class fCanvas {
      * @return {void}
      */
     resetScale() {
-        this.$context2d.translate(-this.__translate.sumX, -this.__translate.sumY);
+        this.$context2d.translate(-this.__scale.sumX, -this.__scale.sumY);
     }
     /**
      * @param {any} fillRule?
@@ -3435,6 +3479,7 @@ fCanvas.Element = MyElement;
 fCanvas.RectElement = RectElement;
 fCanvas.CircleElement = CircleElement;
 fCanvas.Point3D = Point3D;
+fCanvas.Point3DCenter = Point3DCenter;
 fCanvas.count = 0;
 const noopFCanvas = new fCanvas();
 

@@ -14,9 +14,6 @@ export interface LikeMyElement extends MyElement {
 export default class MyElement {
   public update?: noop;
   public draw?: noop;
-  public setup?: { (): any }; //// If you don't like the constructor you can use setup() instead
-  public __autodraw: boolean = true;
-
   private _els: {
     [propName: string]: fCanvas;
   } = Object.create(null);
@@ -51,7 +48,7 @@ export default class MyElement {
     this._idActiveNow = canvas.id;
 
     if (typeof this.update === "function") {
-      if (this.__autodraw === true && typeof this.draw === "function") {
+      if (typeof this.draw === "function") {
         this.draw();
       }
       this.update();
@@ -75,19 +72,8 @@ export default class MyElement {
    * @param {LikeMyElement} element
    * @return {void}
    */
-  addQueue(element: LikeMyElement): void {
-    this._queue.push(element);
-  }
-  /**
-   * @param {number} index
-   * @return {LikeMyElement | undefined}
-   */
-  getQueue(index: number): LikeMyElement | void {
-    if (index < 0) {
-      index += this._queue.length;
-    }
-
-    return this._queue[index];
+  add(...elements: LikeMyElement[]): void {
+    this._queue.push(...elements);
   }
   /**
    * @param {LikeMyElement} element
@@ -412,10 +398,10 @@ export default class MyElement {
    * @returns void
    */
   line(x1: number, y1: number, x2: number, y2: number): void {
-    this.begin();
+    // this.begin();
     this.move(x1, y1);
     this.to(x2, y2);
-    this.close();
+    // this.close();fix
   }
   /**
    * @param  {number} x
@@ -1025,8 +1011,58 @@ export class Point3D extends MyElement {
     this.y =
       this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
   }
+}
 
-  draw: noop = (): void => {
-    this.point(this.x, this.y);
-  };
+export class Point3DCenter extends MyElement {
+  private static persistent = 1000;
+  private __x: number;
+  private __y: number;
+  private __z: number = 0;
+
+  /**
+   * @param {number} x?
+   * @param {number} y?
+   * @param {number} z?
+   * @return {any}
+   */
+  constructor(x: number, y: number, z?: number) {
+    super();
+    [this.__x, this.__y, this.__z] = [x, y, z || 0];
+  }
+  public get scale(): number {
+    return Point3DCenter.persistent / (Point3DCenter.persistent + this.__z);
+  }
+  public get x(): number {
+    return (
+      (this.__x - this.$parent.width / 2) * this.scale + this.$parent.width / 2
+    );
+  }
+  public set x(value: number) {
+    this.__x = value;
+  }
+  public get y(): number {
+    return (
+      (this.__y - this.$parent.height / 2) * this.scale +
+      this.$parent.height / 2
+    );
+  }
+  public set y(value: number) {
+    this.__y = value;
+  }
+  public get z(): number {
+    return this.__z;
+  }
+  public set z(value: number) {
+    this.__z = value;
+  }
+
+  public get(value: number): number;
+  public get(prop: string): number;
+  public get(prop: number | string): number {
+    if (typeof prop === "number") {
+      return this.scale * prop;
+    }
+
+    return this.scale * (this as any)[prop];
+  }
 }

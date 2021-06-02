@@ -3,6 +3,7 @@ import MyElement, {
   CircleElement,
   Point3D,
   LikeMyElement,
+  Point3DCenter,
 } from "./MyElement";
 import {
   AutoToPx,
@@ -61,43 +62,50 @@ export default class fCanvas {
   static RectElement: typeof RectElement = RectElement;
   static CircleElement: typeof CircleElement = CircleElement;
   static Point3D: typeof Point3D = Point3D;
+  static Point3DCenter: typeof Point3DCenter = Point3DCenter;
   static count: number = 0;
 
-  private _ENV: ENV = {
+  private _ENV: ENV = Object.create({
     angleMode: "degress",
     rectAlign: "left",
     rectBaseline: "top",
     colorMode: "rgb",
 
-    rotate: 0,
     clear: true,
     loop: true,
-  };
+  });
   private _id: number = fCanvas.count++;
   private _el: HTMLCanvasElement = document.createElement("canvas");
   private _context2dCaching: CanvasRenderingContext2D | null = null;
   private _stamentReady: Stament = new Stament();
   private _existsPreload: boolean = false;
-  private __translate: HightTransform = {
+  private __translate: HightTransform = Object.create({
     x: 0,
     y: 0,
     sumX: 0,
     sumY: 0,
-  };
-  private __scale: HightTransform = {
+  });
+  private __scale: HightTransform = Object.create({
     x: 0,
     y: 0,
     sumX: 0,
     sumY: 0,
-  };
+  });
+  private __rotate: {
+    now: number;
+    sum: number;
+  } = Object.create({
+    now: 0,
+    sum: 0,
+  });
   private __idFrame: number | null = null;
   private __attributeContext: {
     alpha: boolean;
     desynchronized: boolean;
-  } = {
+  } = Object.create({
     alpha: true,
     desynchronized: false,
-  };
+  });
 
   public preventTouch: boolean = false;
   public stopTouch: boolean = false;
@@ -619,10 +627,20 @@ export default class fCanvas {
    */
   rotate(value?: number): number | void {
     if (value === undefined) {
-      return this._ENV.rotate;
+      return this.__rotate.now;
     } else {
-      this.$context2d.rotate((this._ENV.rotate = this._toRadius(value)));
+      this.$context2d.rotate((this.__rotate.now = this._toRadius(value)));
+      this.__rotate.sum += this.__rotate.now % 360;
     }
+  }
+  /**
+   *
+   *
+   * @memberof fCanvas
+   * @return {void}
+   */
+  resetRotate(): void {
+    this.rotate(-this.__rotate.sum);
   }
   /**
    * @return {void}
@@ -743,6 +761,9 @@ export default class fCanvas {
 
     this.$context2d.globalAlpha = alpha;
   }
+  resetAlpha(): void {
+    this.alpha(1);
+  }
 
   translate(): Offset;
   translate(x: number, y: number): void;
@@ -792,7 +813,7 @@ export default class fCanvas {
    * @return {void}
    */
   resetScale(): void {
-    this.$context2d.translate(-this.__translate.sumX, -this.__translate.sumY);
+    this.$context2d.translate(-this.__scale.sumX, -this.__scale.sumY);
   }
   clip(): void;
   clip(fillRule: "nonzero" | "evenodd"): void;

@@ -1,4 +1,4 @@
-import MyElement, { RectElement, CircleElement, Point3D, LikeMyElement } from "./MyElement";
+import MyElement, { RectElement, CircleElement, Point3D, LikeMyElement, Point3DCenter } from "./MyElement";
 import { InfoTouch, noop, Offset } from "../utils/index";
 import { CallbackEvent } from "../classes/Emitter";
 declare type AngleType = "degress" | "radial";
@@ -14,6 +14,7 @@ export default class fCanvas {
     static RectElement: typeof RectElement;
     static CircleElement: typeof CircleElement;
     static Point3D: typeof Point3D;
+    static Point3DCenter: typeof Point3DCenter;
     static count: number;
     private _ENV;
     private _id;
@@ -23,6 +24,7 @@ export default class fCanvas {
     private _existsPreload;
     private __translate;
     private __scale;
+    private __rotate;
     private __idFrame;
     private __attributeContext;
     preventTouch: boolean;
@@ -218,6 +220,13 @@ export default class fCanvas {
     rotate(): number;
     rotate(value: number): void;
     /**
+     *
+     *
+     * @memberof fCanvas
+     * @return {void}
+     */
+    resetRotate(): void;
+    /**
      * @return {void}
      */
     resetTransform(): void;
@@ -258,6 +267,7 @@ export default class fCanvas {
     operation(composite: GlobalCompositeOperationType): void;
     alpha(): number;
     alpha(alpha: number): void;
+    resetAlpha(): void;
     translate(): Offset;
     translate(x: number, y: number): void;
     /**

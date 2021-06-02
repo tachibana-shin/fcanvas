@@ -6,10 +6,6 @@ export interface LikeMyElement extends MyElement {
 export default class MyElement {
     update?: noop;
     draw?: noop;
-    setup?: {
-        (): any;
-    };
-    __autodraw: boolean;
     private _els;
     private _idActiveNow;
     private _queue;
@@ -28,12 +24,7 @@ export default class MyElement {
      * @param {LikeMyElement} element
      * @return {void}
      */
-    addQueue(element: LikeMyElement): void;
-    /**
-     * @param {number} index
-     * @return {LikeMyElement | undefined}
-     */
-    getQueue(index: number): LikeMyElement | void;
+    add(...elements: LikeMyElement[]): void;
     /**
      * @param {LikeMyElement} element
      * @return {void}
@@ -447,5 +438,26 @@ export declare class Point3D extends MyElement {
      * @return {void}
      */
     rotateZ(angle: number): void;
-    draw: noop;
+}
+export declare class Point3DCenter extends MyElement {
+    private static persistent;
+    private __x;
+    private __y;
+    private __z;
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @param {number} z?
+     * @return {any}
+     */
+    constructor(x: number, y: number, z?: number);
+    get scale(): number;
+    get x(): number;
+    set x(value: number);
+    get y(): number;
+    set y(value: number);
+    get z(): number;
+    set z(value: number);
+    get(value: number): number;
+    get(prop: string): number;
 }
