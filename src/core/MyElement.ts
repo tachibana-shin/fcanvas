@@ -1,5 +1,4 @@
 import { AutoToPx, noop, Offset } from "../utils/index";
-import Animate, { AnimateConfig } from "../classes/Animate";
 import fCanvas, { noopFCanvas, ParamsToRgb } from "./fCanvas";
 import { RectImpactPoint, CircleImpactPoint } from "../functions/index";
 
@@ -919,16 +918,6 @@ export default class MyElement {
       this.$context2d.drawFocusIfNeeded(path as Element);
     } else {
       this.$context2d.drawFocusIfNeeded(path as Path2D, element);
-    }
-  }
-}
-
-export class EAnimate extends MyElement {
-  public animate: Animate = new Animate();
-  constructor(animate?: AnimateConfig) {
-    super();
-    if (animate) {
-      this.animate.config(animate);
     }
   }
 }

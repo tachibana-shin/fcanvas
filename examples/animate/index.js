@@ -1,28 +1,6 @@
-import fCanvas from "../../dist/fcanvas.esm.js";
+import fCanvas, { Animate } from "../../dist/fcanvas.esm.js";
 
 const canvas = new fCanvas();
-
-class App extends fCanvas.EAnimate {
-  draw() {
-    // console.log( this );
-    // debugger
-    this.fill(0);
-    this.circle(this.x, this.y, 10);
-  }
-  update() {
-    this.draw();
-    this.addFrame();
-  }
-}
-
-const app = new App({
-  time: 1000,
-});
-
-app.$.on("done", () => {
-  // alert("done")
-  app.set(app.x, app.y, app.z);
-});
 
 canvas.setup(() => {
   canvas.width = canvas.windowWidth;
@@ -31,12 +9,25 @@ canvas.setup(() => {
   canvas.append();
 });
 
+class App extends fCanvas.Element {
+  offset = new Animate([0, 0], 3000, "ease");
+
+  draw() {
+    this.fill(0);
+    this.rect(this.offset[0], this.offset[1], 40, 40);
+  }
+  update() {
+    this.offset.action();
+  }
+}
+
+const app = new App();
+self.app = app;
 canvas.draw(() => {
   canvas.run(app);
 });
 
 canvas.mouseClicked(() => {
-  // if (app.done) {
-    app.moveImmediate(canvas.mouseX, canvas.mouseY);
-  // }
+  console.log("click");
+  app.offset.add([canvas.mouseX, canvas.mouseY]);
 });

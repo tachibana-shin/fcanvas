@@ -1,5 +1,4 @@
 import { noop, Offset } from "../utils/index";
-import Animate, { AnimateConfig } from "../classes/Animate";
 import fCanvas from "./fCanvas";
 export interface LikeMyElement extends MyElement {
     [propName: string]: any;
@@ -384,10 +383,6 @@ export default class MyElement {
     shadowColor(color: number): void;
     drawFocusIfNeeded(element: Element): void;
     drawFocusIfNeeded(path: Path2D, element: Element): void;
-}
-export declare class EAnimate extends MyElement {
-    animate: Animate;
-    constructor(animate?: AnimateConfig);
 }
 export declare class RectElement extends MyElement {
     readonly type: string;

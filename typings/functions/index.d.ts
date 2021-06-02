@@ -98,7 +98,7 @@ export declare const hypot: (...values: number[]) => number;
  * @param {number} prevent
  * @return {number}
  */
-export declare function odd(value: number, max: number, prevent: number): number;
+export declare function odd(value: number, prevent: number, max: number): number;
 /**
  * @param {number} value
  * @param {number} min

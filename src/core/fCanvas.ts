@@ -1,5 +1,4 @@
 import MyElement, {
-  EAnimate,
   RectElement,
   CircleElement,
   Point3D,
@@ -59,7 +58,6 @@ interface HightTransform {
 
 export default class fCanvas {
   static Element: typeof MyElement = MyElement;
-  static EAnimate: typeof EAnimate = EAnimate;
   static RectElement: typeof RectElement = RectElement;
   static CircleElement: typeof CircleElement = CircleElement;
   static Point3D: typeof Point3D = Point3D;

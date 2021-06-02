@@ -754,6 +754,251 @@ class Vector {
     }
 }
 
+function getAnimate(type, currentProgress, start, distance, steps, power) {
+    switch (type) {
+        case "ease":
+            currentProgress /= steps / 2;
+            if (currentProgress < 1) {
+                return (distance / 2) * Math.pow(currentProgress, power) + start;
+            }
+            currentProgress -= 2;
+            return (distance / 2) * (Math.pow(currentProgress, power) + 2) + start;
+        case "quadratic":
+            currentProgress /= steps / 2;
+            if (currentProgress <= 1) {
+                return (distance / 2) * currentProgress * currentProgress + start;
+            }
+            currentProgress--;
+            return (-1 * (distance / 2) * (currentProgress * (currentProgress - 2) - 1) +
+                start);
+        case "sine-ease-in-out":
+            return ((-distance / 2) * (Math.cos((Math.PI * currentProgress) / steps) - 1) +
+                start);
+        case "quintic-ease":
+            currentProgress /= steps / 2;
+            if (currentProgress < 1) {
+                return (distance / 2) * Math.pow(currentProgress, 5) + start;
+            }
+            currentProgress -= 2;
+            return (distance / 2) * (Math.pow(currentProgress, 5) + 2) + start;
+        case "exp-ease-in-out":
+            currentProgress /= steps / 2;
+            if (currentProgress < 1)
+                return (distance / 2) * Math.pow(2, 10 * (currentProgress - 1)) + start;
+            currentProgress--;
+            return (distance / 2) * (-Math.pow(2, -10 * currentProgress) + 2) + start;
+        case "linear":
+            return start + (distance / steps) * currentProgress;
+    }
+}
+/**
+ * @param {AnimateType} type
+ * @param {number} start
+ * @param {number} stop
+ * @param {number} frame
+ * @param {number} frames
+ * @param {number=3} power
+ * @return {number}
+ */
+function getValueInFrame(type, start, stop, frame, frames, power = 3) {
+    const distance = stop - start;
+    return getAnimate(type, frame, start, distance, frames, power);
+}
+function timeToFrames(time, fps = 1000 / 60) {
+    return time / fps;
+}
+function toObject(obj) {
+    if (Array.isArray(obj)) {
+        let tmp = {};
+        obj.forEach((value, index) => {
+            tmp[`${index}`] = value;
+        });
+        obj = tmp;
+    }
+    return obj;
+}
+function reactive(obj, $this) {
+    delete obj.__observe;
+    obj = toObject(obj);
+    const store = {};
+    for (const key in obj) {
+        store[key] = [obj[key], obj[key]];
+        Object.defineProperty(obj, key, {
+            get() {
+                return getValueInFrame($this.easing, store[key][0], store[key][1], $this.frame, $this.frames);
+            },
+            set(value) {
+                store[key][1] = value;
+            },
+        });
+    }
+    Object.defineProperty(obj, "__observe", {
+        writable: true,
+        enumerable: false,
+        configurable: true,
+        value: store,
+    });
+    return obj;
+}
+function splitNumberString(params) {
+    const indexString = params.findIndex((item) => typeof item === "string");
+    if (indexString > -1) {
+        return [params[indexString], +params[indexString === 0 ? 1 : 0]];
+    }
+    else {
+        return [params[1], +params[0]];
+    }
+}
+function converParams(...params) {
+    let data, time, easing;
+    if ("length" in params[0] ||
+        (params[0] !== null && typeof params[0] === "object")) {
+        /// install to params[0] | time = params[1] | easing = params[2]
+        data = params[0];
+        [easing, time] = splitNumberString(params.slice(1));
+    }
+    else {
+        /// install to params | time  = 0 | easing = linear
+        data = toObject(params);
+    }
+    return [data, time, easing];
+}
+class Animate {
+    constructor(...params) {
+        this.__data = {
+            __observe: {},
+        };
+        this.__fps = 1000 / 60;
+        this.__eventsStore = Object.create(null);
+        this.__queue = [];
+        this.time = 0;
+        this.easing = "ease";
+        this.__frame = 1;
+        const [data, time, easing] = converParams(...params);
+        this.data = data ?? this.data;
+        this.time = Number.isNaN(time) ? this.time : time ?? this.time;
+        this.easing = easing ?? this.easing;
+    }
+    // private get data(): StoreObserve {
+    //   return this.__data;
+    // }
+    set data(data) {
+        this.__data = reactive(data, this);
+        for (const key in this.__data) {
+            Object.defineProperty(this, key, {
+                get() {
+                    return this.__data[key];
+                },
+            });
+        }
+    }
+    /**
+     *
+     *
+     * @param {string} key
+     * @return {*}  {(number | void)}
+     * @memberof Animate
+     */
+    get(key) {
+        return this.__data[key];
+    }
+    get frames() {
+        return Math.max(timeToFrames(this.time, this.__fps), 1);
+    }
+    get frame() {
+        return Math.min(this.__frame, this.frames);
+    }
+    set frame(value) {
+        this.__frame = Math.min(value, this.frames);
+        if (this.frame === this.frames) {
+            this.emit("done");
+            if (this.__queue.length > 0) {
+                this._to(...this.__queue[0]);
+                this.__queue.splice(0, 1);
+            }
+        }
+    }
+    on(name, callback) {
+        if (name in this.__eventsStore) {
+            this.__eventsStore[name].push(callback);
+        }
+        else {
+            this.__eventsStore[name] = [callback];
+        }
+    }
+    off(name, callback) {
+        if (callback) {
+            this.__eventsStore[name] = this.__eventsStore[name]?.filter((item) => item !== callback);
+            if (this.__eventsStore[name]?.length === 0) {
+                delete this.__eventsStore[name];
+            }
+        }
+        else {
+            delete this.__eventsStore[name];
+        }
+    }
+    emit(name, ...params) {
+        this.__eventsStore[name]?.forEach((callback) => {
+            callback.call(this, ...params);
+        });
+    }
+    once(name, callback) {
+        const callbackVirual = (...params) => {
+            callback.call(this, ...params);
+            this.off(name, callbackVirual);
+        };
+        this.on(name, callbackVirual);
+    }
+    setFPS(value) {
+        this.__fps = value;
+    }
+    action() {
+        this.frame++;
+    }
+    cancel(key) {
+        if (key) {
+            if (key in this.__data && key in this.__data.__observe) {
+                this.__data.__observe[key][0] = this.__data[key];
+                this.emit("cancel", key);
+            }
+        }
+        else {
+            for (const key in this.__data) {
+                this.cancel(key);
+            }
+        }
+    }
+    _to(...params) {
+        const [data, time, easing] = converParams(...params);
+        for (const key in data) {
+            if (key in this.__data && key in this.__data.__observe) {
+                this.cancel(key);
+                this.__data.__observe[key][1] = +data[key];
+                // this.__data.__observe[key][1] = +data[key] as number;
+            }
+            else {
+                console.error(`fCanvas<animate.ts>: "${key}" is not signed.`);
+            }
+        }
+        this.frame = 0;
+        this.time = Number.isNaN(time) ? this.time : time ?? this.time;
+        this.easing = easing ?? this.easing;
+    }
+    to(...params) {
+        this._to(...params);
+        this.__queue.splice(0);
+    }
+    get running() {
+        return this.frame < this.frames;
+    }
+    add(...params) {
+        this.__queue.push(converParams(...params));
+    }
+    set(...params) {
+        this.data = converParams(...params)[0];
+    }
+}
+
 /**
  * @param {Circle} circle1
  * @param {Circle} circle2
@@ -970,7 +1215,7 @@ const hypot = typeof Math.hypot === "function"
  * @param {number} prevent
  * @return {number}
  */
-function odd(value, max, prevent) {
+function odd(value, prevent, max) {
     if (value === max) {
         return prevent;
     }
@@ -1017,237 +1262,6 @@ function cutImage(image, x = 0, y = 0, width = extractNumber(`${image.width}`), 
     virualContext.clearRect(0, 0, width, height);
     return imageCuted;
 }
-
-function getAnimate(type, currentProgress, start, distance, steps, power) {
-    switch (type) {
-        case "ease":
-            currentProgress /= steps / 2;
-            if (currentProgress < 1) {
-                return (distance / 2) * Math.pow(currentProgress, power) + start;
-            }
-            currentProgress -= 2;
-            return (distance / 2) * (Math.pow(currentProgress, power) + 2) + start;
-        case "quadratic":
-            currentProgress /= steps / 2;
-            if (currentProgress <= 1) {
-                return (distance / 2) * currentProgress * currentProgress + start;
-            }
-            currentProgress--;
-            return (-1 * (distance / 2) * (currentProgress * (currentProgress - 2) - 1) +
-                start);
-        case "sine-ease-in-out":
-            return ((-distance / 2) * (Math.cos((Math.PI * currentProgress) / steps) - 1) +
-                start);
-        case "quintic-ease":
-            currentProgress /= steps / 2;
-            if (currentProgress < 1) {
-                return (distance / 2) * Math.pow(currentProgress, 5) + start;
-            }
-            currentProgress -= 2;
-            return (distance / 2) * (Math.pow(currentProgress, 5) + 2) + start;
-        case "exp-ease-in-out":
-            currentProgress /= steps / 2;
-            if (currentProgress < 1)
-                return (distance / 2) * Math.pow(2, 10 * (currentProgress - 1)) + start;
-            currentProgress--;
-            return (distance / 2) * (-Math.pow(2, -10 * currentProgress) + 2) + start;
-        case "linear":
-            return start + (distance / steps) * currentProgress;
-    }
-}
-/**
- * @param {AnimateType} type
- * @param {number} start
- * @param {number} stop
- * @param {number} frame
- * @param {number} frames
- * @param {number=3} power
- * @return {number}
- */
-function getValueInFrame(type, start, stop, frame, frames, power = 3) {
-    const distance = stop - start;
-    return getAnimate(type, frame, start, distance, frames, power);
-}
-class Animate {
-    /**
-     * @param {AnimateConfig={time:0}} config
-     * @return {any}
-     */
-    constructor(config = { time: 0 }) {
-        this.event = new Emitter();
-        this._frame = 1;
-        this.type = "linear";
-        this.time = 0;
-        this.fps = 1000 / 60;
-        this.xFrom = 0;
-        this.xTo = 0;
-        this.yFrom = 0;
-        this.yTo = 0;
-        this.zFrom = 0;
-        this.zTo = 0;
-        this.config(config);
-    }
-    /**
-     * Get frames from time
-     * @param {number} time
-     * @param {number=1000/60} fps
-     * @return {number}
-     */
-    static getFrames(time, fps = 1000 / 60) {
-        return time / fps; /// time * 1 / fps
-    }
-    /**
-     * @return {number}
-     */
-    get x() {
-        return getValueInFrame(this.type, this.xFrom, this.xTo, this.frame, this.frames);
-    }
-    /**
-     * @return {number}
-     */
-    get y() {
-        return getValueInFrame(this.type, this.yFrom, this.yTo, this.frame, this.frames);
-    }
-    /**
-     * @return {number}
-     */
-    get z() {
-        return getValueInFrame(this.type, this.zFrom, this.zTo, this.frame, this.frames);
-    }
-    /**
-     * @return {number}
-     */
-    get frames() {
-        return Animate.getFrames(this.time, this.fps);
-    }
-    /**
-     * @return {number}
-     */
-    get frame() {
-        return this._frame;
-    }
-    /**
-     * @param {number} value
-     * @return {any}
-     */
-    set frame(value) {
-        this._frame = constrain(value, 0, this.frames);
-        if (this._frame === this.frames) {
-            this.event.emit("done");
-        }
-    }
-    /**
-     * @return {boolean}
-     */
-    get running() {
-        return this.frame < this.frames;
-    }
-    /**
-     * @return {boolean}
-     */
-    get done() {
-        return this.frame === this.frames;
-    }
-    /**
-     * @param {any} {xFrom=0
-     * @param {any} xTo=0
-     * @param {any} yFrom=0
-     * @param {any} yTo=0
-     * @param {any} zFrom=0
-     * @param {any} zTo=0
-     * @param {any} type="linear"
-     * @param {any} time
-     * @param {any} fps=1000/60
-     * @param {AnimateConfig} }
-     * @return {void}
-     */
-    config({ xFrom = 0, xTo = 0, yFrom = 0, yTo = 0, zFrom = 0, zTo = 0, type = "linear", time, fps = 1000 / 60, }) {
-        [this.xFrom, this.xTo, this.yFrom, this.yTo, this.zFrom, this.zTo] = [
-            xFrom,
-            xTo,
-            yFrom,
-            yTo,
-            zFrom,
-            zTo,
-        ];
-        this.type = type;
-        this.time = time;
-        this.fps = fps;
-    }
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {void}
-     */
-    set(x, y, z) {
-        [this.xFrom, this.yFrom, this.zFrom] = [x || 0, y || 0, z || 0];
-    }
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {void}
-     */
-    moveTo(x, y, z) {
-        this.frame = 1;
-        [this.xTo, this.yTo, this.zTo] = [x || 0, y || 0, z || 0];
-    }
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {Promise<void>}
-     */
-    moveToSync(x, y, z) {
-        this.moveTo(x, y, z);
-        return new Promise((resolve) => {
-            this.event.once("done", () => resolve());
-        });
-    }
-    /**
-     * @returns void
-     */
-    addFrame() {
-        this.frame++;
-    }
-    /**
-     * @param  {AnimateType} type
-     * @returns void
-     */
-    setType(type) {
-        this.type = type;
-    }
-    /**
-     * @returns number
-     */
-    getTime() {
-        return this.time;
-    }
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {void}
-     */
-    moveImmediate(x, y, z) {
-        [this.xFrom, this.yFrom, this.zFrom] = [this.x, this.y, this.z];
-        this.moveTo(x, y, z);
-    }
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {Promise<void>}
-     */
-    moveImmediateSync(x, y, z) {
-        this.moveImmediate(x, y, z);
-        return new Promise((resolve) => {
-            this.event.once("done", () => resolve());
-        });
-    }
-}
-Animate.getValueInFrame = getValueInFrame;
 
 class Camera {
     /**
@@ -2372,15 +2386,6 @@ class MyElement {
         }
     }
 }
-class EAnimate extends MyElement {
-    constructor(animate) {
-        super();
-        this.animate = new Animate();
-        if (animate) {
-            this.animate.config(animate);
-        }
-    }
-}
 class RectElement extends MyElement {
     /**
      * @param {number} x
@@ -3431,7 +3436,6 @@ class fCanvas {
     }
 }
 fCanvas.Element = MyElement;
-fCanvas.EAnimate = EAnimate;
 fCanvas.RectElement = RectElement;
 fCanvas.CircleElement = CircleElement;
 fCanvas.Point3D = Point3D;

@@ -1,4 +1,4 @@
-import MyElement, { EAnimate, RectElement, CircleElement, Point3D, LikeMyElement } from "./MyElement";
+import MyElement, { RectElement, CircleElement, Point3D, LikeMyElement } from "./MyElement";
 import { InfoTouch, noop, Offset } from "../utils/index";
 import { CallbackEvent } from "../classes/Emitter";
 declare type AngleType = "degress" | "radial";
@@ -11,7 +11,6 @@ declare type TextBaselineType = BaselineType | "hanging" | "alphabetic" | "ideog
 declare type GlobalCompositeOperationType = "source-over" | "source-atop" | "source-in" | "source-out" | "destination-over" | "destination-atop" | "destination-in" | "destination-out" | "lighter" | "copy" | "xor";
 export default class fCanvas {
     static Element: typeof MyElement;
-    static EAnimate: typeof EAnimate;
     static RectElement: typeof RectElement;
     static CircleElement: typeof CircleElement;
     static Point3D: typeof Point3D;

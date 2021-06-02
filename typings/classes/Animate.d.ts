@@ -1,146 +1,46 @@
-import Emitter from "./Emitter";
 export declare type AnimateType = "ease" | "quadratic" | "sine-ease-in-out" | "quintic-ease" | "exp-ease-in-out" | "linear";
-export interface AnimateConfig {
-    xFrom?: number;
-    xTo?: number;
-    yFrom?: number;
-    yTo?: number;
-    zFrom?: number;
-    zTo?: number;
-    type?: AnimateType;
+declare type StoreData = number[] | {
+    [propName: string]: number;
+};
+export default class Animate {
+    private __data;
+    private set data(value);
+    /**
+     *
+     *
+     * @param {string} key
+     * @return {*}  {(number | void)}
+     * @memberof Animate
+     */
+    get(key: string): number | void;
+    private __fps;
+    private __eventsStore;
+    private __queue;
     time: number;
-    fps?: number;
-}
-/**
- * @param {AnimateType} type
- * @param {number} start
- * @param {number} stop
- * @param {number} frame
- * @param {number} frames
- * @param {number=3} power
- * @return {number}
- */
-declare function getValueInFrame(type: AnimateType, start: number, stop: number, frame: number, frames: number, power?: number): number;
-declare class Animate {
-    /**
-     * Get frames from time
-     * @param {number} time
-     * @param {number=1000/60} fps
-     * @return {number}
-     */
-    static getFrames(time: number, fps?: number): number;
-    static getValueInFrame: typeof getValueInFrame;
-    event: Emitter;
-    private _frame;
-    private type;
-    private time;
-    private fps;
-    xFrom: number;
-    xTo: number;
-    yFrom: number;
-    yTo: number;
-    zFrom: number;
-    zTo: number;
-    /**
-     * @return {number}
-     */
-    get x(): number;
-    /**
-     * @return {number}
-     */
-    get y(): number;
-    /**
-     * @return {number}
-     */
-    get z(): number;
-    /**
-     * @return {number}
-     */
+    easing: AnimateType;
     get frames(): number;
-    /**
-     * @return {number}
-     */
+    private __frame;
     get frame(): number;
-    /**
-     * @param {number} value
-     * @return {any}
-     */
     set frame(value: number);
-    /**
-     * @return {boolean}
-     */
+    constructor(...params: number[]);
+    constructor(params: StoreData, easing?: AnimateType, duration?: number);
+    constructor(params: StoreData, duration?: number, easing?: AnimateType);
+    on(name: string, callback: Function): void;
+    off(name: string, callback?: Function): void;
+    emit(name: string, ...params: any[]): void;
+    once(name: string, callback: Function): void;
+    setFPS(value: number): void;
+    action(): void;
+    cancel(key?: string): void;
+    private _to;
+    to(...params: number[]): void;
+    to(params: StoreData, easing?: AnimateType, duration?: number): void;
+    to(params: StoreData, duration?: number, easing?: AnimateType): void;
     get running(): boolean;
-    /**
-     * @return {boolean}
-     */
-    get done(): boolean;
-    /**
-     * @param {AnimateConfig={time:0}} config
-     * @return {any}
-     */
-    constructor(config?: AnimateConfig);
-    /**
-     * @param {any} {xFrom=0
-     * @param {any} xTo=0
-     * @param {any} yFrom=0
-     * @param {any} yTo=0
-     * @param {any} zFrom=0
-     * @param {any} zTo=0
-     * @param {any} type="linear"
-     * @param {any} time
-     * @param {any} fps=1000/60
-     * @param {AnimateConfig} }
-     * @return {void}
-     */
-    config({ xFrom, xTo, yFrom, yTo, zFrom, zTo, type, time, fps, }: AnimateConfig): void;
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {void}
-     */
-    set(x?: number, y?: number, z?: number): void;
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {void}
-     */
-    moveTo(x?: number, y?: number, z?: number): void;
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {Promise<void>}
-     */
-    moveToSync(x?: number, y?: number, z?: number): Promise<void>;
-    /**
-     * @returns void
-     */
-    addFrame(): void;
-    /**
-     * @param  {AnimateType} type
-     * @returns void
-     */
-    setType(type: AnimateType): void;
-    /**
-     * @returns number
-     */
-    getTime(): number;
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {void}
-     */
-    moveImmediate(x?: number, y?: number, z?: number): void;
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {Promise<void>}
-     */
-    moveImmediateSync(x?: number, y?: number, z?: number): Promise<void>;
+    add(...params: number[]): void;
+    add(params: StoreData, easing?: AnimateType, duration?: number): void;
+    add(params: StoreData, duration?: number, easing?: AnimateType): void;
+    set(...params: number[]): void;
+    set(params: StoreData): void;
 }
-export default Animate;
-export { getValueInFrame };
+export {};

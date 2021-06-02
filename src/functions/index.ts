@@ -284,7 +284,7 @@ export const hypot =
  * @param {number} prevent
  * @return {number}
  */
-export function odd(value: number, max: number, prevent: number): number {
+export function odd(value: number, prevent: number, max: number): number {
   if (value === max) {
     return prevent;
   }
