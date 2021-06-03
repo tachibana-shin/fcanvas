@@ -27,3 +27,4 @@ export {
 };
 export * from "./functions/index";
 export * from "./core/SystemEvents";
+export { createElement } from "./core/MyElement";

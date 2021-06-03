@@ -1,6 +1,7 @@
 import { AutoToPx, noop, Offset } from "../utils/index";
 import fCanvas, { noopFCanvas, ParamsToRgb } from "./fCanvas";
 import { RectImpactPoint, CircleImpactPoint } from "../functions/index";
+import Vector from "../classes/Vector";
 
 type ParamsDrawImage =
   | [number, number]
@@ -13,7 +14,9 @@ export interface LikeMyElement extends MyElement {
 
 export default class MyElement {
   public update?: noop;
-  public draw?: noop;
+  public draw?: {
+    (...params: any[]): void;
+  };
   private _els: {
     [propName: string]: fCanvas;
   } = Object.create(null);
@@ -43,17 +46,17 @@ export default class MyElement {
   get $el(): HTMLCanvasElement {
     return this.$parent.$el;
   }
-  _run(canvas: fCanvas): void {
+  _run(canvas: fCanvas, ...params: any[]): void {
     this.__addEl(canvas);
     this._idActiveNow = canvas.id;
 
     if (typeof this.update === "function") {
       if (typeof this.draw === "function") {
-        this.draw();
+        this.draw(...params);
       }
       this.update();
     } else if (typeof this.draw === "function") {
-      this.draw();
+      this.draw(...params);
     }
 
     if (this._queue.length > 0) {
@@ -906,6 +909,52 @@ export default class MyElement {
       this.$context2d.drawFocusIfNeeded(path as Path2D, element);
     }
   }
+
+  polyline(...points: number[]): void;
+  polyline(...points: [number, number][]): void;
+  polyline(...points: number[] | Array<[number, number]>): void {
+    if (points.length > 0) {
+      if (Array.isArray(points[0])) {
+        this.move(points[0][0], points[0][1]);
+
+        let index = 1;
+        const { length } = points;
+
+        while (index < length) {
+          this.to(
+            (points[index] as [number, number])[0],
+            (points[index] as [number, number])[1]
+          );
+          index++;
+        }
+      } else {
+        if (points.length > 1) {
+          this.move(points[0], points[1] as number);
+
+          let index = 2;
+          const { length } = points;
+
+          while (index < length - 1) {
+            this.to(points[index] as number, points[index + 1] as number);
+            index += 2;
+          }
+        }
+      }
+    }
+  }
+  polygon(...points: number[]): void;
+  polygon(...points: [number, number][]): void;
+  polygon(...points: number[] | Array<[number, number]>): void {
+    if (Array.isArray(points[0])) {
+      this.polyline(...(points as [number, number][]), points[0]);
+    } else {
+      this.polyline(
+        ...(points as number[]),
+        points[0] as number,
+        points[1] as number
+      );
+    }
+  }
 }
 
 export class RectElement extends MyElement {
@@ -1066,3 +1115,19 @@ export class Point3DCenter extends MyElement {
     return this.scale * (this as any)[prop];
   }
 }
+
+export function createElement(callback: noop): MyElement {
+  return new (class extends MyElement {
+    draw = callback;
+  })();
+}
+
+// class App extends Polyline3D {
+//   constructor(...points, x, y, z) {
+//     super(...points, x, y, z);
+//   }
+
+//   draw() {
+//     this.poly();
+//   }
+// }

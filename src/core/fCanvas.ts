@@ -4,6 +4,7 @@ import MyElement, {
   Point3D,
   LikeMyElement,
   Point3DCenter,
+  createElement,
 } from "./MyElement";
 import {
   AutoToPx,
@@ -265,8 +266,8 @@ export default class fCanvas {
    * @param {LikeMyElement} element
    * @return {void}
    */
-  run(element: LikeMyElement): void {
-    element._run(this);
+  run(element: LikeMyElement, ...params: any[]): void {
+    element._run(this, ...params);
   }
 
   /**
@@ -653,11 +654,7 @@ export default class fCanvas {
    * @return {*}  {MyElement}
    * @memberof fCanvas
    */
-  createElement(callback: noop): MyElement {
-    return new (class extends MyElement {
-      draw = callback;
-    })();
-  }
+  createElement = createElement;
   /**
    * @param {Function} callback
    * @return {Promise<void>}

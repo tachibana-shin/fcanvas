@@ -12,3 +12,4 @@ export { Emitter, Stament, Store, Vector, Animate, Camera, loadResourceImage };
 export { requestAnimationFrame, cancelAnimationFrame, windowSize, isMobile, isTouch, passive, };
 export * from "./functions/index";
 export * from "./core/SystemEvents";
+export { createElement } from "./core/MyElement";

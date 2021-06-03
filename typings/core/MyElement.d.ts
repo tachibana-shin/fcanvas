@@ -5,7 +5,9 @@ export interface LikeMyElement extends MyElement {
 }
 export default class MyElement {
     update?: noop;
-    draw?: noop;
+    draw?: {
+        (...params: any[]): void;
+    };
     private _els;
     private _idActiveNow;
     private _queue;
@@ -19,7 +21,7 @@ export default class MyElement {
      * @return {HTMLCanvasElement}
      */
     get $el(): HTMLCanvasElement;
-    _run(canvas: fCanvas): void;
+    _run(canvas: fCanvas, ...params: any[]): void;
     /**
      * @param {LikeMyElement} element
      * @return {void}
@@ -374,6 +376,10 @@ export default class MyElement {
     shadowColor(color: number): void;
     drawFocusIfNeeded(element: Element): void;
     drawFocusIfNeeded(path: Path2D, element: Element): void;
+    polyline(...points: number[]): void;
+    polyline(...points: [number, number][]): void;
+    polygon(...points: number[]): void;
+    polygon(...points: [number, number][]): void;
 }
 export declare class RectElement extends MyElement {
     readonly type: string;
@@ -461,3 +467,4 @@ export declare class Point3DCenter extends MyElement {
     get(value: number): number;
     get(prop: string): number;
 }
+export declare function createElement(callback: noop): MyElement;

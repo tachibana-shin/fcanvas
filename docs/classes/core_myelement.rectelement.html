@@ -2876,6 +2876,12 @@ img {
 					<a href="core_myelement.rectelement.html#point" class="tsd-kind-icon">point</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a href="core_myelement.rectelement.html#polygon" class="tsd-kind-icon">polygon</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a href="core_myelement.rectelement.html#polyline" class="tsd-kind-icon">polyline</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a href="core_myelement.rectelement.html#putimagedata" class="tsd-kind-icon">put<wbr>Image<wbr>Data</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -2936,6 +2942,9 @@ img {
 		</li>
 		<li class=" tsd-kind-interface tsd-parent-kind-module">
 			<a href="../interfaces/core_myelement.likemyelement.html" class="tsd-kind-icon">Like<wbr>MyElement</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="../modules/core_myelement.html#createelement" class="tsd-kind-icon">create<wbr>Element</a>
 		</li>
 	</ul>
 </nav>
@@ -3029,6 +3038,8 @@ img {
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="core_myelement.rectelement.html#nofill" class="tsd-kind-icon">no<wbr>Fill</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="core_myelement.rectelement.html#pie" class="tsd-kind-icon">pie</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="core_myelement.rectelement.html#point" class="tsd-kind-icon">point</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="core_myelement.rectelement.html#polygon" class="tsd-kind-icon">polygon</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="core_myelement.rectelement.html#polyline" class="tsd-kind-icon">polyline</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="core_myelement.rectelement.html#putimagedata" class="tsd-kind-icon">put<wbr>Image<wbr>Data</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="core_myelement.rectelement.html#quadratic" class="tsd-kind-icon">quadratic</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="core_myelement.rectelement.html#rect" class="tsd-kind-icon">rect</a></li>
@@ -3065,7 +3076,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Overrides <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#constructor">constructor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L916">src/core/MyElement.ts:916</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L965">src/core/MyElement.ts:965</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3093,13 +3104,34 @@ img {
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 				<a name="draw" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagOptional">Optional</span> draw</h3>
-				<div class="tsd-signature tsd-kind-icon">draw<span class="tsd-signature-symbol">:</span> <a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></div>
+				<div class="tsd-signature tsd-kind-icon">draw<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#draw">draw</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L16">src/core/MyElement.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L17">src/core/MyElement.ts:17</a></li>
 					</ul>
 				</aside>
+				<div class="tsd-type-declaration">
+					<h4>Type declaration</h4>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-signature">
+							<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
+								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+							</ul>
+							<ul class="tsd-descriptions">
+								<li class="tsd-description">
+									<h4 class="tsd-parameters-title">Parameters</h4>
+									<ul class="tsd-parameters">
+										<li>
+											<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>params: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+										</li>
+									</ul>
+									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="height" class="tsd-anchor"></a>
@@ -3107,7 +3139,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">height<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L916">src/core/MyElement.ts:916</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L965">src/core/MyElement.ts:965</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3117,7 +3149,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;rect&quot;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L912">src/core/MyElement.ts:912</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L961">src/core/MyElement.ts:961</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3128,7 +3160,7 @@ img {
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#update">update</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L15">src/core/MyElement.ts:15</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L16">src/core/MyElement.ts:16</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3138,7 +3170,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L915">src/core/MyElement.ts:915</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L964">src/core/MyElement.ts:964</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3148,7 +3180,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">x<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L913">src/core/MyElement.ts:913</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L962">src/core/MyElement.ts:962</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3158,7 +3190,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">y<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L914">src/core/MyElement.ts:914</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L963">src/core/MyElement.ts:963</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3175,7 +3207,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L104">src/core/MyElement.ts:104</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L107">src/core/MyElement.ts:107</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">CanvasRenderingContext2D</span></h4>
@@ -3192,7 +3224,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L43">src/core/MyElement.ts:43</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L46">src/core/MyElement.ts:46</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLCanvasElement</span></h4>
@@ -3209,7 +3241,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L88">src/core/MyElement.ts:88</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L91">src/core/MyElement.ts:91</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <a href="core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h4>
@@ -3226,7 +3258,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L938">src/core/MyElement.ts:938</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L987">src/core/MyElement.ts:987</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -3243,7 +3275,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L160">src/core/MyElement.ts:160</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L163">src/core/MyElement.ts:163</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h4>
@@ -3260,7 +3292,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L166">src/core/MyElement.ts:166</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L169">src/core/MyElement.ts:169</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h4>
@@ -3277,7 +3309,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L178">src/core/MyElement.ts:178</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L181">src/core/MyElement.ts:181</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -3294,7 +3326,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L172">src/core/MyElement.ts:172</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L175">src/core/MyElement.ts:175</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -3308,20 +3340,23 @@ img {
 				<a name="_run" class="tsd-anchor"></a>
 				<h3>_run</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<li class="tsd-signature tsd-kind-icon">_run<span class="tsd-signature-symbol">(</span>canvas<span class="tsd-signature-symbol">: </span><a href="core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">_run<span class="tsd-signature-symbol">(</span>canvas<span class="tsd-signature-symbol">: </span><a href="core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a>, <span class="tsd-signature-symbol">...</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#_run">_run</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L46">src/core/MyElement.ts:46</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L49">src/core/MyElement.ts:49</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>canvas: <a href="core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>params: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -3339,7 +3374,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#acos">acos</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L132">src/core/MyElement.ts:132</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L135">src/core/MyElement.ts:135</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3363,7 +3398,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#add">add</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L75">src/core/MyElement.ts:75</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L78">src/core/MyElement.ts:78</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3387,7 +3422,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#arc">arc</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L352">src/core/MyElement.ts:352</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L355">src/core/MyElement.ts:355</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3427,7 +3462,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#arcto">arcTo</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L706">src/core/MyElement.ts:706</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L709">src/core/MyElement.ts:709</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3463,7 +3498,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#asin">asin</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L118">src/core/MyElement.ts:118</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L121">src/core/MyElement.ts:121</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3487,7 +3522,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#atan">atan</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L146">src/core/MyElement.ts:146</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L149">src/core/MyElement.ts:149</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3511,7 +3546,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#atan2">atan2</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L154">src/core/MyElement.ts:154</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L157">src/core/MyElement.ts:157</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3538,7 +3573,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#begin">begin</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L296">src/core/MyElement.ts:296</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L299">src/core/MyElement.ts:299</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -3556,7 +3591,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#bezier">bezier</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L605">src/core/MyElement.ts:605</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L608">src/core/MyElement.ts:608</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3595,7 +3630,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#circle">circle</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L443">src/core/MyElement.ts:443</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L446">src/core/MyElement.ts:446</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3626,7 +3661,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#close">close</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L302">src/core/MyElement.ts:302</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L305">src/core/MyElement.ts:305</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -3644,7 +3679,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#cos">cos</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L125">src/core/MyElement.ts:125</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L128">src/core/MyElement.ts:128</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3669,7 +3704,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#createimagedata">createImageData</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L722">src/core/MyElement.ts:722</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L725">src/core/MyElement.ts:725</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3684,7 +3719,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#createimagedata">createImageData</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L723">src/core/MyElement.ts:723</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L726">src/core/MyElement.ts:726</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3711,7 +3746,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#createlineargradient">createLinearGradient</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L819">src/core/MyElement.ts:819</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L822">src/core/MyElement.ts:822</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3744,7 +3779,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#createpattern">createPattern</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L787">src/core/MyElement.ts:787</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L790">src/core/MyElement.ts:790</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3771,7 +3806,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#createradialgradient">createRadialGradient</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L802">src/core/MyElement.ts:802</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L805">src/core/MyElement.ts:805</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3811,7 +3846,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#drawfocusifneeded">drawFocusIfNeeded</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L900">src/core/MyElement.ts:900</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L903">src/core/MyElement.ts:903</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3826,7 +3861,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#drawfocusifneeded">drawFocusIfNeeded</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L901">src/core/MyElement.ts:901</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L904">src/core/MyElement.ts:904</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3855,7 +3890,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#drawimage">drawImage</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L484">src/core/MyElement.ts:484</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L487">src/core/MyElement.ts:487</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3876,7 +3911,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#drawimage">drawImage</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L485">src/core/MyElement.ts:485</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L488">src/core/MyElement.ts:488</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3903,7 +3938,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#drawimage">drawImage</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L492">src/core/MyElement.ts:492</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L495">src/core/MyElement.ts:495</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3951,7 +3986,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#ellipse">ellipse</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L416">src/core/MyElement.ts:416</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L419">src/core/MyElement.ts:419</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4004,7 +4039,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#fill">fill</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L188">src/core/MyElement.ts:188</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L191">src/core/MyElement.ts:191</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4026,7 +4061,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#fill">fill</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L189">src/core/MyElement.ts:189</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L192">src/core/MyElement.ts:192</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4047,7 +4082,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#fill">fill</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L190">src/core/MyElement.ts:190</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L193">src/core/MyElement.ts:193</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4068,7 +4103,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#fill">fill</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L191">src/core/MyElement.ts:191</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L194">src/core/MyElement.ts:194</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4092,7 +4127,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#fill">fill</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L192">src/core/MyElement.ts:192</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L195">src/core/MyElement.ts:195</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4116,7 +4151,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#fill">fill</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L193">src/core/MyElement.ts:193</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L196">src/core/MyElement.ts:196</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4140,7 +4175,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#fill">fill</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L194">src/core/MyElement.ts:194</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L197">src/core/MyElement.ts:197</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4155,7 +4190,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#fill">fill</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L195">src/core/MyElement.ts:195</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L198">src/core/MyElement.ts:198</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4170,7 +4205,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#fill">fill</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L196">src/core/MyElement.ts:196</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L199">src/core/MyElement.ts:199</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4185,7 +4220,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#fill">fill</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L197">src/core/MyElement.ts:197</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L200">src/core/MyElement.ts:200</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4200,7 +4235,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#fill">fill</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L198">src/core/MyElement.ts:198</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L201">src/core/MyElement.ts:201</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4224,7 +4259,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#fillrect">fillRect</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L658">src/core/MyElement.ts:658</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L661">src/core/MyElement.ts:661</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4257,7 +4292,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#filltext">fillText</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L638">src/core/MyElement.ts:638</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L641">src/core/MyElement.ts:641</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4290,7 +4325,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#getimagedata">getImageData</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L736">src/core/MyElement.ts:736</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L739">src/core/MyElement.ts:739</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4323,7 +4358,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#ispoint">isPoint</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L714">src/core/MyElement.ts:714</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L717">src/core/MyElement.ts:717</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4350,7 +4385,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#line">line</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L400">src/core/MyElement.ts:400</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L403">src/core/MyElement.ts:403</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4385,7 +4420,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#linecap">lineCap</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L843">src/core/MyElement.ts:843</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L846">src/core/MyElement.ts:846</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">&quot;round&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;butt&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;square&quot;</span></h4>
@@ -4394,7 +4429,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#linecap">lineCap</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L844">src/core/MyElement.ts:844</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L847">src/core/MyElement.ts:847</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4420,7 +4455,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#linedash">lineDash</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L684">src/core/MyElement.ts:684</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L687">src/core/MyElement.ts:687</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -4429,7 +4464,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#linedash">lineDash</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L685">src/core/MyElement.ts:685</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L688">src/core/MyElement.ts:688</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4444,7 +4479,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#linedash">lineDash</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L686">src/core/MyElement.ts:686</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L689">src/core/MyElement.ts:689</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4469,7 +4504,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#linedashoffset">lineDashOffset</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L671">src/core/MyElement.ts:671</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L674">src/core/MyElement.ts:674</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -4478,7 +4513,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#linedashoffset">lineDashOffset</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L672">src/core/MyElement.ts:672</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L675">src/core/MyElement.ts:675</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4503,7 +4538,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#linejoin">lineJoin</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L828">src/core/MyElement.ts:828</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L831">src/core/MyElement.ts:831</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">&quot;bevel&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;round&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;miter&quot;</span></h4>
@@ -4512,7 +4547,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#linejoin">lineJoin</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L829">src/core/MyElement.ts:829</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L832">src/core/MyElement.ts:832</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4537,7 +4572,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#linewidth">lineWidth</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L236">src/core/MyElement.ts:236</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L239">src/core/MyElement.ts:239</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -4546,7 +4581,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#linewidth">lineWidth</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L237">src/core/MyElement.ts:237</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L240">src/core/MyElement.ts:240</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4570,7 +4605,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#measuretext">measureText</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L290">src/core/MyElement.ts:290</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L293">src/core/MyElement.ts:293</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4595,7 +4630,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#miterlimit">miterLimit</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L249">src/core/MyElement.ts:249</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L252">src/core/MyElement.ts:252</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -4604,7 +4639,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#miterlimit">miterLimit</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L250">src/core/MyElement.ts:250</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L253">src/core/MyElement.ts:253</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4628,7 +4663,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#move">move</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L620">src/core/MyElement.ts:620</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L623">src/core/MyElement.ts:623</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4655,7 +4690,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#nofill">noFill</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L233">src/core/MyElement.ts:233</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L236">src/core/MyElement.ts:236</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4673,7 +4708,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#pie">pie</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L379">src/core/MyElement.ts:379</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L382">src/core/MyElement.ts:382</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4712,7 +4747,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#point">point</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L457">src/core/MyElement.ts:457</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L460">src/core/MyElement.ts:460</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4730,6 +4765,86 @@ img {
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<a name="polygon" class="tsd-anchor"></a>
+				<h3>polygon</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">polygon<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>points<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">polygon<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>points<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#polygon">polygon</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L945">src/core/MyElement.ts:945</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>points: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#polygon">polygon</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L946">src/core/MyElement.ts:946</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>points: <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<a name="polyline" class="tsd-anchor"></a>
+				<h3>polyline</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">polyline<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>points<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">polyline<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>points<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#polyline">polyline</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L913">src/core/MyElement.ts:913</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>points: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#polyline">polyline</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L914">src/core/MyElement.ts:914</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>points: <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 				<a name="putimagedata" class="tsd-anchor"></a>
 				<h3>put<wbr>Image<wbr>Data</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -4741,7 +4856,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#putimagedata">putImageData</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L739">src/core/MyElement.ts:739</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L742">src/core/MyElement.ts:742</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4762,7 +4877,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#putimagedata">putImageData</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L740">src/core/MyElement.ts:740</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L743">src/core/MyElement.ts:743</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4804,7 +4919,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#quadratic">quadratic</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L593">src/core/MyElement.ts:593</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L596">src/core/MyElement.ts:596</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4842,7 +4957,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#rect">rect</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L519">src/core/MyElement.ts:519</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L522">src/core/MyElement.ts:522</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4866,7 +4981,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#rect">rect</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L520">src/core/MyElement.ts:520</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L523">src/core/MyElement.ts:523</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4893,7 +5008,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#rect">rect</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L527">src/core/MyElement.ts:527</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L530">src/core/MyElement.ts:530</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4923,7 +5038,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#rect">rect</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L546">src/core/MyElement.ts:546</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L549">src/core/MyElement.ts:549</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4969,7 +5084,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#restore">restore</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L314">src/core/MyElement.ts:314</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L317">src/core/MyElement.ts:317</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4988,7 +5103,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#rotate">rotate</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L317">src/core/MyElement.ts:317</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L320">src/core/MyElement.ts:320</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -4997,7 +5112,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#rotate">rotate</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L318">src/core/MyElement.ts:318</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L321">src/core/MyElement.ts:321</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5021,7 +5136,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#run">run</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L82">src/core/MyElement.ts:82</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L85">src/core/MyElement.ts:85</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5045,7 +5160,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#save">save</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L308">src/core/MyElement.ts:308</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L311">src/core/MyElement.ts:311</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -5064,7 +5179,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowblur">shadowBlur</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L858">src/core/MyElement.ts:858</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L861">src/core/MyElement.ts:861</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -5073,7 +5188,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowblur">shadowBlur</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L859">src/core/MyElement.ts:859</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L862">src/core/MyElement.ts:862</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5107,7 +5222,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowcolor">shadowColor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L872">src/core/MyElement.ts:872</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L875">src/core/MyElement.ts:875</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5128,7 +5243,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowcolor">shadowColor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L873">src/core/MyElement.ts:873</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L876">src/core/MyElement.ts:876</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5149,7 +5264,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowcolor">shadowColor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L874">src/core/MyElement.ts:874</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L877">src/core/MyElement.ts:877</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5170,7 +5285,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowcolor">shadowColor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L875">src/core/MyElement.ts:875</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L878">src/core/MyElement.ts:878</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5194,7 +5309,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowcolor">shadowColor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L881">src/core/MyElement.ts:881</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L884">src/core/MyElement.ts:884</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5218,7 +5333,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowcolor">shadowColor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L887">src/core/MyElement.ts:887</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L890">src/core/MyElement.ts:890</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5242,7 +5357,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowcolor">shadowColor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L888">src/core/MyElement.ts:888</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L891">src/core/MyElement.ts:891</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5257,7 +5372,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowcolor">shadowColor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L889">src/core/MyElement.ts:889</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L892">src/core/MyElement.ts:892</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5272,7 +5387,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowcolor">shadowColor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L890">src/core/MyElement.ts:890</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L893">src/core/MyElement.ts:893</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5287,7 +5402,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowcolor">shadowColor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L891">src/core/MyElement.ts:891</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L894">src/core/MyElement.ts:894</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5302,7 +5417,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowcolor">shadowColor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L892">src/core/MyElement.ts:892</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L895">src/core/MyElement.ts:895</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5327,7 +5442,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowoffset">shadowOffset</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L266">src/core/MyElement.ts:266</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L269">src/core/MyElement.ts:269</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <a href="../interfaces/utils.offset.html" class="tsd-signature-type" data-tsd-kind="Interface">Offset</a></h4>
@@ -5336,7 +5451,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#shadowoffset">shadowOffset</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L267">src/core/MyElement.ts:267</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L270">src/core/MyElement.ts:270</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5363,7 +5478,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#sin">sin</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L111">src/core/MyElement.ts:111</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L114">src/core/MyElement.ts:114</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5397,7 +5512,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#stroke">stroke</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L203">src/core/MyElement.ts:203</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L206">src/core/MyElement.ts:206</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5418,7 +5533,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#stroke">stroke</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L204">src/core/MyElement.ts:204</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L207">src/core/MyElement.ts:207</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5439,7 +5554,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#stroke">stroke</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L205">src/core/MyElement.ts:205</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L208">src/core/MyElement.ts:208</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5460,7 +5575,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#stroke">stroke</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L206">src/core/MyElement.ts:206</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L209">src/core/MyElement.ts:209</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5484,7 +5599,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#stroke">stroke</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L212">src/core/MyElement.ts:212</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L215">src/core/MyElement.ts:215</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5508,7 +5623,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#stroke">stroke</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L213">src/core/MyElement.ts:213</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L216">src/core/MyElement.ts:216</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5532,7 +5647,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#stroke">stroke</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L214">src/core/MyElement.ts:214</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L217">src/core/MyElement.ts:217</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5547,7 +5662,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#stroke">stroke</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L215">src/core/MyElement.ts:215</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L218">src/core/MyElement.ts:218</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5562,7 +5677,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#stroke">stroke</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L216">src/core/MyElement.ts:216</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L219">src/core/MyElement.ts:219</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5577,7 +5692,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#stroke">stroke</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L217">src/core/MyElement.ts:217</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L220">src/core/MyElement.ts:220</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5592,7 +5707,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#stroke">stroke</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L218">src/core/MyElement.ts:218</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L221">src/core/MyElement.ts:221</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5616,7 +5731,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#strokerect">strokeRect</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L668">src/core/MyElement.ts:668</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L671">src/core/MyElement.ts:671</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5649,7 +5764,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#stroketext">strokeText</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L648">src/core/MyElement.ts:648</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L651">src/core/MyElement.ts:651</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5682,7 +5797,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#tan">tan</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L139">src/core/MyElement.ts:139</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L142">src/core/MyElement.ts:142</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5706,7 +5821,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#to">to</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L628">src/core/MyElement.ts:628</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L631">src/core/MyElement.ts:631</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5734,7 +5849,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#translate">translate</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L329">src/core/MyElement.ts:329</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L332">src/core/MyElement.ts:332</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <a href="../interfaces/utils.offset.html" class="tsd-signature-type" data-tsd-kind="Interface">Offset</a></h4>
@@ -5743,7 +5858,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#translate">translate</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L330">src/core/MyElement.ts:330</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L333">src/core/MyElement.ts:333</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5770,7 +5885,7 @@ img {
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="core_myelement.default.html">default</a>.<a href="core_myelement.default.html#triange">triange</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/bd454da/src/core/MyElement.ts#L469">src/core/MyElement.ts:469</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/94cae23/src/core/MyElement.ts#L472">src/core/MyElement.ts:472</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>

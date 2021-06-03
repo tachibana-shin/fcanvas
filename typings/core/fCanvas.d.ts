@@ -1,4 +1,4 @@
-import MyElement, { RectElement, CircleElement, Point3D, LikeMyElement, Point3DCenter } from "./MyElement";
+import MyElement, { RectElement, CircleElement, Point3D, LikeMyElement, Point3DCenter, createElement } from "./MyElement";
 import { InfoTouch, noop, Offset } from "../utils/index";
 import { CallbackEvent } from "../classes/Emitter";
 declare type AngleType = "degress" | "radial";
@@ -104,7 +104,7 @@ export default class fCanvas {
      * @param {LikeMyElement} element
      * @return {void}
      */
-    run(element: LikeMyElement): void;
+    run(element: LikeMyElement, ...params: any[]): void;
     /**
      * @return {number}
      */
@@ -235,7 +235,7 @@ export default class fCanvas {
      * @return {*}  {MyElement}
      * @memberof fCanvas
      */
-    createElement(callback: noop): MyElement;
+    createElement: typeof createElement;
     /**
      * @param {Function} callback
      * @return {Promise<void>}

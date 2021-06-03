@@ -1771,17 +1771,17 @@ class MyElement {
     get $el() {
         return this.$parent.$el;
     }
-    _run(canvas) {
+    _run(canvas, ...params) {
         this.__addEl(canvas);
         this._idActiveNow = canvas.id;
         if (typeof this.update === "function") {
             if (typeof this.draw === "function") {
-                this.draw();
+                this.draw(...params);
             }
             this.update();
         }
         else if (typeof this.draw === "function") {
-            this.draw();
+            this.draw(...params);
         }
         if (this._queue.length > 0) {
             const { length } = this._queue;
@@ -2059,7 +2059,7 @@ class MyElement {
         // this.begin();
         this.move(x1, y1);
         this.to(x2, y2);
-        // this.close();
+        // this.close();fix
     }
     /**
      * @param  {number} x
@@ -2374,6 +2374,38 @@ class MyElement {
             this.$context2d.drawFocusIfNeeded(path, element);
         }
     }
+    polyline(...points) {
+        if (points.length > 0) {
+            if (Array.isArray(points[0])) {
+                this.move(points[0][0], points[0][1]);
+                let index = 1;
+                const { length } = points;
+                while (index < length) {
+                    this.to(points[index][0], points[index][1]);
+                    index++;
+                }
+            }
+            else {
+                if (points.length > 1) {
+                    this.move(points[0], points[1]);
+                    let index = 2;
+                    const { length } = points;
+                    while (index < length - 1) {
+                        this.to(points[index], points[index + 1]);
+                        index += 2;
+                    }
+                }
+            }
+        }
+    }
+    polygon(...points) {
+        if (Array.isArray(points[0])) {
+            this.polyline(...points, points[0]);
+        }
+        else {
+            this.polyline(...points, points[0], points[1]);
+        }
+    }
 }
 class RectElement extends MyElement {
     /**
@@ -2514,6 +2546,22 @@ class Point3DCenter extends MyElement {
     }
 }
 Point3DCenter.persistent = 1000;
+function createElement(callback) {
+    return new (class extends MyElement {
+        constructor() {
+            super(...arguments);
+            this.draw = callback;
+        }
+    })();
+}
+// class App extends Polyline3D {
+//   constructor(...points, x, y, z) {
+//     super(...points, x, y, z);
+//   }
+//   draw() {
+//     this.poly();
+//   }
+// }
 
 let inited = false;
 const emitter = new Emitter();
@@ -2699,6 +2747,12 @@ class fCanvas {
         this.stopTouch = false;
         this.touches = [];
         this.changedTouches = [];
+        /**
+         * @param {noop} callback
+         * @return {*}  {MyElement}
+         * @memberof fCanvas
+         */
+        this.createElement = createElement;
         const handlerEvent = (event) => {
             try {
                 if (event.type !== "mouseout") {
@@ -2829,8 +2883,8 @@ class fCanvas {
      * @param {LikeMyElement} element
      * @return {void}
      */
-    run(element) {
-        element._run(this);
+    run(element, ...params) {
+        element._run(this, ...params);
     }
     /**
      * @return {number}
@@ -3135,19 +3189,6 @@ class fCanvas {
      */
     resetTransform() {
         this.setTransform(1, 0, 0, 1, 0, 0);
-    }
-    /**
-     * @param {noop} callback
-     * @return {*}  {MyElement}
-     * @memberof fCanvas
-     */
-    createElement(callback) {
-        return new (class extends MyElement {
-            constructor() {
-                super(...arguments);
-                this.draw = callback;
-            }
-        })();
     }
     /**
      * @param {Function} callback
@@ -3502,6 +3543,7 @@ exports.aspectRatio = aspectRatio;
 exports.cancelAnimationFrame = cancelAnimationFrame;
 exports.changeSize = changeSize;
 exports.constrain = constrain;
+exports.createElement = createElement;
 exports.cutImage = cutImage;
 exports.default = fCanvas;
 exports.draw = draw;
