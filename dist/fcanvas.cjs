@@ -2708,7 +2708,7 @@ class fCanvas {
     /**
      * @return {any}
      */
-    constructor() {
+    constructor(element) {
         this._ENV = Object.create({
             angleMode: "degress",
             rectAlign: "left",
@@ -2743,17 +2743,11 @@ class fCanvas {
             alpha: true,
             desynchronized: false,
         });
-        this.preventTouch = false;
-        this.stopTouch = false;
+        this.__preventTouch = false;
+        this.__stopTouch = false;
         this.touches = [];
         this.changedTouches = [];
-        /**
-         * @param {noop} callback
-         * @return {*}  {MyElement}
-         * @memberof fCanvas
-         */
-        this.createElement = createElement;
-        const handlerEvent = (event) => {
+        this.handlerEvent = (event) => {
             try {
                 if (event.type !== "mouseout") {
                     this.touches = getTouchInfo(this.$el, event.touches || [event]);
@@ -2762,16 +2756,49 @@ class fCanvas {
                 else {
                     this.touches = [];
                 }
-                this.preventTouch && event.preventDefault();
-                this.stopTouch && event.stopPropagation();
+                this.__preventTouch && event.preventDefault();
+                this.__stopTouch && event.stopPropagation();
             }
             catch (e) {
                 // throw e;
             }
         };
-        this.$el.addEventListener(isMobile() ? "touchstart" : "mouseover", handlerEvent);
-        this.$el.addEventListener(isMobile() ? "touchmove" : "mousemove", handlerEvent);
-        this.$el.addEventListener(isMobile() ? "touchend" : "mouseout", handlerEvent);
+        /**
+         * @param {noop} callback
+         * @return {*}  {MyElement}
+         * @memberof fCanvas
+         */
+        this.createElement = createElement;
+        if (element !== undefined) {
+            this.mount(element);
+        }
+        this.restartEvents();
+    }
+    /**
+     *
+     *
+     * @return {*}  {boolean}
+     * @memberof fCanvas
+     */
+    preventTouch() {
+        if (this.__preventTouch === false) {
+            this.__preventTouch = true;
+            return true;
+        }
+        return false;
+    }
+    /**
+     *
+     *
+     * @return {*}  {boolean}
+     * @memberof fCanvas
+     */
+    stopTouch() {
+        if (this.__preventTouch === false) {
+            this.__stopTouch = true;
+            return true;
+        }
+        return false;
     }
     /**
      * @return {number | null}
@@ -2858,6 +2885,36 @@ class fCanvas {
         }
         return this._context2dCaching;
     }
+    cancelEventsSystem() {
+        [
+            "touchstart",
+            "mouseover",
+            "touchmove",
+            "mousemove",
+            "touchend",
+            "mouseout",
+        ].forEach((event) => {
+            this.$el.removeEventListener(event, this.handlerEvent);
+        });
+    }
+    restartEvents() {
+        this.cancelEventsSystem();
+        this.$el.addEventListener(isMobile() ? "touchstart" : "mouseover", this.handlerEvent, passive
+            ? {
+                passive: true,
+            }
+            : undefined);
+        this.$el.addEventListener(isMobile() ? "touchmove" : "mousemove", this.handlerEvent, passive
+            ? {
+                passive: true,
+            }
+            : undefined);
+        this.$el.addEventListener(isMobile() ? "touchend" : "mouseout", this.handlerEvent, passive
+            ? {
+                passive: true,
+            }
+            : undefined);
+    }
     /**
      * @param {HTMLElement=document.body} parent
      * @return {void}
@@ -2866,6 +2923,32 @@ class fCanvas {
         if (parent.contains(this.$el) === false) {
             parent.appendChild(this.$el);
         }
+    }
+    /**
+     *
+     *
+     * @param {(HTMLCanvasElement | string)} element
+     * @memberof fCanvas
+     */
+    mount(element) {
+        let el;
+        if (typeof element === "string") {
+            el =
+                Array.from(document.querySelectorAll(element)).find((item) => item.tagName === "CANVAS") || this._el;
+        }
+        else {
+            if (element.tagName !== "CANVAS") {
+                console.error(`fCanvas<sys>: function .mount() not allow element "${element?.tagName.toLocaleLowerCase()}`);
+                el = this._el;
+            }
+            else {
+                el = element;
+            }
+        }
+        if (this._el !== el) {
+            this.cancelEventsSystem();
+        }
+        this._el = el;
     }
     /**
      * @return {void}

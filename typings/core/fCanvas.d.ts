@@ -27,10 +27,24 @@ export default class fCanvas {
     private __rotate;
     private __idFrame;
     private __attributeContext;
-    preventTouch: boolean;
-    stopTouch: boolean;
+    private __preventTouch;
+    private __stopTouch;
     touches: InfoTouch[];
     changedTouches: InfoTouch[];
+    /**
+     *
+     *
+     * @return {*}  {boolean}
+     * @memberof fCanvas
+     */
+    preventTouch(): boolean;
+    /**
+     *
+     *
+     * @return {*}  {boolean}
+     * @memberof fCanvas
+     */
+    stopTouch(): boolean;
     /**
      * @return {number | null}
      */
@@ -86,12 +100,22 @@ export default class fCanvas {
     /**
      * @return {any}
      */
-    constructor();
+    constructor(element?: HTMLCanvasElement | string);
+    private handlerEvent;
+    private cancelEventsSystem;
+    private restartEvents;
     /**
      * @param {HTMLElement=document.body} parent
      * @return {void}
      */
     append(parent?: HTMLElement): void;
+    /**
+     *
+     *
+     * @param {(HTMLCanvasElement | string)} element
+     * @memberof fCanvas
+     */
+    mount(element: HTMLCanvasElement | string): void;
     /**
      * @return {void}
      */
