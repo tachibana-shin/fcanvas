@@ -17,6 +17,7 @@ import {
   Offset,
   cancelAnimationFrame,
   bindEvent,
+  passive,
 } from "../utils/index";
 import Stament from "../classes/Stament";
 import { setup, draw } from "./SystemEvents";
@@ -108,10 +109,38 @@ export default class fCanvas {
     desynchronized: false,
   });
 
-  public preventTouch: boolean = false;
-  public stopTouch: boolean = false;
+  private __preventTouch: boolean = false;
+  private __stopTouch: boolean = false;
   public touches: InfoTouch[] = [];
   public changedTouches: InfoTouch[] = [];
+  /**
+   *
+   *
+   * @return {*}  {boolean}
+   * @memberof fCanvas
+   */
+  public preventTouch(): boolean {
+    if (this.__preventTouch === false) {
+      this.__preventTouch = true;
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   *
+   *
+   * @return {*}  {boolean}
+   * @memberof fCanvas
+   */
+  public stopTouch(): boolean {
+    if (this.__preventTouch === false) {
+      this.__stopTouch = true;
+      return true;
+    }
+
+    return false;
+  }
   /**
    * @return {number | null}
    */
@@ -207,36 +236,72 @@ export default class fCanvas {
   /**
    * @return {any}
    */
-  constructor() {
-    const handlerEvent = (event: any): void => {
-      try {
-        if (event.type !== "mouseout") {
-          this.touches = getTouchInfo(this.$el, event.touches || [event]);
-          this.changedTouches = getTouchInfo(
-            this.$el,
-            event.changedTouches || [event]
-          );
-        } else {
-          this.touches = [];
-        }
-        this.preventTouch && event.preventDefault();
-        this.stopTouch && event.stopPropagation();
-      } catch (e) {
-        // throw e;
+  constructor(element?: HTMLCanvasElement | string) {
+    if (element !== undefined) {
+      this.mount(element);
+    }
+
+    this.restartEvents();
+  }
+
+  private handlerEvent = (event: any): void => {
+    try {
+      if (event.type !== "mouseout") {
+        this.touches = getTouchInfo(this.$el, event.touches || [event]);
+        this.changedTouches = getTouchInfo(
+          this.$el,
+          event.changedTouches || [event]
+        );
+      } else {
+        this.touches = [];
       }
-    };
+      this.__preventTouch && event.preventDefault();
+      this.__stopTouch && event.stopPropagation();
+    } catch (e) {
+      // throw e;
+    }
+  };
+  private cancelEventsSystem(): void {
+    [
+      "touchstart",
+      "mouseover",
+      "touchmove",
+      "mousemove",
+      "touchend",
+      "mouseout",
+    ].forEach((event: string): void => {
+      this.$el.removeEventListener(event, this.handlerEvent);
+    });
+  }
+  private restartEvents(): void {
+    this.cancelEventsSystem();
 
     this.$el.addEventListener(
       isMobile() ? "touchstart" : "mouseover",
-      handlerEvent
+      this.handlerEvent,
+      passive
+        ? {
+            passive: true,
+          }
+        : undefined
     );
     this.$el.addEventListener(
       isMobile() ? "touchmove" : "mousemove",
-      handlerEvent
+      this.handlerEvent,
+      passive
+        ? {
+            passive: true,
+          }
+        : undefined
     );
     this.$el.addEventListener(
       isMobile() ? "touchend" : "mouseout",
-      handlerEvent
+      this.handlerEvent,
+      passive
+        ? {
+            passive: true,
+          }
+        : undefined
     );
   }
 
@@ -248,6 +313,37 @@ export default class fCanvas {
     if (parent.contains(this.$el) === false) {
       parent.appendChild(this.$el);
     }
+  }
+  /**
+   *
+   *
+   * @param {(HTMLCanvasElement | string)} element
+   * @memberof fCanvas
+   */
+  mount(element: HTMLCanvasElement | string): void {
+    let el: HTMLCanvasElement;
+
+    if (typeof element === "string") {
+      el =
+        (Array.from(document.querySelectorAll(element)).find(
+          (item): boolean => item.tagName === "CANVAS"
+        ) as HTMLCanvasElement) || this._el;
+    } else {
+      if (element.tagName !== "CANVAS") {
+        console.error(
+          `fCanvas<sys>: function .mount() not allow element "${element?.tagName.toLocaleLowerCase()}`
+        );
+        el = this._el;
+      } else {
+        el = element;
+      }
+    }
+
+    if (this._el !== el) {
+      this.cancelEventsSystem();
+    }
+
+    this._el = el;
   }
   /**
    * @return {void}
