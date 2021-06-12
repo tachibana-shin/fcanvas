@@ -1,5 +1,7 @@
 import { noop, Offset } from "../utils/index";
-import fCanvas from "./fCanvas";
+import fCanvas, { DirectionPattern } from "./fCanvas";
+declare type LineJoin = "bevel" | "round" | "miter";
+declare type LineCap = "butt" | "round" | "square";
 export interface LikeMyElement extends MyElement {
     [propName: string]: any;
 }
@@ -220,9 +222,8 @@ export default class MyElement {
     drawImage(image: CanvasImageSource, x: number, y: number): void;
     drawImage(image: CanvasImageSource, x: number, y: number, width: number, height: number): void;
     drawImage(image: CanvasImageSource, sx: number, sy: number, swidth: number, sheight: number, x: number, y: number, width: number, height: number): void;
-    rect(x: number, y: number, width: number, height: number): void;
-    rect(x: number, y: number, width: number, height: number, radius: string | number): void;
-    rect(x: number, y: number, width: number, height: number, radiusLeft: string | number, radiusRight: string | number): void;
+    rRect(x: number, y: number, width: number, height: number, radius: string | number): void;
+    rRect(x: number, y: number, width: number, height: number, radiusLeft: string | number, radiusRight: string | number): void;
     /**
      * @param  {number} x
      * @param  {number} y
@@ -234,7 +235,17 @@ export default class MyElement {
      * @param  {string|number} radiusBottomLeft
      * @returns void
      */
-    rect(x: number, y: number, width: number, height: number, radiusTopLeft: string | number, radiusTopRight: string | number, radiusBottomRight: string | number, radiusBottomLeft: string | number): void;
+    rRect(x: number, y: number, width: number, height: number, radiusTopLeft: string | number, radiusTopRight: string | number, radiusBottomRight: string | number, radiusBottomLeft: string | number): void;
+    /**
+     *
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @memberof MyElement
+     */
+    rect(x: number, y: number, width: number, height: number): void;
     /**
      * @param  {number} cpx
      * @param  {number} cpy
@@ -338,7 +349,7 @@ export default class MyElement {
      * @param {"repeat"|"repeat-x"|"repeat-y"|"no-repeat"} direction
      * @return {CanvasPattern | null}
      */
-    createPattern(image: CanvasImageSource, direction: "repeat" | "repeat-x" | "repeat-y" | "no-repeat"): CanvasPattern | null;
+    createPattern(image: CanvasImageSource, direction: DirectionPattern): CanvasPattern | null;
     /**
      * @param {number} x1
      * @param {number} y1
@@ -357,10 +368,10 @@ export default class MyElement {
      * @return {CanvasGradient}
      */
     createLinearGradient(x: number, y: number, width: number, height: number): CanvasGradient;
-    lineJoin(): "bevel" | "round" | "miter";
-    lineJoin(type: "bevel" | "round" | "miter"): void;
-    lineCap(): "butt" | "round" | "square";
-    lineCap(value: "butt" | "round" | "square"): void;
+    lineJoin(): LineJoin;
+    lineJoin(type: LineJoin): void;
+    lineCap(): LineCap;
+    lineCap(value: LineCap): void;
     shadowBlur(): number;
     shadowBlur(opacity: number): void;
     shadowColor(hue: number, saturation: number, lightness: number): void;
@@ -380,43 +391,6 @@ export default class MyElement {
     polyline(...points: [number, number][]): void;
     polygon(...points: number[]): void;
     polygon(...points: [number, number][]): void;
-}
-export declare class RectElement extends MyElement {
-    readonly type: string;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return {any}
-     */
-    constructor(x: number, y: number, width: number, height: number);
-    /**
-     * @return {boolean}
-     */
-    get interact(): boolean;
-}
-export declare class CircleElement extends MyElement {
-    readonly type: string;
-    x: number;
-    y: number;
-    radius: number;
-    /**
-     * Describe your function
-     * @param {number} x
-     * @param {number} y
-     * @param {number} radius
-     * @return {any}
-     */
-    constructor(x: number, y: number, radius: number);
-    /**
-     * @return {boolean}
-     */
-    get interact(): boolean;
 }
 export declare class Point3D extends MyElement {
     x: number;
@@ -468,3 +442,4 @@ export declare class Point3DCenter extends MyElement {
     get(prop: string): number;
 }
 export declare function createElement(callback: noop): MyElement;
+export {};

@@ -1,12 +1,13 @@
 import { AutoToPx, noop, Offset } from "../utils/index";
-import fCanvas, { noopFCanvas, ParamsToRgb } from "./fCanvas";
+import fCanvas, { noopFCanvas, ParamsToRgb, DirectionPattern } from "./fCanvas";
 import { RectImpactPoint, CircleImpactPoint } from "../functions/index";
-import Vector from "../classes/Vector";
 
 type ParamsDrawImage =
   | [number, number]
   | [number, number, number, number]
   | [number, number, number, number, number, number, number, number];
+type LineJoin = "bevel" | "round" | "miter";
+type LineCap = "butt" | "round" | "square";
 
 export interface LikeMyElement extends MyElement {
   [propName: string]: any;
@@ -246,7 +247,7 @@ export default class MyElement {
     if (value === undefined) {
       return this.$context2d.lineWidth;
     } else {
-      this.$context2d.lineWidth = value;
+      this.$context2d.lineWidth = this.$parent._getPixel(value);
     }
   }
   miterLimit(): number;
@@ -281,8 +282,8 @@ export default class MyElement {
       };
     } else {
       [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [
-        x || 0,
-        y || 0,
+        this.$parent._getPixel(x || 0),
+        this.$parent._getPixel(y || 0),
       ];
     }
   }
@@ -362,8 +363,8 @@ export default class MyElement {
   ): void {
     this.begin();
     this.$context2d.arc(
-      x,
-      y,
+      this.$parent._getPixel(x),
+      this.$parent._getPixel(y),
       radius,
       this.$parent._toRadius(astart) - Math.PI / 2,
       this.$parent._toRadius(astop) - Math.PI / 2,
@@ -427,8 +428,8 @@ export default class MyElement {
   ): void {
     this.begin();
     this.$context2d.ellipse(
-      x,
-      y,
+      this.$parent._getPixel(x),
+      this.$parent._getPixel(y),
       radius1,
       radius2,
       this.$parent._toRadius(astart) - Math.PI / 2,
@@ -519,15 +520,14 @@ export default class MyElement {
     // @ts-expect-error
     this.$context2d.drawImage(image, ...(args as ParamsDrawImage));
   }
-  rect(x: number, y: number, width: number, height: number): void;
-  rect(
+  rRect(
     x: number,
     y: number,
     width: number,
     height: number,
     radius: string | number
   ): void;
-  rect(
+  rRect(
     x: number,
     y: number,
     width: number,
@@ -546,7 +546,7 @@ export default class MyElement {
    * @param  {string|number} radiusBottomLeft
    * @returns void
    */
-  rect(
+  rRect(
     x: number,
     y: number,
     width: number,
@@ -556,7 +556,7 @@ export default class MyElement {
     radiusBottomRight: string | number,
     radiusBottomLeft: string | number
   ): void;
-  rect(
+  rRect(
     x: number,
     y: number,
     w: number,
@@ -567,24 +567,41 @@ export default class MyElement {
     radiusBottomLeft?: string | number
   ): void {
     this.begin();
-    [x, y] = this.$parent._figureOffset(x, y, w, h);
+    [x, y, w, h] = this.$parent._argsRect(x, y, w, h);
 
-    if (arguments.length < 5) {
-      this.$context2d.rect(x, y, w, h);
-    } else {
-      const fontSize = this.$parent.fontSize();
-      const arc = [
-        AutoToPx(radiusTopLeft, w, fontSize),
-        AutoToPx(radiusTopRight, h, fontSize),
-        AutoToPx(radiusBottomRight, w, fontSize),
-        AutoToPx(radiusBottomLeft, h, fontSize),
-      ];
-      this.move(x, y);
-      this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
-      this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
-      this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
-      this.arcTo(x, y, x + w - arc[0], y, arc[0]);
-    }
+    const fontSize = this.$parent.fontSize();
+    const arc = [
+      AutoToPx(radiusTopLeft, w, fontSize),
+      AutoToPx(radiusTopRight, h, fontSize),
+      AutoToPx(radiusBottomRight, w, fontSize),
+      AutoToPx(radiusBottomLeft, h, fontSize),
+    ];
+    this.move(x, y);
+    this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
+    this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
+    this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
+    this.arcTo(x, y, x + w - arc[0], y, arc[0]);
+
+    this.close();
+  }
+  /**
+   *
+   *
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @memberof MyElement
+   */
+  rect(x: number, y: number, width: number, height: number): void {
+    this.begin();
+    [x, y, width, height] = this.$parent._argsRect(x, y, width, height);
+    this.rect(
+      this.$parent._getPixel(x),
+      this.$parent._getPixel(y),
+      width,
+      height
+    );
     this.close();
   }
   /**
@@ -621,7 +638,10 @@ export default class MyElement {
    * @return {void}
    */
   move(x: number, y: number): void {
-    this.$context2d.moveTo(x, y);
+    this.$context2d.moveTo(
+      this.$parent._getPixel(x),
+      this.$parent._getPixel(y)
+    );
   }
   /**
    * @param {number} x
@@ -629,7 +649,10 @@ export default class MyElement {
    * @return {void}
    */
   to(x: number, y: number): void {
-    this.$context2d.lineTo(x, y);
+    this.$context2d.lineTo(
+      this.$parent._getPixel(x),
+      this.$parent._getPixel(y)
+    );
   }
   /**
    * @param {string} text
@@ -639,7 +662,12 @@ export default class MyElement {
    * @return {void}
    */
   fillText(text: string, x: number, y: number, maxWidth?: number): void {
-    this.$context2d.fillText(text, x, y, maxWidth);
+    this.$context2d.fillText(
+      text,
+      this.$parent._getPixel(x),
+      this.$parent._getPixel(y),
+      maxWidth
+    );
   }
   /**
    * @param {string} text
@@ -649,7 +677,12 @@ export default class MyElement {
    * @return {void}
    */
   strokeText(text: string, x: number, y: number, maxWidth?: number): void {
-    this.$context2d.strokeText(text, x, y, maxWidth);
+    this.$context2d.strokeText(
+      text,
+      this.$parent._getPixel(x),
+      this.$parent._getPixel(y),
+      maxWidth
+    );
   }
   /**
    * @param {number} x
@@ -659,7 +692,12 @@ export default class MyElement {
    * @return {void}
    */
   fillRect(x: number, y: number, width: number, height: number): void {
-    this.$context2d.fillRect(x, y, width, height);
+    this.$context2d.fillRect(
+      this.$parent._getPixel(x),
+      this.$parent._getPixel(y),
+      width,
+      height
+    );
   }
   /**
    * @param {number} x
@@ -669,7 +707,12 @@ export default class MyElement {
    * @return {void}
    */
   strokeRect(x: number, y: number, width: number, height: number): void {
-    this.$context2d.strokeRect(x, y, width, height);
+    this.$context2d.strokeRect(
+      this.$parent._getPixel(x),
+      this.$parent._getPixel(y),
+      width,
+      height
+    );
   }
   lineDashOffset(): number;
   lineDashOffset(value: number): void;
@@ -707,7 +750,13 @@ export default class MyElement {
    * @return {void}
    */
   arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void {
-    this.$context2d.arcTo(x1, y1, x2, y2, radius);
+    this.$context2d.arcTo(
+      this.$parent._getPixel(x1),
+      this.$parent._getPixel(y1),
+      this.$parent._getPixel(x2),
+      this.$parent._getPixel(y2),
+      radius
+    );
   }
   /**
    * @param {number} x
@@ -789,7 +838,7 @@ export default class MyElement {
    */
   createPattern(
     image: CanvasImageSource,
-    direction: "repeat" | "repeat-x" | "repeat-y" | "no-repeat"
+    direction: DirectionPattern
   ): CanvasPattern | null {
     return this.$parent.createPattern(image, direction);
   }
@@ -828,30 +877,26 @@ export default class MyElement {
     return this.$parent.createLinearGradient(x, y, width, height);
   }
 
-  lineJoin(): "bevel" | "round" | "miter";
-  lineJoin(type: "bevel" | "round" | "miter"): void;
+  lineJoin(): LineJoin;
+  lineJoin(type: LineJoin): void;
   /**
    * @param {"bevel"|"round"|"miter"} type?
    * @return {any}
    */
-  lineJoin(
-    type?: "bevel" | "round" | "miter"
-  ): "bevel" | "round" | "miter" | void {
+  lineJoin(type?: LineJoin): LineJoin | void {
     if (type !== undefined) {
       this.$context2d.lineJoin = type;
     } else {
       return this.$context2d.lineJoin;
     }
   }
-  lineCap(): "butt" | "round" | "square";
-  lineCap(value: "butt" | "round" | "square"): void;
+  lineCap(): LineCap;
+  lineCap(value: LineCap): void;
   /**
    * @param {"butt"|"round"|"square"} value?
    * @return {any}
    */
-  lineCap(
-    value?: "butt" | "round" | "square"
-  ): "butt" | "round" | "square" | void {
+  lineCap(value?: LineCap): LineCap | void {
     if (value !== undefined) {
       this.$context2d.lineCap = value;
     } else {
@@ -954,64 +999,6 @@ export default class MyElement {
         points[1] as number
       );
     }
-  }
-}
-
-export class RectElement extends MyElement {
-  public readonly type: string = "rect";
-  public x: number = 0;
-  public y: number = 0;
-  public width: number = 0;
-  public height: number = 0;
-
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {number} width
-   * @param {number} height
-   * @return {any}
-   */
-  constructor(x: number, y: number, width: number, height: number) {
-    super();
-    [this.x, this.y, this.width, this.height] = [
-      x || 0,
-      y || 0,
-      width || 0,
-      height || 0,
-    ];
-  }
-
-  /**
-   * @return {boolean}
-   */
-  get interact(): boolean {
-    return RectImpactPoint(this, this.mouseX, this.mouseY);
-  }
-}
-
-export class CircleElement extends MyElement {
-  public readonly type: string = "circle";
-  public x: number = 0;
-  public y: number = 0;
-  public radius: number = 0;
-
-  /**
-   * Describe your function
-   * @param {number} x
-   * @param {number} y
-   * @param {number} radius
-   * @return {any}
-   */
-  constructor(x: number, y: number, radius: number) {
-    super();
-    [this.x, this.y, this.radius] = [x || 0, y || 0, radius || 0];
-  }
-
-  /**
-   * @return {boolean}
-   */
-  get interact(): boolean {
-    return CircleImpactPoint(this, this.mouseX, this.mouseY);
   }
 }
 

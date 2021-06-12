@@ -15,11 +15,6 @@ export declare const requestAnimationFrame: typeof globalThis.requestAnimationFr
 export declare const cancelAnimationFrame: typeof globalThis.cancelAnimationFrame | typeof globalThis.clearTimeout;
 export declare const isTouch: boolean;
 export declare const passive: boolean;
-/**
- * @param {string} str
- * @return {string}
- */
-export declare function camelCase(str: string): string;
 export declare const windowSize: {
     windowWidth: {
         get(): number;
@@ -28,16 +23,6 @@ export declare const windowSize: {
         get(): number;
     };
 };
-/**
- * @param {string|number} string
- * @return {string}
- */
-export declare function convertToPx(string: string | number): string;
-/**
- * @param {string|null} string
- * @return {string}
- */
-export declare function trim(string: string | null): string;
 /**
  * @param {string} font
  * @return {InfoFont}

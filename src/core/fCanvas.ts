@@ -1,6 +1,4 @@
 import MyElement, {
-  RectElement,
-  CircleElement,
   Point3D,
   LikeMyElement,
   Point3DCenter,
@@ -30,6 +28,7 @@ type ColorType = "rgb" | "hsl" | "hue" | "hsb";
 export type ParamsToRgb = [any?, any?, any?, number?];
 type TextAlignType = AlignType | "start" | "end";
 type TextBaselineType = BaselineType | "hanging" | "alphabetic" | "ideographic";
+type RectMode = "corner" | "corners" | "center" | "radius";
 type GlobalCompositeOperationType =
   | "source-over"
   | "source-atop"
@@ -42,16 +41,9 @@ type GlobalCompositeOperationType =
   | "lighter"
   | "copy"
   | "xor";
+type RuleClip = "nonzero" | "evenodd";
+export type DirectionPattern = "repeat" | "repeat-x" | "repeat-y" | "no-repeat";
 
-interface ENV {
-  angleMode: AngleType;
-  rectAlign: AlignType;
-  rectBaseline: BaselineType;
-  colorMode: ColorType;
-  rotate: number;
-  clear: boolean;
-  loop: boolean;
-}
 interface HightTransform {
   x: number;
   y: number;
@@ -61,177 +53,74 @@ interface HightTransform {
 
 export default class fCanvas {
   static Element: typeof MyElement = MyElement;
-  static RectElement: typeof RectElement = RectElement;
-  static CircleElement: typeof CircleElement = CircleElement;
   static Point3D: typeof Point3D = Point3D;
   static Point3DCenter: typeof Point3DCenter = Point3DCenter;
-  static count: number = 0;
+  static _count: number = 0;
 
-  private _ENV: ENV = Object.create({
-    angleMode: "degress",
-    rectAlign: "left",
-    rectBaseline: "top",
-    colorMode: "rgb",
-
-    clear: true,
-    loop: true,
-  });
-  private _id: number = fCanvas.count++;
+  private _id: number = fCanvas._count++;
   private _el: HTMLCanvasElement = document.createElement("canvas");
   private _context2dCaching: CanvasRenderingContext2D | null = null;
   private _stamentReady: Stament = new Stament();
-  private _existsPreload: boolean = false;
-  private __translate: HightTransform = Object.create({
-    x: 0,
-    y: 0,
-    sumX: 0,
-    sumY: 0,
-  });
-  private __scale: HightTransform = Object.create({
-    x: 0,
-    y: 0,
-    sumX: 0,
-    sumY: 0,
-  });
-  private __rotate: {
-    now: number;
-    sum: number;
-  } = Object.create({
-    now: 0,
-    sum: 0,
-  });
-  private __idFrame: number | null = null;
-  private __attributeContext: {
-    alpha: boolean;
-    desynchronized: boolean;
-  } = Object.create({
-    alpha: true,
-    desynchronized: false,
-  });
 
-  private __preventTouch: boolean = false;
-  private __stopTouch: boolean = false;
-  public touches: InfoTouch[] = [];
-  public changedTouches: InfoTouch[] = [];
-  /**
-   *
-   *
-   * @return {*}  {boolean}
-   * @memberof fCanvas
-   */
-  public preventTouch(): boolean {
-    if (this.__preventTouch === false) {
-      this.__preventTouch = true;
-      return true;
-    }
+  private __store: {
+    __translate: HightTransform;
+    __scale: HightTransform;
+    __rotate: {
+      now: number;
+      sum: number;
+    };
+    __attributeContext: {
+      alpha: boolean;
+      desynchronized: boolean;
+    };
 
-    return false;
-  }
-  /**
-   *
-   *
-   * @return {*}  {boolean}
-   * @memberof fCanvas
-   */
-  public stopTouch(): boolean {
-    if (this.__preventTouch === false) {
-      this.__stopTouch = true;
-      return true;
-    }
+    _clear: boolean;
+    _loop: boolean;
 
-    return false;
-  }
-  /**
-   * @return {number | null}
-   */
-  get mouseX(): number | null {
-    return this.touches[0]?.x || null;
-  }
-  /**
-   * @return {number | null}
-   */
-  get mouseY(): number | null {
-    return this.touches[0]?.y || null;
-  }
-  /**
-   * @return {boolean}
-   */
-  get interact(): boolean {
-    return this.touches.length > 0;
-  }
+    _preventTouch: boolean;
+    _stopTouch: boolean;
+    _idFrame: number | null;
+    _existsPreload: boolean;
 
-  /**
-   * @return {number}
-   */
-  get id(): number {
-    return this._id;
-  }
-  /**
-   * @return {HTMLCanvasElement}
-   */
-  get $el(): HTMLCanvasElement {
-    return this._el;
-  }
-  private _createNewContext2d(): void {
-    this._context2dCaching = this.$el.getContext(
-      "2d",
-      this.__attributeContext
-    ) as CanvasRenderingContext2D;
-  }
-  /**
-   * @return {boolean}
-   */
-  acceptBlur(): boolean {
-    return this.__attributeContext.alpha;
-  }
-  /**
-   * @return {void}
-   */
-  blur(): void {
-    this.__attributeContext.alpha = true;
-    this._createNewContext2d();
-  }
-  /**
-   * @return {void}
-   */
-  noBlur(): void {
-    this.__attributeContext.alpha = false;
-    this._createNewContext2d();
-  }
-  /**
-   * Describe your function
-   * @return {boolean}
-   */
-  acceptDesync(): boolean {
-    return this.__attributeContext.desynchronized;
-  }
-  /**
-   * Describe your function
-   * @return {void}
-   */
-  desync(): void {
-    this.__attributeContext.desynchronized = true;
-    this._createNewContext2d();
-  }
-  /**
-   * Describe your function
-   * @return {void}
-   */
-  noDesync(): void {
-    this.__attributeContext.desynchronized = false;
-    this._createNewContext2d();
-  }
+    _angleMode: AngleType;
+    _rectMode: RectMode;
+    _colorMode: ColorType;
+    _useFloatPixel: boolean;
+  } = {
+    __translate: Object.create({
+      x: 0,
+      y: 0,
+      sumX: 0,
+      sumY: 0,
+    }),
+    __scale: Object.create({
+      x: 0,
+      y: 0,
+      sumX: 0,
+      sumY: 0,
+    }),
+    __rotate: Object.create({
+      now: 0,
+      sum: 0,
+    }),
+    __attributeContext: Object.create({
+      alpha: true,
+      desynchronized: false,
+    }),
 
-  /**
-   * @return {CanvasRenderingContext2D}
-   */
-  get $context2d(): CanvasRenderingContext2D {
-    if (this._context2dCaching === null) {
-      this._createNewContext2d();
-    }
+    _clear: true,
+    _loop: true,
 
-    return this._context2dCaching as CanvasRenderingContext2D;
-  }
+    _preventTouch: false,
+    _stopTouch: false,
+    _idFrame: null,
+    _existsPreload: false,
+
+    _angleMode: "degress",
+    _rectMode: "corner",
+    _colorMode: "rgb",
+    _useFloatPixel: true,
+  };
 
   /**
    * @return {any}
@@ -255,8 +144,8 @@ export default class fCanvas {
       } else {
         this.touches = [];
       }
-      this.__preventTouch && event.preventDefault();
-      this.__stopTouch && event.stopPropagation();
+      this.__store._preventTouch && event.preventDefault();
+      this.__store._stopTouch && event.stopPropagation();
     } catch (e) {
       // throw e;
     }
@@ -305,6 +194,140 @@ export default class fCanvas {
     );
   }
 
+  public touches: InfoTouch[] = [];
+  public changedTouches: InfoTouch[] = [];
+  /**
+   *
+   *
+   * @return {*}  {boolean}
+   * @memberof fCanvas
+   */
+  public preventTouch(): boolean {
+    if (this.__store._preventTouch === false) {
+      this.__store._preventTouch = true;
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   *
+   *
+   * @return {*}  {boolean}
+   * @memberof fCanvas
+   */
+  public stopTouch(): boolean {
+    if (this.__store._preventTouch === false) {
+      this.__store._stopTouch = true;
+      return true;
+    }
+
+    return false;
+  }
+  /**
+   * @return {number | null}
+   */
+  get mouseX(): number | null {
+    return this.touches[0]?.x || null;
+  }
+  /**
+   * @return {number | null}
+   */
+  get mouseY(): number | null {
+    return this.touches[0]?.y || null;
+  }
+  /**
+   * @return {boolean}
+   */
+  get interact(): boolean {
+    return this.touches.length > 0;
+  }
+
+  /**
+   * @return {number}
+   */
+  get id(): number {
+    return this._id;
+  }
+  /**
+   * @return {HTMLCanvasElement}
+   */
+  get $el(): HTMLCanvasElement {
+    return this._el;
+  }
+  private _createNewContext2d(): void {
+    this._context2dCaching = this.$el.getContext(
+      "2d",
+      this.__store.__attributeContext
+    ) as CanvasRenderingContext2D;
+  }
+  /**
+   * @return {boolean}
+   */
+  acceptBlur(): boolean {
+    return this.__store.__attributeContext.alpha;
+  }
+  /**
+   * @return {void}
+   */
+  blur(): void {
+    this.__store.__attributeContext.alpha = true;
+    this._createNewContext2d();
+  }
+  /**
+   * @return {void}
+   */
+  noBlur(): void {
+    this.__store.__attributeContext.alpha = false;
+    this._createNewContext2d();
+  }
+  /**
+   * @return {boolean}
+   */
+  acceptDesync(): boolean {
+    return this.__store.__attributeContext.desynchronized;
+  }
+  /**
+   * @return {void}
+   */
+  desync(): void {
+    this.__store.__attributeContext.desynchronized = true;
+    this._createNewContext2d();
+  }
+  /**
+   * @return {void}
+   */
+  noDesync(): void {
+    this.__store.__attributeContext.desynchronized = false;
+    this._createNewContext2d();
+  }
+  /**
+   * @return {void}
+   */
+  useFloatPixel(): void {
+    this.__store._useFloatPixel = true;
+  }
+  /**
+   * @return {void}
+   */
+  noFloatPixel(): void {
+    this.__store._useFloatPixel = false;
+  }
+  _getPixel(value: number): number {
+    return this.__store._useFloatPixel ? value : Math.round(value);
+  }
+
+  /**
+   * @return {CanvasRenderingContext2D}
+   */
+  get $context2d(): CanvasRenderingContext2D {
+    if (this._context2dCaching === null) {
+      this._createNewContext2d();
+    }
+
+    return this._context2dCaching as CanvasRenderingContext2D;
+  }
+
   /**
    * @param {HTMLElement=document.body} parent
    * @return {void}
@@ -349,13 +372,13 @@ export default class fCanvas {
    * @return {void}
    */
   noClear(): void {
-    this._ENV.clear = false;
+    this.__store._clear = false;
   }
   /**
    * @return {boolean}
    */
   get acceptClear(): boolean {
-    return this._ENV.clear;
+    return this.__store._clear;
   }
 
   /**
@@ -419,21 +442,28 @@ export default class fCanvas {
   }
 
   _toRadius(value: number): number {
-    return this._ENV.angleMode === "degress" ? (value * Math.PI) / 180 : value;
+    return this.__store._angleMode === "degress"
+      ? (value * Math.PI) / 180
+      : value;
   }
   _toDegress(value: number): number {
-    return this._ENV.angleMode === "radial" ? (value * 180) / Math.PI : value;
+    return this.__store._angleMode === "radial"
+      ? (value * 180) / Math.PI
+      : value;
   }
-  _toRgb([red = 0, green = red, blue = green, alpha = 1]: ParamsToRgb): string {
+  _toRgb([red = 0, green = red, blue = green, alpha = 1]: ParamsToRgb): any {
     if (Array.isArray(red)) {
       return this._toRgb(red as ParamsToRgb);
     } else {
+      if (typeof red === "object" && red !== null) {
+        return red;
+      }
       if (typeof red === "string") {
         return red;
       } else {
-        const after = this._ENV.colorMode.match(/hsl|hsb/i) ? "%" : "";
+        const after = this.__store._colorMode.match(/hsl|hsb/i) ? "%" : "";
 
-        return `${this._ENV.colorMode}a(${[
+        return `${this.__store._colorMode}a(${[
           red,
           green + after,
           blue + after,
@@ -442,30 +472,23 @@ export default class fCanvas {
       }
     }
   }
-  _figureOffset(
+  _argsRect(
     x: number,
     y: number,
     width: number,
     height: number
-  ): [number, number] {
-    switch (this._ENV.rectAlign) {
+  ): [number, number, number, number] {
+    switch (this.__store._rectMode) {
       case "center":
-        x -= width / 2;
-        break;
-      case "right":
-        x -= width;
-        break;
+        return [x - width / 2, y - height / 2, width, height];
+      case "radius":
+        return [x - width, y - height, width * 2, height * 2];
+      case "corners":
+        return [x - width, y - height, width, height];
+      case "corner":
+      default:
+        return [x, y, width, height];
     }
-    switch (this._ENV.rectBaseline) {
-      case "middle":
-        y -= height / 2;
-        break;
-      case "bottom":
-        y -= height;
-        break;
-    }
-
-    return [x, y];
   }
 
   angleMode(): AngleType;
@@ -476,23 +499,10 @@ export default class fCanvas {
    */
   angleMode(value?: AngleType): AngleType | void {
     if (value === undefined) {
-      return this._ENV.angleMode;
+      return this.__store._angleMode;
     }
 
-    this._ENV.angleMode = value;
-  }
-  rectAlign(): AlignType;
-  rectAlign(align: AlignType): void;
-  /**
-   * @param {AlignType} value?
-   * @return {any}
-   */
-  rectAlign(value?: AlignType): AlignType | void {
-    if (value === undefined) {
-      return this._ENV.rectAlign;
-    }
-
-    this._ENV.rectAlign = value;
+    this.__store._angleMode = value;
   }
   colorMode(): ColorType;
   colorMode(mode: ColorType): void;
@@ -502,25 +512,20 @@ export default class fCanvas {
    */
   colorMode(value?: ColorType): ColorType | void {
     if (value === undefined) {
-      return this._ENV.colorMode;
+      return this.__store._colorMode;
     }
 
-    this._ENV.colorMode = value;
+    this.__store._colorMode = value;
   }
-  rectBaseline(): BaselineType;
-  rectBaseline(baseline: BaselineType): void;
-  /**
-   * @param {BaselineType} value?
-   * @return {any}
-   */
-  rectBaseline(value?: BaselineType): BaselineType | void {
+  rectMode(): RectMode;
+  rectMode(mode: RectMode): void;
+  rectMode(value?: RectMode): RectMode | void {
     if (value === undefined) {
-      return this._ENV.rectBaseline;
+      return this.__store._rectMode;
     }
 
-    this._ENV.rectBaseline = value;
+    this.__store._rectMode = value;
   }
-
   fontSize(): number;
   fontSize(size: number): void;
   /**
@@ -670,7 +675,7 @@ export default class fCanvas {
    */
   createPattern(
     image: CanvasImageSource,
-    direction: "repeat" | "repeat-x" | "repeat-y" | "no-repeat"
+    direction: DirectionPattern
   ): CanvasPattern | null {
     return this.$context2d.createPattern(image, direction);
   }
@@ -724,10 +729,12 @@ export default class fCanvas {
    */
   rotate(value?: number): number | void {
     if (value === undefined) {
-      return this.__rotate.now;
+      return this.__store.__rotate.now;
     } else {
-      this.$context2d.rotate((this.__rotate.now = this._toRadius(value)));
-      this.__rotate.sum += this.__rotate.now % 360;
+      this.$context2d.rotate(
+        (this.__store.__rotate.now = this._toRadius(value))
+      );
+      this.__store.__rotate.sum += this.__store.__rotate.now % 360;
     }
   }
   /**
@@ -737,7 +744,7 @@ export default class fCanvas {
    * @return {void}
    */
   resetRotate(): void {
-    this.rotate(-this.__rotate.sum);
+    this.rotate(-this.__store.__rotate.sum);
   }
   /**
    * @return {void}
@@ -755,8 +762,8 @@ export default class fCanvas {
    * @param {Function} callback
    * @return {Promise<void>}
    */
-  async preload(callback: { (): void }): Promise<void> {
-    this._existsPreload = true;
+  async preload(callback: noop): Promise<void> {
+    this.__store._existsPreload = true;
     await callback();
 
     this._stamentReady.emit("preloaded");
@@ -765,8 +772,8 @@ export default class fCanvas {
    * @param {Function} callback
    * @return {Promise<void>}
    */
-  async setup(callback: { (): void }): Promise<void> {
-    if (this._existsPreload) {
+  async setup(callback: noop): Promise<void> {
+    if (this.__store._existsPreload) {
       this._stamentReady.on("preloaded", async (): Promise<void> => {
         await setup(callback);
         this._stamentReady.emit("setuped");
@@ -780,7 +787,7 @@ export default class fCanvas {
    * @param {Function} callback
    * @return {void}
    */
-  draw(callback: { (): void }): void {
+  draw(callback: noop): void {
     this._stamentReady.on("setuped", (): void => {
       draw(callback, this);
     });
@@ -868,20 +875,26 @@ export default class fCanvas {
   translate(x?: number, y?: number): Offset | void {
     if (arguments.length === 0) {
       return {
-        x: this.__translate.x,
-        y: this.__translate.y,
+        x: this.__store.__translate.x,
+        y: this.__store.__translate.y,
       };
     }
 
-    this.$context2d.translate(x as number, y as number);
-    this.__translate.sumX += x || 0;
-    this.__translate.sumY += y || 0;
+    x = this._getPixel(x || 0);
+    y = this._getPixel(y || 0);
+
+    this.$context2d.translate(x, y);
+    this.__store.__translate.sumX += x;
+    this.__store.__translate.sumY += y;
   }
   /**
    * @return {void}
    */
   resetTranslate(): void {
-    this.$context2d.translate(-this.__translate.sumX, -this.__translate.sumY);
+    this.$context2d.translate(
+      -this.__store.__translate.sumX,
+      -this.__store.__translate.sumY
+    );
   }
   scale(): Offset;
   scale(x: number, y: number): void;
@@ -893,24 +906,27 @@ export default class fCanvas {
   scale(x?: number, y?: number): Offset | void {
     if (arguments.length === 0) {
       return {
-        x: this.__scale.x,
-        y: this.__scale.y,
+        x: this.__store.__scale.x,
+        y: this.__store.__scale.y,
       };
     }
 
     this.$context2d.scale(x as number, y as number);
-    this.__scale.sumX += x || 0;
-    this.__scale.sumY += y || 0;
+    this.__store.__scale.sumX += x || 0;
+    this.__store.__scale.sumY += y || 0;
   }
   /**
    * @return {void}
    */
   resetScale(): void {
-    this.$context2d.translate(-this.__scale.sumX, -this.__scale.sumY);
+    this.$context2d.translate(
+      -this.__store.__scale.sumX,
+      -this.__store.__scale.sumY
+    );
   }
   clip(): void;
-  clip(fillRule: "nonzero" | "evenodd"): void;
-  clip(path: Path2D, fillRule: "nonzero" | "evenodd"): void;
+  clip(fillRule: RuleClip): void;
+  clip(path: Path2D, fillRule: RuleClip): void;
   /**
    * @param {any} fillRule?
    * @param {any} path?
@@ -1076,23 +1092,23 @@ export default class fCanvas {
    * @return {void}
    */
   loop(): void {
-    this._ENV.loop = true;
+    this.__store._loop = true;
     this._stamentReady.emit("setuped");
   }
   /**
    * @return {void}
    */
   noLoop(): void {
-    this._ENV.loop = false;
-    if (this.__idFrame) {
-      cancelAnimationFrame(this.__idFrame);
+    this.__store._loop = false;
+    if (this.__store._idFrame) {
+      cancelAnimationFrame(this.__store._idFrame);
     }
   }
   /**
    * @return {boolean}
    */
   get acceptLoop(): boolean {
-    return this._ENV.loop;
+    return this.__store._loop;
   }
   /**
    * @param {CallbackEvent} callback

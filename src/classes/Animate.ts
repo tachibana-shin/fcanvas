@@ -99,7 +99,7 @@ function toObject(obj: number[] | any): InputStore {
   if (Array.isArray(obj)) {
     let tmp: {
       [propName: string]: number;
-    } = {};
+    } = Object.create(null);
 
     obj.forEach((value, index) => {
       tmp[`${index}`] = value as number;

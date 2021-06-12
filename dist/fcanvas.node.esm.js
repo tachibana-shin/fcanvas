@@ -41,10 +41,6 @@ const windowSize = {
             document.body.clientHeight,
     },
 };
-/**
- * @param {string|null} string
- * @return {string}
- */
 function trim(string) {
     if (string == null) {
         return "null";
@@ -217,7 +213,7 @@ class Emitter {
      */
     emit(name, ...payload) {
         if (name in this.__events) {
-            for (let index = this.__events[name].length - 1; index > -1; index--) {
+            for (let index = 0, length = this.__events[name].length; index < length; index++) {
                 this.__events[name][index](...payload);
             }
         }
@@ -302,8 +298,10 @@ function reactiveDefine(value, callback, parent = []) {
                         if (value.__store) {
                             value.__store[key] = newValue;
                         }
-                        reactiveDefine(newValue, callback, [...parent, key]);
-                        callback([...parent, key], old, newValue);
+                        if (newValue !== old) {
+                            reactiveDefine(newValue, callback, [...parent, key]);
+                            callback([...parent, key], old, newValue);
+                        }
                     },
                 });
                 reactiveDefine(value[key], callback, [...parent, key]);
@@ -332,10 +330,13 @@ class Store {
      * @return {void}
      */
     $set(object, key, value) {
-        object[key] = value;
-        reactiveDefine(object, (paths, oldVal, newVal) => {
-            this.__emitter.emit(paths.join("."), oldVal, newVal);
-        });
+        if (!(key in object)) {
+            //reactive
+            object[key] = undefined;
+            reactiveDefine(object, (paths, oldVal, newVal) => {
+                this.__emitter.emit(paths.join("."), oldVal, newVal);
+            });
+        }
         object[key] = value;
     }
     /**
@@ -805,7 +806,7 @@ function timeToFrames(time, fps = 1000 / 60) {
 }
 function toObject(obj) {
     if (Array.isArray(obj)) {
-        let tmp = {};
+        let tmp = Object.create(null);
         obj.forEach((value, index) => {
             tmp[`${index}`] = value;
         });
@@ -1926,7 +1927,7 @@ class MyElement {
             return this.$context2d.lineWidth;
         }
         else {
-            this.$context2d.lineWidth = value;
+            this.$context2d.lineWidth = this.$parent._getPixel(value);
         }
     }
     /**
@@ -1958,8 +1959,8 @@ class MyElement {
         }
         else {
             [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [
-                x || 0,
-                y || 0,
+                this.$parent._getPixel(x || 0),
+                this.$parent._getPixel(y || 0),
             ];
         }
     }
@@ -2026,7 +2027,7 @@ class MyElement {
      */
     arc(x, y, radius, astart, astop, reverse) {
         this.begin();
-        this.$context2d.arc(x, y, radius, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop) - Math.PI / 2, reverse);
+        this.$context2d.arc(this.$parent._getPixel(x), this.$parent._getPixel(y), radius, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop) - Math.PI / 2, reverse);
         this.close();
     }
     /**
@@ -2069,7 +2070,7 @@ class MyElement {
      */
     ellipse(x, y, radius1, radius2, astart, astop, reverse) {
         this.begin();
-        this.$context2d.ellipse(x, y, radius1, radius2, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop), reverse);
+        this.$context2d.ellipse(this.$parent._getPixel(x), this.$parent._getPixel(y), radius1, radius2, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop), reverse);
         this.close();
     }
     /**
@@ -2121,26 +2122,36 @@ class MyElement {
         // @ts-expect-error
         this.$context2d.drawImage(image, ...args);
     }
-    rect(x, y, w, h, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft) {
+    rRect(x, y, w, h, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft) {
         this.begin();
-        [x, y] = this.$parent._figureOffset(x, y, w, h);
-        if (arguments.length < 5) {
-            this.$context2d.rect(x, y, w, h);
-        }
-        else {
-            const fontSize = this.$parent.fontSize();
-            const arc = [
-                AutoToPx(radiusTopLeft, w, fontSize),
-                AutoToPx(radiusTopRight, h, fontSize),
-                AutoToPx(radiusBottomRight, w, fontSize),
-                AutoToPx(radiusBottomLeft, h, fontSize),
-            ];
-            this.move(x, y);
-            this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
-            this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
-            this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
-            this.arcTo(x, y, x + w - arc[0], y, arc[0]);
-        }
+        [x, y, w, h] = this.$parent._argsRect(x, y, w, h);
+        const fontSize = this.$parent.fontSize();
+        const arc = [
+            AutoToPx(radiusTopLeft, w, fontSize),
+            AutoToPx(radiusTopRight, h, fontSize),
+            AutoToPx(radiusBottomRight, w, fontSize),
+            AutoToPx(radiusBottomLeft, h, fontSize),
+        ];
+        this.move(x, y);
+        this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
+        this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
+        this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
+        this.arcTo(x, y, x + w - arc[0], y, arc[0]);
+        this.close();
+    }
+    /**
+     *
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @memberof MyElement
+     */
+    rect(x, y, width, height) {
+        this.begin();
+        [x, y, width, height] = this.$parent._argsRect(x, y, width, height);
+        this.rect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
         this.close();
     }
     /**
@@ -2170,7 +2181,7 @@ class MyElement {
      * @return {void}
      */
     move(x, y) {
-        this.$context2d.moveTo(x, y);
+        this.$context2d.moveTo(this.$parent._getPixel(x), this.$parent._getPixel(y));
     }
     /**
      * @param {number} x
@@ -2178,7 +2189,7 @@ class MyElement {
      * @return {void}
      */
     to(x, y) {
-        this.$context2d.lineTo(x, y);
+        this.$context2d.lineTo(this.$parent._getPixel(x), this.$parent._getPixel(y));
     }
     /**
      * @param {string} text
@@ -2188,7 +2199,7 @@ class MyElement {
      * @return {void}
      */
     fillText(text, x, y, maxWidth) {
-        this.$context2d.fillText(text, x, y, maxWidth);
+        this.$context2d.fillText(text, this.$parent._getPixel(x), this.$parent._getPixel(y), maxWidth);
     }
     /**
      * @param {string} text
@@ -2198,7 +2209,7 @@ class MyElement {
      * @return {void}
      */
     strokeText(text, x, y, maxWidth) {
-        this.$context2d.strokeText(text, x, y, maxWidth);
+        this.$context2d.strokeText(text, this.$parent._getPixel(x), this.$parent._getPixel(y), maxWidth);
     }
     /**
      * @param {number} x
@@ -2208,7 +2219,7 @@ class MyElement {
      * @return {void}
      */
     fillRect(x, y, width, height) {
-        this.$context2d.fillRect(x, y, width, height);
+        this.$context2d.fillRect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
     }
     /**
      * @param {number} x
@@ -2218,7 +2229,7 @@ class MyElement {
      * @return {void}
      */
     strokeRect(x, y, width, height) {
-        this.$context2d.strokeRect(x, y, width, height);
+        this.$context2d.strokeRect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
     }
     /**
      * @param {number} value?
@@ -2248,7 +2259,7 @@ class MyElement {
      * @return {void}
      */
     arcTo(x1, y1, x2, y2, radius) {
-        this.$context2d.arcTo(x1, y1, x2, y2, radius);
+        this.$context2d.arcTo(this.$parent._getPixel(x1), this.$parent._getPixel(y1), this.$parent._getPixel(x2), this.$parent._getPixel(y2), radius);
     }
     /**
      * @param {number} x
@@ -2401,58 +2412,6 @@ class MyElement {
         else {
             this.polyline(...points, points[0], points[1]);
         }
-    }
-}
-class RectElement extends MyElement {
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return {any}
-     */
-    constructor(x, y, width, height) {
-        super();
-        this.type = "rect";
-        this.x = 0;
-        this.y = 0;
-        this.width = 0;
-        this.height = 0;
-        [this.x, this.y, this.width, this.height] = [
-            x || 0,
-            y || 0,
-            width || 0,
-            height || 0,
-        ];
-    }
-    /**
-     * @return {boolean}
-     */
-    get interact() {
-        return RectImpactPoint(this, this.mouseX, this.mouseY);
-    }
-}
-class CircleElement extends MyElement {
-    /**
-     * Describe your function
-     * @param {number} x
-     * @param {number} y
-     * @param {number} radius
-     * @return {any}
-     */
-    constructor(x, y, radius) {
-        super();
-        this.type = "circle";
-        this.x = 0;
-        this.y = 0;
-        this.radius = 0;
-        [this.x, this.y, this.radius] = [x || 0, y || 0, radius || 0];
-    }
-    /**
-     * @return {boolean}
-     */
-    get interact() {
-        return CircleImpactPoint(this, this.mouseX, this.mouseY);
     }
 }
 class Point3D extends MyElement {
@@ -2705,44 +2664,42 @@ class fCanvas {
      * @return {any}
      */
     constructor(element) {
-        this._ENV = Object.create({
-            angleMode: "degress",
-            rectAlign: "left",
-            rectBaseline: "top",
-            colorMode: "rgb",
-            clear: true,
-            loop: true,
-        });
-        this._id = fCanvas.count++;
+        this._id = fCanvas._count++;
         this._el = document.createElement("canvas");
         this._context2dCaching = null;
         this._stamentReady = new Stament();
-        this._existsPreload = false;
-        this.__translate = Object.create({
-            x: 0,
-            y: 0,
-            sumX: 0,
-            sumY: 0,
-        });
-        this.__scale = Object.create({
-            x: 0,
-            y: 0,
-            sumX: 0,
-            sumY: 0,
-        });
-        this.__rotate = Object.create({
-            now: 0,
-            sum: 0,
-        });
-        this.__idFrame = null;
-        this.__attributeContext = Object.create({
-            alpha: true,
-            desynchronized: false,
-        });
-        this.__preventTouch = false;
-        this.__stopTouch = false;
-        this.touches = [];
-        this.changedTouches = [];
+        this.__store = {
+            __translate: Object.create({
+                x: 0,
+                y: 0,
+                sumX: 0,
+                sumY: 0,
+            }),
+            __scale: Object.create({
+                x: 0,
+                y: 0,
+                sumX: 0,
+                sumY: 0,
+            }),
+            __rotate: Object.create({
+                now: 0,
+                sum: 0,
+            }),
+            __attributeContext: Object.create({
+                alpha: true,
+                desynchronized: false,
+            }),
+            _clear: true,
+            _loop: true,
+            _preventTouch: false,
+            _stopTouch: false,
+            _idFrame: null,
+            _existsPreload: false,
+            _angleMode: "degress",
+            _rectMode: "corner",
+            _colorMode: "rgb",
+            _useFloatPixel: true,
+        };
         this.handlerEvent = (event) => {
             try {
                 if (event.type !== "mouseout") {
@@ -2752,13 +2709,15 @@ class fCanvas {
                 else {
                     this.touches = [];
                 }
-                this.__preventTouch && event.preventDefault();
-                this.__stopTouch && event.stopPropagation();
+                this.__store._preventTouch && event.preventDefault();
+                this.__store._stopTouch && event.stopPropagation();
             }
             catch (e) {
                 // throw e;
             }
         };
+        this.touches = [];
+        this.changedTouches = [];
         /**
          * @param {noop} callback
          * @return {*}  {MyElement}
@@ -2770,6 +2729,36 @@ class fCanvas {
         }
         this.restartEvents();
     }
+    cancelEventsSystem() {
+        [
+            "touchstart",
+            "mouseover",
+            "touchmove",
+            "mousemove",
+            "touchend",
+            "mouseout",
+        ].forEach((event) => {
+            this.$el.removeEventListener(event, this.handlerEvent);
+        });
+    }
+    restartEvents() {
+        this.cancelEventsSystem();
+        this.$el.addEventListener(isMobile() ? "touchstart" : "mouseover", this.handlerEvent, passive
+            ? {
+                passive: true,
+            }
+            : undefined);
+        this.$el.addEventListener(isMobile() ? "touchmove" : "mousemove", this.handlerEvent, passive
+            ? {
+                passive: true,
+            }
+            : undefined);
+        this.$el.addEventListener(isMobile() ? "touchend" : "mouseout", this.handlerEvent, passive
+            ? {
+                passive: true,
+            }
+            : undefined);
+    }
     /**
      *
      *
@@ -2777,8 +2766,8 @@ class fCanvas {
      * @memberof fCanvas
      */
     preventTouch() {
-        if (this.__preventTouch === false) {
-            this.__preventTouch = true;
+        if (this.__store._preventTouch === false) {
+            this.__store._preventTouch = true;
             return true;
         }
         return false;
@@ -2790,8 +2779,8 @@ class fCanvas {
      * @memberof fCanvas
      */
     stopTouch() {
-        if (this.__preventTouch === false) {
-            this.__stopTouch = true;
+        if (this.__store._preventTouch === false) {
+            this.__store._stopTouch = true;
             return true;
         }
         return false;
@@ -2827,50 +2816,62 @@ class fCanvas {
         return this._el;
     }
     _createNewContext2d() {
-        this._context2dCaching = this.$el.getContext("2d", this.__attributeContext);
+        this._context2dCaching = this.$el.getContext("2d", this.__store.__attributeContext);
     }
     /**
      * @return {boolean}
      */
     acceptBlur() {
-        return this.__attributeContext.alpha;
+        return this.__store.__attributeContext.alpha;
     }
     /**
      * @return {void}
      */
     blur() {
-        this.__attributeContext.alpha = true;
+        this.__store.__attributeContext.alpha = true;
         this._createNewContext2d();
     }
     /**
      * @return {void}
      */
     noBlur() {
-        this.__attributeContext.alpha = false;
+        this.__store.__attributeContext.alpha = false;
         this._createNewContext2d();
     }
     /**
-     * Describe your function
      * @return {boolean}
      */
     acceptDesync() {
-        return this.__attributeContext.desynchronized;
+        return this.__store.__attributeContext.desynchronized;
     }
     /**
-     * Describe your function
      * @return {void}
      */
     desync() {
-        this.__attributeContext.desynchronized = true;
+        this.__store.__attributeContext.desynchronized = true;
         this._createNewContext2d();
     }
     /**
-     * Describe your function
      * @return {void}
      */
     noDesync() {
-        this.__attributeContext.desynchronized = false;
+        this.__store.__attributeContext.desynchronized = false;
         this._createNewContext2d();
+    }
+    /**
+     * @return {void}
+     */
+    useFloatPixel() {
+        this.__store._useFloatPixel = true;
+    }
+    /**
+     * @return {void}
+     */
+    noFloatPixel() {
+        this.__store._useFloatPixel = false;
+    }
+    _getPixel(value) {
+        return this.__store._useFloatPixel ? value : Math.round(value);
     }
     /**
      * @return {CanvasRenderingContext2D}
@@ -2880,36 +2881,6 @@ class fCanvas {
             this._createNewContext2d();
         }
         return this._context2dCaching;
-    }
-    cancelEventsSystem() {
-        [
-            "touchstart",
-            "mouseover",
-            "touchmove",
-            "mousemove",
-            "touchend",
-            "mouseout",
-        ].forEach((event) => {
-            this.$el.removeEventListener(event, this.handlerEvent);
-        });
-    }
-    restartEvents() {
-        this.cancelEventsSystem();
-        this.$el.addEventListener(isMobile() ? "touchstart" : "mouseover", this.handlerEvent, passive
-            ? {
-                passive: true,
-            }
-            : undefined);
-        this.$el.addEventListener(isMobile() ? "touchmove" : "mousemove", this.handlerEvent, passive
-            ? {
-                passive: true,
-            }
-            : undefined);
-        this.$el.addEventListener(isMobile() ? "touchend" : "mouseout", this.handlerEvent, passive
-            ? {
-                passive: true,
-            }
-            : undefined);
     }
     /**
      * @param {HTMLElement=document.body} parent
@@ -2950,13 +2921,13 @@ class fCanvas {
      * @return {void}
      */
     noClear() {
-        this._ENV.clear = false;
+        this.__store._clear = false;
     }
     /**
      * @return {boolean}
      */
     get acceptClear() {
-        return this._ENV.clear;
+        return this.__store._clear;
     }
     /**
      * @param {LikeMyElement} element
@@ -3016,22 +2987,29 @@ class fCanvas {
         this.$context2d.restore();
     }
     _toRadius(value) {
-        return this._ENV.angleMode === "degress" ? (value * Math.PI) / 180 : value;
+        return this.__store._angleMode === "degress"
+            ? (value * Math.PI) / 180
+            : value;
     }
     _toDegress(value) {
-        return this._ENV.angleMode === "radial" ? (value * 180) / Math.PI : value;
+        return this.__store._angleMode === "radial"
+            ? (value * 180) / Math.PI
+            : value;
     }
     _toRgb([red = 0, green = red, blue = green, alpha = 1]) {
         if (Array.isArray(red)) {
             return this._toRgb(red);
         }
         else {
+            if (typeof red === "object" && red !== null) {
+                return red;
+            }
             if (typeof red === "string") {
                 return red;
             }
             else {
-                const after = this._ENV.colorMode.match(/hsl|hsb/i) ? "%" : "";
-                return `${this._ENV.colorMode}a(${[
+                const after = this.__store._colorMode.match(/hsl|hsb/i) ? "%" : "";
+                return `${this.__store._colorMode}a(${[
                     red,
                     green + after,
                     blue + after,
@@ -3040,24 +3018,18 @@ class fCanvas {
             }
         }
     }
-    _figureOffset(x, y, width, height) {
-        switch (this._ENV.rectAlign) {
+    _argsRect(x, y, width, height) {
+        switch (this.__store._rectMode) {
             case "center":
-                x -= width / 2;
-                break;
-            case "right":
-                x -= width;
-                break;
+                return [x - width / 2, y - height / 2, width, height];
+            case "radius":
+                return [x - width, y - height, width * 2, height * 2];
+            case "corners":
+                return [x - width, y - height, width, height];
+            case "corner":
+            default:
+                return [x, y, width, height];
         }
-        switch (this._ENV.rectBaseline) {
-            case "middle":
-                y -= height / 2;
-                break;
-            case "bottom":
-                y -= height;
-                break;
-        }
-        return [x, y];
     }
     /**
      * @param {AngleType} value?
@@ -3065,19 +3037,9 @@ class fCanvas {
      */
     angleMode(value) {
         if (value === undefined) {
-            return this._ENV.angleMode;
+            return this.__store._angleMode;
         }
-        this._ENV.angleMode = value;
-    }
-    /**
-     * @param {AlignType} value?
-     * @return {any}
-     */
-    rectAlign(value) {
-        if (value === undefined) {
-            return this._ENV.rectAlign;
-        }
-        this._ENV.rectAlign = value;
+        this.__store._angleMode = value;
     }
     /**
      * @param {ColorType} value?
@@ -3085,19 +3047,15 @@ class fCanvas {
      */
     colorMode(value) {
         if (value === undefined) {
-            return this._ENV.colorMode;
+            return this.__store._colorMode;
         }
-        this._ENV.colorMode = value;
+        this.__store._colorMode = value;
     }
-    /**
-     * @param {BaselineType} value?
-     * @return {any}
-     */
-    rectBaseline(value) {
+    rectMode(value) {
         if (value === undefined) {
-            return this._ENV.rectBaseline;
+            return this.__store._rectMode;
         }
-        this._ENV.rectBaseline = value;
+        this.__store._rectMode = value;
     }
     /**
      * @param {number} value?
@@ -3247,11 +3205,11 @@ class fCanvas {
      */
     rotate(value) {
         if (value === undefined) {
-            return this.__rotate.now;
+            return this.__store.__rotate.now;
         }
         else {
-            this.$context2d.rotate((this.__rotate.now = this._toRadius(value)));
-            this.__rotate.sum += this.__rotate.now % 360;
+            this.$context2d.rotate((this.__store.__rotate.now = this._toRadius(value)));
+            this.__store.__rotate.sum += this.__store.__rotate.now % 360;
         }
     }
     /**
@@ -3261,7 +3219,7 @@ class fCanvas {
      * @return {void}
      */
     resetRotate() {
-        this.rotate(-this.__rotate.sum);
+        this.rotate(-this.__store.__rotate.sum);
     }
     /**
      * @return {void}
@@ -3274,7 +3232,7 @@ class fCanvas {
      * @return {Promise<void>}
      */
     async preload(callback) {
-        this._existsPreload = true;
+        this.__store._existsPreload = true;
         await callback();
         this._stamentReady.emit("preloaded");
     }
@@ -3283,7 +3241,7 @@ class fCanvas {
      * @return {Promise<void>}
      */
     async setup(callback) {
-        if (this._existsPreload) {
+        if (this.__store._existsPreload) {
             this._stamentReady.on("preloaded", async () => {
                 await setup(callback);
                 this._stamentReady.emit("setuped");
@@ -3365,19 +3323,21 @@ class fCanvas {
     translate(x, y) {
         if (arguments.length === 0) {
             return {
-                x: this.__translate.x,
-                y: this.__translate.y,
+                x: this.__store.__translate.x,
+                y: this.__store.__translate.y,
             };
         }
+        x = this._getPixel(x || 0);
+        y = this._getPixel(y || 0);
         this.$context2d.translate(x, y);
-        this.__translate.sumX += x || 0;
-        this.__translate.sumY += y || 0;
+        this.__store.__translate.sumX += x;
+        this.__store.__translate.sumY += y;
     }
     /**
      * @return {void}
      */
     resetTranslate() {
-        this.$context2d.translate(-this.__translate.sumX, -this.__translate.sumY);
+        this.$context2d.translate(-this.__store.__translate.sumX, -this.__store.__translate.sumY);
     }
     /**
      * @param {number} x?
@@ -3387,19 +3347,19 @@ class fCanvas {
     scale(x, y) {
         if (arguments.length === 0) {
             return {
-                x: this.__scale.x,
-                y: this.__scale.y,
+                x: this.__store.__scale.x,
+                y: this.__store.__scale.y,
             };
         }
         this.$context2d.scale(x, y);
-        this.__scale.sumX += x || 0;
-        this.__scale.sumY += y || 0;
+        this.__store.__scale.sumX += x || 0;
+        this.__store.__scale.sumY += y || 0;
     }
     /**
      * @return {void}
      */
     resetScale() {
-        this.$context2d.translate(-this.__scale.sumX, -this.__scale.sumY);
+        this.$context2d.translate(-this.__store.__scale.sumX, -this.__store.__scale.sumY);
     }
     /**
      * @param {any} fillRule?
@@ -3517,23 +3477,23 @@ class fCanvas {
      * @return {void}
      */
     loop() {
-        this._ENV.loop = true;
+        this.__store._loop = true;
         this._stamentReady.emit("setuped");
     }
     /**
      * @return {void}
      */
     noLoop() {
-        this._ENV.loop = false;
-        if (this.__idFrame) {
-            cancelAnimationFrame(this.__idFrame);
+        this.__store._loop = false;
+        if (this.__store._idFrame) {
+            cancelAnimationFrame(this.__store._idFrame);
         }
     }
     /**
      * @return {boolean}
      */
     get acceptLoop() {
-        return this._ENV.loop;
+        return this.__store._loop;
     }
     /**
      * @param {CallbackEvent} callback
@@ -3600,11 +3560,9 @@ class fCanvas {
     }
 }
 fCanvas.Element = MyElement;
-fCanvas.RectElement = RectElement;
-fCanvas.CircleElement = CircleElement;
 fCanvas.Point3D = Point3D;
 fCanvas.Point3DCenter = Point3DCenter;
-fCanvas.count = 0;
+fCanvas._count = 0;
 const noopFCanvas = new fCanvas();
 
 export default fCanvas;

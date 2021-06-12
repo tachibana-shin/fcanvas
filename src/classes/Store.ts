@@ -1,12 +1,11 @@
-
 import Emitter, { CallbackEvent } from "./Emitter";
 
 interface ValueType {
   __reactive?: boolean;
   __store?: {
-    [propName: string]: any
+    [propName: string]: any;
   };
-  [propName: string]: any
+  [propName: string]: any;
 }
 
 function reactiveDefine(
@@ -87,8 +86,11 @@ function reactiveDefine(
             if (value.__store) {
               value.__store[key as string] = newValue;
             }
-            reactiveDefine(newValue, callback, [...parent, key]);
-            callback([...parent, key], old, newValue);
+
+            if (newValue !== old) {
+              reactiveDefine(newValue, callback, [...parent, key]);
+              callback([...parent, key], old, newValue);
+            }
           },
         });
         reactiveDefine(value[key as string], callback, [...parent, key]);
@@ -104,9 +106,7 @@ class Store {
    * @param {Object} store?
    * @return {any}
    */
-  constructor(store?: {
-    [propName: string]: any
-  }) {
+  constructor(store?: { [propName: string]: any }) {
     for (const key in store) {
       this[key] = store[key];
     }
@@ -121,16 +121,26 @@ class Store {
    * @param {any} value
    * @return {void}
    */
-  $set(object: Store | {
-    [propName: string]: any;
-  }, key: string, value: any): void {
-    object[key] = value;
-    reactiveDefine(
-      object,
-      (paths: string[], oldVal: any, newVal: any): void => {
-        this.__emitter.emit(paths.join("."), oldVal, newVal);
-      }
-    );
+  $set(
+    object:
+      | Store
+      | {
+          [propName: string]: any;
+        },
+    key: string,
+    value: any
+  ): void {
+    if (!(key in object)) {
+      //reactive
+      object[key] = undefined;
+      reactiveDefine(
+        object,
+        (paths: string[], oldVal: any, newVal: any): void => {
+          this.__emitter.emit(paths.join("."), oldVal, newVal);
+        }
+      );
+    }
+
     object[key] = value;
   }
   /**

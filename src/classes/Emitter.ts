@@ -64,9 +64,9 @@ export default class Emitter {
   emit(name: string, ...payload: any[]): void {
     if (name in this.__events) {
       for (
-        let index: number = this.__events[name].length - 1;
-        index > -1;
-        index--
+        let index: number = 0, length: number = this.__events[name].length;
+        index < length;
+        index++
       ) {
         this.__events[name][index](...payload);
       }

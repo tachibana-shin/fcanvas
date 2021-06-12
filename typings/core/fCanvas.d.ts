@@ -1,4 +1,4 @@
-import MyElement, { RectElement, CircleElement, Point3D, LikeMyElement, Point3DCenter, createElement } from "./MyElement";
+import MyElement, { Point3D, LikeMyElement, Point3DCenter, createElement } from "./MyElement";
 import { InfoTouch, noop, Offset } from "../utils/index";
 import { CallbackEvent } from "../classes/Emitter";
 declare type AngleType = "degress" | "radial";
@@ -8,27 +8,27 @@ declare type ColorType = "rgb" | "hsl" | "hue" | "hsb";
 export declare type ParamsToRgb = [any?, any?, any?, number?];
 declare type TextAlignType = AlignType | "start" | "end";
 declare type TextBaselineType = BaselineType | "hanging" | "alphabetic" | "ideographic";
+declare type RectMode = "corner" | "corners" | "center" | "radius";
 declare type GlobalCompositeOperationType = "source-over" | "source-atop" | "source-in" | "source-out" | "destination-over" | "destination-atop" | "destination-in" | "destination-out" | "lighter" | "copy" | "xor";
+declare type RuleClip = "nonzero" | "evenodd";
+export declare type DirectionPattern = "repeat" | "repeat-x" | "repeat-y" | "no-repeat";
 export default class fCanvas {
     static Element: typeof MyElement;
-    static RectElement: typeof RectElement;
-    static CircleElement: typeof CircleElement;
     static Point3D: typeof Point3D;
     static Point3DCenter: typeof Point3DCenter;
-    static count: number;
-    private _ENV;
+    static _count: number;
     private _id;
     private _el;
     private _context2dCaching;
     private _stamentReady;
-    private _existsPreload;
-    private __translate;
-    private __scale;
-    private __rotate;
-    private __idFrame;
-    private __attributeContext;
-    private __preventTouch;
-    private __stopTouch;
+    private __store;
+    /**
+     * @return {any}
+     */
+    constructor(element?: HTMLCanvasElement | string);
+    private handlerEvent;
+    private cancelEventsSystem;
+    private restartEvents;
     touches: InfoTouch[];
     changedTouches: InfoTouch[];
     /**
@@ -79,31 +79,30 @@ export default class fCanvas {
      */
     noBlur(): void;
     /**
-     * Describe your function
      * @return {boolean}
      */
     acceptDesync(): boolean;
     /**
-     * Describe your function
      * @return {void}
      */
     desync(): void;
     /**
-     * Describe your function
      * @return {void}
      */
     noDesync(): void;
     /**
+     * @return {void}
+     */
+    useFloatPixel(): void;
+    /**
+     * @return {void}
+     */
+    noFloatPixel(): void;
+    _getPixel(value: number): number;
+    /**
      * @return {CanvasRenderingContext2D}
      */
     get $context2d(): CanvasRenderingContext2D;
-    /**
-     * @return {any}
-     */
-    constructor(element?: HTMLCanvasElement | string);
-    private handlerEvent;
-    private cancelEventsSystem;
-    private restartEvents;
     /**
      * @param {HTMLElement=document.body} parent
      * @return {void}
@@ -165,16 +164,14 @@ export default class fCanvas {
     restore(): void;
     _toRadius(value: number): number;
     _toDegress(value: number): number;
-    _toRgb([red, green, blue, alpha]: ParamsToRgb): string;
-    _figureOffset(x: number, y: number, width: number, height: number): [number, number];
+    _toRgb([red, green, blue, alpha]: ParamsToRgb): any;
+    _argsRect(x: number, y: number, width: number, height: number): [number, number, number, number];
     angleMode(): AngleType;
     angleMode(type: AngleType): void;
-    rectAlign(): AlignType;
-    rectAlign(align: AlignType): void;
     colorMode(): ColorType;
     colorMode(mode: ColorType): void;
-    rectBaseline(): BaselineType;
-    rectBaseline(baseline: BaselineType): void;
+    rectMode(): RectMode;
+    rectMode(mode: RectMode): void;
     fontSize(): number;
     fontSize(size: number): void;
     fontFamily(): string;
@@ -216,7 +213,7 @@ export default class fCanvas {
      * @param {"repeat"|"repeat-x"|"repeat-y"|"no-repeat"} direction
      * @return {CanvasPattern | null}
      */
-    createPattern(image: CanvasImageSource, direction: "repeat" | "repeat-x" | "repeat-y" | "no-repeat"): CanvasPattern | null;
+    createPattern(image: CanvasImageSource, direction: DirectionPattern): CanvasPattern | null;
     /**
      * @param {number} x1
      * @param {number} y1
@@ -264,23 +261,17 @@ export default class fCanvas {
      * @param {Function} callback
      * @return {Promise<void>}
      */
-    preload(callback: {
-        (): void;
-    }): Promise<void>;
+    preload(callback: noop): Promise<void>;
     /**
      * @param {Function} callback
      * @return {Promise<void>}
      */
-    setup(callback: {
-        (): void;
-    }): Promise<void>;
+    setup(callback: noop): Promise<void>;
     /**
      * @param {Function} callback
      * @return {void}
      */
-    draw(callback: {
-        (): void;
-    }): void;
+    draw(callback: noop): void;
     font(): string;
     font(font: string): void;
     textAlign(): TextAlignType;
@@ -305,8 +296,8 @@ export default class fCanvas {
      */
     resetScale(): void;
     clip(): void;
-    clip(fillRule: "nonzero" | "evenodd"): void;
-    clip(path: Path2D, fillRule: "nonzero" | "evenodd"): void;
+    clip(fillRule: RuleClip): void;
+    clip(path: Path2D, fillRule: RuleClip): void;
     transform(matrix: DOMMatrix): void;
     transform(m11: number, m12: number, m21: number, m22: number, dx: number, dy: number): void;
     transform(): DOMMatrix;

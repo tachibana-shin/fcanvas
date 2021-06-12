@@ -49,18 +49,6 @@ try {
 
 export const passive: boolean = supportPassive;
 
-/**
- * @param {string} str
- * @return {string}
- */
-export function camelCase(str: string): string {
-  return str
-    .replace(/^-ms-/, "ms-")
-    .replace(/-([a-z])/g, (str: string, char: string): string =>
-      char.toUpperCase()
-    );
-}
-
 export const windowSize: {
   windowWidth: {
     get(): number;
@@ -83,23 +71,7 @@ export const windowSize: {
   },
 };
 
-/**
- * @param {string|number} string
- * @return {string}
- */
-export function convertToPx(string: string | number): string {
-  if ((string + "").match(/\w/)) {
-    return string as string;
-  } else {
-    return string + "px";
-  }
-}
-
-/**
- * @param {string|null} string
- * @return {string}
- */
-export function trim(string: string | null): string {
+function trim(string: string | null): string {
   if (string == null) {
     return "null";
   } else {
