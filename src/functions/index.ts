@@ -84,21 +84,24 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 /**
+ *
  * @param {string} src
  * @return {Promise<HTMLAudioElement>}
  */
 export function loadAudio(src: string): Promise<HTMLAudioElement> {
-  const audio = new Audio();
+  const audio = document.createElement("audio");
   audio.src = src;
   return new Promise<HTMLAudioElement>((resolve, reject) => {
-    function loaded() {
+    function loaded(): void {
       resolve(audio);
       audio.removeEventListener("load", loaded);
     }
-    function error(err: any) {
+
+    function error(err: any): void {
       reject(err);
       audio.removeEventListener("error", error);
     }
+
     audio.addEventListener("load", loaded);
     audio.addEventListener("error", error);
   });

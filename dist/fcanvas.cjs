@@ -1062,11 +1062,12 @@ function loadImage(src) {
     });
 }
 /**
+ *
  * @param {string} src
  * @return {Promise<HTMLAudioElement>}
  */
 function loadAudio(src) {
-    const audio = new Audio();
+    const audio = document.createElement("audio");
     audio.src = src;
     return new Promise((resolve, reject) => {
         function loaded() {
@@ -1628,7 +1629,7 @@ function convertFieldToJson(keyItem) {
     const key = keyItem.textContent;
     let value = keyItem.nextElementSibling;
     if (value == null) {
-        throw new Error("fCanvas<addons/loadResourceImage>: Error because syntax error in file plist.");
+        throw new Error("fCanvas<loadResourceImage>: Error because syntax error in file plist.");
     }
     if (value.tagName === "dict") {
         let result = {};
@@ -1689,7 +1690,7 @@ function resolvePath(...params) {
 }
 class ResourceTile {
     constructor(image, plist) {
-        this.__caching = Object.create(null);
+        this.__caching = new Map();
         this.image = image;
         this.plist = plist;
     }
@@ -1698,22 +1699,27 @@ class ResourceTile {
      * @return {any}
      */
     get(name) {
-        const { frame, rotated, sourceSize } = this.plist.frames[name];
-        const frameArray = frame.replace(/\{|\}|\s/g, "").split(",");
-        const sizeArray = sourceSize.replace(/\{|\}|\s/g, "").split(",");
-        if (name in this.__caching === false) {
-            this.__caching[name] = cutImage(this.image, +frameArray[0], +frameArray[1], +frameArray[2], +frameArray[3], rotated ? -90 : 0);
+        if (this.has(name)) {
+            const { frame, rotated, sourceSize } = this.plist.frames[name];
+            const frameArray = frame.replace(/\{|\}|\s/g, "").split(",");
+            const sizeArray = sourceSize.replace(/\{|\}|\s/g, "").split(",");
+            if (this.__caching.has(name) === false) {
+                const image = cutImage(this.image, +frameArray[0], +frameArray[1], +frameArray[2], +frameArray[3], rotated ? -90 : 0);
+                this.__caching.set(name, Object.assign(image, {
+                    image,
+                    size: {
+                        width: +sizeArray[0],
+                        height: +sizeArray[1],
+                    },
+                }));
+            }
+            return this.__caching.get(name);
         }
-        const imageCuted = Object.assign(this.__caching[name], {
-            image: this.__caching[name],
-            size: {
-                width: +sizeArray[0],
-                height: +sizeArray[1],
-            },
-        });
-        return imageCuted;
+        else {
+            throw new Error(`fCanvas<addons/loadResourceImage>: Error does not exist this file "${name}" in declaration .plist`);
+        }
     }
-    /*
+    /**
      * @param {string} name
      * @return {boolean}
      */
@@ -3613,4 +3619,3 @@ exports.setup = setup;
 exports.touchEnd = touchEnd;
 exports.touchMove = touchMove;
 exports.touchStart = touchStart;
-exports.windowSize = windowSize;

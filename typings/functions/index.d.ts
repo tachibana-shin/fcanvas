@@ -41,6 +41,7 @@ export declare function constrain(value: number, min: number, max: number): numb
  */
 export declare function loadImage(src: string): Promise<HTMLImageElement>;
 /**
+ *
  * @param {string} src
  * @return {Promise<HTMLAudioElement>}
  */

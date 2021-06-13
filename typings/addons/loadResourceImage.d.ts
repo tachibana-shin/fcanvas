@@ -1,4 +1,4 @@
-interface ImageAndSize extends HTMLImageElement {
+interface ImageResource extends HTMLImageElement {
     image?: HTMLImageElement;
     size: {
         width: number;
@@ -14,7 +14,11 @@ declare class ResourceTile {
      * @param {string} name
      * @return {any}
      */
-    get(name: string): ImageAndSize;
+    get(name: string): ImageResource;
+    /**
+     * @param {string} name
+     * @return {boolean}
+     */
     has(name: string): boolean;
 }
 /**

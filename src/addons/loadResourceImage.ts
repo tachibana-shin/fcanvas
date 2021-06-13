@@ -1,6 +1,6 @@
 import { cutImage, loadImage } from "../functions/index";
 
-interface ImageAndSize extends HTMLImageElement {
+interface ImageResource extends HTMLImageElement {
   image?: HTMLImageElement;
   size: {
     width: number;
@@ -14,7 +14,7 @@ function convertFieldToJson(keyItem: any): object {
 
   if (value == null) {
     throw new Error(
-      "fCanvas<addons/loadResourceImage>: Error because syntax error in file plist."
+      "fCanvas<loadResourceImage>: Error because syntax error in file plist."
     );
   }
 
@@ -85,9 +85,7 @@ class ResourceTile {
   private plist: {
     [propName: string]: any;
   };
-  private __caching: {
-    [propName: string]: HTMLImageElement;
-  } = Object.create(null);
+  private __caching: Map<string, ImageResource> = new Map();
 
   constructor(image: HTMLImageElement, plist: object) {
     this.image = image;
@@ -97,33 +95,42 @@ class ResourceTile {
    * @param {string} name
    * @return {any}
    */
-  get(name: string): ImageAndSize {
-    const { frame, rotated, sourceSize } = this.plist.frames[name];
-    const frameArray = frame.replace(/\{|\}|\s/g, "").split(",");
-    const sizeArray = sourceSize.replace(/\{|\}|\s/g, "").split(",");
+  get(name: string): ImageResource {
+    if (this.has(name)) {
+      const { frame, rotated, sourceSize } = this.plist.frames[name];
+      const frameArray = frame.replace(/\{|\}|\s/g, "").split(",");
+      const sizeArray = sourceSize.replace(/\{|\}|\s/g, "").split(",");
 
-    if (name in this.__caching === false) {
-      this.__caching[name] = cutImage(
-        this.image,
-        +frameArray[0],
-        +frameArray[1],
-        +frameArray[2],
-        +frameArray[3],
-        rotated ? -90 : 0
+      if (this.__caching.has(name) === false) {
+        const image = cutImage(
+          this.image,
+          +frameArray[0],
+          +frameArray[1],
+          +frameArray[2],
+          +frameArray[3],
+          rotated ? -90 : 0
+        );
+
+        this.__caching.set(
+          name,
+          Object.assign(image, {
+            image,
+            size: {
+              width: +sizeArray[0],
+              height: +sizeArray[1],
+            },
+          })
+        );
+      }
+
+      return this.__caching.get(name) as ImageResource;
+    } else {
+      throw new Error(
+        `fCanvas<addons/loadResourceImage>: Error does not exist this file "${name}" in declaration .plist`
       );
     }
-
-    const imageCuted = Object.assign(this.__caching[name], {
-      image: this.__caching[name],
-      size: {
-        width: +sizeArray[0],
-        height: +sizeArray[1],
-      },
-    });
-
-    return imageCuted;
   }
-  /*
+  /**
    * @param {string} name
    * @return {boolean}
    */
@@ -145,7 +152,7 @@ export default async function loadResourceImage(
 
   const plist = await fetch(`${path}`)
     .then((response) => response.text())
-    .then((str) => new DOMParser().parseFromString(str, "text/xml"));
+    .then((str: string) => new DOMParser().parseFromString(str, "text/xml"));
   let plistJson = {};
 
   plist

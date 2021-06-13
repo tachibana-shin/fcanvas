@@ -1,7 +1,6 @@
 import {
   requestAnimationFrame,
   cancelAnimationFrame,
-  windowSize,
   isMobile,
   isTouch,
   passive,
@@ -20,7 +19,6 @@ export { Emitter, Stament, Store, Vector, Animate, Camera, loadResourceImage };
 export {
   requestAnimationFrame,
   cancelAnimationFrame,
-  windowSize,
   isMobile,
   isTouch,
   passive,
