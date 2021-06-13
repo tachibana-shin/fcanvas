@@ -1,16 +1,16 @@
 {
   "name": "fcanvas",
-  "version": "0.0.5-b31",
+  "version": "0.0.5-b32",
   "main": "dist/fcanvas.js",
   "exports": {
     ".": {
-      "module": "./dist/fcanvas.js",
+      "module": "./dist/fcanvas.esm.js",
       "require": "./dist/fcanvas.js",
       "import": "./dist/fcanvas.cjs"
     },
     "./": "./"
   },
-  "module": "dist/fcanvas.js",
+  "module": "dist/fcanvas.esm.js",
   "unpkg": "dist/fcanvas.esm.js",
   "types": "typings/index.d.ts",
   "typings": "typings/index.d.ts",
