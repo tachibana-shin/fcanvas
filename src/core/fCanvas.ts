@@ -473,7 +473,7 @@ export default class fCanvas {
       : value;
   }
   _toDegress(value: number): number {
-    return this.__store._angleMode === "radial"
+    return this.__store._angleMode === "degress"
       ? (value * 180) / Math.PI
       : value;
   }
