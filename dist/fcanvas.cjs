@@ -1001,38 +1001,6 @@ class Animate {
 }
 
 /**
- * @param {Circle} circle1
- * @param {Circle} circle2
- * @return {boolean}
- */
-function CircleImpact(circle1, circle2) {
-    return ((circle1.x - circle2.x) ** 2 + (circle1.y - circle2.y) ** 2 <
-        (circle1.radius + circle2.radius) ** 2);
-}
-/**
- * @param {Circle} circle
- * @param {number} x
- * @param {number} y
- * @return {boolean}
- */
-function CircleImpactPoint(circle, x, y) {
-    if (x == null || y == null) {
-        return false;
-    }
-    return (x - circle.x) ** 2 + (y - circle.y) ** 2 < circle.radius ** 2;
-}
-/**
- * @param {Circle} circle
- * @param {Rect} rect
- * @return {boolean}
- */
-function CircleImpactRect(circle, rect) {
-    const x = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
-    const y = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
-    const distance = (x - circle.x) * (x - circle.x) + (y - circle.y) * (y - circle.y);
-    return distance < circle.radius ** 2;
-}
-/**
  * @param {number} value
  * @param {number} min
  * @param {number} max
@@ -1164,32 +1132,6 @@ function range(start, stop, step) {
     return arr;
 }
 /**
- * @param {Rect} rect1
- * @param {Rect} rect2
- * @return {boolean}
- */
-function RectImpact(rect1, rect2) {
-    return (rect1.x <= rect2.x + rect2.width &&
-        rect1.x + rect1.width >= rect2.x &&
-        rect1.y <= rect2.y + rect2.height &&
-        rect1.y + rect1.height >= rect2.y);
-}
-/**
- * @param {Rect} rect
- * @param {number} x
- * @param {number} y
- * @return {boolean}
- */
-function RectImpactPoint(rect, x, y) {
-    if (x == null || y == null) {
-        return false;
-    }
-    return (rect.x < x &&
-        rect.x + rect.width > x &&
-        rect.y < y &&
-        rect.y + rect.height > y);
-}
-/**
  * @param {number} start
  * @param {number} stop
  * @param {number} amt
@@ -1229,7 +1171,7 @@ function odd(value, prevent, max) {
  * @param {number} prevent
  * @return {number}
  */
-function off(value, min, prevent) {
+function even(value, min, prevent) {
     if (value === min) {
         return prevent;
     }
@@ -1753,6 +1695,91 @@ async function loadResourceImage(path) {
     //// ----------------- convert to json ------------------
 }
 
+class Resource {
+    constructor(resources, autoLoad = true) {
+        this._resourcesLoaded = new Map();
+        this._desResources = Object.create(null);
+        const desResources = {};
+        for (const prop in resources) {
+            ///
+            if (typeof resources[prop] === "object") {
+                desResources[prop] = {
+                    ...resources[prop],
+                };
+            }
+            else {
+                desResources[prop] = {
+                    src: resources[prop],
+                    lazy: false,
+                };
+            }
+        }
+        this._desResources = desResources;
+        if (autoLoad) {
+            const resourceAutoLoad = [];
+            for (const prop in this._desResources) {
+                if (this._desResources[prop].lazy === false) {
+                    resourceAutoLoad.push(this.load(prop));
+                }
+            }
+            // @ts-expect-error
+            return new Promise(async (resolve, reject) => {
+                try {
+                    await Promise.all(resourceAutoLoad);
+                    resolve(this);
+                }
+                catch (err) {
+                    reject(err);
+                }
+            });
+        }
+    }
+    isLoaded(name) {
+        if (name) {
+            return this._resourcesLoaded.has(name);
+        }
+        else {
+            for (const prop in this._desResources) {
+                if (this._resourcesLoaded.has(prop) === false) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    async load(name) {
+        if (name) {
+            if (name in this._desResources) {
+                if (this.isLoaded(name) === false) {
+                    this._resourcesLoaded.set(name, await loadResourceImage(this._desResources[name].src));
+                }
+                else {
+                    console.warn(`fCanvas<Resource>: "${name}" resource loaded.`);
+                }
+            }
+            else {
+                console.error(`fCanvas<Resource>: "${name} resource not exists.`);
+            }
+        }
+    }
+    get(path) {
+        const _path = path.split("/");
+        const resourceName = _path[0];
+        const resoucreProp = _path.slice(1).join("/");
+        if (this._resourcesLoaded.has(resourceName)) {
+            return this._resourcesLoaded.get(resourceName).get(resoucreProp);
+        }
+        else {
+            if (resourceName in this._desResources) {
+                throw new Error(`fCanvas<Resource>: "${resourceName} not loaded.`);
+            }
+            else {
+                throw new Error(`fCanvas<Resource>: "${resourceName}" not exitst.`);
+            }
+        }
+    }
+}
+
 class MyElement {
     /**
      * @param {fCanvas} canvas?
@@ -1767,6 +1794,18 @@ class MyElement {
         }
         this.__addEl(canvas);
     }
+    get type() {
+        if ("x" in this && "y" in this) {
+            if ("width" in this && "height" in this) {
+                return "rect";
+            }
+            if ("radius" in this) {
+                return "circle";
+            }
+            return "point";
+        }
+        return "unknown";
+    }
     __addEl(canvas) {
         if (canvas.id in this._els === false) {
             this._els[canvas.id] = canvas;
@@ -1778,17 +1817,17 @@ class MyElement {
     get $el() {
         return this.$parent.$el;
     }
-    _run(canvas, ...params) {
+    _run(canvas) {
         this.__addEl(canvas);
         this._idActiveNow = canvas.id;
         if (typeof this.update === "function") {
             if (typeof this.draw === "function") {
-                this.draw(...params);
+                this.draw();
             }
             this.update();
         }
         else if (typeof this.draw === "function") {
-            this.draw(...params);
+            this.draw();
         }
         if (this._queue.length > 0) {
             const { length } = this._queue;
@@ -2161,7 +2200,7 @@ class MyElement {
     rect(x, y, width, height) {
         this.begin();
         [x, y, width, height] = this.$parent._argsRect(x, y, width, height);
-        this.rect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
+        this.$context2d.rect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
         this.close();
     }
     /**
@@ -2943,8 +2982,12 @@ class fCanvas {
      * @param {LikeMyElement} element
      * @return {void}
      */
-    run(element, ...params) {
-        element._run(this, ...params);
+    run(...elements) {
+        let index = 0;
+        const { length } = elements;
+        while (index < length) {
+            elements[index++]._run(this);
+        }
     }
     /**
      * @return {number}
@@ -3575,14 +3618,137 @@ fCanvas.Point3DCenter = Point3DCenter;
 fCanvas._count = 0;
 const noopFCanvas = new fCanvas();
 
+function CircleImpact(circle1, circle2) {
+    return ((circle1.x - circle2.x) ** 2 + (circle1.y - circle2.y) ** 2 <
+        (circle1.radius + circle2.radius) ** 2);
+}
+function CircleImpactPoint(circle, x, y) {
+    if (x == null || y == null) {
+        return false;
+    }
+    return (x - circle.x) ** 2 + (y - circle.y) ** 2 < circle.radius ** 2;
+}
+function CircleImpactRect(circle, rect) {
+    const x = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
+    const y = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
+    const distance = (x - circle.x) * (x - circle.x) + (y - circle.y) * (y - circle.y);
+    return distance < circle.radius ** 2;
+}
+function RectImpact(rect1, rect2) {
+    return (rect1.x < rect2.x + rect2.width &&
+        rect1.x + rect1.width > rect2.x &&
+        rect1.y < rect2.y + rect2.height &&
+        rect1.y + rect1.height > rect2.y);
+}
+function RectImpactPoint(rect, x, y) {
+    if (x == null || y == null) {
+        return false;
+    }
+    return (rect.x < x &&
+        rect.x + rect.width > x &&
+        rect.y < y &&
+        rect.y + rect.height > y);
+}
+function getOffset(el) {
+    let { x, y } = el;
+    if (el.type === "rect") {
+        [x, y] = el.$parent._argsRect(el.x, el.y, el.width, el.height);
+    }
+    return {
+        x,
+        y,
+    };
+}
+function getDirectionElement(el1, el2) {
+    let { x: x1, y: y1 } = getOffset(el1);
+    let { x: x2, y: y2 } = getOffset(el2);
+    return (Math.atan2(x2 - x1, y2 - y1) * 180) / Math.PI;
+}
+function interfering(element1, element2) {
+    switch (element1.type) {
+        case "rect":
+            switch (element2.type) {
+                case "rect":
+                    if (RectImpact(element1, element2)) {
+                        return {
+                            direction: getDirectionElement(element1, element2),
+                            element: element2,
+                        };
+                    }
+                    break;
+                case "circle":
+                    if (CircleImpactRect(element2, element1)) {
+                        return {
+                            direction: getDirectionElement(element1, element2),
+                            element: element2,
+                        };
+                    }
+                    break;
+                case "point":
+                    if (RectImpactPoint(element1, element2.x, element2.y)) {
+                        return {
+                            direction: getDirectionElement(element1, element2),
+                            element: element2,
+                        };
+                    }
+                    break;
+            }
+            break;
+        case "circle":
+            switch (element2.type) {
+                case "rect":
+                    return interfering(element2, element1);
+                case "circle":
+                    if (CircleImpact(element1, element2)) {
+                        return {
+                            direction: getDirectionElement(element1, element2),
+                            element: element2,
+                        };
+                    }
+                    break;
+                case "point":
+                    if (CircleImpactPoint(element1, element2.x, element2.y)) {
+                        return {
+                            direction: getDirectionElement(element1, element2),
+                            element: element2,
+                        };
+                    }
+                    break;
+            }
+            break;
+        case "point": {
+            switch (element2.type) {
+                case "rect":
+                case "circle":
+                    return interfering(element2, element1);
+                case "point":
+                    if (element1.x === element2.x && element1.y === element2.y) {
+                        return {
+                            direction: getDirectionElement(element1, element2),
+                            element: element2,
+                        };
+                    }
+            }
+        }
+    }
+    return null;
+}
+function interferings(el, ...otherEl) {
+    let result;
+    otherEl.some((el2) => {
+        const r = interfering(el, el2);
+        if (r) {
+            result = r;
+            return true;
+        }
+    });
+    return result ?? null;
+}
+
 exports.Animate = Animate;
 exports.Camera = Camera;
-exports.CircleImpact = CircleImpact;
-exports.CircleImpactPoint = CircleImpactPoint;
-exports.CircleImpactRect = CircleImpactRect;
 exports.Emitter = Emitter;
-exports.RectImpact = RectImpact;
-exports.RectImpactPoint = RectImpactPoint;
+exports.Resource = Resource;
 exports.Stament = Stament;
 exports.Store = Store;
 exports.Vector = Vector;
@@ -3594,7 +3760,10 @@ exports.createElement = createElement;
 exports.cutImage = cutImage;
 exports.default = fCanvas;
 exports.draw = draw;
+exports.even = even;
+exports.getDirectionElement = getDirectionElement;
 exports.hypot = hypot;
+exports.interferings = interferings;
 exports.isMobile = isMobile;
 exports.isTouch = isTouch;
 exports.keyPressed = keyPressed;
@@ -3609,7 +3778,6 @@ exports.mouseMoved = mouseMoved;
 exports.mousePressed = mousePressed;
 exports.mouseWheel = mouseWheel;
 exports.odd = odd;
-exports.off = off;
 exports.passive = passive;
 exports.random = random;
 exports.randomInt = randomInt;

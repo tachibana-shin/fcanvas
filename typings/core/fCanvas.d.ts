@@ -127,7 +127,7 @@ export default class fCanvas {
      * @param {LikeMyElement} element
      * @return {void}
      */
-    run(element: LikeMyElement, ...params: any[]): void;
+    run(...elements: LikeMyElement[]): void;
     /**
      * @return {number}
      */

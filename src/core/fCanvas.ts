@@ -385,8 +385,13 @@ export default class fCanvas {
    * @param {LikeMyElement} element
    * @return {void}
    */
-  run(element: LikeMyElement, ...params: any[]): void {
-    element._run(this, ...params);
+  run(...elements: LikeMyElement[]): void {
+    let index = 0;
+    const { length } = elements;
+
+    while (index < length) {
+      elements[index++]._run(this);
+    }
   }
 
   /**

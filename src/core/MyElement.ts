@@ -1,6 +1,5 @@
 import { AutoToPx, noop, Offset } from "../utils/index";
 import fCanvas, { noopFCanvas, ParamsToRgb, DirectionPattern } from "./fCanvas";
-import { RectImpactPoint, CircleImpactPoint } from "../functions/index";
 
 type ParamsDrawImage =
   | [number, number]
@@ -13,11 +12,26 @@ export interface LikeMyElement extends MyElement {
   [propName: string]: any;
 }
 
-export default class MyElement {
+export default abstract class MyElement {
   public update?: noop;
   public draw?: {
     (...params: any[]): void;
   };
+  public get type(): "rect" | "circle" | "point" | "unknown" {
+    if ("x" in this && "y" in this) {
+      if ("width" in this && "height" in this) {
+        return "rect";
+      }
+
+      if ("radius" in this) {
+        return "circle";
+      }
+
+      return "point";
+    }
+
+    return "unknown";
+  }
   private _els: {
     [propName: string]: fCanvas;
   } = Object.create(null);
@@ -47,17 +61,17 @@ export default class MyElement {
   get $el(): HTMLCanvasElement {
     return this.$parent.$el;
   }
-  _run(canvas: fCanvas, ...params: any[]): void {
+  _run(canvas: fCanvas): void {
     this.__addEl(canvas);
     this._idActiveNow = canvas.id;
 
     if (typeof this.update === "function") {
       if (typeof this.draw === "function") {
-        this.draw(...params);
+        this.draw();
       }
       this.update();
     } else if (typeof this.draw === "function") {
-      this.draw(...params);
+      this.draw();
     }
 
     if (this._queue.length > 0) {
@@ -596,7 +610,7 @@ export default class MyElement {
   rect(x: number, y: number, width: number, height: number): void {
     this.begin();
     [x, y, width, height] = this.$parent._argsRect(x, y, width, height);
-    this.rect(
+    this.$context2d.rect(
       this.$parent._getPixel(x),
       this.$parent._getPixel(y),
       width,

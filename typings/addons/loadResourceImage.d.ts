@@ -5,7 +5,7 @@ interface ImageResource extends HTMLImageElement {
         height: number;
     };
 }
-declare class ResourceTile {
+export declare class ResourceTile {
     private image;
     private plist;
     private __caching;

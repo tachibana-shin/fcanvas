@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SHARE_TWITTER_MESSAGE</key>
+	<string>세상에! #SpringNinja 게임에서 {SCORE}점을 얻었습니다 https://itunes.apple.com/kr/app/spring-ninja/id{APP_ID}</string>
+	<key>SHARE_TWITTER_MESSAGE_ANDROID</key>
+	<string>세상에! #SpringNinja 게임에서 {SCORE}점을 얻었습니다 https://play.google.com/store/apps/details?id={APP_ID}</string>
+</dict>
+</plist>

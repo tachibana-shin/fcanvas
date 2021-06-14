@@ -1,58 +1,5 @@
 import { extractNumber } from "../utils/index";
 
-export interface Circle extends Object {
-  x: number;
-  y: number;
-  radius: number;
-}
-export interface Rect extends Object {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-/**
- * @param {Circle} circle1
- * @param {Circle} circle2
- * @return {boolean}
- */
-export function CircleImpact(circle1: Circle, circle2: Circle): boolean {
-  return (
-    (circle1.x - circle2.x) ** 2 + (circle1.y - circle2.y) ** 2 <
-    (circle1.radius + circle2.radius) ** 2
-  );
-}
-/**
- * @param {Circle} circle
- * @param {number} x
- * @param {number} y
- * @return {boolean}
- */
-export function CircleImpactPoint(
-  circle: Circle,
-  x: number | null,
-  y: number | null
-): boolean {
-  if (x == null || y == null) {
-    return false;
-  }
-  return (x - circle.x) ** 2 + (y - circle.y) ** 2 < circle.radius ** 2;
-}
-/**
- * @param {Circle} circle
- * @param {Rect} rect
- * @return {boolean}
- */
-export function CircleImpactRect(circle: Circle, rect: Rect): boolean {
-  const x = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
-  const y = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
-
-  const distance =
-    (x - circle.x) * (x - circle.x) + (y - circle.y) * (y - circle.y);
-
-  return distance < circle.radius ** 2;
-}
 /**
  * @param {number} value
  * @param {number} min
@@ -221,42 +168,6 @@ function range(start: any, stop: any, step: number): any {
 export { random, randomInt, range };
 
 /**
- * @param {Rect} rect1
- * @param {Rect} rect2
- * @return {boolean}
- */
-export function RectImpact(rect1: Rect, rect2: Rect): boolean {
-  return (
-    rect1.x <= rect2.x + rect2.width &&
-    rect1.x + rect1.width >= rect2.x &&
-    rect1.y <= rect2.y + rect2.height &&
-    rect1.y + rect1.height >= rect2.y
-  );
-}
-
-/**
- * @param {Rect} rect
- * @param {number} x
- * @param {number} y
- * @return {boolean}
- */
-export function RectImpactPoint(
-  rect: Rect,
-  x: number | null,
-  y: number | null
-): boolean {
-  if (x == null || y == null) {
-    return false;
-  }
-  return (
-    rect.x < x &&
-    rect.x + rect.width > x &&
-    rect.y < y &&
-    rect.y + rect.height > y
-  );
-}
-
-/**
  * @param {number} start
  * @param {number} stop
  * @param {number} amt
@@ -300,7 +211,7 @@ export function odd(value: number, prevent: number, max: number): number {
  * @param {number} prevent
  * @return {number}
  */
-export function off(value: number, min: number, prevent: number): number {
+export function even(value: number, min: number, prevent: number): number {
   if (value === min) {
     return prevent;
   }

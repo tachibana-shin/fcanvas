@@ -5,11 +5,12 @@ declare type LineCap = "butt" | "round" | "square";
 export interface LikeMyElement extends MyElement {
     [propName: string]: any;
 }
-export default class MyElement {
+export default abstract class MyElement {
     update?: noop;
     draw?: {
         (...params: any[]): void;
     };
+    get type(): "rect" | "circle" | "point" | "unknown";
     private _els;
     private _idActiveNow;
     private _queue;
@@ -23,7 +24,7 @@ export default class MyElement {
      * @return {HTMLCanvasElement}
      */
     get $el(): HTMLCanvasElement;
-    _run(canvas: fCanvas, ...params: any[]): void;
+    _run(canvas: fCanvas): void;
     /**
      * @param {LikeMyElement} element
      * @return {void}

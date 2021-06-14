@@ -1,33 +1,3 @@
-export interface Circle extends Object {
-    x: number;
-    y: number;
-    radius: number;
-}
-export interface Rect extends Object {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
-/**
- * @param {Circle} circle1
- * @param {Circle} circle2
- * @return {boolean}
- */
-export declare function CircleImpact(circle1: Circle, circle2: Circle): boolean;
-/**
- * @param {Circle} circle
- * @param {number} x
- * @param {number} y
- * @return {boolean}
- */
-export declare function CircleImpactPoint(circle: Circle, x: number | null, y: number | null): boolean;
-/**
- * @param {Circle} circle
- * @param {Rect} rect
- * @return {boolean}
- */
-export declare function CircleImpactRect(circle: Circle, rect: Rect): boolean;
 /**
  * @param {number} value
  * @param {number} min
@@ -69,19 +39,6 @@ declare function range(start: number, stop: number, step: number): number;
 declare function range(start: string, stop: string, step: number): string;
 export { random, randomInt, range };
 /**
- * @param {Rect} rect1
- * @param {Rect} rect2
- * @return {boolean}
- */
-export declare function RectImpact(rect1: Rect, rect2: Rect): boolean;
-/**
- * @param {Rect} rect
- * @param {number} x
- * @param {number} y
- * @return {boolean}
- */
-export declare function RectImpactPoint(rect: Rect, x: number | null, y: number | null): boolean;
-/**
  * @param {number} start
  * @param {number} stop
  * @param {number} amt
@@ -106,5 +63,5 @@ export declare function odd(value: number, prevent: number, max: number): number
  * @param {number} prevent
  * @return {number}
  */
-export declare function off(value: number, min: number, prevent: number): number;
+export declare function even(value: number, min: number, prevent: number): number;
 export declare function cutImage(image: CanvasImageSource, x?: number, y?: number, width?: number, height?: number, rotate?: number): HTMLImageElement;

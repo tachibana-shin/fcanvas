@@ -80,7 +80,7 @@ function resolvePath(...params: string[]): string {
   return params.join("/");
 }
 
-class ResourceTile {
+export class ResourceTile {
   private image: HTMLImageElement;
   private plist: {
     [propName: string]: any;
