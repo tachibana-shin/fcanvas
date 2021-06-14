@@ -238,8 +238,6 @@ export default abstract class MyElement {
      */
     rRect(x: number, y: number, width: number, height: number, radiusTopLeft: string | number, radiusTopRight: string | number, radiusBottomRight: string | number, radiusBottomLeft: string | number): void;
     /**
-     *
-     *
      * @param {number} x
      * @param {number} y
      * @param {number} width

@@ -2743,7 +2743,7 @@ img {
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a href="core_fcanvas.default.html#point3dcenter" class="tsd-kind-icon">Point3DCenter</a>
 				</li>
-				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
 					<a href="core_fcanvas.default.html#_count" class="tsd-kind-icon">_count</a>
 				</li>
 				<li class=" tsd-kind-get-signature tsd-parent-kind-class">
@@ -2990,6 +2990,9 @@ img {
 					<a href="core_fcanvas.default.html#sin" class="tsd-kind-icon">sin</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="core_fcanvas.default.html#size" class="tsd-kind-icon">size</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="core_fcanvas.default.html#stoptouch" class="tsd-kind-icon">stop<wbr>Touch</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -3075,7 +3078,7 @@ img {
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="core_fcanvas.default.html#element" class="tsd-kind-icon">Element</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="core_fcanvas.default.html#point3d" class="tsd-kind-icon">Point3D</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="core_fcanvas.default.html#point3dcenter" class="tsd-kind-icon">Point3DCenter</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="core_fcanvas.default.html#_count" class="tsd-kind-icon">_count</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="core_fcanvas.default.html#_count" class="tsd-kind-icon">_count</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
@@ -3167,6 +3170,7 @@ img {
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="core_fcanvas.default.html#settransform" class="tsd-kind-icon">set<wbr>Transform</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="core_fcanvas.default.html#setup" class="tsd-kind-icon">setup</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="core_fcanvas.default.html#sin" class="tsd-kind-icon">sin</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="core_fcanvas.default.html#size" class="tsd-kind-icon">size</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="core_fcanvas.default.html#stoptouch" class="tsd-kind-icon">stop<wbr>Touch</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="core_fcanvas.default.html#tan" class="tsd-kind-icon">tan</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="core_fcanvas.default.html#textalign" class="tsd-kind-icon">text<wbr>Align</a></li>
@@ -3189,19 +3193,58 @@ img {
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
 				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">new default<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></li>
 					<li class="tsd-signature tsd-kind-icon">new default<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLCanvasElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></li>
+					<li class="tsd-signature tsd-kind-icon">new default<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLCanvasElement</span>, width<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L123">src/core/fCanvas.ts:123</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L123">src/core/fCanvas.ts:123</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>width: <span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li>
+								<h5>height: <span class="tsd-signature-type">number</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h4>
+					</li>
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L125">src/core/fCanvas.ts:125</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> element: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLCanvasElement</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h4>
+					</li>
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L126">src/core/fCanvas.ts:126</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>element: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLCanvasElement</span></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> width: <span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> height: <span class="tsd-signature-type">number</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h4>
@@ -3217,7 +3260,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">__store<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>__attributeContext<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>alpha<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>desynchronized<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">; </span>__rotate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>now<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>sum<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">; </span>__scale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HightTransform</span><span class="tsd-signature-symbol">; </span>__translate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HightTransform</span><span class="tsd-signature-symbol">; </span>_angleMode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">AngleType</span><span class="tsd-signature-symbol">; </span>_clear<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>_colorMode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ColorType</span><span class="tsd-signature-symbol">; </span>_existsPreload<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>_idFrame<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>_loop<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>_preventTouch<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>_rectMode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RectMode</span><span class="tsd-signature-symbol">; </span>_stopTouch<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>_useFloatPixel<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = ...</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L65">src/core/fCanvas.ts:65</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L65">src/core/fCanvas.ts:65</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -3290,7 +3333,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">_context2d<wbr>Caching<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CanvasRenderingContext2D</span><span class="tsd-signature-symbol"> = null</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L62">src/core/fCanvas.ts:62</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L62">src/core/fCanvas.ts:62</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3300,7 +3343,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">_el<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLCanvasElement</span><span class="tsd-signature-symbol"> = ...</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L61">src/core/fCanvas.ts:61</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L61">src/core/fCanvas.ts:61</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3310,7 +3353,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">_id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = ...</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L60">src/core/fCanvas.ts:60</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L60">src/core/fCanvas.ts:60</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3320,7 +3363,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">_stament<wbr>Ready<span class="tsd-signature-symbol">:</span> <a href="classes_stament.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a><span class="tsd-signature-symbol"> = ...</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L63">src/core/fCanvas.ts:63</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L63">src/core/fCanvas.ts:63</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3330,7 +3373,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">changed<wbr>Touches<span class="tsd-signature-symbol">:</span> <a href="../interfaces/utils.infotouch.html" class="tsd-signature-type" data-tsd-kind="Interface">InfoTouch</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L198">src/core/fCanvas.ts:198</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L234">src/core/fCanvas.ts:234</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3340,7 +3383,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">create<wbr>Element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="core_myelement.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a><span class="tsd-signature-symbol"> = ...</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L765">src/core/fCanvas.ts:765</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L782">src/core/fCanvas.ts:782</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -3349,9 +3392,6 @@ img {
 						<dd></dd>
 						<dt>returns</dt>
 						<dd><p>{MyElement}</p>
-						</dd>
-						<dt>memberof</dt>
-						<dd><p>fCanvas</p>
 						</dd>
 					</dl>
 				</div>
@@ -3383,7 +3423,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">touches<span class="tsd-signature-symbol">:</span> <a href="../interfaces/utils.infotouch.html" class="tsd-signature-type" data-tsd-kind="Interface">InfoTouch</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L197">src/core/fCanvas.ts:197</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L233">src/core/fCanvas.ts:233</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3393,7 +3433,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">Element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="core_myelement.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a><span class="tsd-signature-symbol"> = ...</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L55">src/core/fCanvas.ts:55</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L55">src/core/fCanvas.ts:55</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3403,7 +3443,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">Point3D<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="core_myelement.point3d.html" class="tsd-signature-type" data-tsd-kind="Class">Point3D</a><span class="tsd-signature-symbol"> = ...</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L56">src/core/fCanvas.ts:56</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L56">src/core/fCanvas.ts:56</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3413,17 +3453,17 @@ img {
 				<div class="tsd-signature tsd-kind-icon">Point3DCenter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="core_myelement.point3dcenter.html" class="tsd-signature-type" data-tsd-kind="Class">Point3DCenter</a><span class="tsd-signature-symbol"> = ...</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L57">src/core/fCanvas.ts:57</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L57">src/core/fCanvas.ts:57</a></li>
 					</ul>
 				</aside>
 			</section>
-			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
 				<a name="_count" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagStatic">Static</span> _count</h3>
+				<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> _count</h3>
 				<div class="tsd-signature tsd-kind-icon">_count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L58">src/core/fCanvas.ts:58</a></li>
+						<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L58">src/core/fCanvas.ts:58</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -3440,7 +3480,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L323">src/core/fCanvas.ts:323</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L347">src/core/fCanvas.ts:347</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">CanvasRenderingContext2D</span></h4>
@@ -3457,7 +3497,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L255">src/core/fCanvas.ts:255</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L159">src/core/fCanvas.ts:159</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLCanvasElement</span></h4>
@@ -3474,7 +3514,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L380">src/core/fCanvas.ts:380</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L401">src/core/fCanvas.ts:401</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -3491,7 +3531,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1115">src/core/fCanvas.ts:1115</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1132">src/core/fCanvas.ts:1132</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -3509,7 +3549,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L413">src/core/fCanvas.ts:413</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L434">src/core/fCanvas.ts:434</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -3517,7 +3557,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L420">src/core/fCanvas.ts:420</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L441">src/core/fCanvas.ts:441</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3540,7 +3580,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L249">src/core/fCanvas.ts:249</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L279">src/core/fCanvas.ts:279</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -3557,7 +3597,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L242">src/core/fCanvas.ts:242</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L272">src/core/fCanvas.ts:272</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -3574,7 +3614,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L230">src/core/fCanvas.ts:230</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L260">src/core/fCanvas.ts:260</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h4>
@@ -3591,7 +3631,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L236">src/core/fCanvas.ts:236</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L266">src/core/fCanvas.ts:266</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h4>
@@ -3609,7 +3649,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L400">src/core/fCanvas.ts:400</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L421">src/core/fCanvas.ts:421</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -3617,7 +3657,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L407">src/core/fCanvas.ts:407</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L428">src/core/fCanvas.ts:428</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3640,7 +3680,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L432">src/core/fCanvas.ts:432</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L453">src/core/fCanvas.ts:453</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -3657,7 +3697,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L426">src/core/fCanvas.ts:426</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L447">src/core/fCanvas.ts:447</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -3677,7 +3717,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L480">src/core/fCanvas.ts:480</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L501">src/core/fCanvas.ts:501</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3709,7 +3749,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L258">src/core/fCanvas.ts:258</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L282">src/core/fCanvas.ts:282</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -3726,7 +3766,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L316">src/core/fCanvas.ts:316</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L340">src/core/fCanvas.ts:340</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3749,7 +3789,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L454">src/core/fCanvas.ts:454</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L475">src/core/fCanvas.ts:475</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3772,7 +3812,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L449">src/core/fCanvas.ts:449</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L470">src/core/fCanvas.ts:470</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3795,7 +3835,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L459">src/core/fCanvas.ts:459</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L480">src/core/fCanvas.ts:480</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3818,7 +3858,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L267">src/core/fCanvas.ts:267</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L291">src/core/fCanvas.ts:291</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -3835,7 +3875,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L287">src/core/fCanvas.ts:287</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L311">src/core/fCanvas.ts:311</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -3852,7 +3892,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1058">src/core/fCanvas.ts:1058</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1075">src/core/fCanvas.ts:1075</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3876,7 +3916,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L856">src/core/fCanvas.ts:856</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L873">src/core/fCanvas.ts:873</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -3884,7 +3924,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L857">src/core/fCanvas.ts:857</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L874">src/core/fCanvas.ts:874</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3908,7 +3948,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L499">src/core/fCanvas.ts:499</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L520">src/core/fCanvas.ts:520</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">AngleType</span></h4>
@@ -3916,7 +3956,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L500">src/core/fCanvas.ts:500</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L521">src/core/fCanvas.ts:521</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3939,7 +3979,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L335">src/core/fCanvas.ts:335</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L359">src/core/fCanvas.ts:359</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3962,7 +4002,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1044">src/core/fCanvas.ts:1044</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1061">src/core/fCanvas.ts:1061</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3985,7 +4025,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1072">src/core/fCanvas.ts:1072</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1089">src/core/fCanvas.ts:1089</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4008,7 +4048,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1080">src/core/fCanvas.ts:1080</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1097">src/core/fCanvas.ts:1097</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4034,7 +4074,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L599">src/core/fCanvas.ts:599</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L620">src/core/fCanvas.ts:620</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4057,7 +4097,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L608">src/core/fCanvas.ts:608</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L629">src/core/fCanvas.ts:629</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4080,7 +4120,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L273">src/core/fCanvas.ts:273</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L297">src/core/fCanvas.ts:297</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4097,7 +4137,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L153">src/core/fCanvas.ts:153</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L189">src/core/fCanvas.ts:189</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4114,7 +4154,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L587">src/core/fCanvas.ts:587</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L608">src/core/fCanvas.ts:608</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4148,7 +4188,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L932">src/core/fCanvas.ts:932</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L949">src/core/fCanvas.ts:949</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4156,7 +4196,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L933">src/core/fCanvas.ts:933</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L950">src/core/fCanvas.ts:950</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4170,7 +4210,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L934">src/core/fCanvas.ts:934</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L951">src/core/fCanvas.ts:951</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4197,7 +4237,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L512">src/core/fCanvas.ts:512</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L533">src/core/fCanvas.ts:533</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ColorType</span></h4>
@@ -4205,7 +4245,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L513">src/core/fCanvas.ts:513</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L534">src/core/fCanvas.ts:534</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4228,7 +4268,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1051">src/core/fCanvas.ts:1051</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1068">src/core/fCanvas.ts:1068</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4252,7 +4292,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L611">src/core/fCanvas.ts:611</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L632">src/core/fCanvas.ts:632</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4266,7 +4306,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L612">src/core/fCanvas.ts:612</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L633">src/core/fCanvas.ts:633</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4292,7 +4332,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L713">src/core/fCanvas.ts:713</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L734">src/core/fCanvas.ts:734</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4324,7 +4364,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L681">src/core/fCanvas.ts:681</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L702">src/core/fCanvas.ts:702</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4350,7 +4390,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L696">src/core/fCanvas.ts:696</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L717">src/core/fCanvas.ts:717</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4388,7 +4428,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1087">src/core/fCanvas.ts:1087</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1104">src/core/fCanvas.ts:1104</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4405,7 +4445,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L293">src/core/fCanvas.ts:293</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L317">src/core/fCanvas.ts:317</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4422,7 +4462,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L795">src/core/fCanvas.ts:795</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L812">src/core/fCanvas.ts:812</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4446,7 +4486,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L801">src/core/fCanvas.ts:801</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L818">src/core/fCanvas.ts:818</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -4454,7 +4494,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L802">src/core/fCanvas.ts:802</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L819">src/core/fCanvas.ts:819</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4478,7 +4518,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L550">src/core/fCanvas.ts:550</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L571">src/core/fCanvas.ts:571</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -4486,7 +4526,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L551">src/core/fCanvas.ts:551</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L572">src/core/fCanvas.ts:572</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4510,7 +4550,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L534">src/core/fCanvas.ts:534</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L555">src/core/fCanvas.ts:555</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -4518,7 +4558,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L535">src/core/fCanvas.ts:535</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L556">src/core/fCanvas.ts:556</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4542,7 +4582,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L565">src/core/fCanvas.ts:565</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L586">src/core/fCanvas.ts:586</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -4550,7 +4590,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L566">src/core/fCanvas.ts:566</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L587">src/core/fCanvas.ts:587</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4573,7 +4613,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L630">src/core/fCanvas.ts:630</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L651">src/core/fCanvas.ts:651</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4605,7 +4645,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L136">src/core/fCanvas.ts:136</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L172">src/core/fCanvas.ts:172</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4628,7 +4668,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1099">src/core/fCanvas.ts:1099</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1116">src/core/fCanvas.ts:1116</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4645,20 +4685,15 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L346">src/core/fCanvas.ts:346</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L367">src/core/fCanvas.ts:367</a></li>
 							</ul>
 						</aside>
-						<div class="tsd-comment tsd-typography">
-							<dl class="tsd-comment-tags">
-								<dt>memberof</dt>
-								<dd><p>fCanvas</p>
-								</dd>
-							</dl>
-						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>element: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLCanvasElement</span></h5>
+								<div class="tsd-comment tsd-typography">
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4675,7 +4710,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1178">src/core/fCanvas.ts:1178</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1195">src/core/fCanvas.ts:1195</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4698,7 +4733,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1171">src/core/fCanvas.ts:1171</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1188">src/core/fCanvas.ts:1188</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4721,7 +4756,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1122">src/core/fCanvas.ts:1122</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1139">src/core/fCanvas.ts:1139</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4744,7 +4779,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1157">src/core/fCanvas.ts:1157</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1174">src/core/fCanvas.ts:1174</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4767,7 +4802,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1129">src/core/fCanvas.ts:1129</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1146">src/core/fCanvas.ts:1146</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4790,7 +4825,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1164">src/core/fCanvas.ts:1164</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1181">src/core/fCanvas.ts:1181</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4813,7 +4848,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L280">src/core/fCanvas.ts:280</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L304">src/core/fCanvas.ts:304</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4830,7 +4865,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L374">src/core/fCanvas.ts:374</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L395">src/core/fCanvas.ts:395</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4847,7 +4882,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1093">src/core/fCanvas.ts:1093</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1110">src/core/fCanvas.ts:1110</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4864,7 +4899,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L300">src/core/fCanvas.ts:300</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L324">src/core/fCanvas.ts:324</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4881,7 +4916,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L313">src/core/fCanvas.ts:313</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L337">src/core/fCanvas.ts:337</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4898,7 +4933,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1106">src/core/fCanvas.ts:1106</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1123">src/core/fCanvas.ts:1123</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -4916,7 +4951,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L840">src/core/fCanvas.ts:840</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L857">src/core/fCanvas.ts:857</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">GlobalCompositeOperationType</span></h4>
@@ -4924,7 +4959,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L841">src/core/fCanvas.ts:841</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L858">src/core/fCanvas.ts:858</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4947,7 +4982,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L770">src/core/fCanvas.ts:770</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L787">src/core/fCanvas.ts:787</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -4970,16 +5005,9 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L205">src/core/fCanvas.ts:205</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L238">src/core/fCanvas.ts:238</a></li>
 							</ul>
 						</aside>
-						<div class="tsd-comment tsd-typography">
-							<dl class="tsd-comment-tags">
-								<dt>memberof</dt>
-								<dd><p>fCanvas</p>
-								</dd>
-							</dl>
-						</div>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						<p>{boolean}</p>
 					</li>
@@ -4996,7 +5024,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L633">src/core/fCanvas.ts:633</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L654">src/core/fCanvas.ts:654</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5016,7 +5044,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L634">src/core/fCanvas.ts:634</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L655">src/core/fCanvas.ts:655</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5058,7 +5086,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L525">src/core/fCanvas.ts:525</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L546">src/core/fCanvas.ts:546</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">RectMode</span></h4>
@@ -5066,7 +5094,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L526">src/core/fCanvas.ts:526</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L547">src/core/fCanvas.ts:547</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5089,7 +5117,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L869">src/core/fCanvas.ts:869</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L886">src/core/fCanvas.ts:886</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -5106,16 +5134,9 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L751">src/core/fCanvas.ts:751</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L769">src/core/fCanvas.ts:769</a></li>
 							</ul>
 						</aside>
-						<div class="tsd-comment tsd-typography">
-							<dl class="tsd-comment-tags">
-								<dt>memberof</dt>
-								<dd><p>fCanvas</p>
-								</dd>
-							</dl>
-						</div>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 					</li>
 				</ul>
@@ -5130,7 +5151,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L926">src/core/fCanvas.ts:926</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L943">src/core/fCanvas.ts:943</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -5147,7 +5168,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L757">src/core/fCanvas.ts:757</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L775">src/core/fCanvas.ts:775</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -5164,7 +5185,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L898">src/core/fCanvas.ts:898</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L915">src/core/fCanvas.ts:915</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -5181,7 +5202,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L165">src/core/fCanvas.ts:165</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L201">src/core/fCanvas.ts:201</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -5198,7 +5219,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L445">src/core/fCanvas.ts:445</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L466">src/core/fCanvas.ts:466</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -5216,7 +5237,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L729">src/core/fCanvas.ts:729</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L750">src/core/fCanvas.ts:750</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -5224,7 +5245,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L730">src/core/fCanvas.ts:730</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L751">src/core/fCanvas.ts:751</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5247,7 +5268,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L388">src/core/fCanvas.ts:388</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L409">src/core/fCanvas.ts:409</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5270,7 +5291,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L439">src/core/fCanvas.ts:439</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L460">src/core/fCanvas.ts:460</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -5288,7 +5309,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L904">src/core/fCanvas.ts:904</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L921">src/core/fCanvas.ts:921</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <a href="../interfaces/utils.offset.html" class="tsd-signature-type" data-tsd-kind="Interface">Offset</a></h4>
@@ -5296,7 +5317,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L905">src/core/fCanvas.ts:905</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L922">src/core/fCanvas.ts:922</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5323,7 +5344,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L992">src/core/fCanvas.ts:992</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1009">src/core/fCanvas.ts:1009</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5337,7 +5358,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L993">src/core/fCanvas.ts:993</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1010">src/core/fCanvas.ts:1010</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5375,7 +5396,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L780">src/core/fCanvas.ts:780</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L797">src/core/fCanvas.ts:797</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5398,7 +5419,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1037">src/core/fCanvas.ts:1037</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1054">src/core/fCanvas.ts:1054</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5412,16 +5433,16 @@ img {
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-				<a name="stoptouch" class="tsd-anchor"></a>
-				<h3>stop<wbr>Touch</h3>
+				<a name="size" class="tsd-anchor"></a>
+				<h3>size</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">stop<wbr>Touch<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					<li class="tsd-signature tsd-kind-icon">size<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L219">src/core/fCanvas.ts:219</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L167">src/core/fCanvas.ts:167</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -5431,6 +5452,32 @@ img {
 								</dd>
 							</dl>
 						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>width: <span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li>
+								<h5>height: <span class="tsd-signature-type">number</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="stoptouch" class="tsd-anchor"></a>
+				<h3>stop<wbr>Touch</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">stop<wbr>Touch<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L249">src/core/fCanvas.ts:249</a></li>
+							</ul>
+						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						<p>{boolean}</p>
 					</li>
@@ -5446,7 +5493,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1065">src/core/fCanvas.ts:1065</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1082">src/core/fCanvas.ts:1082</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5470,7 +5517,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L814">src/core/fCanvas.ts:814</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L831">src/core/fCanvas.ts:831</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TextAlignType</span></h4>
@@ -5478,7 +5525,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L815">src/core/fCanvas.ts:815</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L832">src/core/fCanvas.ts:832</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5502,7 +5549,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L827">src/core/fCanvas.ts:827</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L844">src/core/fCanvas.ts:844</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TextBaselineType</span></h4>
@@ -5510,7 +5557,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L828">src/core/fCanvas.ts:828</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L845">src/core/fCanvas.ts:845</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5533,7 +5580,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L726">src/core/fCanvas.ts:726</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L747">src/core/fCanvas.ts:747</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5559,7 +5606,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1150">src/core/fCanvas.ts:1150</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1167">src/core/fCanvas.ts:1167</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5582,7 +5629,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1143">src/core/fCanvas.ts:1143</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1160">src/core/fCanvas.ts:1160</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5605,7 +5652,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L1136">src/core/fCanvas.ts:1136</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L1153">src/core/fCanvas.ts:1153</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5630,7 +5677,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L947">src/core/fCanvas.ts:947</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L964">src/core/fCanvas.ts:964</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5644,7 +5691,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L948">src/core/fCanvas.ts:948</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L965">src/core/fCanvas.ts:965</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5673,7 +5720,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L956">src/core/fCanvas.ts:956</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L973">src/core/fCanvas.ts:973</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">DOMMatrix</span></h4>
@@ -5691,7 +5738,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L873">src/core/fCanvas.ts:873</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L890">src/core/fCanvas.ts:890</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <a href="../interfaces/utils.offset.html" class="tsd-signature-type" data-tsd-kind="Interface">Offset</a></h4>
@@ -5699,7 +5746,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L874">src/core/fCanvas.ts:874</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L891">src/core/fCanvas.ts:891</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -5725,7 +5772,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/638bb32/src/core/fCanvas.ts#L307">src/core/fCanvas.ts:307</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/ce1fa13/src/core/fCanvas.ts#L331">src/core/fCanvas.ts:331</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

@@ -210,8 +210,6 @@ export default class Animate {
     }
   }
   /**
-   *
-   *
    * @param {string} key
    * @return {*}  {(number | void)}
    * @memberof Animate

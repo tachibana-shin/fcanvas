@@ -382,8 +382,6 @@ class Vector {
         [this.x, this.y, this.z] = [x, y, z];
     }
     /**
-     *
-     *
      * @param {(Vector | [number?, number?, number?] | number)} x
      * @param {number} [y]
      * @param {number} [z]
@@ -409,8 +407,6 @@ class Vector {
         return this;
     }
     /**
-     *
-     *
      * @return {*}  {Vector}
      * @memberof Vector
      */
@@ -418,8 +414,6 @@ class Vector {
         return new Vector(this.x, this.y, this.z);
     }
     /**
-     *
-     *
      * @param {(Vector | [number?, number?, number?] | number)} x
      * @param {number} [y]
      * @param {number} [z]
@@ -445,8 +439,6 @@ class Vector {
         return this;
     }
     /**
-     *
-     *
      * @param {(Vector | [number, number?, number?])} x
      * @memberof Vector
      */
@@ -499,8 +491,6 @@ class Vector {
         }
     }
     /**
-     *
-     *
      * @param {(Vector | [number?, number?, number?] | number)} x
      * @param {number} [y]
      * @param {number} [z]
@@ -526,8 +516,6 @@ class Vector {
         return this;
     }
     /**
-     *
-     *
      * @param {number} n
      * @return {*}  {this}
      * @memberof Vector
@@ -539,8 +527,6 @@ class Vector {
         return this;
     }
     /**
-     *
-     *
      * @param {number} n
      * @return {*}  {this}
      * @memberof Vector
@@ -556,8 +542,6 @@ class Vector {
         return this;
     }
     /**
-     *
-     *
      * @return {*}  {number}
      * @memberof Vector
      */
@@ -565,8 +549,6 @@ class Vector {
         return Math.sqrt(this.magSq());
     }
     /**
-     *
-     *
      * @return {*}  {number}
      * @memberof Vector
      */
@@ -575,8 +557,6 @@ class Vector {
         return x * x + y * y + z * z;
     }
     /**
-     *
-     *
      * @param {(number | Vector)} [x]
      * @param {number} [y]
      * @param {number} [z]
@@ -590,8 +570,6 @@ class Vector {
         return this.x * (x || 0) + this.y * (y || 0) + this.z * (z || 0);
     }
     /**
-     *
-     *
      * @param {Vector} v
      * @return {*}  {Vector}
      * @memberof Vector
@@ -600,8 +578,6 @@ class Vector {
         return new Vector(this.y * v.z - this.z * v.y, this.z * v.x - this.x * v.z, this.x * v.y - this.y * v.x);
     }
     /**
-     *
-     *
      * @return {*}  {this}
      * @memberof Vector
      */
@@ -613,8 +589,6 @@ class Vector {
         return this;
     }
     /**
-     *
-     *
      * @param {number} max
      * @return {*}  {this}
      * @memberof Vector
@@ -628,8 +602,6 @@ class Vector {
         return this;
     }
     /**
-     *
-     *
      * @param {number} n
      * @return {*}  {this}
      * @memberof Vector
@@ -638,8 +610,6 @@ class Vector {
         return this.normalize().mult(n);
     }
     /**
-     *
-     *
      * @return {*}  {number}
      * @memberof Vector
      */
@@ -647,8 +617,6 @@ class Vector {
         return Math.atan2(this.y, this.x);
     }
     /**
-     *
-     *
      * @param {number} angle
      * @return {*}  {this}
      * @memberof Vector
@@ -661,8 +629,6 @@ class Vector {
         return this;
     }
     /**
-     *
-     *
      * @param {Vector} vector
      * @return {*}  {number}
      * @memberof Vector
@@ -674,8 +640,6 @@ class Vector {
         return angle;
     }
     /**
-     *
-     *
      * @param {(Vector | number)} [x=0]
      * @param {number} [y=0]
      * @param {number} [z=0]
@@ -693,8 +657,6 @@ class Vector {
         return this;
     }
     /**
-     *
-     *
      * @param {Vector} surfaceNormal
      * @return {*}  {this}
      * @memberof Vector
@@ -704,8 +666,6 @@ class Vector {
         return this.sub(surfaceNormal.mult(2 * this.dot(surfaceNormal)));
     }
     /**
-     *
-     *
      * @return {*}  {[number, number, number]}
      * @memberof Vector
      */
@@ -713,8 +673,6 @@ class Vector {
         return [this.x || 0, this.y || 0, this.z || 0];
     }
     /**
-     *
-     *
      * @param {(Vector | [number?, number?, number?] | number)} [x]
      * @param {number} [y]
      * @param {number} [z]
@@ -741,8 +699,6 @@ class Vector {
         return this.x === a && this.y === b && this.z === c;
     }
     /**
-     *
-     *
      * @return {*}  {string}
      * @memberof Vector
      */
@@ -890,8 +846,6 @@ class Animate {
         }
     }
     /**
-     *
-     *
      * @param {string} key
      * @return {*}  {(number | void)}
      * @memberof Animate
@@ -2185,8 +2139,6 @@ class MyElement {
         this.close();
     }
     /**
-     *
-     *
      * @param {number} x
      * @param {number} y
      * @param {number} width
@@ -2708,7 +2660,7 @@ class fCanvas {
     /**
      * @return {any}
      */
-    constructor(element) {
+    constructor(element, width, height) {
         this._id = fCanvas._count++;
         this._el = document.createElement("canvas");
         this._context2dCaching = null;
@@ -2766,13 +2718,36 @@ class fCanvas {
         /**
          * @param {noop} callback
          * @return {*}  {MyElement}
-         * @memberof fCanvas
          */
         this.createElement = createElement;
-        if (element !== undefined) {
-            this.mount(element);
+        switch (arguments.length) {
+            case 1:
+                this.mount(element);
+                break;
+            case 2:
+                this.size(element, height);
+                break;
+            case 3:
+                this.mount(element);
+                this.size(width, height);
+                break;
         }
         this.restartEvents();
+    }
+    /**
+     * @return {HTMLCanvasElement}
+     */
+    get $el() {
+        return this._el;
+    }
+    /**
+     * @param {number} width
+     * @param {number} height
+     * @memberof fCanvas
+     */
+    size(width, height) {
+        this.$el.width = width;
+        this.$el.height = height;
     }
     cancelEventsSystem() {
         [
@@ -2805,10 +2780,7 @@ class fCanvas {
             : undefined);
     }
     /**
-     *
-     *
      * @return {*}  {boolean}
-     * @memberof fCanvas
      */
     preventTouch() {
         if (this.__store._preventTouch === false) {
@@ -2818,10 +2790,7 @@ class fCanvas {
         return false;
     }
     /**
-     *
-     *
      * @return {*}  {boolean}
-     * @memberof fCanvas
      */
     stopTouch() {
         if (this.__store._preventTouch === false) {
@@ -2853,12 +2822,6 @@ class fCanvas {
      */
     get id() {
         return this._id;
-    }
-    /**
-     * @return {HTMLCanvasElement}
-     */
-    get $el() {
-        return this._el;
     }
     _createNewContext2d() {
         this._context2dCaching = this.$el.getContext("2d", this.__store.__attributeContext);
@@ -2937,10 +2900,7 @@ class fCanvas {
         }
     }
     /**
-     *
-     *
      * @param {(HTMLCanvasElement | string)} element
-     * @memberof fCanvas
      */
     mount(element) {
         let el;
@@ -3262,9 +3222,6 @@ class fCanvas {
         }
     }
     /**
-     *
-     *
-     * @memberof fCanvas
      * @return {void}
      */
     resetRotate() {

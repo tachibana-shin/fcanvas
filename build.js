@@ -120,10 +120,11 @@ build(
       }),
       commonjs(),
       babel({
-        babelrc: false,
+        // babelrc: false,
         runtimeHelpers: true,
         presets: ["@babel/preset-env"],
         plugins: [
+          "transform-es2015-modules-commonjs",
           "@babel/plugin-proposal-class-properties",
           "@babel/plugin-proposal-optional-chaining",
           "@babel/plugin-proposal-object-rest-spread",

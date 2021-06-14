@@ -16,33 +16,36 @@ export default class fCanvas {
     static Element: typeof MyElement;
     static Point3D: typeof Point3D;
     static Point3DCenter: typeof Point3DCenter;
-    static _count: number;
+    private static _count;
     private _id;
     private _el;
     private _context2dCaching;
     private _stamentReady;
     private __store;
-    /**
-     * @return {any}
-     */
+    constructor(width: number, height: number);
     constructor(element?: HTMLCanvasElement | string);
+    constructor(element: HTMLCanvasElement | string, width?: number, height?: number);
+    /**
+     * @return {HTMLCanvasElement}
+     */
+    get $el(): HTMLCanvasElement;
+    /**
+     * @param {number} width
+     * @param {number} height
+     * @memberof fCanvas
+     */
+    size(width: number, height: number): void;
     private handlerEvent;
     private cancelEventsSystem;
     private restartEvents;
     touches: InfoTouch[];
     changedTouches: InfoTouch[];
     /**
-     *
-     *
      * @return {*}  {boolean}
-     * @memberof fCanvas
      */
     preventTouch(): boolean;
     /**
-     *
-     *
      * @return {*}  {boolean}
-     * @memberof fCanvas
      */
     stopTouch(): boolean;
     /**
@@ -61,10 +64,6 @@ export default class fCanvas {
      * @return {number}
      */
     get id(): number;
-    /**
-     * @return {HTMLCanvasElement}
-     */
-    get $el(): HTMLCanvasElement;
     private _createNewContext2d;
     /**
      * @return {boolean}
@@ -109,10 +108,7 @@ export default class fCanvas {
      */
     append(parent?: HTMLElement): void;
     /**
-     *
-     *
      * @param {(HTMLCanvasElement | string)} element
-     * @memberof fCanvas
      */
     mount(element: HTMLCanvasElement | string): void;
     /**
@@ -241,9 +237,6 @@ export default class fCanvas {
     rotate(): number;
     rotate(value: number): void;
     /**
-     *
-     *
-     * @memberof fCanvas
      * @return {void}
      */
     resetRotate(): void;
@@ -254,7 +247,6 @@ export default class fCanvas {
     /**
      * @param {noop} callback
      * @return {*}  {MyElement}
-     * @memberof fCanvas
      */
     createElement: typeof createElement;
     /**

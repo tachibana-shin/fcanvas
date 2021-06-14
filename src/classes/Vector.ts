@@ -54,8 +54,6 @@ export default class Vector {
   set(offset: [number?, number?, number?]): this;
   set(x?: number, y?: number, z?: number): this;
   /**
-   *
-   *
    * @param {(Vector | [number?, number?, number?] | number)} x
    * @param {number} [y]
    * @param {number} [z]
@@ -88,8 +86,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @return {*}  {Vector}
    * @memberof Vector
    */
@@ -101,8 +97,6 @@ export default class Vector {
   add(offset: [number?, number?, number?]): this;
   add(x: number, y: number, z: number): this;
   /**
-   *
-   *
    * @param {(Vector | [number?, number?, number?] | number)} x
    * @param {number} [y]
    * @param {number} [z]
@@ -137,8 +131,6 @@ export default class Vector {
   rem(vector: Vector): void;
   rem(params: [number, number?, number?]): void;
   /**
-   *
-   *
    * @param {(Vector | [number, number?, number?])} x
    * @memberof Vector
    */
@@ -207,8 +199,6 @@ export default class Vector {
   sub(offset: [number?, number?, number?]): this;
   sub(x: number, y: number, z: number): this;
   /**
-   *
-   *
    * @param {(Vector | [number?, number?, number?] | number)} x
    * @param {number} [y]
    * @param {number} [z]
@@ -241,8 +231,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @param {number} n
    * @return {*}  {this}
    * @memberof Vector
@@ -255,8 +243,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @param {number} n
    * @return {*}  {this}
    * @memberof Vector
@@ -274,8 +260,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @return {*}  {number}
    * @memberof Vector
    */
@@ -284,8 +268,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @return {*}  {number}
    * @memberof Vector
    */
@@ -297,8 +279,6 @@ export default class Vector {
   dot(vector: Vector): number;
   dot(x?: number, y?: number, z?: number): number;
   /**
-   *
-   *
    * @param {(number | Vector)} [x]
    * @param {number} [y]
    * @param {number} [z]
@@ -314,8 +294,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @param {Vector} v
    * @return {*}  {Vector}
    * @memberof Vector
@@ -329,8 +307,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @return {*}  {this}
    * @memberof Vector
    */
@@ -343,8 +319,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @param {number} max
    * @return {*}  {this}
    * @memberof Vector
@@ -361,8 +335,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @param {number} n
    * @return {*}  {this}
    * @memberof Vector
@@ -372,8 +344,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @return {*}  {number}
    * @memberof Vector
    */
@@ -382,8 +352,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @param {number} angle
    * @return {*}  {this}
    * @memberof Vector
@@ -397,8 +365,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @param {Vector} vector
    * @return {*}  {number}
    * @memberof Vector
@@ -414,8 +380,6 @@ export default class Vector {
   lerp(vector: Vector, amt?: number): this;
   lerp(x?: number, y?: number, z?: number, amt?: number): this;
   /**
-   *
-   *
    * @param {(Vector | number)} [x=0]
    * @param {number} [y=0]
    * @param {number} [z=0]
@@ -440,8 +404,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @param {Vector} surfaceNormal
    * @return {*}  {this}
    * @memberof Vector
@@ -452,8 +414,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @return {*}  {[number, number, number]}
    * @memberof Vector
    */
@@ -465,8 +425,6 @@ export default class Vector {
   equals(params: [number?, number?, number?]): boolean;
   equals(x?: number, y?: number, z?: number): boolean;
   /**
-   *
-   *
    * @param {(Vector | [number?, number?, number?] | number)} [x]
    * @param {number} [y]
    * @param {number} [z]
@@ -498,8 +456,6 @@ export default class Vector {
   }
 
   /**
-   *
-   *
    * @return {*}  {string}
    * @memberof Vector
    */

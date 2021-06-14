@@ -55,7 +55,7 @@ export default class fCanvas {
   static Element: typeof MyElement = MyElement;
   static Point3D: typeof Point3D = Point3D;
   static Point3DCenter: typeof Point3DCenter = Point3DCenter;
-  static _count: number = 0;
+  private static _count: number = 0;
 
   private _id: number = fCanvas._count++;
   private _el: HTMLCanvasElement = document.createElement("canvas");
@@ -122,15 +122,51 @@ export default class fCanvas {
     _useFloatPixel: true,
   };
 
+  constructor(width: number, height: number);
+  constructor(element?: HTMLCanvasElement | string);
+  constructor(
+    element: HTMLCanvasElement | string,
+    width?: number,
+    height?: number
+  );
   /**
    * @return {any}
    */
-  constructor(element?: HTMLCanvasElement | string) {
-    if (element !== undefined) {
-      this.mount(element);
+  constructor(
+    element?: HTMLCanvasElement | string | number,
+    width?: number,
+    height?: number
+  ) {
+    switch (arguments.length) {
+      case 1:
+        this.mount(element as HTMLCanvasElement | string);
+        break;
+      case 2:
+        this.size(element as number, height as number);
+        break;
+      case 3:
+        this.mount(element as HTMLCanvasElement | string);
+        this.size(width as number, height as number);
+        break;
     }
 
     this.restartEvents();
+  }
+
+  /**
+   * @return {HTMLCanvasElement}
+   */
+  get $el(): HTMLCanvasElement {
+    return this._el;
+  }
+  /**
+   * @param {number} width
+   * @param {number} height
+   * @memberof fCanvas
+   */
+  public size(width: number, height: number): void {
+    this.$el.width = width;
+    this.$el.height = height;
   }
 
   private handlerEvent = (event: any): void => {
@@ -197,10 +233,7 @@ export default class fCanvas {
   public touches: InfoTouch[] = [];
   public changedTouches: InfoTouch[] = [];
   /**
-   *
-   *
    * @return {*}  {boolean}
-   * @memberof fCanvas
    */
   public preventTouch(): boolean {
     if (this.__store._preventTouch === false) {
@@ -211,10 +244,7 @@ export default class fCanvas {
     return false;
   }
   /**
-   *
-   *
    * @return {*}  {boolean}
-   * @memberof fCanvas
    */
   public stopTouch(): boolean {
     if (this.__store._preventTouch === false) {
@@ -248,12 +278,6 @@ export default class fCanvas {
    */
   get id(): number {
     return this._id;
-  }
-  /**
-   * @return {HTMLCanvasElement}
-   */
-  get $el(): HTMLCanvasElement {
-    return this._el;
   }
   private _createNewContext2d(): void {
     this._context2dCaching = this.$el.getContext(
@@ -338,10 +362,7 @@ export default class fCanvas {
     }
   }
   /**
-   *
-   *
    * @param {(HTMLCanvasElement | string)} element
-   * @memberof fCanvas
    */
   mount(element: HTMLCanvasElement | string): void {
     let el: HTMLCanvasElement;
@@ -743,9 +764,6 @@ export default class fCanvas {
     }
   }
   /**
-   *
-   *
-   * @memberof fCanvas
    * @return {void}
    */
   resetRotate(): void {
@@ -760,7 +778,6 @@ export default class fCanvas {
   /**
    * @param {noop} callback
    * @return {*}  {MyElement}
-   * @memberof fCanvas
    */
   createElement = createElement;
   /**

@@ -599,8 +599,6 @@ export default abstract class MyElement {
     this.close();
   }
   /**
-   *
-   *
    * @param {number} x
    * @param {number} y
    * @param {number} width

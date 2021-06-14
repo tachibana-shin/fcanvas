@@ -6,8 +6,6 @@ export default class Animate {
     private __data;
     private set data(value);
     /**
-     *
-     *
      * @param {string} key
      * @return {*}  {(number | void)}
      * @memberof Animate
