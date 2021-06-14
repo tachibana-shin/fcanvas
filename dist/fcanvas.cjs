@@ -1972,7 +1972,7 @@ class MyElement {
      * @return {number}
      */
     measureText(text) {
-        return this.$context2d.measureText(text).width;
+        return this.$parent.measureText(text);
     }
     /**
      * @return {void}
@@ -3420,6 +3420,13 @@ class fCanvas {
         else {
             this.$context2d.setTransform(m11, m12, m21, m22, dx, dy);
         }
+    }
+    /**
+     * @param {string} text
+     * @return {number}
+     */
+    measureText(text) {
+        return this.$context2d.measureText(text).width;
     }
     /**
      * @param {number} angle

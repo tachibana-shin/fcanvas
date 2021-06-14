@@ -1048,6 +1048,13 @@ export default class fCanvas {
   }
 
   /**
+   * @param {string} text
+   * @return {number}
+   */
+  measureText(text: string): number {
+    return this.$context2d.measureText(text).width;
+  }
+  /**
    * @param {number} angle
    * @return {number}
    */

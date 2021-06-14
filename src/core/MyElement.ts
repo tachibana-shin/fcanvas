@@ -306,7 +306,7 @@ export default abstract class MyElement {
    * @return {number}
    */
   measureText(text: string): number {
-    return this.$context2d.measureText(text).width;
+    return this.$parent.measureText(text);
   }
   /**
    * @return {void}
