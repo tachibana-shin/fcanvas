@@ -74,32 +74,42 @@ export function getDirectionElement(el1: any, el2: any): any {
   return (Math.atan2(x2 - x1, y2 - y1) * 180) / Math.PI;
 }
 
-function interfering(element1: any, element2: any): ReturnInterfering | null {
+function interfering(
+  element1: any,
+  element2: any,
+  company: boolean = true
+): ReturnInterfering | boolean | null {
   switch (element1.type) {
     case "rect":
       switch (element2.type) {
         case "rect":
           if (RectImpact(element1, element2)) {
-            return {
-              direction: getDirectionElement(element1, element2),
-              element: element2,
-            };
+            return company
+              ? {
+                  direction: getDirectionElement(element1, element2),
+                  element: element2,
+                }
+              : true;
           }
           break;
         case "circle":
           if (CircleImpactRect(element2, element1)) {
-            return {
-              direction: getDirectionElement(element1, element2),
-              element: element2,
-            };
+            return company
+              ? {
+                  direction: getDirectionElement(element1, element2),
+                  element: element2,
+                }
+              : true;
           }
           break;
         case "point":
           if (RectImpactPoint(element1, element2.x, element2.y)) {
-            return {
-              direction: getDirectionElement(element1, element2),
-              element: element2,
-            };
+            return company
+              ? {
+                  direction: getDirectionElement(element1, element2),
+                  element: element2,
+                }
+              : true;
           }
           break;
       }
@@ -107,21 +117,25 @@ function interfering(element1: any, element2: any): ReturnInterfering | null {
     case "circle":
       switch (element2.type) {
         case "rect":
-          return interfering(element2, element1);
+          return interfering(element2, element1, company);
         case "circle":
           if (CircleImpact(element1, element2)) {
-            return {
-              direction: getDirectionElement(element1, element2),
-              element: element2,
-            };
+            return company
+              ? {
+                  direction: getDirectionElement(element1, element2),
+                  element: element2,
+                }
+              : true;
           }
           break;
         case "point":
           if (CircleImpactPoint(element1, element2.x, element2.y)) {
-            return {
-              direction: getDirectionElement(element1, element2),
-              element: element2,
-            };
+            return company
+              ? {
+                  direction: getDirectionElement(element1, element2),
+                  element: element2,
+                }
+              : true;
           }
           break;
       }
@@ -130,19 +144,21 @@ function interfering(element1: any, element2: any): ReturnInterfering | null {
       switch (element2.type) {
         case "rect":
         case "circle":
-          return interfering(element2, element1);
+          return interfering(element2, element1, company);
         case "point":
           if (element1.x === element2.x && element1.y === element2.y) {
-            return {
-              direction: getDirectionElement(element1, element2),
-              element: element2,
-            };
+            return company
+              ? {
+                  direction: getDirectionElement(element1, element2),
+                  element: element2,
+                }
+              : true;
           }
       }
     }
   }
 
-  return null;
+  return company ? false : null;
 }
 
 export function interferings(
@@ -161,4 +177,11 @@ export function interferings(
   });
 
   return result ?? null;
+}
+
+export function interferingsBoolean(
+  el: MyElement,
+  ...otherEl: MyElement[]
+): boolean {
+  return otherEl.some((el2) => interfering(el, el2, false));
 }

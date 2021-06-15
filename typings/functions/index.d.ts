@@ -65,3 +65,11 @@ export declare function odd(value: number, prevent: number, max: number): number
  */
 export declare function even(value: number, min: number, prevent: number): number;
 export declare function cutImage(image: CanvasImageSource, x?: number, y?: number, width?: number, height?: number, rotate?: number): HTMLImageElement;
+/**
+ * @export
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ * @return {*}  {boolean}
+ */
+export declare function unlimited(value: number, min: number, max: number): boolean;

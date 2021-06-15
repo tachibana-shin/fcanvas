@@ -1156,6 +1156,16 @@ function cutImage(image, x = 0, y = 0, width = extractNumber(`${image.width}`), 
     virualContext.clearRect(0, 0, width, height);
     return imageCuted;
 }
+/**
+ * @export
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ * @return {*}  {boolean}
+ */
+function unlimited(value, min, max) {
+    return value < min || value > max;
+}
 
 class Camera {
     /**
@@ -3624,32 +3634,38 @@ function getDirectionElement(el1, el2) {
     let { x: x2, y: y2 } = getOffset(el2);
     return (Math.atan2(x2 - x1, y2 - y1) * 180) / Math.PI;
 }
-function interfering(element1, element2) {
+function interfering(element1, element2, company = true) {
     switch (element1.type) {
         case "rect":
             switch (element2.type) {
                 case "rect":
                     if (RectImpact(element1, element2)) {
-                        return {
-                            direction: getDirectionElement(element1, element2),
-                            element: element2,
-                        };
+                        return company
+                            ? {
+                                direction: getDirectionElement(element1, element2),
+                                element: element2,
+                            }
+                            : true;
                     }
                     break;
                 case "circle":
                     if (CircleImpactRect(element2, element1)) {
-                        return {
-                            direction: getDirectionElement(element1, element2),
-                            element: element2,
-                        };
+                        return company
+                            ? {
+                                direction: getDirectionElement(element1, element2),
+                                element: element2,
+                            }
+                            : true;
                     }
                     break;
                 case "point":
                     if (RectImpactPoint(element1, element2.x, element2.y)) {
-                        return {
-                            direction: getDirectionElement(element1, element2),
-                            element: element2,
-                        };
+                        return company
+                            ? {
+                                direction: getDirectionElement(element1, element2),
+                                element: element2,
+                            }
+                            : true;
                     }
                     break;
             }
@@ -3657,21 +3673,25 @@ function interfering(element1, element2) {
         case "circle":
             switch (element2.type) {
                 case "rect":
-                    return interfering(element2, element1);
+                    return interfering(element2, element1, company);
                 case "circle":
                     if (CircleImpact(element1, element2)) {
-                        return {
-                            direction: getDirectionElement(element1, element2),
-                            element: element2,
-                        };
+                        return company
+                            ? {
+                                direction: getDirectionElement(element1, element2),
+                                element: element2,
+                            }
+                            : true;
                     }
                     break;
                 case "point":
                     if (CircleImpactPoint(element1, element2.x, element2.y)) {
-                        return {
-                            direction: getDirectionElement(element1, element2),
-                            element: element2,
-                        };
+                        return company
+                            ? {
+                                direction: getDirectionElement(element1, element2),
+                                element: element2,
+                            }
+                            : true;
                     }
                     break;
             }
@@ -3680,18 +3700,20 @@ function interfering(element1, element2) {
             switch (element2.type) {
                 case "rect":
                 case "circle":
-                    return interfering(element2, element1);
+                    return interfering(element2, element1, company);
                 case "point":
                     if (element1.x === element2.x && element1.y === element2.y) {
-                        return {
-                            direction: getDirectionElement(element1, element2),
-                            element: element2,
-                        };
+                        return company
+                            ? {
+                                direction: getDirectionElement(element1, element2),
+                                element: element2,
+                            }
+                            : true;
                     }
             }
         }
     }
-    return null;
+    return company ? false : null;
 }
 function interferings(el, ...otherEl) {
     let result;
@@ -3704,6 +3726,9 @@ function interferings(el, ...otherEl) {
     });
     return result ?? null;
 }
+function interferingsBoolean(el, ...otherEl) {
+    return otherEl.some((el2) => interfering(el, el2, false));
+}
 
 export default fCanvas;
-export { Animate, Camera, Emitter, Resource, Stament, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, draw, even, getDirectionElement, hypot, interferings, isMobile, isTouch, keyPressed, keyUp, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart };
+export { Animate, Camera, Emitter, Resource, Stament, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, draw, even, getDirectionElement, hypot, interferings, interferingsBoolean, isMobile, isTouch, keyPressed, keyUp, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, unlimited };

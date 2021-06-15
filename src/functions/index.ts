@@ -280,3 +280,14 @@ export function cutImage(
   virualContext.clearRect(0, 0, width, height);
   return imageCuted;
 }
+
+/**
+ * @export
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ * @return {*}  {boolean}
+ */
+export function unlimited(value: number, min: number, max: number): boolean {
+  return value < min || value > max;
+}
