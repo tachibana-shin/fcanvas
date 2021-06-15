@@ -74,6 +74,10 @@ function convertFieldToJson(keyItem: any): object {
   return {};
 }
 function resolvePath(...params: string[]): string {
+  if (params[1].match(/^[a-z]+:\/\//i)) {
+    return params[1];
+  }
+
   const root = ("" || params[0]).replace(/\/$/, "").split("/");
   params[0] = root.slice(0, root.length - 1).join("/");
 

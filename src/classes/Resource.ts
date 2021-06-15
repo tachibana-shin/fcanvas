@@ -1,15 +1,18 @@
 import loadResourceImage, { ResourceTile } from "../addons/loadResourceImage";
+import { loadAudio, loadImage } from "../functions/index";
 
 interface ResourceParam {
   src: string;
   lazy: boolean;
+  type: "image" | "audio" | "plist";
 }
 interface ResourcesParams {
   [propName: string]: ResourceParam;
 }
 
+type ResourceType = ResourceTile | HTMLImageElement | HTMLAudioElement;
 export default class Resource {
-  private _resourcesLoaded: Map<string, ResourceTile> = new Map();
+  private _resourcesLoaded: Map<string, ResourceType> = new Map();
   private _desResources: ResourcesParams = Object.create(null);
 
   constructor(
@@ -30,6 +33,7 @@ export default class Resource {
         desResources[prop] = {
           src: resources[prop] as string,
           lazy: false,
+          type: "plist",
         };
       }
     }
@@ -75,6 +79,30 @@ export default class Resource {
     if (name) {
       if (name in this._desResources) {
         if (this.isLoaded(name) === false) {
+          switch (this._desResources[name].type) {
+            case "image":
+              this._resourcesLoaded.set(
+                name,
+                await loadImage(this._desResources[name].src)
+              );
+              break;
+            case "audio":
+              this._resourcesLoaded.set(
+                name,
+                await loadAudio(this._desResources[name].src)
+              );
+              break;
+            case "plist":
+              this._resourcesLoaded.set(
+                name,
+                await loadResourceImage(this._desResources[name].src)
+              );
+              break;
+            default:
+              console.warn(
+                `fCanvas<Resource>: can't load "${name} because it is "${this._desResources[name].type}`
+              );
+          }
           this._resourcesLoaded.set(
             name,
             await loadResourceImage(this._desResources[name].src)
@@ -87,20 +115,40 @@ export default class Resource {
       }
     }
   }
-  get(path: string): ResourceTile {
+  get(path: string): ResourceType {
     const _path = path.split("/");
 
     const resourceName = _path[0];
     const resoucreProp = _path.slice(1).join("/");
 
-    if (this._resourcesLoaded.has(resourceName)) {
-      return (this._resourcesLoaded.get(resourceName) as any).get(resoucreProp);
-    } else {
-      if (resourceName in this._desResources) {
-        throw new Error(`fCanvas<Resource>: "${resourceName} not loaded.`);
+    const info: ResourceParam = this._desResources[resourceName];
+
+    if (info) {
+      if (this._resourcesLoaded.has(resourceName)) {
+        const resource = this._resourcesLoaded.get(resourceName);
+
+        if (resource) {
+          switch (info.type) {
+            case "image":
+            case "audio":
+              return resource;
+            case "plist":
+              return (this._resourcesLoaded.get(resourceName) as any).get(
+                resoucreProp
+              );
+            default:
+              throw new Error(
+                `fCanvas<Resource>: "can't get "${resourceName} because not support type "${info.type}".`
+              );
+          }
+        }
+
+        throw new Error(`fCanvas<Resource>: "${resourceName} not exists.`);
       } else {
-        throw new Error(`fCanvas<Resource>: "${resourceName}" not exitst.`);
+        throw new Error(`fCanvas<Resource>: "${resourceName} not loaded.`);
       }
+    } else {
+      throw new Error(`fCanvas<Resource>: "${resourceName}" not exitst.`);
     }
   }
 }
