@@ -954,554 +954,6 @@ class Animate {
     }
 }
 
-/**
- * @param {number} value
- * @param {number} min
- * @param {number} max
- * @return {number}
- */
-function constrain(value, min, max) {
-    return Math.min(Math.max(min, value), max);
-}
-/**
- * @param {string} src
- * @return {Promise<HTMLImageElement>}
- */
-function loadImage(src) {
-    const img = new Image();
-    img.src = src;
-    return new Promise((resolve, reject) => {
-        function loaded() {
-            resolve(img);
-            img.removeEventListener("load", loaded);
-        }
-        function error(err) {
-            reject(err);
-            img.removeEventListener("error", error);
-        }
-        img.addEventListener("load", loaded);
-        img.addEventListener("error", error);
-    });
-}
-/**
- *
- * @param {string} src
- * @return {Promise<HTMLAudioElement>}
- */
-function loadAudio(src) {
-    const audio = document.createElement("audio");
-    audio.src = src;
-    return new Promise((resolve, reject) => {
-        function loaded() {
-            resolve(audio);
-            audio.removeEventListener("load", loaded);
-        }
-        function error(err) {
-            reject(err);
-            audio.removeEventListener("error", error);
-        }
-        audio.addEventListener("load", loaded);
-        audio.addEventListener("error", error);
-    });
-}
-/**
- * @param {number} value
- * @param {number} start
- * @param {number} stop
- * @param {number} min
- * @param {number} max
- * @return {number}
- */
-function map(value, start, stop, min, max) {
-    return ((value - start) * (max - min)) / (stop - start) + min;
-}
-function aspectRatio(ratio, width, height) {
-    /// ratio = width / height => height = width / ratio
-    const nwidth = ratio * height;
-    const nheight = width / ratio;
-    if (width < nwidth) {
-        return [width, nheight];
-    }
-    else {
-        return [nwidth, height];
-    }
-}
-function random(...args) {
-    if (args.length === 1) {
-        if (args[0] !== null &&
-            typeof args[0] === "object" &&
-            "length" in args[0]) {
-            return args[0][Math.floor(Math.random() * args[0].length)];
-        }
-        return Math.random() * args[0];
-    }
-    if (args.length === 2) {
-        return args[0] + Math.random() * (args[1] - args[0]);
-    }
-}
-/**
- * @param {number} start
- * @param {number} stop?
- * @return {number}
- */
-function randomInt(start, stop) {
-    if (stop === undefined) {
-        return Math.round(random(start));
-    }
-    return Math.round(random(start, stop));
-}
-/**
- * @param {any} start
- * @param {any} stop
- * @param {number} step
- * @return {any}
- */
-function range(start, stop, step) {
-    step = step || 1;
-    const arr = [];
-    let isChar = false;
-    if (stop === undefined)
-        (stop = start), (start = 1);
-    if (typeof start === "string") {
-        start = start.charCodeAt(0);
-        stop = stop.charCodeAt(0);
-        isChar = true;
-    }
-    if (start !== stop && Math.abs(stop - start) < Math.abs(step))
-        throw new Error("range(): step exceeds the specified range.");
-    if (stop > start) {
-        step < 0 && (step *= -1);
-        while (start <= stop) {
-            arr.push(isChar ? String.fromCharCode(start) : start);
-            start += step;
-        }
-    }
-    else {
-        step > 0 && (step *= -1);
-        while (start >= stop) {
-            arr.push(isChar ? String.fromCharCode(start) : start);
-            start += step;
-        }
-    }
-    return arr;
-}
-/**
- * @param {number} start
- * @param {number} stop
- * @param {number} amt
- * @return {number}
- */
-function lerp(start, stop, amt) {
-    return amt * (stop - start) + start;
-}
-/**
- * @param {number[]} ...args
- * @return {number}
- */
-const hypot = typeof Math.hypot === "function"
-    ? Math.hypot
-    : (...args) => {
-        const len = args.length;
-        let i = 0, result = 0;
-        while (i < len)
-            result += Math.pow(args[i++], 2);
-        return Math.sqrt(result);
-    };
-/**
- * @param {number} value
- * @param {number} max
- * @param {number} prevent
- * @return {number}
- */
-function odd(value, prevent, max) {
-    if (value === max) {
-        return prevent;
-    }
-    return value + 1;
-}
-/**
- * @param {number} value
- * @param {number} min
- * @param {number} prevent
- * @return {number}
- */
-function even(value, min, prevent) {
-    if (value === min) {
-        return prevent;
-    }
-    return value - 1;
-}
-///// https://jsfiddle.net/casamia743/xqh48gno/
-function calcProjectedRectSizeOfRotatedRect(width, height, rad) {
-    const rectProjectedWidth = Math.abs(width * Math.cos(rad)) + Math.abs(height * Math.sin(rad));
-    const rectProjectedHeight = Math.abs(width * Math.sin(rad)) + Math.abs(height * Math.cos(rad));
-    return [rectProjectedWidth, rectProjectedHeight];
-}
-let virualContext;
-function cutImage(image, x = 0, y = 0, width = extractNumber(`${image.width}`), height = extractNumber(`${image.height}`), rotate = 0) {
-    if (virualContext === undefined) {
-        virualContext = document
-            .createElement("canvas")
-            .getContext("2d"); /// never null
-    }
-    /// ------------------ draw image canvas -----------------
-    const rad = (rotate * Math.PI) / 180;
-    const [nwidth, nheight] = calcProjectedRectSizeOfRotatedRect(width, height, rad);
-    virualContext.canvas.width = width;
-    virualContext.canvas.height = height;
-    virualContext.save();
-    virualContext.translate(width / 2, height / 2);
-    virualContext.rotate((rotate * Math.PI) / 180);
-    virualContext.drawImage(image, x, y, nwidth, nheight, -nwidth / 2, -nheight / 2, nwidth, nheight);
-    virualContext.restore();
-    /// -----------------------------------------------------------
-    const imageCuted = new Image();
-    imageCuted.src = virualContext.canvas.toDataURL();
-    virualContext.clearRect(0, 0, width, height);
-    return imageCuted;
-}
-/**
- * @export
- * @param {number} value
- * @param {number} min
- * @param {number} max
- * @return {*}  {boolean}
- */
-function unlimited(value, min, max) {
-    return value < min || value > max;
-}
-
-class Camera {
-    /**
-     * @param {number} width?
-     * @param {number} height?
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} vWidth?
-     * @param {number} vHeight?
-     * @param {number|false} cix?
-     * @param {number} ciy?
-     * @param {number} cwidth?
-     * @param {number} cheight?
-     * @return {any}
-     */
-    constructor(width, height, x, y, vWidth, vHeight, cix, ciy, cwidth, cheight) {
-        this.viewport = {
-            width: 0,
-            height: 0,
-        }; /// view port 100% frame
-        this.viewBox = {
-            mx: 0,
-            my: 0,
-            width: 0,
-            height: 0,
-        }; /// view box for full canvas
-        this._cx = 0; /// x camera
-        this._cy = 0; /// y camera
-        this.cursor = {
-            __camera: this,
-            use: true,
-            idealX: 0,
-            idealY: 0,
-            idealRX: 0,
-            offsetTop: 0,
-            offsetRight: 0,
-            offsetBottom: 0,
-            offsetLeft: 0,
-            width: 0,
-            height: 0,
-            get x() {
-                if (this.__camera._cx < -this.__camera.viewBox.mx) {
-                    const dx = -this.__camera.viewBox.mx - this.__camera._cx;
-                    return this.idealX - dx;
-                }
-                if (this.__camera._cx >
-                    this.__camera.viewport.width - this.__camera.viewBox.width) {
-                    const dx = this.__camera.viewport.width -
-                        this.__camera.viewBox.width -
-                        this.__camera._cx;
-                    return this.idealX - dx;
-                }
-                return this.idealX;
-            },
-            set x(x) {
-                if (x < this.idealX) {
-                    this.__camera._cx = x - this.idealX - this.__camera.viewBox.mx;
-                }
-                if (x > this.idealX + this.idealRX) {
-                    this.__camera._cx =
-                        x -
-                            this.idealX +
-                            this.__camera.viewport.width -
-                            this.__camera.viewBox.width -
-                            this.width;
-                }
-            },
-            get y() {
-                if (this.__camera._cy < -this.__camera.viewBox.my) {
-                    const dy = -this.__camera.viewBox.my - this.__camera._cy;
-                    return this.idealY - dy;
-                }
-                if (this.__camera._cy >
-                    this.__camera.viewport.height - this.__camera.viewBox.height) {
-                    const dy = this.__camera.viewport.height -
-                        this.__camera.viewBox.height -
-                        this.__camera._cy;
-                    return this.idealY - dy;
-                }
-                return this.idealY;
-            },
-            set y(y) {
-                if (y < this.idealY) {
-                    this.__camera._cy = y - this.idealY - this.__camera.viewBox.my;
-                }
-                if (y > this.idealY) {
-                    this.__camera._cy =
-                        y -
-                            this.idealY +
-                            this.__camera.viewport.height -
-                            this.__camera.viewBox.height -
-                            this.height;
-                }
-            },
-        };
-        this.setViewport(width || 0, height || 0);
-        this.setViewBox(x || 0, y || 0, vWidth || 0, vHeight || 0);
-        if (cix === false) {
-            this.setCursor(false);
-        }
-        else {
-            this.setCursor(cix, ciy, cwidth, cheight);
-        }
-    }
-    get cx() {
-        return this._cx;
-    }
-    set cx(x) {
-        if (this.cursor.use) {
-            this._cx = constrain(x, -this.cursor.idealX - this.viewBox.mx - this.cursor.offsetLeft, this.viewport.width -
-                this.viewBox.width +
-                (this.viewBox.width - this.cursor.idealX - this.cursor.width) +
-                this.cursor.offsetRight);
-        }
-        else {
-            this._cx = constrain(x, -this.viewBox.mx, this.viewport.width - this.viewBox.width);
-        }
-    }
-    get cy() {
-        return this._cy;
-    }
-    set cy(y) {
-        if (this.cursor.use) {
-            this._cy = constrain(y, -this.cursor.idealY - this.viewBox.my - this.cursor.offsetTop, this.viewport.height -
-                this.viewBox.height +
-                (this.viewBox.height - this.cursor.idealY - this.cursor.height) +
-                this.cursor.offsetBottom);
-        }
-        else {
-            this._cy = constrain(y, -this.viewBox.my, this.viewport.height - this.viewBox.height);
-        }
-    }
-    /**
-     * @param {number} width?
-     * @param {number} height?
-     * @return {void}
-     */
-    setViewport(width, height) {
-        this.viewport.width = width || 0;
-        this.viewport.height = height || 0;
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return {void}
-     */
-    setViewBox(x, y, width, height) {
-        this.viewBox.mx = x || 0;
-        this.viewBox.my = y || 0;
-        this.viewBox.width = width || 0;
-        this.viewBox.height = height || 0;
-    }
-    /**
-     * @param {number|false} idealX
-     * @param {number} idealY?
-     * @param {number} width?
-     * @param {number} height?
-     * @return {void}
-     */
-    setCursor(idealX, idealY, width, height) {
-        if (arguments.length === 1) {
-            if (idealX === false) {
-                this.cursor.use = false;
-            }
-        }
-        else {
-            this.cursor.idealX = idealX || 0;
-            this.cursor.idealY = idealY || 0;
-            this.cursor.width = width || 0;
-            this.cursor.height = height || 0;
-        }
-    }
-    /**
-     * @param {number} x
-     * @param {number=1} scale
-     * @return {number}
-     */
-    followX(x, scale = 1) {
-        return (x -
-            constrain(this._cx * scale, -this.viewBox.mx, this.viewport.width - this.viewBox.width));
-    }
-    /**
-     * @param {number} y
-     * @param {number=1} scale
-     * @return {number}
-     */
-    followY(y, scale = 1) {
-        return (y -
-            constrain(this._cy * scale, -this.viewBox.my, this.viewport.height - this.viewBox.height));
-    }
-    /**
-     * @param {Vector} vector
-     * @param {number=1} scaleX
-     * @param {number=scaleX} scaleY
-     * @return {Vector}
-     */
-    followVector(vector, scaleX = 1, scaleY = scaleX) {
-        return vector.set(this.followX(vector.x, scaleX), this.followY(vector.y, scaleY));
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number=1} scaleX
-     * @param {number=scaleX} scaleY
-     * @return {any}
-     */
-    follow(x, y, scaleX = 1, scaleY = scaleX) {
-        return {
-            x: this.followX(x, scaleX),
-            y: this.followY(y, scaleY),
-        };
-    }
-    /**
-     * @param {number} x
-     * @param {number=0} width
-     * @param {number=1} scale
-     * @return {boolean}
-     */
-    xInViewBox(x, width = 0, scale = 1) {
-        x = this.followX(x, scale);
-        if (this.viewBox.mx < x + width &&
-            this.viewBox.mx + this.viewBox.width > x) {
-            return true;
-        }
-        return false;
-    }
-    /**
-     * @param {number} y
-     * @param {number=0} height
-     * @param {number=1} scale
-     * @return {boolean}
-     */
-    yInViewBox(y, height = 0, scale = 1) {
-        y = this.followY(y, scale);
-        if (this.viewBox.my < y + height &&
-            this.viewBox.my + this.viewBox.height > y) {
-            return true;
-        }
-        return false;
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number=0} width
-     * @param {number=0} height
-     * @param {number=1} scaleX
-     * @param {number=scaleX} scaleY
-     * @return {boolean}
-     */
-    inViewBox(x, y, width = 0, height = 0, scaleX = 1, scaleY = scaleX) {
-        return (this.xInViewBox(x, width, scaleX) && this.yInViewBox(y, height, scaleY));
-    }
-    /**
-     * @param {number} x
-     * @param {number=0} width
-     * @param {number=1} scale
-     * @return {boolean}
-     */
-    xAfterViewBox(x, width = 0, scale = 1) {
-        x = this.followX(x, scale);
-        if (this.viewBox.mx >= x + width) {
-            return true;
-        }
-        return false;
-    }
-    /**
-     * @param {number} y
-     * @param {number=0} height
-     * @param {number=1} scale
-     * @return {boolean}
-     */
-    yAfterViewBox(y, height = 0, scale = 1) {
-        y = this.followY(y, scale);
-        if (this.viewBox.my >= y + height) {
-            return true;
-        }
-        return false;
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number=0} width
-     * @param {number=0} height
-     * @param {number=1} scaleX
-     * @param {number=scaleX} scaleY
-     * @return {boolean}
-     */
-    afterViewBox(x, y, width = 0, height = 0, scaleX = 1, scaleY = scaleX) {
-        return (this.xAfterViewBox(x, width, scaleX) && this.yAfterViewBox(y, height, scaleY));
-    }
-    /**
-     * @param {number} x
-     * @param {number=0} width
-     * @param {number=1} scale
-     * @return {boolean}
-     */
-    xBeforeViewBox(x, scale = 1) {
-        x = this.followX(x, scale);
-        if (this.viewBox.mx + this.viewBox.width <= x) {
-            return true;
-        }
-        return false;
-    }
-    /**
-     * @param {number} y
-     * @param {number=0} height
-     * @param {number=1} scale
-     * @return {boolean}
-     */
-    yBeforeViewBox(y, scale = 1) {
-        y = this.followY(y, scale);
-        if (this.viewBox.my + this.viewBox.height <= y) {
-            return true;
-        }
-        return false;
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number=0} width
-     * @param {number=0} height
-     * @param {number=1} scaleX
-     * @param {number=scaleX} scaleY
-     * @return {boolean}
-     */
-    beforeViewBox(x, y, scaleX = 1, scaleY = scaleX) {
-        return (this.xBeforeViewBox(x, scaleX) && this.yBeforeViewBox(y, scaleY));
-    }
-}
-
 class Stament {
     constructor() {
         this.__store = new Store();
@@ -1530,1004 +982,6 @@ class Stament {
         this.__store.$set(this.__store, name, true);
     }
 }
-
-function convertFieldToJson(keyItem) {
-    const key = keyItem.textContent;
-    let value = keyItem.nextElementSibling;
-    if (value == null) {
-        throw new Error("fCanvas<loadResourceImage>: Error because syntax error in file plist.");
-    }
-    if (value.tagName === "dict") {
-        let result = {};
-        Array.from(value.childNodes)
-            .filter((item) => item.tagName === "key")
-            .forEach((keyItem) => {
-            result = {
-                ...result,
-                ...convertFieldToJson(keyItem),
-            };
-        });
-        return {
-            [key]: result,
-        };
-    }
-    if (value.tagName === "array") {
-        let result = [];
-        Array.from(value.childNodes)
-            .filter((item) => item.tagName === "key")
-            .forEach((keyItem) => {
-            result.push(convertFieldToJson(keyItem));
-        });
-        return {
-            [key]: result,
-        };
-    }
-    if (value.tagName === "string") {
-        return {
-            [key]: value.textContent,
-        };
-    }
-    if (value.tagName === "integer") {
-        return {
-            [key]: parseInt(value.textContent),
-        };
-    }
-    if (value.tagName === "float") {
-        return {
-            [key]: parseFloat(value.textContent),
-        };
-    }
-    if (value.tagName === "true") {
-        return {
-            [key]: true,
-        };
-    }
-    if (value.tagName === "false") {
-        return {
-            [key]: false,
-        };
-    }
-    return {};
-}
-function resolvePath(...params) {
-    const root = (params[0]).replace(/\/$/, "").split("/");
-    params[0] = root.slice(0, root.length - 1).join("/");
-    return params.join("/");
-}
-class ResourceTile {
-    constructor(image, plist) {
-        this.__caching = new Map();
-        this.image = image;
-        this.plist = plist;
-    }
-    /**
-     * @param {string} name
-     * @return {any}
-     */
-    get(name) {
-        if (this.has(name)) {
-            const { frame, rotated, sourceSize } = this.plist.frames[name];
-            const frameArray = frame.replace(/\{|\}|\s/g, "").split(",");
-            const sizeArray = sourceSize.replace(/\{|\}|\s/g, "").split(",");
-            if (this.__caching.has(name) === false) {
-                const image = cutImage(this.image, +frameArray[0], +frameArray[1], +frameArray[2], +frameArray[3], rotated ? -90 : 0);
-                this.__caching.set(name, Object.assign(image, {
-                    image,
-                    size: {
-                        width: +sizeArray[0],
-                        height: +sizeArray[1],
-                    },
-                }));
-            }
-            return this.__caching.get(name);
-        }
-        else {
-            throw new Error(`fCanvas<addons/loadResourceImage>: Error does not exist this file "${name}" in declaration .plist`);
-        }
-    }
-    /**
-     * @param {string} name
-     * @return {boolean}
-     */
-    has(name) {
-        return name in this.plist.frames;
-    }
-}
-/**
- * @param {string} path
- * @return {Promise<ResourceTile>}
- */
-async function loadResourceImage(path) {
-    if (path.match(/\.plist$/) == null) {
-        path += `.plist`;
-    }
-    const plist = await fetch(`${path}`)
-        .then((response) => response.text())
-        .then((str) => new DOMParser().parseFromString(str, "text/xml"));
-    let plistJson = {};
-    plist
-        .querySelectorAll("plist > dict:first-child > key")
-        .forEach((itemKey) => {
-        plistJson = {
-            ...plistJson,
-            ...convertFieldToJson(itemKey),
-        };
-    });
-    const image = await loadImage(resolvePath(path, plistJson?.metadata.realTextureFileName ||
-        plistJson?.metadata.textureFileName));
-    return new ResourceTile(image, plistJson);
-    //// ----------------- convert to json ------------------
-}
-
-class Resource {
-    constructor(resources, autoLoad = true) {
-        this._resourcesLoaded = new Map();
-        this._desResources = Object.create(null);
-        const desResources = {};
-        for (const prop in resources) {
-            ///
-            if (typeof resources[prop] === "object") {
-                desResources[prop] = {
-                    ...resources[prop],
-                };
-            }
-            else {
-                desResources[prop] = {
-                    src: resources[prop],
-                    lazy: false,
-                };
-            }
-        }
-        this._desResources = desResources;
-        if (autoLoad) {
-            const resourceAutoLoad = [];
-            for (const prop in this._desResources) {
-                if (this._desResources[prop].lazy === false) {
-                    resourceAutoLoad.push(this.load(prop));
-                }
-            }
-            // @ts-expect-error
-            return new Promise(async (resolve, reject) => {
-                try {
-                    await Promise.all(resourceAutoLoad);
-                    resolve(this);
-                }
-                catch (err) {
-                    reject(err);
-                }
-            });
-        }
-    }
-    isLoaded(name) {
-        if (name) {
-            return this._resourcesLoaded.has(name);
-        }
-        else {
-            for (const prop in this._desResources) {
-                if (this._resourcesLoaded.has(prop) === false) {
-                    return false;
-                }
-            }
-            return true;
-        }
-    }
-    async load(name) {
-        if (name) {
-            if (name in this._desResources) {
-                if (this.isLoaded(name) === false) {
-                    this._resourcesLoaded.set(name, await loadResourceImage(this._desResources[name].src));
-                }
-                else {
-                    console.warn(`fCanvas<Resource>: "${name}" resource loaded.`);
-                }
-            }
-            else {
-                console.error(`fCanvas<Resource>: "${name} resource not exists.`);
-            }
-        }
-    }
-    get(path) {
-        const _path = path.split("/");
-        const resourceName = _path[0];
-        const resoucreProp = _path.slice(1).join("/");
-        if (this._resourcesLoaded.has(resourceName)) {
-            return this._resourcesLoaded.get(resourceName).get(resoucreProp);
-        }
-        else {
-            if (resourceName in this._desResources) {
-                throw new Error(`fCanvas<Resource>: "${resourceName} not loaded.`);
-            }
-            else {
-                throw new Error(`fCanvas<Resource>: "${resourceName}" not exitst.`);
-            }
-        }
-    }
-}
-
-class MyElement {
-    /**
-     * @param {fCanvas} canvas?
-     * @return {any}
-     */
-    constructor(canvas) {
-        this._els = Object.create(null);
-        this._idActiveNow = -1;
-        this._queue = [];
-        if (canvas?.constructor !== fCanvas) {
-            canvas = noopFCanvas;
-        }
-        this.__addEl(canvas);
-    }
-    get type() {
-        if ("x" in this && "y" in this) {
-            if ("width" in this && "height" in this) {
-                return "rect";
-            }
-            if ("radius" in this) {
-                return "circle";
-            }
-            return "point";
-        }
-        return "unknown";
-    }
-    __addEl(canvas) {
-        if (canvas.id in this._els === false) {
-            this._els[canvas.id] = canvas;
-        }
-    }
-    /**
-     * @return {HTMLCanvasElement}
-     */
-    get $el() {
-        return this.$parent.$el;
-    }
-    _run(canvas) {
-        this.__addEl(canvas);
-        this._idActiveNow = canvas.id;
-        if (typeof this.update === "function") {
-            if (typeof this.draw === "function") {
-                this.draw();
-            }
-            this.update();
-        }
-        else if (typeof this.draw === "function") {
-            this.draw();
-        }
-        if (this._queue.length > 0) {
-            const { length } = this._queue;
-            let index = 0;
-            while (index < length) {
-                this.run(this._queue[index]);
-                index++;
-            }
-        }
-        this._idActiveNow = -1;
-    }
-    /**
-     * @param {LikeMyElement} element
-     * @return {void}
-     */
-    add(...elements) {
-        this._queue.push(...elements);
-    }
-    /**
-     * @param {LikeMyElement} element
-     * @return {void}
-     */
-    run(element) {
-        this.$parent.run(element);
-    }
-    /**
-     * @return {fCanvas}
-     */
-    get $parent() {
-        const canvas = this._els[this._idActiveNow === -1 ? 0 : this._idActiveNow];
-        if (canvas?.constructor === fCanvas) {
-            return canvas;
-        }
-        else {
-            console.warn("fCanvas: The current referenced version of the fCanvas.run function is incorrect.");
-            return this._els[0];
-        }
-    }
-    /**
-     * @return {CanvasRenderingContext2D}
-     */
-    get $context2d() {
-        return this.$parent.$context2d;
-    }
-    /**
-     * @param {number} angle
-     * @return {number}
-     */
-    sin(angle) {
-        return this.$parent.sin(angle);
-    }
-    /**
-     * @param {number} sin
-     * @return {number}
-     */
-    asin(sin) {
-        return this.$parent.asin(sin);
-    }
-    /**
-     * @param {number} angle
-     * @return {number}
-     */
-    cos(angle) {
-        return this.$parent.cos(angle);
-    }
-    /**
-     * @param {number} cos
-     * @return {number}
-     */
-    acos(cos) {
-        return this.$parent.asin(cos);
-    }
-    /**
-     * @param {number} angle
-     * @return {number}
-     */
-    tan(angle) {
-        return this.$parent.tan(angle);
-    }
-    /**
-     * @param {number} tan
-     * @return {number}
-     */
-    atan(tan) {
-        return this.$parent.atan(tan);
-    }
-    /**
-     * @param {number} y
-     * @param {number} x
-     * @return {number}
-     */
-    atan2(y, x) {
-        return this.$parent.atan2(y, x);
-    }
-    /**
-     * @return {number | null}
-     */
-    get mouseX() {
-        return this.$parent.mouseX;
-    }
-    /**
-     * @return {number | null}
-     */
-    get mouseY() {
-        return this.$parent.mouseY;
-    }
-    /**
-     * @return {number}
-     */
-    get windowWidth() {
-        return this.$parent.windowWidth;
-    }
-    /**
-     * @return {number}
-     */
-    get windowHeight() {
-        return this.$parent.windowHeight;
-    }
-    fill(...args) {
-        this.$context2d.fillStyle = this.$parent._toRgb(args);
-        this.$context2d.fill();
-    }
-    /**
-     * @param  {number} red
-     * @param  {number} green
-     * @param  {number} blue
-     * @param  {number} alpha
-     * @returns void
-     */
-    stroke(...args) {
-        this.$context2d.strokeStyle = this.$parent._toRgb(args);
-        this.$context2d.stroke();
-    }
-    /**
-     * @return {void}
-     */
-    noFill() {
-        this.fill(0, 0, 0, 0);
-    }
-    /**
-     * @param {number} value?
-     * @return {number|void}
-     */
-    lineWidth(value) {
-        if (value === undefined) {
-            return this.$context2d.lineWidth;
-        }
-        else {
-            this.$context2d.lineWidth = this.$parent._getPixel(value);
-        }
-    }
-    /**
-     * @param {number} value?
-     * @return {number|void}
-     */
-    miterLimit(value) {
-        if (value === undefined) {
-            return this.$context2d.miterLimit;
-        }
-        else {
-            if (this.lineJoin() !== "miter") {
-                this.lineJoin("miter");
-            }
-            this.$context2d.miterLimit = value;
-        }
-    }
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @return {void|{ x: number, y: number }}
-     */
-    shadowOffset(x, y) {
-        if (arguments.length === 0) {
-            return {
-                x: this.$context2d.shadowOffsetX,
-                y: this.$context2d.shadowOffsetY,
-            };
-        }
-        else {
-            [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [
-                this.$parent._getPixel(x || 0),
-                this.$parent._getPixel(y || 0),
-            ];
-        }
-    }
-    /**
-     * @param {string} text
-     * @return {number}
-     */
-    measureText(text) {
-        return this.$parent.measureText(text);
-    }
-    /**
-     * @return {void}
-     */
-    begin() {
-        this.$context2d.beginPath();
-    }
-    /**
-     * @return {void}
-     */
-    close() {
-        this.$context2d.closePath();
-    }
-    /**
-     * @return {void}
-     */
-    save() {
-        this.$parent.save();
-    }
-    /**
-     * @return {void}
-     */
-    restore() {
-        this.$parent.restore();
-    }
-    /**
-     * @param {number} angle?
-     * @return {number | void}
-     */
-    rotate(angle) {
-        if (angle === undefined) {
-            return this.$parent.rotate();
-        }
-        this.$parent.rotate(angle);
-    }
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @return {any}
-     */
-    translate(x, y) {
-        if (arguments.length === 0) {
-            return this.$parent.translate();
-        }
-        this.$parent.translate(x, y);
-    }
-    /**
-     * @param  {number} x
-     * @param  {number} y
-     * @param  {number} radius
-     * @param  {number} astart
-     * @param  {number} astop
-     * @param  {boolean} reverse?
-     * @returns void
-     */
-    arc(x, y, radius, astart, astop, reverse) {
-        this.begin();
-        this.$context2d.arc(this.$parent._getPixel(x), this.$parent._getPixel(y), radius, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop) - Math.PI / 2, reverse);
-        this.close();
-    }
-    /**
-     * @param  {number} x
-     * @param  {number} y
-     * @param  {number} radius
-     * @param  {number} astart
-     * @param  {number} astop
-     * @param  {boolean} reverse?
-     */
-    pie(x, y, radius, astart, astop, reverse) {
-        this.begin();
-        this.move(x, y);
-        this.arc(x, y, radius, astart, astop, reverse);
-        this.to(x, y);
-        this.close();
-    }
-    /**
-     * @param  {number} x1
-     * @param  {number} y1
-     * @param  {number} x2
-     * @param  {number} y2
-     * @returns void
-     */
-    line(x1, y1, x2, y2) {
-        // this.begin();
-        this.move(x1, y1);
-        this.to(x2, y2);
-        // this.close();fix
-    }
-    /**
-     * @param  {number} x
-     * @param  {number} y
-     * @param  {number} radius1
-     * @param  {number} radius2
-     * @param  {number} astart
-     * @param  {number} astop
-     * @param  {number} reverse
-     * @returns void
-     */
-    ellipse(x, y, radius1, radius2, astart, astop, reverse) {
-        this.begin();
-        this.$context2d.ellipse(this.$parent._getPixel(x), this.$parent._getPixel(y), radius1, radius2, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop), reverse);
-        this.close();
-    }
-    /**
-     * @param  {number} x
-     * @param  {number} y
-     * @param  {number} radius
-     * @returns void
-     */
-    circle(x, y, radius) {
-        this.arc(x, y, radius, 0, this.$parent.angleMode() === "degress" ? 360 : Math.PI * 2);
-    }
-    /**
-     * @param  {number} x
-     * @param  {number} y
-     * @returns void
-     */
-    point(x, y) {
-        this.circle(x, y, 1);
-    }
-    /**
-     * @param  {number} x1
-     * @param  {number} y1
-     * @param  {number} x2
-     * @param  {number} y2
-     * @param  {number} x3
-     * @param  {number} y3
-     * @returns void
-     */
-    triange(x1, y1, x2, y2, x3, y3) {
-        this.begin();
-        this.move(x1, y1);
-        this.to(x2, y2);
-        this.to(x3, y3);
-        this.close();
-    }
-    /**
-     * @param  {CanvasImageSource} image
-     * @param  {number} sx?
-     * @param  {number} sy?
-     * @param  {number} swidth?
-     * @param  {number} sheight?
-     * @param  {number} x
-     * @param  {number} y
-     * @param  {number} width
-     * @param  {number} height
-     * @returns void
-     */
-    drawImage(image, ...args) {
-        // @ts-expect-error
-        this.$context2d.drawImage(image, ...args);
-    }
-    rRect(x, y, w, h, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft) {
-        this.begin();
-        [x, y, w, h] = this.$parent._argsRect(x, y, w, h);
-        const fontSize = this.$parent.fontSize();
-        const arc = [
-            AutoToPx(radiusTopLeft, w, fontSize),
-            AutoToPx(radiusTopRight, h, fontSize),
-            AutoToPx(radiusBottomRight, w, fontSize),
-            AutoToPx(radiusBottomLeft, h, fontSize),
-        ];
-        this.move(x, y);
-        this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
-        this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
-        this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
-        this.arcTo(x, y, x + w - arc[0], y, arc[0]);
-        this.close();
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @memberof MyElement
-     */
-    rect(x, y, width, height) {
-        this.begin();
-        [x, y, width, height] = this.$parent._argsRect(x, y, width, height);
-        this.$context2d.rect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
-        this.close();
-    }
-    /**
-     * @param  {number} cpx
-     * @param  {number} cpy
-     * @param  {number} x
-     * @param  {number} y
-     */
-    quadratic(cpx, cpy, x, y) {
-        this.$context2d.quadraticCurveTo(cpx, cpy, x, y);
-    }
-    /**
-     * @param {number} cp1x
-     * @param {number} cp1y
-     * @param {number} cp2x
-     * @param {number} cp2y
-     * @param {number} x
-     * @param {number} y
-     * @return {void}
-     */
-    bezier(cp1x, cp1y, cp2x, cp2y, x, y) {
-        this.$context2d.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @return {void}
-     */
-    move(x, y) {
-        this.$context2d.moveTo(this.$parent._getPixel(x), this.$parent._getPixel(y));
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @return {void}
-     */
-    to(x, y) {
-        this.$context2d.lineTo(this.$parent._getPixel(x), this.$parent._getPixel(y));
-    }
-    /**
-     * @param {string} text
-     * @param {number} x
-     * @param {number} y
-     * @param {number} maxWidth?
-     * @return {void}
-     */
-    fillText(text, x, y, maxWidth) {
-        this.$context2d.fillText(text, this.$parent._getPixel(x), this.$parent._getPixel(y), maxWidth);
-    }
-    /**
-     * @param {string} text
-     * @param {number} x
-     * @param {number} y
-     * @param {number} maxWidth?
-     * @return {void}
-     */
-    strokeText(text, x, y, maxWidth) {
-        this.$context2d.strokeText(text, this.$parent._getPixel(x), this.$parent._getPixel(y), maxWidth);
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return {void}
-     */
-    fillRect(x, y, width, height) {
-        this.$context2d.fillRect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return {void}
-     */
-    strokeRect(x, y, width, height) {
-        this.$context2d.strokeRect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
-    }
-    /**
-     * @param {number} value?
-     * @return {any}
-     */
-    lineDashOffset(value) {
-        if (value === undefined) {
-            return this.$context2d.lineDashOffset;
-        }
-        this.$context2d.lineDashOffset = value;
-    }
-    lineDash(...segments) {
-        if (segments.length === 0) {
-            return this.$context2d.getLineDash();
-        }
-        if (Array.isArray(segments[0])) {
-            this.$context2d.setLineDash(segments[0]);
-        }
-        this.$context2d.setLineDash(segments);
-    }
-    /**
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     * @param {number} radius
-     * @return {void}
-     */
-    arcTo(x1, y1, x2, y2, radius) {
-        this.$context2d.arcTo(this.$parent._getPixel(x1), this.$parent._getPixel(y1), this.$parent._getPixel(x2), this.$parent._getPixel(y2), radius);
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @return {boolean}
-     */
-    isPoint(x, y) {
-        return this.$context2d.isPointInPath(x, y);
-    }
-    createImageData(width, height) {
-        return height
-            ? this.$parent.createImageData(width, height)
-            : this.$parent.createImageData(width);
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return {ImageData}
-     */
-    getImageData(x, y, width, height) {
-        return this.$parent.getImageData(x, y, width, height);
-    }
-    /**
-     * @param {ImageData} imageData
-     * @param {number} x
-     * @param {number} y
-     * @param {number} xs?
-     * @param {number} ys?
-     * @param {number} width?
-     * @param {number} height?
-     * @return {void}
-     */
-    putImageData(imageData, x, y, xs, ys, width, height) {
-        if (arguments.length === 7) {
-            this.$parent.putImageData(imageData, x, y, xs, ys, width, height);
-        }
-        else {
-            this.$parent.putImageData(imageData, x, y);
-        }
-    }
-    /**
-     * @param {CanvasImageSource} image
-     * @param {"repeat"|"repeat-x"|"repeat-y"|"no-repeat"} direction
-     * @return {CanvasPattern | null}
-     */
-    createPattern(image, direction) {
-        return this.$parent.createPattern(image, direction);
-    }
-    /**
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} r1
-     * @param {number} x2
-     * @param {number} y2
-     * @param {number} r2
-     * @return {CanvasGradient}
-     */
-    createRadialGradient(x1, y1, r1, x2, y2, r2) {
-        return this.$parent.createRadialGradient(x1, y1, r1, x2, y2, r2);
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return {CanvasGradient}
-     */
-    createLinearGradient(x, y, width, height) {
-        return this.$parent.createLinearGradient(x, y, width, height);
-    }
-    /**
-     * @param {"bevel"|"round"|"miter"} type?
-     * @return {any}
-     */
-    lineJoin(type) {
-        if (type !== undefined) {
-            this.$context2d.lineJoin = type;
-        }
-        else {
-            return this.$context2d.lineJoin;
-        }
-    }
-    /**
-     * @param {"butt"|"round"|"square"} value?
-     * @return {any}
-     */
-    lineCap(value) {
-        if (value !== undefined) {
-            this.$context2d.lineCap = value;
-        }
-        else {
-            return this.$context2d.lineCap;
-        }
-    }
-    /**
-     * @param {number} opacity?
-     * @return {any}
-     */
-    shadowBlur(opacity) {
-        if (opacity === undefined) {
-            return this.$context2d.shadowBlur;
-        }
-        this.$context2d.shadowBlur = opacity;
-    }
-    /**
-     * @param {ParamsToRgb} ...args
-     * @return {void}
-     */
-    shadowColor(...args) {
-        this.$context2d.shadowColor = this.$parent._toRgb(args);
-    }
-    drawFocusIfNeeded(path, element) {
-        if (element === undefined) {
-            this.$context2d.drawFocusIfNeeded(path);
-        }
-        else {
-            this.$context2d.drawFocusIfNeeded(path, element);
-        }
-    }
-    polyline(...points) {
-        if (points.length > 0) {
-            if (Array.isArray(points[0])) {
-                this.move(points[0][0], points[0][1]);
-                let index = 1;
-                const { length } = points;
-                while (index < length) {
-                    this.to(points[index][0], points[index][1]);
-                    index++;
-                }
-            }
-            else {
-                if (points.length > 1) {
-                    this.move(points[0], points[1]);
-                    let index = 2;
-                    const { length } = points;
-                    while (index < length - 1) {
-                        this.to(points[index], points[index + 1]);
-                        index += 2;
-                    }
-                }
-            }
-        }
-    }
-    polygon(...points) {
-        if (Array.isArray(points[0])) {
-            this.polyline(...points, points[0]);
-        }
-        else {
-            this.polyline(...points, points[0], points[1]);
-        }
-    }
-}
-class Point3D extends MyElement {
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {any}
-     */
-    constructor(x, y, z) {
-        super();
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
-        [this.x, this.y, this.z] = [x || 0, y || 0, z || 0];
-    }
-    /**
-     * @param {number} angle
-     * @return {void}
-     */
-    rotateX(angle) {
-        this.y =
-            this.y * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
-        this.z =
-            -this.y * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
-    }
-    /**
-     * @param {number} angle
-     * @return {void}
-     */
-    rotateY(angle) {
-        this.x =
-            this.x * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
-        this.z =
-            -this.x * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
-    }
-    /**
-     * @param {number} angle
-     * @return {void}
-     */
-    rotateZ(angle) {
-        this.x =
-            this.x * this.$parent.cos(angle) - this.y * this.$parent.sin(angle);
-        this.y =
-            this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
-    }
-}
-class Point3DCenter extends MyElement {
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {any}
-     */
-    constructor(x, y, z) {
-        super();
-        this.__z = 0;
-        [this.__x, this.__y, this.__z] = [x, y, z || 0];
-    }
-    get scale() {
-        return Point3DCenter.persistent / (Point3DCenter.persistent + this.__z);
-    }
-    get x() {
-        return ((this.__x - this.$parent.width / 2) * this.scale + this.$parent.width / 2);
-    }
-    set x(value) {
-        this.__x = value;
-    }
-    get y() {
-        return ((this.__y - this.$parent.height / 2) * this.scale +
-            this.$parent.height / 2);
-    }
-    set y(value) {
-        this.__y = value;
-    }
-    get z() {
-        return this.__z;
-    }
-    set z(value) {
-        this.__z = value;
-    }
-    get(prop) {
-        if (typeof prop === "number") {
-            return this.scale * prop;
-        }
-        return this.scale * this[prop];
-    }
-}
-Point3DCenter.persistent = 1000;
-function createElement(callback) {
-    return new (class extends MyElement {
-        constructor() {
-            super(...arguments);
-            this.draw = callback;
-        }
-    })();
-}
-// class App extends Polyline3D {
-//   constructor(...points, x, y, z) {
-//     super(...points, x, y, z);
-//   }
-//   draw() {
-//     this.poly();
-//   }
-// }
 
 let inited = false;
 const emitter = new Emitter();
@@ -3591,6 +2045,1422 @@ fCanvas.Point3D = Point3D;
 fCanvas.Point3DCenter = Point3DCenter;
 fCanvas._count = 0;
 const noopFCanvas = new fCanvas();
+
+class MyElement {
+    /**
+     * @param {fCanvas} canvas?
+     * @return {any}
+     */
+    constructor(canvas) {
+        this._els = Object.create(null);
+        this._idActiveNow = -1;
+        this._queue = [];
+        if (canvas?.constructor !== fCanvas) {
+            canvas = noopFCanvas;
+        }
+        this.__addEl(canvas);
+    }
+    get type() {
+        if ("x" in this && "y" in this) {
+            if ("width" in this && "height" in this) {
+                return "rect";
+            }
+            if ("radius" in this) {
+                return "circle";
+            }
+            return "point";
+        }
+        return "unknown";
+    }
+    __addEl(canvas) {
+        if (canvas.id in this._els === false) {
+            this._els[canvas.id] = canvas;
+        }
+    }
+    /**
+     * @return {HTMLCanvasElement}
+     */
+    get $el() {
+        return this.$parent.$el;
+    }
+    _run(canvas) {
+        this.__addEl(canvas);
+        this._idActiveNow = canvas.id;
+        if (typeof this.update === "function") {
+            if (typeof this.draw === "function") {
+                this.draw();
+            }
+            this.update();
+        }
+        else if (typeof this.draw === "function") {
+            this.draw();
+        }
+        if (this._queue.length > 0) {
+            const { length } = this._queue;
+            let index = 0;
+            while (index < length) {
+                this.run(this._queue[index]);
+                index++;
+            }
+        }
+        this._idActiveNow = -1;
+    }
+    /**
+     * @param {LikeMyElement} element
+     * @return {void}
+     */
+    add(...elements) {
+        this._queue.push(...elements);
+    }
+    /**
+     * @param {LikeMyElement} element
+     * @return {void}
+     */
+    run(element) {
+        this.$parent.run(element);
+    }
+    /**
+     * @return {fCanvas}
+     */
+    get $parent() {
+        const canvas = this._els[this._idActiveNow === -1 ? 0 : this._idActiveNow];
+        if (canvas?.constructor === fCanvas) {
+            return canvas;
+        }
+        else {
+            console.warn("fCanvas: The current referenced version of the fCanvas.run function is incorrect.");
+            return this._els[0];
+        }
+    }
+    /**
+     * @return {CanvasRenderingContext2D}
+     */
+    get $context2d() {
+        return this.$parent.$context2d;
+    }
+    /**
+     * @param {number} angle
+     * @return {number}
+     */
+    sin(angle) {
+        return this.$parent.sin(angle);
+    }
+    /**
+     * @param {number} sin
+     * @return {number}
+     */
+    asin(sin) {
+        return this.$parent.asin(sin);
+    }
+    /**
+     * @param {number} angle
+     * @return {number}
+     */
+    cos(angle) {
+        return this.$parent.cos(angle);
+    }
+    /**
+     * @param {number} cos
+     * @return {number}
+     */
+    acos(cos) {
+        return this.$parent.asin(cos);
+    }
+    /**
+     * @param {number} angle
+     * @return {number}
+     */
+    tan(angle) {
+        return this.$parent.tan(angle);
+    }
+    /**
+     * @param {number} tan
+     * @return {number}
+     */
+    atan(tan) {
+        return this.$parent.atan(tan);
+    }
+    /**
+     * @param {number} y
+     * @param {number} x
+     * @return {number}
+     */
+    atan2(y, x) {
+        return this.$parent.atan2(y, x);
+    }
+    /**
+     * @return {number | null}
+     */
+    get mouseX() {
+        return this.$parent.mouseX;
+    }
+    /**
+     * @return {number | null}
+     */
+    get mouseY() {
+        return this.$parent.mouseY;
+    }
+    /**
+     * @return {number}
+     */
+    get windowWidth() {
+        return this.$parent.windowWidth;
+    }
+    /**
+     * @return {number}
+     */
+    get windowHeight() {
+        return this.$parent.windowHeight;
+    }
+    fill(...args) {
+        this.$context2d.fillStyle = this.$parent._toRgb(args);
+        this.$context2d.fill();
+    }
+    /**
+     * @param  {number} red
+     * @param  {number} green
+     * @param  {number} blue
+     * @param  {number} alpha
+     * @returns void
+     */
+    stroke(...args) {
+        this.$context2d.strokeStyle = this.$parent._toRgb(args);
+        this.$context2d.stroke();
+    }
+    /**
+     * @return {void}
+     */
+    noFill() {
+        this.fill(0, 0, 0, 0);
+    }
+    /**
+     * @param {number} value?
+     * @return {number|void}
+     */
+    lineWidth(value) {
+        if (value === undefined) {
+            return this.$context2d.lineWidth;
+        }
+        else {
+            this.$context2d.lineWidth = this.$parent._getPixel(value);
+        }
+    }
+    /**
+     * @param {number} value?
+     * @return {number|void}
+     */
+    miterLimit(value) {
+        if (value === undefined) {
+            return this.$context2d.miterLimit;
+        }
+        else {
+            if (this.lineJoin() !== "miter") {
+                this.lineJoin("miter");
+            }
+            this.$context2d.miterLimit = value;
+        }
+    }
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @return {void|{ x: number, y: number }}
+     */
+    shadowOffset(x, y) {
+        if (arguments.length === 0) {
+            return {
+                x: this.$context2d.shadowOffsetX,
+                y: this.$context2d.shadowOffsetY,
+            };
+        }
+        else {
+            [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [
+                this.$parent._getPixel(x || 0),
+                this.$parent._getPixel(y || 0),
+            ];
+        }
+    }
+    /**
+     * @param {string} text
+     * @return {number}
+     */
+    measureText(text) {
+        return this.$parent.measureText(text);
+    }
+    /**
+     * @return {void}
+     */
+    begin() {
+        this.$context2d.beginPath();
+    }
+    /**
+     * @return {void}
+     */
+    close() {
+        this.$context2d.closePath();
+    }
+    /**
+     * @return {void}
+     */
+    save() {
+        this.$parent.save();
+    }
+    /**
+     * @return {void}
+     */
+    restore() {
+        this.$parent.restore();
+    }
+    /**
+     * @param {number} angle?
+     * @return {number | void}
+     */
+    rotate(angle) {
+        if (angle === undefined) {
+            return this.$parent.rotate();
+        }
+        this.$parent.rotate(angle);
+    }
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @return {any}
+     */
+    translate(x, y) {
+        if (arguments.length === 0) {
+            return this.$parent.translate();
+        }
+        this.$parent.translate(x, y);
+    }
+    /**
+     * @param  {number} x
+     * @param  {number} y
+     * @param  {number} radius
+     * @param  {number} astart
+     * @param  {number} astop
+     * @param  {boolean} reverse?
+     * @returns void
+     */
+    arc(x, y, radius, astart, astop, reverse) {
+        this.begin();
+        this.$context2d.arc(this.$parent._getPixel(x), this.$parent._getPixel(y), radius, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop) - Math.PI / 2, reverse);
+        this.close();
+    }
+    /**
+     * @param  {number} x
+     * @param  {number} y
+     * @param  {number} radius
+     * @param  {number} astart
+     * @param  {number} astop
+     * @param  {boolean} reverse?
+     */
+    pie(x, y, radius, astart, astop, reverse) {
+        this.begin();
+        this.move(x, y);
+        this.arc(x, y, radius, astart, astop, reverse);
+        this.to(x, y);
+        this.close();
+    }
+    /**
+     * @param  {number} x1
+     * @param  {number} y1
+     * @param  {number} x2
+     * @param  {number} y2
+     * @returns void
+     */
+    line(x1, y1, x2, y2) {
+        // this.begin();
+        this.move(x1, y1);
+        this.to(x2, y2);
+        // this.close();fix
+    }
+    /**
+     * @param  {number} x
+     * @param  {number} y
+     * @param  {number} radius1
+     * @param  {number} radius2
+     * @param  {number} astart
+     * @param  {number} astop
+     * @param  {number} reverse
+     * @returns void
+     */
+    ellipse(x, y, radius1, radius2, astart, astop, reverse) {
+        this.begin();
+        this.$context2d.ellipse(this.$parent._getPixel(x), this.$parent._getPixel(y), radius1, radius2, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop), reverse);
+        this.close();
+    }
+    /**
+     * @param  {number} x
+     * @param  {number} y
+     * @param  {number} radius
+     * @returns void
+     */
+    circle(x, y, radius) {
+        this.arc(x, y, radius, 0, this.$parent.angleMode() === "degress" ? 360 : Math.PI * 2);
+    }
+    /**
+     * @param  {number} x
+     * @param  {number} y
+     * @returns void
+     */
+    point(x, y) {
+        this.circle(x, y, 1);
+    }
+    /**
+     * @param  {number} x1
+     * @param  {number} y1
+     * @param  {number} x2
+     * @param  {number} y2
+     * @param  {number} x3
+     * @param  {number} y3
+     * @returns void
+     */
+    triange(x1, y1, x2, y2, x3, y3) {
+        this.begin();
+        this.move(x1, y1);
+        this.to(x2, y2);
+        this.to(x3, y3);
+        this.close();
+    }
+    /**
+     * @param  {CanvasImageSource} image
+     * @param  {number} sx?
+     * @param  {number} sy?
+     * @param  {number} swidth?
+     * @param  {number} sheight?
+     * @param  {number} x
+     * @param  {number} y
+     * @param  {number} width
+     * @param  {number} height
+     * @returns void
+     */
+    drawImage(image, ...args) {
+        // @ts-expect-error
+        this.$context2d.drawImage(image, ...args);
+    }
+    rRect(x, y, w, h, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft) {
+        this.begin();
+        [x, y, w, h] = this.$parent._argsRect(x, y, w, h);
+        const fontSize = this.$parent.fontSize();
+        const arc = [
+            AutoToPx(radiusTopLeft, w, fontSize),
+            AutoToPx(radiusTopRight, h, fontSize),
+            AutoToPx(radiusBottomRight, w, fontSize),
+            AutoToPx(radiusBottomLeft, h, fontSize),
+        ];
+        this.move(x, y);
+        this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
+        this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
+        this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
+        this.arcTo(x, y, x + w - arc[0], y, arc[0]);
+        this.close();
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @memberof MyElement
+     */
+    rect(x, y, width, height) {
+        this.begin();
+        [x, y, width, height] = this.$parent._argsRect(x, y, width, height);
+        this.$context2d.rect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
+        this.close();
+    }
+    /**
+     * @param  {number} cpx
+     * @param  {number} cpy
+     * @param  {number} x
+     * @param  {number} y
+     */
+    quadratic(cpx, cpy, x, y) {
+        this.$context2d.quadraticCurveTo(cpx, cpy, x, y);
+    }
+    /**
+     * @param {number} cp1x
+     * @param {number} cp1y
+     * @param {number} cp2x
+     * @param {number} cp2y
+     * @param {number} x
+     * @param {number} y
+     * @return {void}
+     */
+    bezier(cp1x, cp1y, cp2x, cp2y, x, y) {
+        this.$context2d.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {void}
+     */
+    move(x, y) {
+        this.$context2d.moveTo(this.$parent._getPixel(x), this.$parent._getPixel(y));
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {void}
+     */
+    to(x, y) {
+        this.$context2d.lineTo(this.$parent._getPixel(x), this.$parent._getPixel(y));
+    }
+    /**
+     * @param {string} text
+     * @param {number} x
+     * @param {number} y
+     * @param {number} maxWidth?
+     * @return {void}
+     */
+    fillText(text, x, y, maxWidth) {
+        this.$context2d.fillText(text, this.$parent._getPixel(x), this.$parent._getPixel(y), maxWidth);
+    }
+    /**
+     * @param {string} text
+     * @param {number} x
+     * @param {number} y
+     * @param {number} maxWidth?
+     * @return {void}
+     */
+    strokeText(text, x, y, maxWidth) {
+        this.$context2d.strokeText(text, this.$parent._getPixel(x), this.$parent._getPixel(y), maxWidth);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {void}
+     */
+    fillRect(x, y, width, height) {
+        this.$context2d.fillRect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {void}
+     */
+    strokeRect(x, y, width, height) {
+        this.$context2d.strokeRect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
+    }
+    /**
+     * @param {number} value?
+     * @return {any}
+     */
+    lineDashOffset(value) {
+        if (value === undefined) {
+            return this.$context2d.lineDashOffset;
+        }
+        this.$context2d.lineDashOffset = value;
+    }
+    lineDash(...segments) {
+        if (segments.length === 0) {
+            return this.$context2d.getLineDash();
+        }
+        if (Array.isArray(segments[0])) {
+            this.$context2d.setLineDash(segments[0]);
+        }
+        this.$context2d.setLineDash(segments);
+    }
+    /**
+     * @param {number} x1
+     * @param {number} y1
+     * @param {number} x2
+     * @param {number} y2
+     * @param {number} radius
+     * @return {void}
+     */
+    arcTo(x1, y1, x2, y2, radius) {
+        this.$context2d.arcTo(this.$parent._getPixel(x1), this.$parent._getPixel(y1), this.$parent._getPixel(x2), this.$parent._getPixel(y2), radius);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {boolean}
+     */
+    isPoint(x, y) {
+        return this.$context2d.isPointInPath(x, y);
+    }
+    createImageData(width, height) {
+        return height
+            ? this.$parent.createImageData(width, height)
+            : this.$parent.createImageData(width);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {ImageData}
+     */
+    getImageData(x, y, width, height) {
+        return this.$parent.getImageData(x, y, width, height);
+    }
+    /**
+     * @param {ImageData} imageData
+     * @param {number} x
+     * @param {number} y
+     * @param {number} xs?
+     * @param {number} ys?
+     * @param {number} width?
+     * @param {number} height?
+     * @return {void}
+     */
+    putImageData(imageData, x, y, xs, ys, width, height) {
+        if (arguments.length === 7) {
+            this.$parent.putImageData(imageData, x, y, xs, ys, width, height);
+        }
+        else {
+            this.$parent.putImageData(imageData, x, y);
+        }
+    }
+    /**
+     * @param {CanvasImageSource} image
+     * @param {"repeat"|"repeat-x"|"repeat-y"|"no-repeat"} direction
+     * @return {CanvasPattern | null}
+     */
+    createPattern(image, direction) {
+        return this.$parent.createPattern(image, direction);
+    }
+    /**
+     * @param {number} x1
+     * @param {number} y1
+     * @param {number} r1
+     * @param {number} x2
+     * @param {number} y2
+     * @param {number} r2
+     * @return {CanvasGradient}
+     */
+    createRadialGradient(x1, y1, r1, x2, y2, r2) {
+        return this.$parent.createRadialGradient(x1, y1, r1, x2, y2, r2);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {CanvasGradient}
+     */
+    createLinearGradient(x, y, width, height) {
+        return this.$parent.createLinearGradient(x, y, width, height);
+    }
+    /**
+     * @param {"bevel"|"round"|"miter"} type?
+     * @return {any}
+     */
+    lineJoin(type) {
+        if (type !== undefined) {
+            this.$context2d.lineJoin = type;
+        }
+        else {
+            return this.$context2d.lineJoin;
+        }
+    }
+    /**
+     * @param {"butt"|"round"|"square"} value?
+     * @return {any}
+     */
+    lineCap(value) {
+        if (value !== undefined) {
+            this.$context2d.lineCap = value;
+        }
+        else {
+            return this.$context2d.lineCap;
+        }
+    }
+    /**
+     * @param {number} opacity?
+     * @return {any}
+     */
+    shadowBlur(opacity) {
+        if (opacity === undefined) {
+            return this.$context2d.shadowBlur;
+        }
+        this.$context2d.shadowBlur = opacity;
+    }
+    /**
+     * @param {ParamsToRgb} ...args
+     * @return {void}
+     */
+    shadowColor(...args) {
+        this.$context2d.shadowColor = this.$parent._toRgb(args);
+    }
+    drawFocusIfNeeded(path, element) {
+        if (element === undefined) {
+            this.$context2d.drawFocusIfNeeded(path);
+        }
+        else {
+            this.$context2d.drawFocusIfNeeded(path, element);
+        }
+    }
+    polyline(...points) {
+        if (points.length > 0) {
+            if (Array.isArray(points[0])) {
+                this.move(points[0][0], points[0][1]);
+                let index = 1;
+                const { length } = points;
+                while (index < length) {
+                    this.to(points[index][0], points[index][1]);
+                    index++;
+                }
+            }
+            else {
+                if (points.length > 1) {
+                    this.move(points[0], points[1]);
+                    let index = 2;
+                    const { length } = points;
+                    while (index < length - 1) {
+                        this.to(points[index], points[index + 1]);
+                        index += 2;
+                    }
+                }
+            }
+        }
+    }
+    polygon(...points) {
+        if (Array.isArray(points[0])) {
+            this.polyline(...points, points[0]);
+        }
+        else {
+            this.polyline(...points, points[0], points[1]);
+        }
+    }
+}
+class Point3D extends MyElement {
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @param {number} z?
+     * @return {any}
+     */
+    constructor(x, y, z) {
+        super();
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        [this.x, this.y, this.z] = [x || 0, y || 0, z || 0];
+    }
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
+    rotateX(angle) {
+        this.y =
+            this.y * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
+        this.z =
+            -this.y * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
+    }
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
+    rotateY(angle) {
+        this.x =
+            this.x * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
+        this.z =
+            -this.x * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
+    }
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
+    rotateZ(angle) {
+        this.x =
+            this.x * this.$parent.cos(angle) - this.y * this.$parent.sin(angle);
+        this.y =
+            this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
+    }
+}
+class Point3DCenter extends MyElement {
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @param {number} z?
+     * @return {any}
+     */
+    constructor(x, y, z) {
+        super();
+        this.__z = 0;
+        [this.__x, this.__y, this.__z] = [x, y, z || 0];
+    }
+    get scale() {
+        return Point3DCenter.persistent / (Point3DCenter.persistent + this.__z);
+    }
+    get x() {
+        return ((this.__x - this.$parent.width / 2) * this.scale + this.$parent.width / 2);
+    }
+    set x(value) {
+        this.__x = value;
+    }
+    get y() {
+        return ((this.__y - this.$parent.height / 2) * this.scale +
+            this.$parent.height / 2);
+    }
+    set y(value) {
+        this.__y = value;
+    }
+    get z() {
+        return this.__z;
+    }
+    set z(value) {
+        this.__z = value;
+    }
+    get(prop) {
+        if (typeof prop === "number") {
+            return this.scale * prop;
+        }
+        return this.scale * this[prop];
+    }
+}
+Point3DCenter.persistent = 1000;
+function createElement(callback) {
+    return new (class extends MyElement {
+        constructor() {
+            super(...arguments);
+            this.draw = callback;
+        }
+    })();
+}
+// class App extends Polyline3D {
+//   constructor(...points, x, y, z) {
+//     super(...points, x, y, z);
+//   }
+//   draw() {
+//     this.poly();
+//   }
+// }
+
+/**
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ * @return {number}
+ */
+function constrain(value, min, max) {
+    return Math.min(Math.max(min, value), max);
+}
+/**
+ * @param {string} src
+ * @return {Promise<HTMLImageElement>}
+ */
+function loadImage(src) {
+    const img = new Image();
+    img.src = src;
+    return new Promise((resolve, reject) => {
+        function loaded() {
+            resolve(img);
+            img.removeEventListener("load", loaded);
+        }
+        function error(err) {
+            reject(err);
+            img.removeEventListener("error", error);
+        }
+        img.addEventListener("load", loaded);
+        img.addEventListener("error", error);
+    });
+}
+/**
+ *
+ * @param {string} src
+ * @return {Promise<HTMLAudioElement>}
+ */
+function loadAudio(src) {
+    const audio = document.createElement("audio");
+    audio.src = src;
+    return new Promise((resolve, reject) => {
+        function loaded() {
+            resolve(audio);
+            audio.removeEventListener("load", loaded);
+        }
+        function error(err) {
+            reject(err);
+            audio.removeEventListener("error", error);
+        }
+        audio.addEventListener("load", loaded);
+        audio.addEventListener("error", error);
+    });
+}
+/**
+ * @param {number} value
+ * @param {number} start
+ * @param {number} stop
+ * @param {number} min
+ * @param {number} max
+ * @return {number}
+ */
+function map(value, start, stop, min, max) {
+    return ((value - start) * (max - min)) / (stop - start) + min;
+}
+function aspectRatio(ratio, width, height) {
+    /// ratio = width / height => height = width / ratio
+    const nwidth = ratio * height;
+    const nheight = width / ratio;
+    if (width < nwidth) {
+        return [width, nheight];
+    }
+    else {
+        return [nwidth, height];
+    }
+}
+function random(...args) {
+    if (args.length === 1) {
+        if (args[0] !== null &&
+            typeof args[0] === "object" &&
+            "length" in args[0]) {
+            return args[0][Math.floor(Math.random() * args[0].length)];
+        }
+        return Math.random() * args[0];
+    }
+    if (args.length === 2) {
+        return args[0] + Math.random() * (args[1] - args[0]);
+    }
+}
+/**
+ * @param {number} start
+ * @param {number} stop?
+ * @return {number}
+ */
+function randomInt(start, stop) {
+    if (stop === undefined) {
+        return Math.round(random(start));
+    }
+    return Math.round(random(start, stop));
+}
+/**
+ * @param {any} start
+ * @param {any} stop
+ * @param {number} step
+ * @return {any}
+ */
+function range(start, stop, step) {
+    step = step || 1;
+    const arr = [];
+    let isChar = false;
+    if (stop === undefined)
+        (stop = start), (start = 1);
+    if (typeof start === "string") {
+        start = start.charCodeAt(0);
+        stop = stop.charCodeAt(0);
+        isChar = true;
+    }
+    if (start !== stop && Math.abs(stop - start) < Math.abs(step))
+        throw new Error("range(): step exceeds the specified range.");
+    if (stop > start) {
+        step < 0 && (step *= -1);
+        while (start <= stop) {
+            arr.push(isChar ? String.fromCharCode(start) : start);
+            start += step;
+        }
+    }
+    else {
+        step > 0 && (step *= -1);
+        while (start >= stop) {
+            arr.push(isChar ? String.fromCharCode(start) : start);
+            start += step;
+        }
+    }
+    return arr;
+}
+/**
+ * @param {number} start
+ * @param {number} stop
+ * @param {number} amt
+ * @return {number}
+ */
+function lerp(start, stop, amt) {
+    return amt * (stop - start) + start;
+}
+/**
+ * @param {number[]} ...args
+ * @return {number}
+ */
+const hypot = typeof Math.hypot === "function"
+    ? Math.hypot
+    : (...args) => {
+        const len = args.length;
+        let i = 0, result = 0;
+        while (i < len)
+            result += Math.pow(args[i++], 2);
+        return Math.sqrt(result);
+    };
+/**
+ * @param {number} value
+ * @param {number} max
+ * @param {number} prevent
+ * @return {number}
+ */
+function odd(value, prevent, max) {
+    if (value === max) {
+        return prevent;
+    }
+    return value + 1;
+}
+/**
+ * @param {number} value
+ * @param {number} min
+ * @param {number} prevent
+ * @return {number}
+ */
+function even(value, min, prevent) {
+    if (value === min) {
+        return prevent;
+    }
+    return value - 1;
+}
+///// https://jsfiddle.net/casamia743/xqh48gno/
+function calcProjectedRectSizeOfRotatedRect(width, height, rad) {
+    const rectProjectedWidth = Math.abs(width * Math.cos(rad)) + Math.abs(height * Math.sin(rad));
+    const rectProjectedHeight = Math.abs(width * Math.sin(rad)) + Math.abs(height * Math.cos(rad));
+    return [rectProjectedWidth, rectProjectedHeight];
+}
+let virualContext;
+function cutImage(image, x = 0, y = 0, width = extractNumber(`${image.width}`), height = extractNumber(`${image.height}`), rotate = 0) {
+    if (virualContext === undefined) {
+        virualContext = document
+            .createElement("canvas")
+            .getContext("2d"); /// never null
+    }
+    /// ------------------ draw image canvas -----------------
+    const rad = (rotate * Math.PI) / 180;
+    const [nwidth, nheight] = calcProjectedRectSizeOfRotatedRect(width, height, rad);
+    virualContext.canvas.width = width;
+    virualContext.canvas.height = height;
+    virualContext.save();
+    virualContext.translate(width / 2, height / 2);
+    virualContext.rotate((rotate * Math.PI) / 180);
+    virualContext.drawImage(image, x, y, nwidth, nheight, -nwidth / 2, -nheight / 2, nwidth, nheight);
+    virualContext.restore();
+    /// -----------------------------------------------------------
+    const imageCuted = new Image();
+    imageCuted.src = virualContext.canvas.toDataURL();
+    virualContext.clearRect(0, 0, width, height);
+    return imageCuted;
+}
+/**
+ * @export
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ * @return {*}  {boolean}
+ */
+function unlimited(value, min, max) {
+    return value < min || value > max;
+}
+
+class Cursor {
+    constructor(camera, config) {
+        this._camera = camera;
+        this._config = config;
+        const watch = (prop) => {
+            this._camera.$watch(prop, (newValue, oldValue) => {
+                const dist = newValue - oldValue;
+                // min = this._config.x.min;
+                if (this._config[prop].dynamic) {
+                    if (dist < 0
+                        ? this[prop] > this._config[prop].min
+                        : this[prop] < this._config[prop].max) {
+                        this[prop] += dist;
+                        return false;
+                    }
+                }
+                else {
+                    if ((prop === "x"
+                        ? this._camera.isLimitX()
+                        : this._camera.isLimitY()) === (dist < 0 ? -1 : 1)) {
+                        if (this[prop] > this._config[prop].min) {
+                            this[prop] += dist;
+                        }
+                    }
+                }
+            });
+        };
+        watch("x");
+        watch("y");
+    }
+    get x() {
+        return this._config.x.current;
+    }
+    set x(value) { }
+    get y() {
+        return this._config.y.current;
+    }
+    set y(value) { }
+}
+class Camera {
+    constructor(canvas, x, y, width, height) {
+        this._offset = Object.create({
+            x: 0,
+            y: 0,
+        });
+        this._watchers = Object.create(null);
+        this._canvas = canvas;
+        this._viewport = {
+            x,
+            y,
+            width,
+            height,
+        };
+    }
+    get x() {
+        return this._offset.x;
+    }
+    set x(value) {
+        const old = this._offset.x;
+        let allowChange = true;
+        this._watchers.x?.forEach((callback) => {
+            if (callback(value, old) === false) {
+                allowChange = false;
+            }
+        });
+        if (allowChange) {
+            this._offset.x = value;
+        }
+    }
+    get y() {
+        return this._offset.y;
+    }
+    set y(value) {
+        const old = this._offset.y;
+        let allowChange = true;
+        this._watchers.y?.forEach((callback) => {
+            if (callback(value, old) === false) {
+                allowChange = false;
+            }
+        });
+        if (allowChange) {
+            this._offset.y = value;
+        }
+    }
+    $watch(name, callback) {
+        if (name in this._watchers === false) {
+            this._watchers[name] = [];
+        }
+        this._watchers[name].push(callback);
+        return () => {
+            const index = this._watchers[name]?.findIndex((item) => item === callback);
+            if (index && index !== -1) {
+                this._watchers[name].splice(index, 1);
+            }
+        };
+    }
+    getXOffset(value, diffSpeed = 1) {
+        return (value -
+            constrain(this.x * diffSpeed, this._viewport.x, this._viewport.width - this._canvas.width));
+    }
+    getYOffset(value, diffSpeed = 1) {
+        return (value -
+            constrain(this.y * diffSpeed, this._viewport.y, this._viewport.height - this._canvas.height));
+    }
+    isLimitX() {
+        if (this.x < this._viewport.x) {
+            return -1;
+        }
+        if (this.x > this._viewport.width - this._canvas.width) {
+            return 1;
+        }
+        return 0;
+    }
+    isLimitY() {
+        if (this.y < this._viewport.y) {
+            return -1;
+        }
+        if (this.y > this._viewport.height - this._canvas.height) {
+            return 1;
+        }
+        return 0;
+    }
+    isXInViewBox(value, width = 0, diffSpeed = 1) {
+        if (value instanceof MyElement) {
+            width = value.width || 0;
+            value = value.x || 0;
+        }
+        value = this.getXOffset(value, diffSpeed);
+        return value + width > 0 || value < this._canvas.width;
+    }
+    isYInViewBox(value, height = 0, diffSpeed = 1) {
+        if (value instanceof MyElement) {
+            height = value.height || 0;
+            value = value.y || 0;
+        }
+        value = this.getYOffset(value, diffSpeed);
+        return value + height > 0 || value < this._canvas.height;
+    }
+    isInViewBox(x, y, width = 0, height = 0, diffSpeedX = 1, diffSpeedY = 1) {
+        if (x instanceof MyElement) {
+            return (this.isXInViewBox(x, diffSpeedX) && this.isYInViewBox(x, diffSpeedY));
+        }
+        return (this.isXInViewBox(x, width, diffSpeedX) &&
+            this.isYInViewBox(y, height, diffSpeedY));
+    }
+}
+Camera.Cursor = Cursor;
+
+function convertFieldToJson(keyItem) {
+    const key = keyItem.textContent;
+    let value = keyItem.nextElementSibling;
+    if (value == null) {
+        throw new Error("fCanvas<loadResourceImage>: Error because syntax error in file plist.");
+    }
+    if (value.tagName === "dict") {
+        let result = {};
+        Array.from(value.childNodes)
+            .filter((item) => item.tagName === "key")
+            .forEach((keyItem) => {
+            result = {
+                ...result,
+                ...convertFieldToJson(keyItem),
+            };
+        });
+        return {
+            [key]: result,
+        };
+    }
+    if (value.tagName === "array") {
+        let result = [];
+        Array.from(value.childNodes)
+            .filter((item) => item.tagName === "key")
+            .forEach((keyItem) => {
+            result.push(convertFieldToJson(keyItem));
+        });
+        return {
+            [key]: result,
+        };
+    }
+    if (value.tagName === "string") {
+        return {
+            [key]: value.textContent,
+        };
+    }
+    if (value.tagName === "integer") {
+        return {
+            [key]: parseInt(value.textContent),
+        };
+    }
+    if (value.tagName === "float") {
+        return {
+            [key]: parseFloat(value.textContent),
+        };
+    }
+    if (value.tagName === "true") {
+        return {
+            [key]: true,
+        };
+    }
+    if (value.tagName === "false") {
+        return {
+            [key]: false,
+        };
+    }
+    return {};
+}
+function resolvePath(...params) {
+    if (params[1].match(/^[a-z]+:\/\//i)) {
+        return params[1];
+    }
+    const root = (params[0]).replace(/\/$/, "").split("/");
+    params[0] = root.slice(0, root.length - 1).join("/");
+    return params.join("/");
+}
+class ResourceTile {
+    constructor(image, plist) {
+        this.__caching = new Map();
+        this.image = image;
+        this.plist = plist;
+    }
+    /**
+     * @param {string} name
+     * @return {any}
+     */
+    get(name) {
+        if (this.has(name)) {
+            const { frame, rotated, sourceSize } = this.plist.frames[name];
+            const frameArray = frame.replace(/\{|\}|\s/g, "").split(",");
+            const sizeArray = sourceSize.replace(/\{|\}|\s/g, "").split(",");
+            if (this.__caching.has(name) === false) {
+                const image = cutImage(this.image, +frameArray[0], +frameArray[1], +frameArray[2], +frameArray[3], rotated ? -90 : 0);
+                this.__caching.set(name, Object.assign(image, {
+                    image,
+                    size: {
+                        width: +sizeArray[0],
+                        height: +sizeArray[1],
+                    },
+                }));
+            }
+            return this.__caching.get(name);
+        }
+        else {
+            throw new Error(`fCanvas<addons/loadResourceImage>: Error does not exist this file "${name}" in declaration .plist`);
+        }
+    }
+    /**
+     * @param {string} name
+     * @return {boolean}
+     */
+    has(name) {
+        return name in this.plist.frames;
+    }
+}
+/**
+ * @param {string} path
+ * @return {Promise<ResourceTile>}
+ */
+async function loadResourceImage(path) {
+    if (path.match(/\.plist$/) == null) {
+        path += `.plist`;
+    }
+    const plist = await fetch(`${path}`)
+        .then((response) => response.text())
+        .then((str) => new DOMParser().parseFromString(str, "text/xml"));
+    let plistJson = {};
+    plist
+        .querySelectorAll("plist > dict:first-child > key")
+        .forEach((itemKey) => {
+        plistJson = {
+            ...plistJson,
+            ...convertFieldToJson(itemKey),
+        };
+    });
+    const image = await loadImage(resolvePath(path, plistJson?.metadata.realTextureFileName ||
+        plistJson?.metadata.textureFileName));
+    return new ResourceTile(image, plistJson);
+    //// ----------------- convert to json ------------------
+}
+
+class Resource {
+    constructor(resources, autoLoad = true) {
+        this._resourcesLoaded = new Map();
+        this._desResources = Object.create(null);
+        const desResources = {};
+        for (const prop in resources) {
+            ///
+            if (typeof resources[prop] === "object") {
+                desResources[prop] = {
+                    ...resources[prop],
+                };
+            }
+            else {
+                desResources[prop] = {
+                    src: resources[prop],
+                    lazy: false,
+                    type: "plist",
+                };
+            }
+        }
+        this._desResources = desResources;
+        /// observe
+        const { set, delete: _delete } = this._resourcesLoaded;
+        const $this = this;
+        this._resourcesLoaded.set = function (...params) {
+            /// call this._set
+            $this._set(params[0], params[1]);
+            return set.apply(this, params);
+        };
+        this._resourcesLoaded.delete = function (...params) {
+            /// call this._set
+            $this._delete(params[0]);
+            return _delete.apply(this, params);
+        };
+        if (autoLoad) {
+            const resourceAutoLoad = [];
+            for (const prop in this._desResources) {
+                if (this._desResources[prop].lazy === false) {
+                    resourceAutoLoad.push(this.load(prop));
+                }
+            }
+            // @ts-expect-error
+            return new Promise(async (resolve, reject) => {
+                try {
+                    await Promise.all(resourceAutoLoad);
+                    resolve(this);
+                }
+                catch (err) {
+                    reject(err);
+                }
+            });
+        }
+    }
+    _set(key, value) {
+        this[key] = value;
+    }
+    _delete(key) {
+        if (key in this) {
+            delete this[key];
+        }
+    }
+    isLoaded(name) {
+        if (name) {
+            return this._resourcesLoaded.has(name);
+        }
+        else {
+            for (const prop in this._desResources) {
+                if (this._resourcesLoaded.has(prop) === false) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    async load(name) {
+        if (name) {
+            if (name in this._desResources) {
+                if (this.isLoaded(name) === false) {
+                    switch (this._desResources[name].type) {
+                        case "image":
+                            this._resourcesLoaded.set(name, await loadImage(this._desResources[name].src));
+                            break;
+                        case "audio":
+                            this._resourcesLoaded.set(name, await loadAudio(this._desResources[name].src));
+                            break;
+                        case "plist":
+                            this._resourcesLoaded.set(name, await loadResourceImage(this._desResources[name].src));
+                            break;
+                        default:
+                            console.warn(`fCanvas<Resource>: can't load "${name} because it is "${this._desResources[name].type}`);
+                    }
+                    this._resourcesLoaded.set(name, await loadResourceImage(this._desResources[name].src));
+                }
+                else {
+                    console.warn(`fCanvas<Resource>: "${name}" resource loaded.`);
+                }
+            }
+            else {
+                console.error(`fCanvas<Resource>: "${name} resource not exists.`);
+            }
+        }
+    }
+    get(path) {
+        const _path = path.split("/");
+        const resourceName = _path[0];
+        const resoucreProp = _path.slice(1).join("/");
+        const info = this._desResources[resourceName];
+        if (info) {
+            if (this._resourcesLoaded.has(resourceName)) {
+                const resource = this._resourcesLoaded.get(resourceName);
+                if (resource) {
+                    switch (info.type) {
+                        case "image":
+                        case "audio":
+                            return resource;
+                        case "plist":
+                            return resoucreProp
+                                ? resource.get(resoucreProp)
+                                : resource;
+                        default:
+                            throw new Error(`fCanvas<Resource>: "can't get "${resourceName} because not support type "${info.type}".`);
+                    }
+                }
+                throw new Error(`fCanvas<Resource>: "${resourceName} not exists.`);
+            }
+            else {
+                throw new Error(`fCanvas<Resource>: "${resourceName} not loaded.`);
+            }
+        }
+        else {
+            throw new Error(`fCanvas<Resource>: "${resourceName}" not exitst.`);
+        }
+    }
+}
 
 function CircleImpact(circle1, circle2) {
     return ((circle1.x - circle2.x) ** 2 + (circle1.y - circle2.y) ** 2 <

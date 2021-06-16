@@ -1,6 +1,6 @@
 import { cutImage, loadImage } from "../functions/index";
 
-interface ImageResource extends HTMLImageElement {
+export interface ImageResource extends HTMLImageElement {
   image?: HTMLImageElement;
   size: {
     width: number;

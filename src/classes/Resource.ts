@@ -1,4 +1,7 @@
-import loadResourceImage, { ResourceTile } from "../addons/loadResourceImage";
+import loadResourceImage, {
+  ResourceTile,
+  ImageResource,
+} from "../addons/loadResourceImage";
 import { loadAudio, loadImage } from "../functions/index";
 
 interface ResourceParam {
@@ -15,6 +18,14 @@ export default class Resource {
   private _resourcesLoaded: Map<string, ResourceType> = new Map();
   private _desResources: ResourcesParams = Object.create(null);
 
+  private _set(key: string, value: ResourceType): void {
+    (this as any)[key] = value;
+  }
+  private _delete(key: string): void {
+    if (key in this) {
+      delete (this as any)[key];
+    }
+  }
   constructor(
     resources: {
       [propName: string]: string | ResourceParam;
@@ -39,6 +50,21 @@ export default class Resource {
     }
 
     this._desResources = desResources;
+
+    /// observe
+    const { set, delete: _delete } = this._resourcesLoaded;
+    const $this = this;
+
+    this._resourcesLoaded.set = function (...params: any): any {
+      /// call this._set
+      $this._set(params[0], params[1]);
+      return set.apply(this, params);
+    };
+    this._resourcesLoaded.delete = function (...params: any): any {
+      /// call this._set
+      $this._delete(params[0]);
+      return _delete.apply(this, params);
+    };
 
     if (autoLoad) {
       const resourceAutoLoad: Promise<void>[] = [];
@@ -115,7 +141,7 @@ export default class Resource {
       }
     }
   }
-  get(path: string): ResourceType {
+  get(path: string): ResourceType | ImageResource {
     const _path = path.split("/");
 
     const resourceName = _path[0];
@@ -133,9 +159,9 @@ export default class Resource {
             case "audio":
               return resource;
             case "plist":
-              return (this._resourcesLoaded.get(resourceName) as any).get(
-                resoucreProp
-              );
+              return resoucreProp
+                ? (resource as ResourceTile).get(resoucreProp)
+                : resource;
             default:
               throw new Error(
                 `fCanvas<Resource>: "can't get "${resourceName} because not support type "${info.type}".`

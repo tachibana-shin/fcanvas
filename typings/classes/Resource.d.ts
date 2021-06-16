@@ -1,16 +1,20 @@
-import { ResourceTile } from "../addons/loadResourceImage";
+import { ResourceTile, ImageResource } from "../addons/loadResourceImage";
 interface ResourceParam {
     src: string;
     lazy: boolean;
+    type: "image" | "audio" | "plist";
 }
+declare type ResourceType = ResourceTile | HTMLImageElement | HTMLAudioElement;
 export default class Resource {
     private _resourcesLoaded;
     private _desResources;
+    private _set;
+    private _delete;
     constructor(resources: {
         [propName: string]: string | ResourceParam;
     }, autoLoad?: boolean);
     isLoaded(name?: string): boolean;
     load(name?: string): Promise<void>;
-    get(path: string): ResourceTile;
+    get(path: string): ResourceType | ImageResource;
 }
 export {};

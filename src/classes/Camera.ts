@@ -1,503 +1,271 @@
+import fCanvas from "../core/fCanvas";
+import MyElement from "../core/MyElement";
 import { constrain } from "../functions/index";
-import Vector from "./Vector";
+import { noop, Offset } from "../utils/index";
 
-interface ViewBox {
-  mx: number;
-  my: number;
-  width: number;
-  height: number;
-}
-interface Viewport {
-  width: number;
-  height: number;
-}
-interface Cursor {
-  __camera: Camera;
-
-  idealX: number;
-  idealY: number;
-
-  width: number;
-  height: number;
-
-  offsetTop: number;
-  offsetRight: number;
-  offsetBottom: number;
-  offsetLeft: number;
-
+interface ViewPort {
   x: number;
   y: number;
+  width: number;
+  height: number;
+}
+interface Range {
+  min: number;
+  max: number;
+  default: number;
+  current: number;
+  dynamic: boolean;
+}
+interface ConfigCursor {
+  x: Range;
+  y: Range;
 }
 
-class Camera {
-  public viewport: Viewport = {
-    width: 0,
-    height: 0,
-  }; /// view port 100% frame
-  public viewBox: ViewBox = {
-    mx: 0,
-    my: 0,
-    width: 0,
-    height: 0,
-  }; /// view box for full canvas
-  private _cx: number = 0; /// x camera
-  private _cy: number = 0; /// y camera
-  get cx(): number {
-    return this._cx;
+class Cursor {
+  private _camera: Camera;
+  private _config: ConfigCursor;
+
+  public get x(): number {
+    return this._config.x.current;
   }
-  set cx(x: number) {
-    if (this.cursor.use) {
-      this._cx = constrain(
-        x,
-        -this.cursor.idealX - this.viewBox.mx - this.cursor.offsetLeft,
-        this.viewport.width -
-          this.viewBox.width +
-          (this.viewBox.width - this.cursor.idealX - this.cursor.width) +
-          this.cursor.offsetRight
-      );
-    } else {
-      this._cx = constrain(
-        x,
-        -this.viewBox.mx,
-        this.viewport.width - this.viewBox.width
-      );
+  public set x(value: number) {}
+  public get y(): number {
+    return this._config.y.current;
+  }
+  public set y(value: number) {}
+
+  constructor(camera: Camera, config: ConfigCursor) {
+    this._camera = camera;
+
+    this._config = config;
+
+    const watch = (prop: keyof ConfigCursor) => {
+      this._camera.$watch(prop, (newValue, oldValue) => {
+        const dist = newValue - oldValue;
+        // min = this._config.x.min;
+
+        if (this._config[prop].dynamic) {
+          if (
+            dist < 0
+              ? this[prop] > this._config[prop].min
+              : this[prop] < this._config[prop].max
+          ) {
+            this[prop] += dist;
+            return false;
+          }
+        } else {
+          if (
+            (prop === "x"
+              ? this._camera.isLimitX()
+              : this._camera.isLimitY()) === (dist < 0 ? -1 : 1)
+          ) {
+            if (this[prop] > this._config[prop].min) {
+              this[prop] += dist;
+            }
+          }
+        }
+      });
+    };
+
+    watch("x");
+    watch("y");
+  }
+}
+
+export default class Camera {
+  static Cursor: typeof Cursor = Cursor;
+  private _canvas: fCanvas;
+  private _viewport: ViewPort;
+  private _offset: Offset = Object.create({
+    x: 0,
+    y: 0,
+  });
+  private _watchers: {
+    [propName: string]: Function[];
+  } = Object.create(null);
+
+  public get x(): number {
+    return this._offset.x;
+  }
+  public set x(value: number) {
+    const old = this._offset.x;
+    let allowChange = true;
+    this._watchers.x?.forEach((callback) => {
+      if (callback(value, old) === false) {
+        allowChange = false;
+      }
+    });
+
+    if (allowChange) {
+      this._offset.x = value;
     }
   }
-  get cy(): number {
-    return this._cy;
+  public get y(): number {
+    return this._offset.y;
   }
-  set cy(y: number) {
-    if (this.cursor.use) {
-      this._cy = constrain(
-        y,
-        -this.cursor.idealY - this.viewBox.my - this.cursor.offsetTop,
-        this.viewport.height -
-          this.viewBox.height +
-          (this.viewBox.height - this.cursor.idealY - this.cursor.height) +
-          this.cursor.offsetBottom
-      );
-    } else {
-      this._cy = constrain(
-        y,
-        -this.viewBox.my,
-        this.viewport.height - this.viewBox.height
-      );
+  public set y(value: number) {
+    const old = this._offset.y;
+    let allowChange = true;
+    this._watchers.y?.forEach((callback) => {
+      if (callback(value, old) === false) {
+        allowChange = false;
+      }
+    });
+
+    if (allowChange) {
+      this._offset.y = value;
     }
   }
+  public $watch(
+    name: string,
+    callback: {
+      (newValue: any, oldValue: any): void;
+    }
+  ): noop {
+    if (name in this._watchers === false) {
+      this._watchers[name] = [];
+    }
 
-  public readonly cursor: Cursor & {
-    use: boolean;
-    idealRX: number;
-  } = {
-    __camera: this,
-    use: true,
-    idealX: 0,
-    idealY: 0,
+    this._watchers[name].push(callback);
 
-    idealRX: 0,
-
-    offsetTop: 0,
-    offsetRight: 0,
-    offsetBottom: 0,
-    offsetLeft: 0,
-
-    width: 0,
-    height: 0,
-
-    get x(): number {
-      if (this.__camera._cx < -this.__camera.viewBox.mx) {
-        const dx = -this.__camera.viewBox.mx - this.__camera._cx;
-
-        return this.idealX - dx;
-      }
-
-      if (
-        this.__camera._cx >
-        this.__camera.viewport.width - this.__camera.viewBox.width
-      ) {
-        const dx =
-          this.__camera.viewport.width -
-          this.__camera.viewBox.width -
-          this.__camera._cx;
-
-        return this.idealX - dx;
-      }
-
-      return this.idealX;
-    },
-    set x(x: number) {
-      if (x < this.idealX) {
-        this.__camera._cx = x - this.idealX - this.__camera.viewBox.mx;
-      }
-      if (x > this.idealX + this.idealRX) {
-        this.__camera._cx =
-          x -
-          this.idealX +
-          this.__camera.viewport.width -
-          this.__camera.viewBox.width -
-          this.width;
-      }
-    },
-    get y(): number {
-      if (this.__camera._cy < -this.__camera.viewBox.my) {
-        const dy = -this.__camera.viewBox.my - this.__camera._cy;
-
-        return this.idealY - dy;
-      }
-
-      if (
-        this.__camera._cy >
-        this.__camera.viewport.height - this.__camera.viewBox.height
-      ) {
-        const dy =
-          this.__camera.viewport.height -
-          this.__camera.viewBox.height -
-          this.__camera._cy;
-
-        return this.idealY - dy;
-      }
-
-      return this.idealY;
-    },
-    set y(y: number) {
-      if (y < this.idealY) {
-        this.__camera._cy = y - this.idealY - this.__camera.viewBox.my;
-      }
-      if (y > this.idealY) {
-        this.__camera._cy =
-          y -
-          this.idealY +
-          this.__camera.viewport.height -
-          this.__camera.viewBox.height -
-          this.height;
-      }
-    },
-  };
-
-  /**
-   * @param {number} width?
-   * @param {number} height?
-   * @param {number} x?
-   * @param {number} y?
-   * @param {number} vWidth?
-   * @param {number} vHeight?
-   * @param {number|false} cix?
-   * @param {number} ciy?
-   * @param {number} cwidth?
-   * @param {number} cheight?
-   * @return {any}
-   */
-  constructor(
-    width?: number,
-    height?: number,
-    x?: number,
-    y?: number,
-    vWidth?: number,
-    vHeight?: number,
-    cix?: number | false,
-    ciy?: number,
-    cwidth?: number,
-    cheight?: number
-  ) {
-    this.setViewport(width || 0, height || 0);
-    this.setViewBox(x || 0, y || 0, vWidth || 0, vHeight || 0);
-
-    if (cix === false) {
-      this.setCursor(false);
-    } else {
-      this.setCursor(
-        cix as number,
-        ciy as number,
-        cwidth as number,
-        cheight as number
+    return () => {
+      const index = this._watchers[name]?.findIndex(
+        (item) => item === callback
       );
-    }
-  }
 
-  /**
-   * @param {number} width?
-   * @param {number} height?
-   * @return {void}
-   */
-  setViewport(width: number, height: number): void {
-    this.viewport.width = width || 0;
-    this.viewport.height = height || 0;
-  }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {number} width
-   * @param {number} height
-   * @return {void}
-   */
-  setViewBox(x: number, y: number, width: number, height: number): void {
-    this.viewBox.mx = x || 0;
-    this.viewBox.my = y || 0;
-    this.viewBox.width = width || 0;
-    this.viewBox.height = height || 0;
-  }
-  setCursor(
-    idealX: number,
-    idealY: number,
-    width?: number,
-    height?: number
-  ): void;
-  setCursor(use: false): void;
-  /**
-   * @param {number|false} idealX
-   * @param {number} idealY?
-   * @param {number} width?
-   * @param {number} height?
-   * @return {void}
-   */
-  setCursor(
-    idealX: number | false,
-    idealY?: number,
-    width?: number,
-    height?: number
-  ): void {
-    if (arguments.length === 1) {
-      if (idealX === false) {
-        this.cursor.use = false;
+      if (index && index !== -1) {
+        this._watchers[name].splice(index, 1);
       }
-    } else {
-      this.cursor.idealX = idealX || 0;
-      this.cursor.idealY = idealY || 0;
-      this.cursor.width = width || 0;
-      this.cursor.height = height || 0;
-    }
-  }
-  /**
-   * @param {number} x
-   * @param {number=1} scale
-   * @return {number}
-   */
-  followX(x: number, scale: number = 1): number {
-    return (
-      x -
-      constrain(
-        this._cx * scale,
-        -this.viewBox.mx,
-        this.viewport.width - this.viewBox.width
-      )
-    );
-  }
-
-  /**
-   * @param {number} y
-   * @param {number=1} scale
-   * @return {number}
-   */
-  followY(y: number, scale: number = 1): number {
-    return (
-      y -
-      constrain(
-        this._cy * scale,
-        -this.viewBox.my,
-        this.viewport.height - this.viewBox.height
-      )
-    );
-  }
-
-  /**
-   * @param {Vector} vector
-   * @param {number=1} scaleX
-   * @param {number=scaleX} scaleY
-   * @return {Vector}
-   */
-  followVector(
-    vector: Vector,
-    scaleX: number = 1,
-    scaleY: number = scaleX
-  ): Vector {
-    return vector.set(
-      this.followX(vector.x, scaleX),
-      this.followY(vector.y, scaleY)
-    );
-  }
-
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {number=1} scaleX
-   * @param {number=scaleX} scaleY
-   * @return {any}
-   */
-  follow(
-    x: number,
-    y: number,
-    scaleX: number = 1,
-    scaleY: number = scaleX
-  ): {
-    x: number;
-    y: number;
-  } {
-    return {
-      x: this.followX(x, scaleX),
-      y: this.followY(y, scaleY),
     };
   }
-  /**
-   * @param {number} x
-   * @param {number=0} width
-   * @param {number=1} scale
-   * @return {boolean}
-   */
-  xInViewBox(x: number, width: number = 0, scale: number = 1): boolean {
-    x = this.followX(x, scale);
 
-    if (
-      this.viewBox.mx < x + width &&
-      this.viewBox.mx + this.viewBox.width > x
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-  /**
-   * @param {number} y
-   * @param {number=0} height
-   * @param {number=1} scale
-   * @return {boolean}
-   */
-  yInViewBox(y: number, height: number = 0, scale: number = 1): boolean {
-    y = this.followY(y, scale);
-
-    if (
-      this.viewBox.my < y + height &&
-      this.viewBox.my + this.viewBox.height > y
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {number=0} width
-   * @param {number=0} height
-   * @param {number=1} scaleX
-   * @param {number=scaleX} scaleY
-   * @return {boolean}
-   */
-  inViewBox(
+  constructor(
+    canvas: fCanvas,
     x: number,
+    y: number,
+    width: number,
+    height: number
+  ) {
+    this._canvas = canvas;
+
+    this._viewport = {
+      x,
+      y,
+      width,
+      height,
+    };
+  }
+
+  public getXOffset(value: number, diffSpeed: number = 1): number {
+    return (
+      value -
+      constrain(
+        this.x * diffSpeed,
+        this._viewport.x,
+        this._viewport.width - this._canvas.width
+      )
+    );
+  }
+  public getYOffset(value: number, diffSpeed: number = 1): number {
+    return (
+      value -
+      constrain(
+        this.y * diffSpeed,
+        this._viewport.y,
+        this._viewport.height - this._canvas.height
+      )
+    );
+  }
+  public isLimitX(): -1 | 0 | 1 {
+    if (this.x < this._viewport.x) {
+      return -1;
+    }
+
+    if (this.x > this._viewport.width - this._canvas.width) {
+      return 1;
+    }
+
+    return 0;
+  }
+  public isLimitY(): -1 | 0 | 1 {
+    if (this.y < this._viewport.y) {
+      return -1;
+    }
+
+    if (this.y > this._viewport.height - this._canvas.height) {
+      return 1;
+    }
+
+    return 0;
+  }
+
+  public isXInViewBox(element: MyElement, diffSpeed: number): boolean;
+  public isXInViewBox(value: number, width: number, diffSpeed: number): boolean;
+  public isXInViewBox(
+    value: number | MyElement,
+    width: number = 0,
+    diffSpeed: number = 1
+  ): boolean {
+    if (value instanceof MyElement) {
+      width = (value as any).width || 0;
+      value = ((value as any).x as number) || 0;
+    }
+
+    value = this.getXOffset(value, diffSpeed);
+
+    return value + width > 0 || value < this._canvas.width;
+  }
+  public isYInViewBox(element: MyElement, diffSpeed: number): boolean;
+  public isYInViewBox(
+    value: number,
+    height: number,
+    diffSpeed: number
+  ): boolean;
+  public isYInViewBox(
+    value: number | MyElement,
+    height: number = 0,
+    diffSpeed: number = 1
+  ): boolean {
+    if (value instanceof MyElement) {
+      height = (value as any).height || 0;
+      value = ((value as any).y as number) || 0;
+    }
+
+    value = this.getYOffset(value, diffSpeed);
+
+    return value + height > 0 || value < this._canvas.height;
+  }
+
+  public isInViewBox(
+    element: MyElement,
+    diffSpeedX: number,
+    diffSpeedY: number
+  ): boolean;
+  public isInViewBox(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    diffSpeedX: number,
+    diffSpeedY: number
+  ): boolean;
+  public isInViewBox(
+    x: MyElement | number,
     y: number,
     width: number = 0,
     height: number = 0,
-    scaleX: number = 1,
-    scaleY: number = scaleX
+    diffSpeedX: number = 1,
+    diffSpeedY: number = 1
   ): boolean {
+    if (x instanceof MyElement) {
+      return (
+        this.isXInViewBox(x, diffSpeedX) && this.isYInViewBox(x, diffSpeedY)
+      );
+    }
+
     return (
-      this.xInViewBox(x, width, scaleX) && this.yInViewBox(y, height, scaleY)
-    );
-  }
-  /**
-   * @param {number} x
-   * @param {number=0} width
-   * @param {number=1} scale
-   * @return {boolean}
-   */
-  xAfterViewBox(x: number, width: number = 0, scale: number = 1): boolean {
-    x = this.followX(x, scale);
-
-    if (this.viewBox.mx >= x + width) {
-      return true;
-    }
-
-    return false;
-  }
-  /**
-   * @param {number} y
-   * @param {number=0} height
-   * @param {number=1} scale
-   * @return {boolean}
-   */
-  yAfterViewBox(y: number, height: number = 0, scale: number = 1): boolean {
-    y = this.followY(y, scale);
-
-    if (this.viewBox.my >= y + height) {
-      return true;
-    }
-
-    return false;
-  }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {number=0} width
-   * @param {number=0} height
-   * @param {number=1} scaleX
-   * @param {number=scaleX} scaleY
-   * @return {boolean}
-   */
-  afterViewBox(
-    x: number,
-    y: number,
-    width: number = 0,
-    height: number = 0,
-    scaleX: number = 1,
-    scaleY: number = scaleX
-  ): boolean {
-    return (
-      this.xAfterViewBox(x, width, scaleX) && this.yAfterViewBox(y, height, scaleY)
-    );
-  }
-  /**
-   * @param {number} x
-   * @param {number=0} width
-   * @param {number=1} scale
-   * @return {boolean}
-   */
-  xBeforeViewBox(x: number, scale: number = 1): boolean {
-    x = this.followX(x, scale);
-
-    if (
-      this.viewBox.mx + this.viewBox.width <= x
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-  /**
-   * @param {number} y
-   * @param {number=0} height
-   * @param {number=1} scale
-   * @return {boolean}
-   */
-  yBeforeViewBox(y: number, scale: number = 1): boolean {
-    y = this.followY(y, scale);
-
-    if (
-      this.viewBox.my + this.viewBox.height <= y
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {number=0} width
-   * @param {number=0} height
-   * @param {number=1} scaleX
-   * @param {number=scaleX} scaleY
-   * @return {boolean}
-   */
-  beforeViewBox(
-    x: number,
-    y: number,
-    scaleX: number = 1,
-    scaleY: number = scaleX
-  ): boolean {
-    return (
-      this.xBeforeViewBox(x, scaleX) && this.yBeforeViewBox(y, scaleY)
+      this.isXInViewBox(x, width, diffSpeedX) &&
+      this.isYInViewBox(y, height, diffSpeedY)
     );
   }
 }
-
-export default Camera;

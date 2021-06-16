@@ -1,171 +1,49 @@
-import Vector from "./Vector";
-interface ViewBox {
-    mx: number;
-    my: number;
-    width: number;
-    height: number;
+import fCanvas from "../core/fCanvas";
+import MyElement from "../core/MyElement";
+import { noop } from "../utils/index";
+interface Range {
+    min: number;
+    max: number;
+    default: number;
+    current: number;
+    dynamic: boolean;
 }
-interface Viewport {
-    width: number;
-    height: number;
+interface ConfigCursor {
+    x: Range;
+    y: Range;
 }
-interface Cursor {
-    __camera: Camera;
-    idealX: number;
-    idealY: number;
-    width: number;
-    height: number;
-    offsetTop: number;
-    offsetRight: number;
-    offsetBottom: number;
-    offsetLeft: number;
-    x: number;
-    y: number;
+declare class Cursor {
+    private _camera;
+    private _config;
+    get x(): number;
+    set x(value: number);
+    get y(): number;
+    set y(value: number);
+    constructor(camera: Camera, config: ConfigCursor);
 }
-declare class Camera {
-    viewport: Viewport;
-    viewBox: ViewBox;
-    private _cx;
-    private _cy;
-    get cx(): number;
-    set cx(x: number);
-    get cy(): number;
-    set cy(y: number);
-    readonly cursor: Cursor & {
-        use: boolean;
-        idealRX: number;
-    };
-    /**
-     * @param {number} width?
-     * @param {number} height?
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} vWidth?
-     * @param {number} vHeight?
-     * @param {number|false} cix?
-     * @param {number} ciy?
-     * @param {number} cwidth?
-     * @param {number} cheight?
-     * @return {any}
-     */
-    constructor(width?: number, height?: number, x?: number, y?: number, vWidth?: number, vHeight?: number, cix?: number | false, ciy?: number, cwidth?: number, cheight?: number);
-    /**
-     * @param {number} width?
-     * @param {number} height?
-     * @return {void}
-     */
-    setViewport(width: number, height: number): void;
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return {void}
-     */
-    setViewBox(x: number, y: number, width: number, height: number): void;
-    setCursor(idealX: number, idealY: number, width?: number, height?: number): void;
-    setCursor(use: false): void;
-    /**
-     * @param {number} x
-     * @param {number=1} scale
-     * @return {number}
-     */
-    followX(x: number, scale?: number): number;
-    /**
-     * @param {number} y
-     * @param {number=1} scale
-     * @return {number}
-     */
-    followY(y: number, scale?: number): number;
-    /**
-     * @param {Vector} vector
-     * @param {number=1} scaleX
-     * @param {number=scaleX} scaleY
-     * @return {Vector}
-     */
-    followVector(vector: Vector, scaleX?: number, scaleY?: number): Vector;
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number=1} scaleX
-     * @param {number=scaleX} scaleY
-     * @return {any}
-     */
-    follow(x: number, y: number, scaleX?: number, scaleY?: number): {
-        x: number;
-        y: number;
-    };
-    /**
-     * @param {number} x
-     * @param {number=0} width
-     * @param {number=1} scale
-     * @return {boolean}
-     */
-    xInViewBox(x: number, width?: number, scale?: number): boolean;
-    /**
-     * @param {number} y
-     * @param {number=0} height
-     * @param {number=1} scale
-     * @return {boolean}
-     */
-    yInViewBox(y: number, height?: number, scale?: number): boolean;
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number=0} width
-     * @param {number=0} height
-     * @param {number=1} scaleX
-     * @param {number=scaleX} scaleY
-     * @return {boolean}
-     */
-    inViewBox(x: number, y: number, width?: number, height?: number, scaleX?: number, scaleY?: number): boolean;
-    /**
-     * @param {number} x
-     * @param {number=0} width
-     * @param {number=1} scale
-     * @return {boolean}
-     */
-    xAfterViewBox(x: number, width?: number, scale?: number): boolean;
-    /**
-     * @param {number} y
-     * @param {number=0} height
-     * @param {number=1} scale
-     * @return {boolean}
-     */
-    yAfterViewBox(y: number, height?: number, scale?: number): boolean;
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number=0} width
-     * @param {number=0} height
-     * @param {number=1} scaleX
-     * @param {number=scaleX} scaleY
-     * @return {boolean}
-     */
-    afterViewBox(x: number, y: number, width?: number, height?: number, scaleX?: number, scaleY?: number): boolean;
-    /**
-     * @param {number} x
-     * @param {number=0} width
-     * @param {number=1} scale
-     * @return {boolean}
-     */
-    xBeforeViewBox(x: number, scale?: number): boolean;
-    /**
-     * @param {number} y
-     * @param {number=0} height
-     * @param {number=1} scale
-     * @return {boolean}
-     */
-    yBeforeViewBox(y: number, scale?: number): boolean;
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number=0} width
-     * @param {number=0} height
-     * @param {number=1} scaleX
-     * @param {number=scaleX} scaleY
-     * @return {boolean}
-     */
-    beforeViewBox(x: number, y: number, scaleX?: number, scaleY?: number): boolean;
+export default class Camera {
+    static Cursor: typeof Cursor;
+    private _canvas;
+    private _viewport;
+    private _offset;
+    private _watchers;
+    get x(): number;
+    set x(value: number);
+    get y(): number;
+    set y(value: number);
+    $watch(name: string, callback: {
+        (newValue: any, oldValue: any): void;
+    }): noop;
+    constructor(canvas: fCanvas, x: number, y: number, width: number, height: number);
+    getXOffset(value: number, diffSpeed?: number): number;
+    getYOffset(value: number, diffSpeed?: number): number;
+    isLimitX(): -1 | 0 | 1;
+    isLimitY(): -1 | 0 | 1;
+    isXInViewBox(element: MyElement, diffSpeed: number): boolean;
+    isXInViewBox(value: number, width: number, diffSpeed: number): boolean;
+    isYInViewBox(element: MyElement, diffSpeed: number): boolean;
+    isYInViewBox(value: number, height: number, diffSpeed: number): boolean;
+    isInViewBox(element: MyElement, diffSpeedX: number, diffSpeedY: number): boolean;
+    isInViewBox(x: number, y: number, width: number, height: number, diffSpeedX: number, diffSpeedY: number): boolean;
 }
-export default Camera;
+export {};
