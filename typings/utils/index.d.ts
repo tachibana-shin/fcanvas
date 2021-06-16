@@ -7,10 +7,6 @@ interface InfoFont {
 export interface noop {
     (): void;
 }
-/**
- * @param {any} e
- * @return {any}
- */
 export declare const requestAnimationFrame: typeof globalThis.requestAnimationFrame | typeof globalThis.setTimeout;
 export declare const cancelAnimationFrame: typeof globalThis.cancelAnimationFrame | typeof globalThis.clearTimeout;
 export declare const isTouch: boolean;

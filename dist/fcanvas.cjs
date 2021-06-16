@@ -2,10 +2,6 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-/**
- * @param {any} e
- * @return {any}
- */
 const requestAnimationFrame = window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     function (callback) {
@@ -162,6 +158,791 @@ function bindEvent(name, callback, element) {
         element.removeEventListener(name, callback);
     };
 }
+
+class MyElement {
+    /**
+     * @param {fCanvas} canvas?
+     * @return {any}
+     */
+    constructor(canvas) {
+        this._els = Object.create(null);
+        this._idActiveNow = -1;
+        this._queue = [];
+        if (canvas?.constructor !== fCanvas) {
+            canvas = noopFCanvas;
+        }
+        this.__addEl(canvas);
+    }
+    get type() {
+        if ("x" in this && "y" in this) {
+            if ("width" in this && "height" in this) {
+                return "rect";
+            }
+            if ("radius" in this) {
+                return "circle";
+            }
+            return "point";
+        }
+        return "unknown";
+    }
+    __addEl(canvas) {
+        if (canvas.id in this._els === false) {
+            this._els[canvas.id] = canvas;
+        }
+    }
+    /**
+     * @return {HTMLCanvasElement}
+     */
+    get $el() {
+        return this.$parent.$el;
+    }
+    _run(canvas) {
+        this.__addEl(canvas);
+        this._idActiveNow = canvas.id;
+        if (typeof this.update === "function") {
+            if (typeof this.draw === "function") {
+                this.draw();
+            }
+            this.update();
+        }
+        else if (typeof this.draw === "function") {
+            this.draw();
+        }
+        if (this._queue.length > 0) {
+            const { length } = this._queue;
+            let index = 0;
+            while (index < length) {
+                this.run(this._queue[index]);
+                index++;
+            }
+        }
+        this._idActiveNow = -1;
+    }
+    /**
+     * @param {LikeMyElement} element
+     * @return {void}
+     */
+    add(...elements) {
+        this._queue.push(...elements);
+    }
+    /**
+     * @param {LikeMyElement} element
+     * @return {void}
+     */
+    run(element) {
+        this.$parent.run(element);
+    }
+    /**
+     * @return {fCanvas}
+     */
+    get $parent() {
+        const canvas = this._els[this._idActiveNow === -1 ? 0 : this._idActiveNow];
+        if (canvas?.constructor === fCanvas) {
+            return canvas;
+        }
+        else {
+            console.warn("fCanvas: The current referenced version of the fCanvas.run function is incorrect.");
+            return this._els[0];
+        }
+    }
+    /**
+     * @return {CanvasRenderingContext2D}
+     */
+    get $context2d() {
+        return this.$parent.$context2d;
+    }
+    /**
+     * @param {number} angle
+     * @return {number}
+     */
+    sin(angle) {
+        return this.$parent.sin(angle);
+    }
+    /**
+     * @param {number} sin
+     * @return {number}
+     */
+    asin(sin) {
+        return this.$parent.asin(sin);
+    }
+    /**
+     * @param {number} angle
+     * @return {number}
+     */
+    cos(angle) {
+        return this.$parent.cos(angle);
+    }
+    /**
+     * @param {number} cos
+     * @return {number}
+     */
+    acos(cos) {
+        return this.$parent.asin(cos);
+    }
+    /**
+     * @param {number} angle
+     * @return {number}
+     */
+    tan(angle) {
+        return this.$parent.tan(angle);
+    }
+    /**
+     * @param {number} tan
+     * @return {number}
+     */
+    atan(tan) {
+        return this.$parent.atan(tan);
+    }
+    /**
+     * @param {number} y
+     * @param {number} x
+     * @return {number}
+     */
+    atan2(y, x) {
+        return this.$parent.atan2(y, x);
+    }
+    /**
+     * @return {number | null}
+     */
+    get mouseX() {
+        return this.$parent.mouseX;
+    }
+    /**
+     * @return {number | null}
+     */
+    get mouseY() {
+        return this.$parent.mouseY;
+    }
+    /**
+     * @return {number}
+     */
+    get windowWidth() {
+        return this.$parent.windowWidth;
+    }
+    /**
+     * @return {number}
+     */
+    get windowHeight() {
+        return this.$parent.windowHeight;
+    }
+    fill(...args) {
+        this.$context2d.fillStyle = this.$parent._toRgb(args);
+        this.$context2d.fill();
+    }
+    /**
+     * @param  {number} red
+     * @param  {number} green
+     * @param  {number} blue
+     * @param  {number} alpha
+     * @returns void
+     */
+    stroke(...args) {
+        this.$context2d.strokeStyle = this.$parent._toRgb(args);
+        this.$context2d.stroke();
+    }
+    /**
+     * @return {void}
+     */
+    noFill() {
+        this.fill(0, 0, 0, 0);
+    }
+    /**
+     * @param {number} value?
+     * @return {number|void}
+     */
+    lineWidth(value) {
+        if (value === undefined) {
+            return this.$context2d.lineWidth;
+        }
+        else {
+            this.$context2d.lineWidth = this.$parent._getPixel(value);
+        }
+    }
+    /**
+     * @param {number} value?
+     * @return {number|void}
+     */
+    miterLimit(value) {
+        if (value === undefined) {
+            return this.$context2d.miterLimit;
+        }
+        else {
+            if (this.lineJoin() !== "miter") {
+                this.lineJoin("miter");
+            }
+            this.$context2d.miterLimit = value;
+        }
+    }
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @return {void|{ x: number, y: number }}
+     */
+    shadowOffset(x, y) {
+        if (arguments.length === 0) {
+            return {
+                x: this.$context2d.shadowOffsetX,
+                y: this.$context2d.shadowOffsetY,
+            };
+        }
+        else {
+            [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [
+                this.$parent._getPixel(x || 0),
+                this.$parent._getPixel(y || 0),
+            ];
+        }
+    }
+    /**
+     * @param {string} text
+     * @return {number}
+     */
+    measureText(text) {
+        return this.$parent.measureText(text);
+    }
+    /**
+     * @return {void}
+     */
+    begin() {
+        this.$context2d.beginPath();
+    }
+    /**
+     * @return {void}
+     */
+    close() {
+        this.$context2d.closePath();
+    }
+    /**
+     * @return {void}
+     */
+    save() {
+        this.$parent.save();
+    }
+    /**
+     * @return {void}
+     */
+    restore() {
+        this.$parent.restore();
+    }
+    /**
+     * @param {number} angle?
+     * @return {number | void}
+     */
+    rotate(angle) {
+        if (angle === undefined) {
+            return this.$parent.rotate();
+        }
+        this.$parent.rotate(angle);
+    }
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @return {any}
+     */
+    translate(x, y) {
+        if (arguments.length === 0) {
+            return this.$parent.translate();
+        }
+        this.$parent.translate(x, y);
+    }
+    /**
+     * @param  {number} x
+     * @param  {number} y
+     * @param  {number} radius
+     * @param  {number} astart
+     * @param  {number} astop
+     * @param  {boolean} reverse?
+     * @returns void
+     */
+    arc(x, y, radius, astart, astop, reverse) {
+        this.begin();
+        this.$context2d.arc(this.$parent._getPixel(x), this.$parent._getPixel(y), radius, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop) - Math.PI / 2, reverse);
+        this.close();
+    }
+    /**
+     * @param  {number} x
+     * @param  {number} y
+     * @param  {number} radius
+     * @param  {number} astart
+     * @param  {number} astop
+     * @param  {boolean} reverse?
+     */
+    pie(x, y, radius, astart, astop, reverse) {
+        this.begin();
+        this.move(x, y);
+        this.arc(x, y, radius, astart, astop, reverse);
+        this.to(x, y);
+        this.close();
+    }
+    /**
+     * @param  {number} x1
+     * @param  {number} y1
+     * @param  {number} x2
+     * @param  {number} y2
+     * @returns void
+     */
+    line(x1, y1, x2, y2) {
+        // this.begin();
+        this.move(x1, y1);
+        this.to(x2, y2);
+        // this.close();fix
+    }
+    /**
+     * @param  {number} x
+     * @param  {number} y
+     * @param  {number} radius1
+     * @param  {number} radius2
+     * @param  {number} astart
+     * @param  {number} astop
+     * @param  {number} reverse
+     * @returns void
+     */
+    ellipse(x, y, radius1, radius2, astart, astop, reverse) {
+        this.begin();
+        this.$context2d.ellipse(this.$parent._getPixel(x), this.$parent._getPixel(y), radius1, radius2, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop), reverse);
+        this.close();
+    }
+    /**
+     * @param  {number} x
+     * @param  {number} y
+     * @param  {number} radius
+     * @returns void
+     */
+    circle(x, y, radius) {
+        this.arc(x, y, radius, 0, this.$parent.angleMode() === "degress" ? 360 : Math.PI * 2);
+    }
+    /**
+     * @param  {number} x
+     * @param  {number} y
+     * @returns void
+     */
+    point(x, y) {
+        this.circle(x, y, 1);
+    }
+    /**
+     * @param  {number} x1
+     * @param  {number} y1
+     * @param  {number} x2
+     * @param  {number} y2
+     * @param  {number} x3
+     * @param  {number} y3
+     * @returns void
+     */
+    triange(x1, y1, x2, y2, x3, y3) {
+        this.begin();
+        this.move(x1, y1);
+        this.to(x2, y2);
+        this.to(x3, y3);
+        this.close();
+    }
+    /**
+     * @param  {CanvasImageSource} image
+     * @param  {number} sx?
+     * @param  {number} sy?
+     * @param  {number} swidth?
+     * @param  {number} sheight?
+     * @param  {number} x
+     * @param  {number} y
+     * @param  {number} width
+     * @param  {number} height
+     * @returns void
+     */
+    drawImage(image, ...args) {
+        // @ts-expect-error
+        this.$context2d.drawImage(image, ...args);
+    }
+    rRect(x, y, w, h, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft) {
+        this.begin();
+        [x, y, w, h] = this.$parent._argsRect(x, y, w, h);
+        const fontSize = this.$parent.fontSize();
+        const arc = [
+            AutoToPx(radiusTopLeft, w, fontSize),
+            AutoToPx(radiusTopRight, h, fontSize),
+            AutoToPx(radiusBottomRight, w, fontSize),
+            AutoToPx(radiusBottomLeft, h, fontSize),
+        ];
+        this.move(x, y);
+        this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
+        this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
+        this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
+        this.arcTo(x, y, x + w - arc[0], y, arc[0]);
+        this.close();
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @memberof MyElement
+     */
+    rect(x, y, width, height) {
+        this.begin();
+        [x, y, width, height] = this.$parent._argsRect(x, y, width, height);
+        this.$context2d.rect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
+        this.close();
+    }
+    /**
+     * @param  {number} cpx
+     * @param  {number} cpy
+     * @param  {number} x
+     * @param  {number} y
+     */
+    quadratic(cpx, cpy, x, y) {
+        this.$context2d.quadraticCurveTo(cpx, cpy, x, y);
+    }
+    /**
+     * @param {number} cp1x
+     * @param {number} cp1y
+     * @param {number} cp2x
+     * @param {number} cp2y
+     * @param {number} x
+     * @param {number} y
+     * @return {void}
+     */
+    bezier(cp1x, cp1y, cp2x, cp2y, x, y) {
+        this.$context2d.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {void}
+     */
+    move(x, y) {
+        this.$context2d.moveTo(this.$parent._getPixel(x), this.$parent._getPixel(y));
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {void}
+     */
+    to(x, y) {
+        this.$context2d.lineTo(this.$parent._getPixel(x), this.$parent._getPixel(y));
+    }
+    /**
+     * @param {string} text
+     * @param {number} x
+     * @param {number} y
+     * @param {number} maxWidth?
+     * @return {void}
+     */
+    fillText(text, x, y, maxWidth) {
+        this.$context2d.fillText(text, this.$parent._getPixel(x), this.$parent._getPixel(y), maxWidth);
+    }
+    /**
+     * @param {string} text
+     * @param {number} x
+     * @param {number} y
+     * @param {number} maxWidth?
+     * @return {void}
+     */
+    strokeText(text, x, y, maxWidth) {
+        this.$context2d.strokeText(text, this.$parent._getPixel(x), this.$parent._getPixel(y), maxWidth);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {void}
+     */
+    fillRect(x, y, width, height) {
+        this.$context2d.fillRect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {void}
+     */
+    strokeRect(x, y, width, height) {
+        this.$context2d.strokeRect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
+    }
+    /**
+     * @param {number} value?
+     * @return {any}
+     */
+    lineDashOffset(value) {
+        if (value === undefined) {
+            return this.$context2d.lineDashOffset;
+        }
+        this.$context2d.lineDashOffset = value;
+    }
+    lineDash(...segments) {
+        if (segments.length === 0) {
+            return this.$context2d.getLineDash();
+        }
+        if (Array.isArray(segments[0])) {
+            this.$context2d.setLineDash(segments[0]);
+        }
+        this.$context2d.setLineDash(segments);
+    }
+    /**
+     * @param {number} x1
+     * @param {number} y1
+     * @param {number} x2
+     * @param {number} y2
+     * @param {number} radius
+     * @return {void}
+     */
+    arcTo(x1, y1, x2, y2, radius) {
+        this.$context2d.arcTo(this.$parent._getPixel(x1), this.$parent._getPixel(y1), this.$parent._getPixel(x2), this.$parent._getPixel(y2), radius);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @return {boolean}
+     */
+    isPoint(x, y) {
+        return this.$context2d.isPointInPath(x, y);
+    }
+    createImageData(width, height) {
+        return height
+            ? this.$parent.createImageData(width, height)
+            : this.$parent.createImageData(width);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {ImageData}
+     */
+    getImageData(x, y, width, height) {
+        return this.$parent.getImageData(x, y, width, height);
+    }
+    /**
+     * @param {ImageData} imageData
+     * @param {number} x
+     * @param {number} y
+     * @param {number} xs?
+     * @param {number} ys?
+     * @param {number} width?
+     * @param {number} height?
+     * @return {void}
+     */
+    putImageData(imageData, x, y, xs, ys, width, height) {
+        if (arguments.length === 7) {
+            this.$parent.putImageData(imageData, x, y, xs, ys, width, height);
+        }
+        else {
+            this.$parent.putImageData(imageData, x, y);
+        }
+    }
+    /**
+     * @param {CanvasImageSource} image
+     * @param {"repeat"|"repeat-x"|"repeat-y"|"no-repeat"} direction
+     * @return {CanvasPattern | null}
+     */
+    createPattern(image, direction) {
+        return this.$parent.createPattern(image, direction);
+    }
+    /**
+     * @param {number} x1
+     * @param {number} y1
+     * @param {number} r1
+     * @param {number} x2
+     * @param {number} y2
+     * @param {number} r2
+     * @return {CanvasGradient}
+     */
+    createRadialGradient(x1, y1, r1, x2, y2, r2) {
+        return this.$parent.createRadialGradient(x1, y1, r1, x2, y2, r2);
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     * @return {CanvasGradient}
+     */
+    createLinearGradient(x, y, width, height) {
+        return this.$parent.createLinearGradient(x, y, width, height);
+    }
+    /**
+     * @param {"bevel"|"round"|"miter"} type?
+     * @return {any}
+     */
+    lineJoin(type) {
+        if (type !== undefined) {
+            this.$context2d.lineJoin = type;
+        }
+        else {
+            return this.$context2d.lineJoin;
+        }
+    }
+    /**
+     * @param {"butt"|"round"|"square"} value?
+     * @return {any}
+     */
+    lineCap(value) {
+        if (value !== undefined) {
+            this.$context2d.lineCap = value;
+        }
+        else {
+            return this.$context2d.lineCap;
+        }
+    }
+    /**
+     * @param {number} opacity?
+     * @return {any}
+     */
+    shadowBlur(opacity) {
+        if (opacity === undefined) {
+            return this.$context2d.shadowBlur;
+        }
+        this.$context2d.shadowBlur = opacity;
+    }
+    /**
+     * @param {ParamsToRgb} ...args
+     * @return {void}
+     */
+    shadowColor(...args) {
+        this.$context2d.shadowColor = this.$parent._toRgb(args);
+    }
+    drawFocusIfNeeded(path, element) {
+        if (element === undefined) {
+            this.$context2d.drawFocusIfNeeded(path);
+        }
+        else {
+            this.$context2d.drawFocusIfNeeded(path, element);
+        }
+    }
+    polyline(...points) {
+        if (points.length > 0) {
+            if (Array.isArray(points[0])) {
+                this.move(points[0][0], points[0][1]);
+                let index = 1;
+                const { length } = points;
+                while (index < length) {
+                    this.to(points[index][0], points[index][1]);
+                    index++;
+                }
+            }
+            else {
+                if (points.length > 1) {
+                    this.move(points[0], points[1]);
+                    let index = 2;
+                    const { length } = points;
+                    while (index < length - 1) {
+                        this.to(points[index], points[index + 1]);
+                        index += 2;
+                    }
+                }
+            }
+        }
+    }
+    polygon(...points) {
+        if (Array.isArray(points[0])) {
+            this.polyline(...points, points[0]);
+        }
+        else {
+            this.polyline(...points, points[0], points[1]);
+        }
+    }
+}
+class Point3D extends MyElement {
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @param {number} z?
+     * @return {any}
+     */
+    constructor(x, y, z) {
+        super();
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        [this.x, this.y, this.z] = [x || 0, y || 0, z || 0];
+    }
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
+    rotateX(angle) {
+        this.y =
+            this.y * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
+        this.z =
+            -this.y * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
+    }
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
+    rotateY(angle) {
+        this.x =
+            this.x * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
+        this.z =
+            -this.x * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
+    }
+    /**
+     * @param {number} angle
+     * @return {void}
+     */
+    rotateZ(angle) {
+        this.x =
+            this.x * this.$parent.cos(angle) - this.y * this.$parent.sin(angle);
+        this.y =
+            this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
+    }
+}
+class Point3DCenter extends MyElement {
+    /**
+     * @param {number} x?
+     * @param {number} y?
+     * @param {number} z?
+     * @return {any}
+     */
+    constructor(x, y, z) {
+        super();
+        this.__z = 0;
+        [this.__x, this.__y, this.__z] = [x, y, z || 0];
+    }
+    get scale() {
+        return Point3DCenter.persistent / (Point3DCenter.persistent + this.__z);
+    }
+    get x() {
+        return ((this.__x - this.$parent.width / 2) * this.scale + this.$parent.width / 2);
+    }
+    set x(value) {
+        this.__x = value;
+    }
+    get y() {
+        return ((this.__y - this.$parent.height / 2) * this.scale +
+            this.$parent.height / 2);
+    }
+    set y(value) {
+        this.__y = value;
+    }
+    get z() {
+        return this.__z;
+    }
+    set z(value) {
+        this.__z = value;
+    }
+    get(prop) {
+        if (typeof prop === "number") {
+            return this.scale * prop;
+        }
+        return this.scale * this[prop];
+    }
+}
+Point3DCenter.persistent = 1000;
+function createElement(callback) {
+    return new (class extends MyElement {
+        constructor() {
+            super(...arguments);
+            this.draw = callback;
+        }
+    })();
+}
+// class App extends Polyline3D {
+//   constructor(...points, x, y, z) {
+//     super(...points, x, y, z);
+//   }
+//   draw() {
+//     this.poly();
+//   }
+// }
 
 class Emitter {
     constructor() {
@@ -350,607 +1131,6 @@ class Store {
      */
     $watch(key, callback) {
         return this.__emitter.on(key, callback);
-    }
-}
-
-function calculateRemainder2D(xComponent, yComponent, vector) {
-    if (xComponent !== 0) {
-        vector.x = vector.x % xComponent;
-    }
-    if (yComponent !== 0) {
-        vector.y = vector.y % yComponent;
-    }
-    return vector;
-}
-function calculateRemainder3D(xComponent, yComponent, zComponent, vector) {
-    if (xComponent !== 0) {
-        vector.x = vector.x % xComponent;
-    }
-    if (yComponent !== 0) {
-        vector.y = vector.y % yComponent;
-    }
-    if (zComponent !== 0) {
-        vector.z = vector.z % zComponent;
-    }
-    return vector;
-}
-class Vector {
-    /**
-     * Creates an instance of Vector.
-     * @param {number} [x=0]
-     * @param {number} [y=0]
-     * @param {number} [z=0]
-     * @memberof Vector
-     */
-    constructor(x = 0, y = 0, z = 0) {
-        [this.x, this.y, this.z] = [x, y, z];
-    }
-    /**
-     * @param {(Vector | [number?, number?, number?] | number)} x
-     * @param {number} [y]
-     * @param {number} [z]
-     * @return {*}  {this}
-     * @memberof Vector
-     */
-    set(x, y, z) {
-        if (x instanceof Vector) {
-            this.x = x.x || 0;
-            this.y = x.y || 0;
-            this.z = x.z || 0;
-            return this;
-        }
-        if (x instanceof Array) {
-            this.x = x[0] || 0;
-            this.y = x[1] || 0;
-            this.z = x[2] || 0;
-            return this;
-        }
-        this.x = x || 0;
-        this.y = y || 0;
-        this.z = z || 0;
-        return this;
-    }
-    /**
-     * @return {*}  {Vector}
-     * @memberof Vector
-     */
-    copy() {
-        return new Vector(this.x, this.y, this.z);
-    }
-    /**
-     * @param {(Vector | [number?, number?, number?] | number)} x
-     * @param {number} [y]
-     * @param {number} [z]
-     * @return {*}  {this}
-     * @memberof Vector
-     */
-    add(x, y, z) {
-        if (x instanceof Vector) {
-            this.x += x.x || 0;
-            this.y += x.y || 0;
-            this.z += x.z || 0;
-            return this;
-        }
-        if (x instanceof Array) {
-            this.x += x[0] || 0;
-            this.y += x[1] || 0;
-            this.z += x[2] || 0;
-            return this;
-        }
-        this.x += x || 0;
-        this.y += y || 0;
-        this.z += z || 0;
-        return this;
-    }
-    /**
-     * @param {(Vector | [number, number?, number?])} x
-     * @memberof Vector
-     */
-    rem(x) {
-        if (x instanceof Vector) {
-            if (Number.isFinite(x.x) &&
-                Number.isFinite(x.y) &&
-                Number.isFinite(x.z)) {
-                calculateRemainder3D(x.x, x.y, x.z, this);
-            }
-        }
-        else if (x instanceof Array) {
-            if (x.every(function (element) {
-                return Number.isFinite(element);
-            })) {
-                if (x.length === 2) {
-                    calculateRemainder2D(x[0], x[1], this);
-                }
-                if (x.length === 3) {
-                    calculateRemainder3D(x[0], x[1], x[2], this);
-                }
-            }
-        }
-        else if (arguments.length === 1) {
-            if (Number.isFinite(arguments[0]) && arguments[0] !== 0) {
-                this.x = this.x % arguments[0];
-                this.y = this.y % arguments[0];
-                this.z = this.z % arguments[0];
-            }
-        }
-        else if (arguments.length === 2) {
-            const vectorComponents = [].slice.call(arguments);
-            if (vectorComponents.every(function (element) {
-                return Number.isFinite(element);
-            })) {
-                if (vectorComponents.length === 2) {
-                    calculateRemainder2D(vectorComponents[0], vectorComponents[1], this);
-                }
-            }
-        }
-        else if (arguments.length === 3) {
-            var _vectorComponents = [].slice.call(arguments);
-            if (_vectorComponents.every(function (element) {
-                return Number.isFinite(element);
-            })) {
-                if (_vectorComponents.length === 3) {
-                    calculateRemainder3D(_vectorComponents[0], _vectorComponents[1], _vectorComponents[2], this);
-                }
-            }
-        }
-    }
-    /**
-     * @param {(Vector | [number?, number?, number?] | number)} x
-     * @param {number} [y]
-     * @param {number} [z]
-     * @return {*}  {this}
-     * @memberof Vector
-     */
-    sub(x, y, z) {
-        if (x instanceof Vector) {
-            this.x -= x.x || 0;
-            this.y -= x.y || 0;
-            this.z -= x.z || 0;
-            return this;
-        }
-        if (x instanceof Array) {
-            this.x -= x[0] || 0;
-            this.y -= x[1] || 0;
-            this.z -= x[2] || 0;
-            return this;
-        }
-        this.x -= x || 0;
-        this.y -= y || 0;
-        this.z -= z || 0;
-        return this;
-    }
-    /**
-     * @param {number} n
-     * @return {*}  {this}
-     * @memberof Vector
-     */
-    mult(n) {
-        this.x *= n;
-        this.y *= n;
-        this.z *= n;
-        return this;
-    }
-    /**
-     * @param {number} n
-     * @return {*}  {this}
-     * @memberof Vector
-     */
-    div(n) {
-        if (n === 0) {
-            console.warn("div:", "divide by 0");
-            return this;
-        }
-        this.x /= n;
-        this.y /= n;
-        this.z /= n;
-        return this;
-    }
-    /**
-     * @return {*}  {number}
-     * @memberof Vector
-     */
-    mag() {
-        return Math.sqrt(this.magSq());
-    }
-    /**
-     * @return {*}  {number}
-     * @memberof Vector
-     */
-    magSq() {
-        const { x, y, z } = this;
-        return x * x + y * y + z * z;
-    }
-    /**
-     * @param {(number | Vector)} [x]
-     * @param {number} [y]
-     * @param {number} [z]
-     * @return {*}  {number}
-     * @memberof Vector
-     */
-    dot(x, y, z) {
-        if (x instanceof Vector) {
-            return this.dot(x.x, x.y, x.z);
-        }
-        return this.x * (x || 0) + this.y * (y || 0) + this.z * (z || 0);
-    }
-    /**
-     * @param {Vector} v
-     * @return {*}  {Vector}
-     * @memberof Vector
-     */
-    cross(v) {
-        return new Vector(this.y * v.z - this.z * v.y, this.z * v.x - this.x * v.z, this.x * v.y - this.y * v.x);
-    }
-    /**
-     * @return {*}  {this}
-     * @memberof Vector
-     */
-    normalize() {
-        const len = this.mag();
-        if (len !== 0) {
-            this.mult(1 / len);
-        }
-        return this;
-    }
-    /**
-     * @param {number} max
-     * @return {*}  {this}
-     * @memberof Vector
-     */
-    limit(max) {
-        const mSq = this.magSq();
-        if (mSq > max ** 2) {
-            this.div(Math.sqrt(mSq)) //normalize it
-                .mult(max);
-        }
-        return this;
-    }
-    /**
-     * @param {number} n
-     * @return {*}  {this}
-     * @memberof Vector
-     */
-    setMag(n) {
-        return this.normalize().mult(n);
-    }
-    /**
-     * @return {*}  {number}
-     * @memberof Vector
-     */
-    heading() {
-        return Math.atan2(this.y, this.x);
-    }
-    /**
-     * @param {number} angle
-     * @return {*}  {this}
-     * @memberof Vector
-     */
-    rotate(angle) {
-        const newHeading = this.heading() + angle;
-        const mag = this.mag();
-        this.x = Math.cos(newHeading) * mag;
-        this.y = Math.sin(newHeading) * mag;
-        return this;
-    }
-    /**
-     * @param {Vector} vector
-     * @return {*}  {number}
-     * @memberof Vector
-     */
-    angleBetween(vector) {
-        const dotmagmag = this.dot(vector) / (this.mag() * vector.mag());
-        const angle = Math.acos(Math.min(1, Math.max(-1, dotmagmag))) *
-            Math.sign(this.cross(vector).z || 1);
-        return angle;
-    }
-    /**
-     * @param {(Vector | number)} [x=0]
-     * @param {number} [y=0]
-     * @param {number} [z=0]
-     * @param {number} [amt=0]
-     * @return {*}  {this}
-     * @memberof Vector
-     */
-    lerp(x = 0, y = 0, z = 0, amt = 0) {
-        if (x instanceof Vector) {
-            return this.lerp(x.x, x.y, x.z, y);
-        }
-        this.x += (x - this.x) * amt || 0;
-        this.y += (y - this.y) * amt || 0;
-        this.z += (z - this.z) * amt || 0;
-        return this;
-    }
-    /**
-     * @param {Vector} surfaceNormal
-     * @return {*}  {this}
-     * @memberof Vector
-     */
-    reflect(surfaceNormal) {
-        surfaceNormal.normalize();
-        return this.sub(surfaceNormal.mult(2 * this.dot(surfaceNormal)));
-    }
-    /**
-     * @return {*}  {[number, number, number]}
-     * @memberof Vector
-     */
-    array() {
-        return [this.x || 0, this.y || 0, this.z || 0];
-    }
-    /**
-     * @param {(Vector | [number?, number?, number?] | number)} [x]
-     * @param {number} [y]
-     * @param {number} [z]
-     * @return {*}  {boolean}
-     * @memberof Vector
-     */
-    equals(x, y, z) {
-        let a, b, c;
-        if (x instanceof Vector) {
-            a = x.x || 0;
-            b = x.y || 0;
-            c = x.z || 0;
-        }
-        else if (x instanceof Array) {
-            a = x[0] || 0;
-            b = x[1] || 0;
-            c = x[2] || 0;
-        }
-        else {
-            a = x || 0;
-            b = y || 0;
-            c = z || 0;
-        }
-        return this.x === a && this.y === b && this.z === c;
-    }
-    /**
-     * @return {*}  {string}
-     * @memberof Vector
-     */
-    toString() {
-        return "Vector: [" + this.array().join(", ") + "]";
-    }
-}
-
-function getAnimate(type, currentProgress, start, distance, steps, power) {
-    switch (type) {
-        case "ease":
-            currentProgress /= steps / 2;
-            if (currentProgress < 1) {
-                return (distance / 2) * Math.pow(currentProgress, power) + start;
-            }
-            currentProgress -= 2;
-            return (distance / 2) * (Math.pow(currentProgress, power) + 2) + start;
-        case "quadratic":
-            currentProgress /= steps / 2;
-            if (currentProgress <= 1) {
-                return (distance / 2) * currentProgress * currentProgress + start;
-            }
-            currentProgress--;
-            return (-1 * (distance / 2) * (currentProgress * (currentProgress - 2) - 1) +
-                start);
-        case "sine-ease-in-out":
-            return ((-distance / 2) * (Math.cos((Math.PI * currentProgress) / steps) - 1) +
-                start);
-        case "quintic-ease":
-            currentProgress /= steps / 2;
-            if (currentProgress < 1) {
-                return (distance / 2) * Math.pow(currentProgress, 5) + start;
-            }
-            currentProgress -= 2;
-            return (distance / 2) * (Math.pow(currentProgress, 5) + 2) + start;
-        case "exp-ease-in-out":
-            currentProgress /= steps / 2;
-            if (currentProgress < 1)
-                return (distance / 2) * Math.pow(2, 10 * (currentProgress - 1)) + start;
-            currentProgress--;
-            return (distance / 2) * (-Math.pow(2, -10 * currentProgress) + 2) + start;
-        case "linear":
-            return start + (distance / steps) * currentProgress;
-    }
-}
-/**
- * @param {AnimateType} type
- * @param {number} start
- * @param {number} stop
- * @param {number} frame
- * @param {number} frames
- * @param {number=3} power
- * @return {number}
- */
-function getValueInFrame(type, start, stop, frame, frames, power = 3) {
-    const distance = stop - start;
-    return getAnimate(type, frame, start, distance, frames, power);
-}
-function timeToFrames(time, fps = 1000 / 60) {
-    return time / fps;
-}
-function toObject(obj) {
-    if (Array.isArray(obj)) {
-        let tmp = Object.create(null);
-        obj.forEach((value, index) => {
-            tmp[`${index}`] = value;
-        });
-        obj = tmp;
-    }
-    return obj;
-}
-function reactive(obj, $this) {
-    delete obj.__observe;
-    obj = toObject(obj);
-    const store = {};
-    for (const key in obj) {
-        store[key] = [obj[key], obj[key]];
-        Object.defineProperty(obj, key, {
-            get() {
-                return getValueInFrame($this.easing, store[key][0], store[key][1], $this.frame, $this.frames);
-            },
-            set(value) {
-                store[key][1] = value;
-            },
-        });
-    }
-    Object.defineProperty(obj, "__observe", {
-        writable: true,
-        enumerable: false,
-        configurable: true,
-        value: store,
-    });
-    return obj;
-}
-function splitNumberString(params) {
-    const indexString = params.findIndex((item) => typeof item === "string");
-    if (indexString > -1) {
-        return [params[indexString], +params[indexString === 0 ? 1 : 0]];
-    }
-    else {
-        return [params[1], +params[0]];
-    }
-}
-function converParams(...params) {
-    let data, time, easing;
-    if ("length" in params[0] ||
-        (params[0] !== null && typeof params[0] === "object")) {
-        /// install to params[0] | time = params[1] | easing = params[2]
-        data = params[0];
-        [easing, time] = splitNumberString(params.slice(1));
-    }
-    else {
-        /// install to params | time  = 0 | easing = linear
-        data = toObject(params);
-    }
-    return [data, time, easing];
-}
-class Animate {
-    constructor(...params) {
-        this.__data = {
-            __observe: {},
-        };
-        this.__fps = 1000 / 60;
-        this.__eventsStore = Object.create(null);
-        this.__queue = [];
-        this.time = 0;
-        this.easing = "ease";
-        this.__frame = 1;
-        const [data, time, easing] = converParams(...params);
-        this.data = data ?? this.data;
-        this.time = Number.isNaN(time) ? this.time : time ?? this.time;
-        this.easing = easing ?? this.easing;
-    }
-    // private get data(): StoreObserve {
-    //   return this.__data;
-    // }
-    set data(data) {
-        this.__data = reactive(data, this);
-        for (const key in this.__data) {
-            Object.defineProperty(this, key, {
-                get() {
-                    return this.__data[key];
-                },
-            });
-        }
-    }
-    /**
-     * @param {string} key
-     * @return {*}  {(number | void)}
-     * @memberof Animate
-     */
-    get(key) {
-        return this.__data[key];
-    }
-    get frames() {
-        return Math.max(timeToFrames(this.time, this.__fps), 1);
-    }
-    get frame() {
-        return Math.min(this.__frame, this.frames);
-    }
-    set frame(value) {
-        this.__frame = Math.min(value, this.frames);
-        if (this.frame === this.frames) {
-            this.emit("done");
-            if (this.__queue.length > 0) {
-                this._to(...this.__queue[0]);
-                this.__queue.splice(0, 1);
-            }
-        }
-    }
-    on(name, callback) {
-        if (name in this.__eventsStore) {
-            this.__eventsStore[name].push(callback);
-        }
-        else {
-            this.__eventsStore[name] = [callback];
-        }
-    }
-    off(name, callback) {
-        if (callback) {
-            this.__eventsStore[name] = this.__eventsStore[name]?.filter((item) => item !== callback);
-            if (this.__eventsStore[name]?.length === 0) {
-                delete this.__eventsStore[name];
-            }
-        }
-        else {
-            delete this.__eventsStore[name];
-        }
-    }
-    emit(name, ...params) {
-        this.__eventsStore[name]?.forEach((callback) => {
-            callback.call(this, ...params);
-        });
-    }
-    once(name, callback) {
-        const callbackVirual = (...params) => {
-            callback.call(this, ...params);
-            this.off(name, callbackVirual);
-        };
-        this.on(name, callbackVirual);
-    }
-    setFPS(value) {
-        this.__fps = value;
-    }
-    action() {
-        this.frame++;
-    }
-    cancel(key) {
-        if (key) {
-            if (key in this.__data && key in this.__data.__observe) {
-                this.__data.__observe[key][0] = this.__data[key];
-                this.emit("cancel", key);
-            }
-        }
-        else {
-            for (const key in this.__data) {
-                this.cancel(key);
-            }
-        }
-    }
-    _to(...params) {
-        const [data, time, easing] = converParams(...params);
-        for (const key in data) {
-            if (key in this.__data && key in this.__data.__observe) {
-                this.cancel(key);
-                this.__data.__observe[key][1] = +data[key];
-                // this.__data.__observe[key][1] = +data[key] as number;
-            }
-            else {
-                console.error(`fCanvas<animate.ts>: "${key}" is not signed.`);
-            }
-        }
-        this.frame = 0;
-        this.time = Number.isNaN(time) ? this.time : time ?? this.time;
-        this.easing = easing ?? this.easing;
-    }
-    to(...params) {
-        this._to(...params);
-        this.__queue.splice(0);
-    }
-    get running() {
-        return this.frame < this.frames;
-    }
-    add(...params) {
-        this.__queue.push(converParams(...params));
-    }
-    set(...params) {
-        this.data = converParams(...params)[0];
     }
 }
 
@@ -2046,790 +2226,606 @@ fCanvas.Point3DCenter = Point3DCenter;
 fCanvas._count = 0;
 const noopFCanvas = new fCanvas();
 
-class MyElement {
-    /**
-     * @param {fCanvas} canvas?
-     * @return {any}
-     */
-    constructor(canvas) {
-        this._els = Object.create(null);
-        this._idActiveNow = -1;
-        this._queue = [];
-        if (canvas?.constructor !== fCanvas) {
-            canvas = noopFCanvas;
-        }
-        this.__addEl(canvas);
+function calculateRemainder2D(xComponent, yComponent, vector) {
+    if (xComponent !== 0) {
+        vector.x = vector.x % xComponent;
     }
-    get type() {
-        if ("x" in this && "y" in this) {
-            if ("width" in this && "height" in this) {
-                return "rect";
+    if (yComponent !== 0) {
+        vector.y = vector.y % yComponent;
+    }
+    return vector;
+}
+function calculateRemainder3D(xComponent, yComponent, zComponent, vector) {
+    if (xComponent !== 0) {
+        vector.x = vector.x % xComponent;
+    }
+    if (yComponent !== 0) {
+        vector.y = vector.y % yComponent;
+    }
+    if (zComponent !== 0) {
+        vector.z = vector.z % zComponent;
+    }
+    return vector;
+}
+class Vector {
+    /**
+     * Creates an instance of Vector.
+     * @param {number} [x=0]
+     * @param {number} [y=0]
+     * @param {number} [z=0]
+     * @memberof Vector
+     */
+    constructor(x = 0, y = 0, z = 0) {
+        [this.x, this.y, this.z] = [x, y, z];
+    }
+    /**
+     * @param {(Vector | [number?, number?, number?] | number)} x
+     * @param {number} [y]
+     * @param {number} [z]
+     * @return {*}  {this}
+     * @memberof Vector
+     */
+    set(x, y, z) {
+        if (x instanceof Vector) {
+            this.x = x.x || 0;
+            this.y = x.y || 0;
+            this.z = x.z || 0;
+            return this;
+        }
+        if (x instanceof Array) {
+            this.x = x[0] || 0;
+            this.y = x[1] || 0;
+            this.z = x[2] || 0;
+            return this;
+        }
+        this.x = x || 0;
+        this.y = y || 0;
+        this.z = z || 0;
+        return this;
+    }
+    /**
+     * @return {*}  {Vector}
+     * @memberof Vector
+     */
+    copy() {
+        return new Vector(this.x, this.y, this.z);
+    }
+    /**
+     * @param {(Vector | [number?, number?, number?] | number)} x
+     * @param {number} [y]
+     * @param {number} [z]
+     * @return {*}  {this}
+     * @memberof Vector
+     */
+    add(x, y, z) {
+        if (x instanceof Vector) {
+            this.x += x.x || 0;
+            this.y += x.y || 0;
+            this.z += x.z || 0;
+            return this;
+        }
+        if (x instanceof Array) {
+            this.x += x[0] || 0;
+            this.y += x[1] || 0;
+            this.z += x[2] || 0;
+            return this;
+        }
+        this.x += x || 0;
+        this.y += y || 0;
+        this.z += z || 0;
+        return this;
+    }
+    /**
+     * @param {(Vector | [number, number?, number?])} x
+     * @memberof Vector
+     */
+    rem(x) {
+        if (x instanceof Vector) {
+            if (Number.isFinite(x.x) &&
+                Number.isFinite(x.y) &&
+                Number.isFinite(x.z)) {
+                calculateRemainder3D(x.x, x.y, x.z, this);
             }
-            if ("radius" in this) {
-                return "circle";
-            }
-            return "point";
         }
-        return "unknown";
-    }
-    __addEl(canvas) {
-        if (canvas.id in this._els === false) {
-            this._els[canvas.id] = canvas;
-        }
-    }
-    /**
-     * @return {HTMLCanvasElement}
-     */
-    get $el() {
-        return this.$parent.$el;
-    }
-    _run(canvas) {
-        this.__addEl(canvas);
-        this._idActiveNow = canvas.id;
-        if (typeof this.update === "function") {
-            if (typeof this.draw === "function") {
-                this.draw();
-            }
-            this.update();
-        }
-        else if (typeof this.draw === "function") {
-            this.draw();
-        }
-        if (this._queue.length > 0) {
-            const { length } = this._queue;
-            let index = 0;
-            while (index < length) {
-                this.run(this._queue[index]);
-                index++;
+        else if (x instanceof Array) {
+            if (x.every(function (element) {
+                return Number.isFinite(element);
+            })) {
+                if (x.length === 2) {
+                    calculateRemainder2D(x[0], x[1], this);
+                }
+                if (x.length === 3) {
+                    calculateRemainder3D(x[0], x[1], x[2], this);
+                }
             }
         }
-        this._idActiveNow = -1;
-    }
-    /**
-     * @param {LikeMyElement} element
-     * @return {void}
-     */
-    add(...elements) {
-        this._queue.push(...elements);
-    }
-    /**
-     * @param {LikeMyElement} element
-     * @return {void}
-     */
-    run(element) {
-        this.$parent.run(element);
-    }
-    /**
-     * @return {fCanvas}
-     */
-    get $parent() {
-        const canvas = this._els[this._idActiveNow === -1 ? 0 : this._idActiveNow];
-        if (canvas?.constructor === fCanvas) {
-            return canvas;
+        else if (arguments.length === 1) {
+            if (Number.isFinite(arguments[0]) && arguments[0] !== 0) {
+                this.x = this.x % arguments[0];
+                this.y = this.y % arguments[0];
+                this.z = this.z % arguments[0];
+            }
         }
-        else {
-            console.warn("fCanvas: The current referenced version of the fCanvas.run function is incorrect.");
-            return this._els[0];
+        else if (arguments.length === 2) {
+            const vectorComponents = [].slice.call(arguments);
+            if (vectorComponents.every(function (element) {
+                return Number.isFinite(element);
+            })) {
+                if (vectorComponents.length === 2) {
+                    calculateRemainder2D(vectorComponents[0], vectorComponents[1], this);
+                }
+            }
+        }
+        else if (arguments.length === 3) {
+            var _vectorComponents = [].slice.call(arguments);
+            if (_vectorComponents.every(function (element) {
+                return Number.isFinite(element);
+            })) {
+                if (_vectorComponents.length === 3) {
+                    calculateRemainder3D(_vectorComponents[0], _vectorComponents[1], _vectorComponents[2], this);
+                }
+            }
         }
     }
     /**
-     * @return {CanvasRenderingContext2D}
+     * @param {(Vector | [number?, number?, number?] | number)} x
+     * @param {number} [y]
+     * @param {number} [z]
+     * @return {*}  {this}
+     * @memberof Vector
      */
-    get $context2d() {
-        return this.$parent.$context2d;
+    sub(x, y, z) {
+        if (x instanceof Vector) {
+            this.x -= x.x || 0;
+            this.y -= x.y || 0;
+            this.z -= x.z || 0;
+            return this;
+        }
+        if (x instanceof Array) {
+            this.x -= x[0] || 0;
+            this.y -= x[1] || 0;
+            this.z -= x[2] || 0;
+            return this;
+        }
+        this.x -= x || 0;
+        this.y -= y || 0;
+        this.z -= z || 0;
+        return this;
+    }
+    /**
+     * @param {number} n
+     * @return {*}  {this}
+     * @memberof Vector
+     */
+    mult(n) {
+        this.x *= n;
+        this.y *= n;
+        this.z *= n;
+        return this;
+    }
+    /**
+     * @param {number} n
+     * @return {*}  {this}
+     * @memberof Vector
+     */
+    div(n) {
+        if (n === 0) {
+            console.warn("div:", "divide by 0");
+            return this;
+        }
+        this.x /= n;
+        this.y /= n;
+        this.z /= n;
+        return this;
+    }
+    /**
+     * @return {*}  {number}
+     * @memberof Vector
+     */
+    mag() {
+        return Math.sqrt(this.magSq());
+    }
+    /**
+     * @return {*}  {number}
+     * @memberof Vector
+     */
+    magSq() {
+        const { x, y, z } = this;
+        return x * x + y * y + z * z;
+    }
+    /**
+     * @param {(number | Vector)} [x]
+     * @param {number} [y]
+     * @param {number} [z]
+     * @return {*}  {number}
+     * @memberof Vector
+     */
+    dot(x, y, z) {
+        if (x instanceof Vector) {
+            return this.dot(x.x, x.y, x.z);
+        }
+        return this.x * (x || 0) + this.y * (y || 0) + this.z * (z || 0);
+    }
+    /**
+     * @param {Vector} v
+     * @return {*}  {Vector}
+     * @memberof Vector
+     */
+    cross(v) {
+        return new Vector(this.y * v.z - this.z * v.y, this.z * v.x - this.x * v.z, this.x * v.y - this.y * v.x);
+    }
+    /**
+     * @return {*}  {this}
+     * @memberof Vector
+     */
+    normalize() {
+        const len = this.mag();
+        if (len !== 0) {
+            this.mult(1 / len);
+        }
+        return this;
+    }
+    /**
+     * @param {number} max
+     * @return {*}  {this}
+     * @memberof Vector
+     */
+    limit(max) {
+        const mSq = this.magSq();
+        if (mSq > max ** 2) {
+            this.div(Math.sqrt(mSq)) //normalize it
+                .mult(max);
+        }
+        return this;
+    }
+    /**
+     * @param {number} n
+     * @return {*}  {this}
+     * @memberof Vector
+     */
+    setMag(n) {
+        return this.normalize().mult(n);
+    }
+    /**
+     * @return {*}  {number}
+     * @memberof Vector
+     */
+    heading() {
+        return Math.atan2(this.y, this.x);
     }
     /**
      * @param {number} angle
-     * @return {number}
-     */
-    sin(angle) {
-        return this.$parent.sin(angle);
-    }
-    /**
-     * @param {number} sin
-     * @return {number}
-     */
-    asin(sin) {
-        return this.$parent.asin(sin);
-    }
-    /**
-     * @param {number} angle
-     * @return {number}
-     */
-    cos(angle) {
-        return this.$parent.cos(angle);
-    }
-    /**
-     * @param {number} cos
-     * @return {number}
-     */
-    acos(cos) {
-        return this.$parent.asin(cos);
-    }
-    /**
-     * @param {number} angle
-     * @return {number}
-     */
-    tan(angle) {
-        return this.$parent.tan(angle);
-    }
-    /**
-     * @param {number} tan
-     * @return {number}
-     */
-    atan(tan) {
-        return this.$parent.atan(tan);
-    }
-    /**
-     * @param {number} y
-     * @param {number} x
-     * @return {number}
-     */
-    atan2(y, x) {
-        return this.$parent.atan2(y, x);
-    }
-    /**
-     * @return {number | null}
-     */
-    get mouseX() {
-        return this.$parent.mouseX;
-    }
-    /**
-     * @return {number | null}
-     */
-    get mouseY() {
-        return this.$parent.mouseY;
-    }
-    /**
-     * @return {number}
-     */
-    get windowWidth() {
-        return this.$parent.windowWidth;
-    }
-    /**
-     * @return {number}
-     */
-    get windowHeight() {
-        return this.$parent.windowHeight;
-    }
-    fill(...args) {
-        this.$context2d.fillStyle = this.$parent._toRgb(args);
-        this.$context2d.fill();
-    }
-    /**
-     * @param  {number} red
-     * @param  {number} green
-     * @param  {number} blue
-     * @param  {number} alpha
-     * @returns void
-     */
-    stroke(...args) {
-        this.$context2d.strokeStyle = this.$parent._toRgb(args);
-        this.$context2d.stroke();
-    }
-    /**
-     * @return {void}
-     */
-    noFill() {
-        this.fill(0, 0, 0, 0);
-    }
-    /**
-     * @param {number} value?
-     * @return {number|void}
-     */
-    lineWidth(value) {
-        if (value === undefined) {
-            return this.$context2d.lineWidth;
-        }
-        else {
-            this.$context2d.lineWidth = this.$parent._getPixel(value);
-        }
-    }
-    /**
-     * @param {number} value?
-     * @return {number|void}
-     */
-    miterLimit(value) {
-        if (value === undefined) {
-            return this.$context2d.miterLimit;
-        }
-        else {
-            if (this.lineJoin() !== "miter") {
-                this.lineJoin("miter");
-            }
-            this.$context2d.miterLimit = value;
-        }
-    }
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @return {void|{ x: number, y: number }}
-     */
-    shadowOffset(x, y) {
-        if (arguments.length === 0) {
-            return {
-                x: this.$context2d.shadowOffsetX,
-                y: this.$context2d.shadowOffsetY,
-            };
-        }
-        else {
-            [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [
-                this.$parent._getPixel(x || 0),
-                this.$parent._getPixel(y || 0),
-            ];
-        }
-    }
-    /**
-     * @param {string} text
-     * @return {number}
-     */
-    measureText(text) {
-        return this.$parent.measureText(text);
-    }
-    /**
-     * @return {void}
-     */
-    begin() {
-        this.$context2d.beginPath();
-    }
-    /**
-     * @return {void}
-     */
-    close() {
-        this.$context2d.closePath();
-    }
-    /**
-     * @return {void}
-     */
-    save() {
-        this.$parent.save();
-    }
-    /**
-     * @return {void}
-     */
-    restore() {
-        this.$parent.restore();
-    }
-    /**
-     * @param {number} angle?
-     * @return {number | void}
+     * @return {*}  {this}
+     * @memberof Vector
      */
     rotate(angle) {
-        if (angle === undefined) {
-            return this.$parent.rotate();
+        const newHeading = this.heading() + angle;
+        const mag = this.mag();
+        this.x = Math.cos(newHeading) * mag;
+        this.y = Math.sin(newHeading) * mag;
+        return this;
+    }
+    /**
+     * @param {Vector} vector
+     * @return {*}  {number}
+     * @memberof Vector
+     */
+    angleBetween(vector) {
+        const dotmagmag = this.dot(vector) / (this.mag() * vector.mag());
+        const angle = Math.acos(Math.min(1, Math.max(-1, dotmagmag))) *
+            Math.sign(this.cross(vector).z || 1);
+        return angle;
+    }
+    /**
+     * @param {(Vector | number)} [x=0]
+     * @param {number} [y=0]
+     * @param {number} [z=0]
+     * @param {number} [amt=0]
+     * @return {*}  {this}
+     * @memberof Vector
+     */
+    lerp(x = 0, y = 0, z = 0, amt = 0) {
+        if (x instanceof Vector) {
+            return this.lerp(x.x, x.y, x.z, y);
         }
-        this.$parent.rotate(angle);
+        this.x += (x - this.x) * amt || 0;
+        this.y += (y - this.y) * amt || 0;
+        this.z += (z - this.z) * amt || 0;
+        return this;
     }
     /**
-     * @param {number} x?
-     * @param {number} y?
-     * @return {any}
+     * @param {Vector} surfaceNormal
+     * @return {*}  {this}
+     * @memberof Vector
      */
-    translate(x, y) {
-        if (arguments.length === 0) {
-            return this.$parent.translate();
+    reflect(surfaceNormal) {
+        surfaceNormal.normalize();
+        return this.sub(surfaceNormal.mult(2 * this.dot(surfaceNormal)));
+    }
+    /**
+     * @return {*}  {[number, number, number]}
+     * @memberof Vector
+     */
+    array() {
+        return [this.x || 0, this.y || 0, this.z || 0];
+    }
+    /**
+     * @param {(Vector | [number?, number?, number?] | number)} [x]
+     * @param {number} [y]
+     * @param {number} [z]
+     * @return {*}  {boolean}
+     * @memberof Vector
+     */
+    equals(x, y, z) {
+        let a, b, c;
+        if (x instanceof Vector) {
+            a = x.x || 0;
+            b = x.y || 0;
+            c = x.z || 0;
         }
-        this.$parent.translate(x, y);
-    }
-    /**
-     * @param  {number} x
-     * @param  {number} y
-     * @param  {number} radius
-     * @param  {number} astart
-     * @param  {number} astop
-     * @param  {boolean} reverse?
-     * @returns void
-     */
-    arc(x, y, radius, astart, astop, reverse) {
-        this.begin();
-        this.$context2d.arc(this.$parent._getPixel(x), this.$parent._getPixel(y), radius, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop) - Math.PI / 2, reverse);
-        this.close();
-    }
-    /**
-     * @param  {number} x
-     * @param  {number} y
-     * @param  {number} radius
-     * @param  {number} astart
-     * @param  {number} astop
-     * @param  {boolean} reverse?
-     */
-    pie(x, y, radius, astart, astop, reverse) {
-        this.begin();
-        this.move(x, y);
-        this.arc(x, y, radius, astart, astop, reverse);
-        this.to(x, y);
-        this.close();
-    }
-    /**
-     * @param  {number} x1
-     * @param  {number} y1
-     * @param  {number} x2
-     * @param  {number} y2
-     * @returns void
-     */
-    line(x1, y1, x2, y2) {
-        // this.begin();
-        this.move(x1, y1);
-        this.to(x2, y2);
-        // this.close();fix
-    }
-    /**
-     * @param  {number} x
-     * @param  {number} y
-     * @param  {number} radius1
-     * @param  {number} radius2
-     * @param  {number} astart
-     * @param  {number} astop
-     * @param  {number} reverse
-     * @returns void
-     */
-    ellipse(x, y, radius1, radius2, astart, astop, reverse) {
-        this.begin();
-        this.$context2d.ellipse(this.$parent._getPixel(x), this.$parent._getPixel(y), radius1, radius2, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop), reverse);
-        this.close();
-    }
-    /**
-     * @param  {number} x
-     * @param  {number} y
-     * @param  {number} radius
-     * @returns void
-     */
-    circle(x, y, radius) {
-        this.arc(x, y, radius, 0, this.$parent.angleMode() === "degress" ? 360 : Math.PI * 2);
-    }
-    /**
-     * @param  {number} x
-     * @param  {number} y
-     * @returns void
-     */
-    point(x, y) {
-        this.circle(x, y, 1);
-    }
-    /**
-     * @param  {number} x1
-     * @param  {number} y1
-     * @param  {number} x2
-     * @param  {number} y2
-     * @param  {number} x3
-     * @param  {number} y3
-     * @returns void
-     */
-    triange(x1, y1, x2, y2, x3, y3) {
-        this.begin();
-        this.move(x1, y1);
-        this.to(x2, y2);
-        this.to(x3, y3);
-        this.close();
-    }
-    /**
-     * @param  {CanvasImageSource} image
-     * @param  {number} sx?
-     * @param  {number} sy?
-     * @param  {number} swidth?
-     * @param  {number} sheight?
-     * @param  {number} x
-     * @param  {number} y
-     * @param  {number} width
-     * @param  {number} height
-     * @returns void
-     */
-    drawImage(image, ...args) {
-        // @ts-expect-error
-        this.$context2d.drawImage(image, ...args);
-    }
-    rRect(x, y, w, h, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft) {
-        this.begin();
-        [x, y, w, h] = this.$parent._argsRect(x, y, w, h);
-        const fontSize = this.$parent.fontSize();
-        const arc = [
-            AutoToPx(radiusTopLeft, w, fontSize),
-            AutoToPx(radiusTopRight, h, fontSize),
-            AutoToPx(radiusBottomRight, w, fontSize),
-            AutoToPx(radiusBottomLeft, h, fontSize),
-        ];
-        this.move(x, y);
-        this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
-        this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
-        this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
-        this.arcTo(x, y, x + w - arc[0], y, arc[0]);
-        this.close();
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @memberof MyElement
-     */
-    rect(x, y, width, height) {
-        this.begin();
-        [x, y, width, height] = this.$parent._argsRect(x, y, width, height);
-        this.$context2d.rect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
-        this.close();
-    }
-    /**
-     * @param  {number} cpx
-     * @param  {number} cpy
-     * @param  {number} x
-     * @param  {number} y
-     */
-    quadratic(cpx, cpy, x, y) {
-        this.$context2d.quadraticCurveTo(cpx, cpy, x, y);
-    }
-    /**
-     * @param {number} cp1x
-     * @param {number} cp1y
-     * @param {number} cp2x
-     * @param {number} cp2y
-     * @param {number} x
-     * @param {number} y
-     * @return {void}
-     */
-    bezier(cp1x, cp1y, cp2x, cp2y, x, y) {
-        this.$context2d.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @return {void}
-     */
-    move(x, y) {
-        this.$context2d.moveTo(this.$parent._getPixel(x), this.$parent._getPixel(y));
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @return {void}
-     */
-    to(x, y) {
-        this.$context2d.lineTo(this.$parent._getPixel(x), this.$parent._getPixel(y));
-    }
-    /**
-     * @param {string} text
-     * @param {number} x
-     * @param {number} y
-     * @param {number} maxWidth?
-     * @return {void}
-     */
-    fillText(text, x, y, maxWidth) {
-        this.$context2d.fillText(text, this.$parent._getPixel(x), this.$parent._getPixel(y), maxWidth);
-    }
-    /**
-     * @param {string} text
-     * @param {number} x
-     * @param {number} y
-     * @param {number} maxWidth?
-     * @return {void}
-     */
-    strokeText(text, x, y, maxWidth) {
-        this.$context2d.strokeText(text, this.$parent._getPixel(x), this.$parent._getPixel(y), maxWidth);
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return {void}
-     */
-    fillRect(x, y, width, height) {
-        this.$context2d.fillRect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return {void}
-     */
-    strokeRect(x, y, width, height) {
-        this.$context2d.strokeRect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
-    }
-    /**
-     * @param {number} value?
-     * @return {any}
-     */
-    lineDashOffset(value) {
-        if (value === undefined) {
-            return this.$context2d.lineDashOffset;
-        }
-        this.$context2d.lineDashOffset = value;
-    }
-    lineDash(...segments) {
-        if (segments.length === 0) {
-            return this.$context2d.getLineDash();
-        }
-        if (Array.isArray(segments[0])) {
-            this.$context2d.setLineDash(segments[0]);
-        }
-        this.$context2d.setLineDash(segments);
-    }
-    /**
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     * @param {number} radius
-     * @return {void}
-     */
-    arcTo(x1, y1, x2, y2, radius) {
-        this.$context2d.arcTo(this.$parent._getPixel(x1), this.$parent._getPixel(y1), this.$parent._getPixel(x2), this.$parent._getPixel(y2), radius);
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @return {boolean}
-     */
-    isPoint(x, y) {
-        return this.$context2d.isPointInPath(x, y);
-    }
-    createImageData(width, height) {
-        return height
-            ? this.$parent.createImageData(width, height)
-            : this.$parent.createImageData(width);
-    }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return {ImageData}
-     */
-    getImageData(x, y, width, height) {
-        return this.$parent.getImageData(x, y, width, height);
-    }
-    /**
-     * @param {ImageData} imageData
-     * @param {number} x
-     * @param {number} y
-     * @param {number} xs?
-     * @param {number} ys?
-     * @param {number} width?
-     * @param {number} height?
-     * @return {void}
-     */
-    putImageData(imageData, x, y, xs, ys, width, height) {
-        if (arguments.length === 7) {
-            this.$parent.putImageData(imageData, x, y, xs, ys, width, height);
+        else if (x instanceof Array) {
+            a = x[0] || 0;
+            b = x[1] || 0;
+            c = x[2] || 0;
         }
         else {
-            this.$parent.putImageData(imageData, x, y);
+            a = x || 0;
+            b = y || 0;
+            c = z || 0;
+        }
+        return this.x === a && this.y === b && this.z === c;
+    }
+    /**
+     * @return {*}  {string}
+     * @memberof Vector
+     */
+    toString() {
+        return "Vector: [" + this.array().join(", ") + "]";
+    }
+}
+
+function getAnimate(type, currentProgress, start, distance, steps, power) {
+    switch (type) {
+        case "ease":
+            currentProgress /= steps / 2;
+            if (currentProgress < 1) {
+                return (distance / 2) * Math.pow(currentProgress, power) + start;
+            }
+            currentProgress -= 2;
+            return (distance / 2) * (Math.pow(currentProgress, power) + 2) + start;
+        case "quadratic":
+            currentProgress /= steps / 2;
+            if (currentProgress <= 1) {
+                return (distance / 2) * currentProgress * currentProgress + start;
+            }
+            currentProgress--;
+            return (-1 * (distance / 2) * (currentProgress * (currentProgress - 2) - 1) +
+                start);
+        case "sine-ease-in-out":
+            return ((-distance / 2) * (Math.cos((Math.PI * currentProgress) / steps) - 1) +
+                start);
+        case "quintic-ease":
+            currentProgress /= steps / 2;
+            if (currentProgress < 1) {
+                return (distance / 2) * Math.pow(currentProgress, 5) + start;
+            }
+            currentProgress -= 2;
+            return (distance / 2) * (Math.pow(currentProgress, 5) + 2) + start;
+        case "exp-ease-in-out":
+            currentProgress /= steps / 2;
+            if (currentProgress < 1)
+                return (distance / 2) * Math.pow(2, 10 * (currentProgress - 1)) + start;
+            currentProgress--;
+            return (distance / 2) * (-Math.pow(2, -10 * currentProgress) + 2) + start;
+        case "linear":
+            return start + (distance / steps) * currentProgress;
+    }
+}
+/**
+ * @param {AnimateType} type
+ * @param {number} start
+ * @param {number} stop
+ * @param {number} frame
+ * @param {number} frames
+ * @param {number=3} power
+ * @return {number}
+ */
+function getValueInFrame(type, start, stop, frame, frames, power = 3) {
+    const distance = stop - start;
+    return getAnimate(type, frame, start, distance, frames, power);
+}
+function timeToFrames(time, fps = 1000 / 60) {
+    return time / fps;
+}
+function toObject(obj) {
+    if (Array.isArray(obj)) {
+        let tmp = Object.create(null);
+        obj.forEach((value, index) => {
+            tmp[`${index}`] = value;
+        });
+        obj = tmp;
+    }
+    return obj;
+}
+function reactive(obj, $this) {
+    delete obj.__observe;
+    obj = toObject(obj);
+    const store = {};
+    for (const key in obj) {
+        store[key] = [obj[key], obj[key]];
+        Object.defineProperty(obj, key, {
+            get() {
+                return getValueInFrame($this.easing, store[key][0], store[key][1], $this.frame, $this.frames);
+            },
+            set(value) {
+                store[key][1] = value;
+            },
+        });
+    }
+    Object.defineProperty(obj, "__observe", {
+        writable: true,
+        enumerable: false,
+        configurable: true,
+        value: store,
+    });
+    return obj;
+}
+function splitNumberString(params) {
+    const indexString = params.findIndex((item) => typeof item === "string");
+    if (indexString > -1) {
+        return [params[indexString], +params[indexString === 0 ? 1 : 0]];
+    }
+    else {
+        return [params[1], +params[0]];
+    }
+}
+function converParams(...params) {
+    let data, time, easing;
+    if ("length" in params[0] ||
+        (params[0] !== null && typeof params[0] === "object")) {
+        /// install to params[0] | time = params[1] | easing = params[2]
+        data = params[0];
+        [easing, time] = splitNumberString(params.slice(1));
+    }
+    else {
+        /// install to params | time  = 0 | easing = linear
+        data = toObject(params);
+    }
+    return [data, time, easing];
+}
+class Animate {
+    constructor(...params) {
+        this.__data = {
+            __observe: {},
+        };
+        this.__fps = 1000 / 60;
+        this.__eventsStore = Object.create(null);
+        this.__queue = [];
+        this.time = 0;
+        this.easing = "ease";
+        this.__frame = 1;
+        const [data, time, easing] = converParams(...params);
+        this.data = data ?? this.data;
+        this.time = Number.isNaN(time) ? this.time : time ?? this.time;
+        this.easing = easing ?? this.easing;
+    }
+    // private get data(): StoreObserve {
+    //   return this.__data;
+    // }
+    set data(data) {
+        this.__data = reactive(data, this);
+        for (const key in this.__data) {
+            Object.defineProperty(this, key, {
+                get() {
+                    return this.__data[key];
+                },
+            });
         }
     }
     /**
-     * @param {CanvasImageSource} image
-     * @param {"repeat"|"repeat-x"|"repeat-y"|"no-repeat"} direction
-     * @return {CanvasPattern | null}
+     * @param {string} key
+     * @return {*}  {(number | void)}
+     * @memberof Animate
      */
-    createPattern(image, direction) {
-        return this.$parent.createPattern(image, direction);
+    get(key) {
+        return this.__data[key];
     }
-    /**
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} r1
-     * @param {number} x2
-     * @param {number} y2
-     * @param {number} r2
-     * @return {CanvasGradient}
-     */
-    createRadialGradient(x1, y1, r1, x2, y2, r2) {
-        return this.$parent.createRadialGradient(x1, y1, r1, x2, y2, r2);
+    get frames() {
+        return Math.max(timeToFrames(this.time, this.__fps), 1);
     }
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return {CanvasGradient}
-     */
-    createLinearGradient(x, y, width, height) {
-        return this.$parent.createLinearGradient(x, y, width, height);
+    get frame() {
+        return Math.min(this.__frame, this.frames);
     }
-    /**
-     * @param {"bevel"|"round"|"miter"} type?
-     * @return {any}
-     */
-    lineJoin(type) {
-        if (type !== undefined) {
-            this.$context2d.lineJoin = type;
+    set frame(value) {
+        this.__frame = Math.min(value, this.frames);
+        if (this.frame === this.frames) {
+            this.emit("done");
+            if (this.__queue.length > 0) {
+                this._to(...this.__queue[0]);
+                this.__queue.splice(0, 1);
+            }
+        }
+    }
+    on(name, callback) {
+        if (name in this.__eventsStore) {
+            this.__eventsStore[name].push(callback);
         }
         else {
-            return this.$context2d.lineJoin;
+            this.__eventsStore[name] = [callback];
         }
     }
-    /**
-     * @param {"butt"|"round"|"square"} value?
-     * @return {any}
-     */
-    lineCap(value) {
-        if (value !== undefined) {
-            this.$context2d.lineCap = value;
+    off(name, callback) {
+        if (callback) {
+            this.__eventsStore[name] = this.__eventsStore[name]?.filter((item) => item !== callback);
+            if (this.__eventsStore[name]?.length === 0) {
+                delete this.__eventsStore[name];
+            }
         }
         else {
-            return this.$context2d.lineCap;
+            delete this.__eventsStore[name];
         }
     }
-    /**
-     * @param {number} opacity?
-     * @return {any}
-     */
-    shadowBlur(opacity) {
-        if (opacity === undefined) {
-            return this.$context2d.shadowBlur;
-        }
-        this.$context2d.shadowBlur = opacity;
+    emit(name, ...params) {
+        this.__eventsStore[name]?.forEach((callback) => {
+            callback.call(this, ...params);
+        });
     }
-    /**
-     * @param {ParamsToRgb} ...args
-     * @return {void}
-     */
-    shadowColor(...args) {
-        this.$context2d.shadowColor = this.$parent._toRgb(args);
+    once(name, callback) {
+        const callbackVirual = (...params) => {
+            callback.call(this, ...params);
+            this.off(name, callbackVirual);
+        };
+        this.on(name, callbackVirual);
     }
-    drawFocusIfNeeded(path, element) {
-        if (element === undefined) {
-            this.$context2d.drawFocusIfNeeded(path);
+    setFPS(value) {
+        this.__fps = value;
+    }
+    action() {
+        this.frame++;
+    }
+    cancel(key) {
+        if (key) {
+            if (key in this.__data && key in this.__data.__observe) {
+                this.__data.__observe[key][0] = this.__data[key];
+                this.emit("cancel", key);
+            }
         }
         else {
-            this.$context2d.drawFocusIfNeeded(path, element);
+            for (const key in this.__data) {
+                this.cancel(key);
+            }
         }
     }
-    polyline(...points) {
-        if (points.length > 0) {
-            if (Array.isArray(points[0])) {
-                this.move(points[0][0], points[0][1]);
-                let index = 1;
-                const { length } = points;
-                while (index < length) {
-                    this.to(points[index][0], points[index][1]);
-                    index++;
-                }
+    _to(...params) {
+        const [data, time, easing] = converParams(...params);
+        for (const key in data) {
+            if (key in this.__data && key in this.__data.__observe) {
+                this.cancel(key);
+                this.__data.__observe[key][1] = +data[key];
+                // this.__data.__observe[key][1] = +data[key] as number;
             }
             else {
-                if (points.length > 1) {
-                    this.move(points[0], points[1]);
-                    let index = 2;
-                    const { length } = points;
-                    while (index < length - 1) {
-                        this.to(points[index], points[index + 1]);
-                        index += 2;
-                    }
-                }
+                console.error(`fCanvas<animate.ts>: "${key}" is not signed.`);
             }
         }
+        this.frame = 0;
+        this.time = Number.isNaN(time) ? this.time : time ?? this.time;
+        this.easing = easing ?? this.easing;
     }
-    polygon(...points) {
-        if (Array.isArray(points[0])) {
-            this.polyline(...points, points[0]);
-        }
-        else {
-            this.polyline(...points, points[0], points[1]);
-        }
+    to(...params) {
+        this._to(...params);
+        this.__queue.splice(0);
     }
-}
-class Point3D extends MyElement {
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {any}
-     */
-    constructor(x, y, z) {
-        super();
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
-        [this.x, this.y, this.z] = [x || 0, y || 0, z || 0];
+    get running() {
+        return this.frame < this.frames;
     }
-    /**
-     * @param {number} angle
-     * @return {void}
-     */
-    rotateX(angle) {
-        this.y =
-            this.y * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
-        this.z =
-            -this.y * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
+    add(...params) {
+        this.__queue.push(converParams(...params));
     }
-    /**
-     * @param {number} angle
-     * @return {void}
-     */
-    rotateY(angle) {
-        this.x =
-            this.x * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
-        this.z =
-            -this.x * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
-    }
-    /**
-     * @param {number} angle
-     * @return {void}
-     */
-    rotateZ(angle) {
-        this.x =
-            this.x * this.$parent.cos(angle) - this.y * this.$parent.sin(angle);
-        this.y =
-            this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
+    set(...params) {
+        this.data = converParams(...params)[0];
     }
 }
-class Point3DCenter extends MyElement {
-    /**
-     * @param {number} x?
-     * @param {number} y?
-     * @param {number} z?
-     * @return {any}
-     */
-    constructor(x, y, z) {
-        super();
-        this.__z = 0;
-        [this.__x, this.__y, this.__z] = [x, y, z || 0];
-    }
-    get scale() {
-        return Point3DCenter.persistent / (Point3DCenter.persistent + this.__z);
-    }
-    get x() {
-        return ((this.__x - this.$parent.width / 2) * this.scale + this.$parent.width / 2);
-    }
-    set x(value) {
-        this.__x = value;
-    }
-    get y() {
-        return ((this.__y - this.$parent.height / 2) * this.scale +
-            this.$parent.height / 2);
-    }
-    set y(value) {
-        this.__y = value;
-    }
-    get z() {
-        return this.__z;
-    }
-    set z(value) {
-        this.__z = value;
-    }
-    get(prop) {
-        if (typeof prop === "number") {
-            return this.scale * prop;
-        }
-        return this.scale * this[prop];
-    }
-}
-Point3DCenter.persistent = 1000;
-function createElement(callback) {
-    return new (class extends MyElement {
-        constructor() {
-            super(...arguments);
-            this.draw = callback;
-        }
-    })();
-}
-// class App extends Polyline3D {
-//   constructor(...points, x, y, z) {
-//     super(...points, x, y, z);
-//   }
-//   draw() {
-//     this.poly();
-//   }
-// }
 
 /**
  * @param {number} value
@@ -3608,7 +3604,6 @@ exports.Animate = Animate;
 exports.Camera = Camera;
 exports.Emitter = Emitter;
 exports.Resource = Resource;
-exports.Stament = Stament;
 exports.Store = Store;
 exports.Vector = Vector;
 exports.aspectRatio = aspectRatio;
