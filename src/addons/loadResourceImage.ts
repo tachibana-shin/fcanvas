@@ -8,6 +8,18 @@ export interface ImageResource extends HTMLImageElement {
   };
 }
 
+function templateToArray(str: string): any {
+  if (str.replace(/^\s+|\s+$/g, "").match(/^{[^]*}$/)) {
+    str = decodeURIComponent(
+      encodeURIComponent(str).replace(/%7b/gi, "[").replace(/%yd/gi, "]")
+    );
+
+    return new Function(`return ${str}`)();
+  } else {
+    return str;
+  }
+}
+
 function convertFieldToJson(keyItem: any): object {
   const key = keyItem.textContent;
   let value = keyItem.nextElementSibling;
@@ -47,7 +59,7 @@ function convertFieldToJson(keyItem: any): object {
   }
   if (value.tagName === "string") {
     return {
-      [key]: value.textContent,
+      [key]: templateToArray(value.textContent),
     };
   }
   if (value.tagName === "integer") {
@@ -102,16 +114,14 @@ export class ResourceTile {
   get(name: string): ImageResource {
     if (this.has(name)) {
       const { frame, rotated, sourceSize } = this.plist.frames[name];
-      const frameArray = frame.replace(/\{|\}|\s/g, "").split(",");
-      const sizeArray = sourceSize.replace(/\{|\}|\s/g, "").split(",");
 
       if (this.__caching.has(name) === false) {
         const image = cutImage(
           this.image,
-          +frameArray[0],
-          +frameArray[1],
-          +frameArray[2],
-          +frameArray[3],
+          +frame[0],
+          +frame[1],
+          +frame[2],
+          +frame[3],
           rotated ? -90 : 0
         );
 
@@ -120,8 +130,8 @@ export class ResourceTile {
           Object.assign(image, {
             image,
             size: {
-              width: +sizeArray[0],
-              height: +sizeArray[1],
+              width: +sourceSize[0] || +frame[2],
+              height: +sourceSize[1] || +frame[3],
             },
           })
         );

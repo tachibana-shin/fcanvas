@@ -13,9 +13,11 @@ export interface LikeMyElement extends MyElement {
 }
 
 export default abstract class MyElement {
+  private static _count: number = 0;
   public update?: noop;
-  public draw?: {
-    (...params: any[]): void;
+  public draw?: noop;
+  public setup?: {
+    (): object | void;
   };
   public get type(): "rect" | "circle" | "point" | "unknown" {
     if ("x" in this && "y" in this) {
@@ -32,15 +34,25 @@ export default abstract class MyElement {
 
     return "unknown";
   }
-  private _els: {
-    [propName: string]: fCanvas;
+  private readonly _id: number = MyElement._count++;
+  public get id(): number {
+    return this._id;
+  }
+  private readonly _els: {
+    [propName: string]: {
+      canvas: fCanvas;
+      setuped: boolean;
+    };
   } = Object.create(null);
   private _idActiveNow: number = -1;
-  private _queue: LikeMyElement[] = [];
+  private readonly _queue: LikeMyElement[] = [];
 
   private __addEl(canvas: fCanvas): void {
     if (canvas.id in this._els === false) {
-      this._els[canvas.id] = canvas;
+      this._els[canvas.id] = {
+        canvas,
+        setuped: false,
+      };
     }
   }
   /**
@@ -48,7 +60,7 @@ export default abstract class MyElement {
    * @return {any}
    */
   constructor(canvas?: fCanvas) {
-    if (canvas?.constructor !== fCanvas) {
+    if (!(canvas instanceof fCanvas)) {
       canvas = noopFCanvas;
     }
 
@@ -64,6 +76,21 @@ export default abstract class MyElement {
   _run(canvas: fCanvas): void {
     this.__addEl(canvas);
     this._idActiveNow = canvas.id;
+
+    if (
+      typeof this.setup === "function" &&
+      this._els[this._idActiveNow].setuped === false
+    ) {
+      const result = this.setup();
+
+      if (result !== null && typeof result === "object") {
+        for (const prop in result) {
+          (this as any)[prop] = (result as any)[prop];
+        }
+      }
+
+      this._els[this._idActiveNow].setuped = true;
+    }
 
     if (typeof this.update === "function") {
       if (typeof this.draw === "function") {
@@ -106,13 +133,13 @@ export default abstract class MyElement {
   get $parent(): fCanvas {
     const canvas = this._els[this._idActiveNow === -1 ? 0 : this._idActiveNow];
 
-    if (canvas?.constructor === fCanvas) {
-      return canvas;
+    if (canvas?.canvas instanceof fCanvas) {
+      return canvas.canvas;
     } else {
       console.warn(
         "fCanvas: The current referenced version of the fCanvas.run function is incorrect."
       );
-      return this._els[0];
+      return this._els[0].canvas;
     }
   }
 

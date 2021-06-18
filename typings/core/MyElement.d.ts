@@ -6,14 +6,18 @@ export interface LikeMyElement extends MyElement {
     [propName: string]: any;
 }
 export default abstract class MyElement {
+    private static _count;
     update?: noop;
-    draw?: {
-        (...params: any[]): void;
+    draw?: noop;
+    setup?: {
+        (): object | void;
     };
     get type(): "rect" | "circle" | "point" | "unknown";
-    private _els;
+    private readonly _id;
+    get id(): number;
+    private readonly _els;
     private _idActiveNow;
-    private _queue;
+    private readonly _queue;
     private __addEl;
     /**
      * @param {fCanvas} canvas?

@@ -17,11 +17,11 @@ export default class fCanvas {
     static Point3D: typeof Point3D;
     static Point3DCenter: typeof Point3DCenter;
     private static _count;
-    private _id;
+    private readonly _id;
     private _el;
     private _context2dCaching;
-    private _stamentReady;
-    private __store;
+    private readonly _stamentReady;
+    private readonly __store;
     constructor(width: number, height: number);
     constructor(element?: HTMLCanvasElement | string);
     constructor(element: HTMLCanvasElement | string, width?: number, height?: number);
@@ -43,11 +43,11 @@ export default class fCanvas {
     /**
      * @return {*}  {boolean}
      */
-    preventTouch(): boolean;
+    preventTouch(): void;
     /**
      * @return {*}  {boolean}
      */
-    stopTouch(): boolean;
+    stopTouch(): void;
     /**
      * @return {number | null}
      */
@@ -66,10 +66,6 @@ export default class fCanvas {
     get id(): number;
     private _createNewContext2d;
     /**
-     * @return {boolean}
-     */
-    acceptBlur(): boolean;
-    /**
      * @return {void}
      */
     blur(): void;
@@ -77,10 +73,6 @@ export default class fCanvas {
      * @return {void}
      */
     noBlur(): void;
-    /**
-     * @return {boolean}
-     */
-    acceptDesync(): boolean;
     /**
      * @return {void}
      */

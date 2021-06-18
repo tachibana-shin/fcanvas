@@ -7,13 +7,19 @@ import { loadAudio, loadImage } from "../functions/index";
 interface ResourceParam {
   src: string;
   lazy: boolean;
-  type: "image" | "audio" | "plist";
+  type: "image" | "audio" | "plist" | "json" | "txt" | "map";
 }
 interface ResourcesParams {
   [propName: string]: ResourceParam;
 }
 
-type ResourceType = ResourceTile | HTMLImageElement | HTMLAudioElement;
+type ResourceType =
+  | ResourceTile
+  | HTMLImageElement
+  | HTMLAudioElement
+  | any[]
+  | Object
+  | String;
 export default class Resource {
   private _resourcesLoaded: Map<string, ResourceType> = new Map();
   private _desResources: ResourcesParams = Object.create(null);
@@ -122,6 +128,32 @@ export default class Resource {
               this._resourcesLoaded.set(
                 name,
                 await loadResourceImage(this._desResources[name].src)
+              );
+              break;
+            case "json":
+              this._resourcesLoaded.set(
+                name,
+                await fetch(this._desResources[name].src).then((res) =>
+                  res.json()
+                )
+              );
+              break;
+            case "txt":
+              this._resourcesLoaded.set(
+                name,
+                await fetch(this._desResources[name].src).then((res) =>
+                  res.text()
+                )
+              );
+              break;
+            case "map":
+              this._resourcesLoaded.set(
+                name,
+                await fetch(this._desResources[name].src)
+                  .then((res) => res.text())
+                  .then((text) =>
+                    text.split("\n").map((item) => item.split(" "))
+                  )
               );
               break;
             default:

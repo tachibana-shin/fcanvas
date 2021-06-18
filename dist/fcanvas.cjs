@@ -165,10 +165,11 @@ class MyElement {
      * @return {any}
      */
     constructor(canvas) {
+        this._id = MyElement._count++;
         this._els = Object.create(null);
         this._idActiveNow = -1;
         this._queue = [];
-        if (canvas?.constructor !== fCanvas) {
+        if (!(canvas instanceof fCanvas)) {
             canvas = noopFCanvas;
         }
         this.__addEl(canvas);
@@ -185,9 +186,15 @@ class MyElement {
         }
         return "unknown";
     }
+    get id() {
+        return this._id;
+    }
     __addEl(canvas) {
         if (canvas.id in this._els === false) {
-            this._els[canvas.id] = canvas;
+            this._els[canvas.id] = {
+                canvas,
+                setuped: false,
+            };
         }
     }
     /**
@@ -199,6 +206,16 @@ class MyElement {
     _run(canvas) {
         this.__addEl(canvas);
         this._idActiveNow = canvas.id;
+        if (typeof this.setup === "function" &&
+            this._els[this._idActiveNow].setuped === false) {
+            const result = this.setup();
+            if (result !== null && typeof result === "object") {
+                for (const prop in result) {
+                    this[prop] = result[prop];
+                }
+            }
+            this._els[this._idActiveNow].setuped = true;
+        }
         if (typeof this.update === "function") {
             if (typeof this.draw === "function") {
                 this.draw();
@@ -237,12 +254,12 @@ class MyElement {
      */
     get $parent() {
         const canvas = this._els[this._idActiveNow === -1 ? 0 : this._idActiveNow];
-        if (canvas?.constructor === fCanvas) {
-            return canvas;
+        if (canvas?.canvas instanceof fCanvas) {
+            return canvas.canvas;
         }
         else {
             console.warn("fCanvas: The current referenced version of the fCanvas.run function is incorrect.");
-            return this._els[0];
+            return this._els[0].canvas;
         }
     }
     /**
@@ -840,6 +857,7 @@ class MyElement {
         }
     }
 }
+MyElement._count = 0;
 class Point3D extends MyElement {
     /**
      * @param {number} x?
@@ -1310,7 +1328,6 @@ class fCanvas {
      */
     constructor(element, width, height) {
         this._id = fCanvas._count++;
-        this._el = document.createElement("canvas");
         this._context2dCaching = null;
         this._stamentReady = new Stament();
         this.__store = {
@@ -1368,6 +1385,24 @@ class fCanvas {
          * @return {*}  {MyElement}
          */
         this.createElement = createElement;
+        if (arguments.length === 1 || arguments.length === 3) {
+            if (element instanceof HTMLCanvasElement) {
+                this._el = element;
+            }
+            else {
+                const el = document.querySelector(element);
+                if (el instanceof HTMLCanvasElement) {
+                    this._el = el;
+                }
+                else {
+                    console.warn(`fCanvas: "${element}" is not instanceof HTMLCanvasElement.`);
+                    this._el = document.createElement("canvas");
+                }
+            }
+        }
+        else {
+            this._el = document.createElement("canvas");
+        }
         switch (arguments.length) {
             case 1:
                 this.mount(element);
@@ -1431,21 +1466,13 @@ class fCanvas {
      * @return {*}  {boolean}
      */
     preventTouch() {
-        if (this.__store._preventTouch === false) {
-            this.__store._preventTouch = true;
-            return true;
-        }
-        return false;
+        this.__store._preventTouch = true;
     }
     /**
      * @return {*}  {boolean}
      */
     stopTouch() {
-        if (this.__store._preventTouch === false) {
-            this.__store._stopTouch = true;
-            return true;
-        }
-        return false;
+        this.__store._stopTouch = true;
     }
     /**
      * @return {number | null}
@@ -1475,12 +1502,6 @@ class fCanvas {
         this._context2dCaching = this.$el.getContext("2d", this.__store.__attributeContext);
     }
     /**
-     * @return {boolean}
-     */
-    acceptBlur() {
-        return this.__store.__attributeContext.alpha;
-    }
-    /**
      * @return {void}
      */
     blur() {
@@ -1493,12 +1514,6 @@ class fCanvas {
     noBlur() {
         this.__store.__attributeContext.alpha = false;
         this._createNewContext2d();
-    }
-    /**
-     * @return {boolean}
-     */
-    acceptDesync() {
-        return this.__store.__attributeContext.desynchronized;
     }
     /**
      * @return {void}
@@ -2224,7 +2239,7 @@ fCanvas.Element = MyElement;
 fCanvas.Point3D = Point3D;
 fCanvas.Point3DCenter = Point3DCenter;
 fCanvas._count = 0;
-const noopFCanvas = new fCanvas();
+const noopFCanvas = new fCanvas(0, 0);
 
 function calculateRemainder2D(xComponent, yComponent, vector) {
     if (xComponent !== 0) {
@@ -3192,6 +3207,15 @@ class Camera {
 }
 Camera.Cursor = Cursor;
 
+function templateToArray(str) {
+    if (str.replace(/^\s+|\s+$/g, "").match(/^{[^]*}$/)) {
+        str = decodeURIComponent(encodeURIComponent(str).replace(/%7b/gi, "[").replace(/%yd/gi, "]"));
+        return new Function(`return ${str}`)();
+    }
+    else {
+        return str;
+    }
+}
 function convertFieldToJson(keyItem) {
     const key = keyItem.textContent;
     let value = keyItem.nextElementSibling;
@@ -3225,7 +3249,7 @@ function convertFieldToJson(keyItem) {
     }
     if (value.tagName === "string") {
         return {
-            [key]: value.textContent,
+            [key]: templateToArray(value.textContent),
         };
     }
     if (value.tagName === "integer") {
@@ -3271,15 +3295,13 @@ class ResourceTile {
     get(name) {
         if (this.has(name)) {
             const { frame, rotated, sourceSize } = this.plist.frames[name];
-            const frameArray = frame.replace(/\{|\}|\s/g, "").split(",");
-            const sizeArray = sourceSize.replace(/\{|\}|\s/g, "").split(",");
             if (this.__caching.has(name) === false) {
-                const image = cutImage(this.image, +frameArray[0], +frameArray[1], +frameArray[2], +frameArray[3], rotated ? -90 : 0);
+                const image = cutImage(this.image, +frame[0], +frame[1], +frame[2], +frame[3], rotated ? -90 : 0);
                 this.__caching.set(name, Object.assign(image, {
                     image,
                     size: {
-                        width: +sizeArray[0],
-                        height: +sizeArray[1],
+                        width: +sourceSize[0] || +frame[2],
+                        height: +sourceSize[1] || +frame[3],
                     },
                 }));
             }
@@ -3410,6 +3432,17 @@ class Resource {
                             break;
                         case "plist":
                             this._resourcesLoaded.set(name, await loadResourceImage(this._desResources[name].src));
+                            break;
+                        case "json":
+                            this._resourcesLoaded.set(name, await fetch(this._desResources[name].src).then((res) => res.json()));
+                            break;
+                        case "txt":
+                            this._resourcesLoaded.set(name, await fetch(this._desResources[name].src).then((res) => res.text()));
+                            break;
+                        case "map":
+                            this._resourcesLoaded.set(name, await fetch(this._desResources[name].src)
+                                .then((res) => res.text())
+                                .then((text) => text.split("\n").map((item) => item.split(" "))));
                             break;
                         default:
                             console.warn(`fCanvas<Resource>: can't load "${name} because it is "${this._desResources[name].type}`);

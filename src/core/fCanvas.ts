@@ -57,12 +57,12 @@ export default class fCanvas {
   static Point3DCenter: typeof Point3DCenter = Point3DCenter;
   private static _count: number = 0;
 
-  private _id: number = fCanvas._count++;
-  private _el: HTMLCanvasElement = document.createElement("canvas");
+  private readonly _id: number = fCanvas._count++;
+  private _el: HTMLCanvasElement;
   private _context2dCaching: CanvasRenderingContext2D | null = null;
-  private _stamentReady: Stament = new Stament();
+  private readonly _stamentReady: Stament = new Stament();
 
-  private __store: {
+  private readonly __store: {
     __translate: HightTransform;
     __scale: HightTransform;
     __rotate: {
@@ -137,6 +137,25 @@ export default class fCanvas {
     width?: number,
     height?: number
   ) {
+    if (arguments.length === 1 || arguments.length === 3) {
+      if (element instanceof HTMLCanvasElement) {
+        this._el = element as HTMLCanvasElement;
+      } else {
+        const el = document.querySelector(element as string);
+
+        if (el instanceof HTMLCanvasElement) {
+          this._el = el;
+        } else {
+          console.warn(
+            `fCanvas: "${element}" is not instanceof HTMLCanvasElement.`
+          );
+          this._el = document.createElement("canvas");
+        }
+      }
+    } else {
+      this._el = document.createElement("canvas");
+    }
+
     switch (arguments.length) {
       case 1:
         this.mount(element as HTMLCanvasElement | string);
@@ -235,24 +254,14 @@ export default class fCanvas {
   /**
    * @return {*}  {boolean}
    */
-  public preventTouch(): boolean {
-    if (this.__store._preventTouch === false) {
-      this.__store._preventTouch = true;
-      return true;
-    }
-
-    return false;
+  public preventTouch(): void {
+    this.__store._preventTouch = true;
   }
   /**
    * @return {*}  {boolean}
    */
-  public stopTouch(): boolean {
-    if (this.__store._preventTouch === false) {
-      this.__store._stopTouch = true;
-      return true;
-    }
-
-    return false;
+  public stopTouch(): void {
+    this.__store._stopTouch = true;
   }
   /**
    * @return {number | null}
@@ -286,12 +295,6 @@ export default class fCanvas {
     ) as CanvasRenderingContext2D;
   }
   /**
-   * @return {boolean}
-   */
-  acceptBlur(): boolean {
-    return this.__store.__attributeContext.alpha;
-  }
-  /**
    * @return {void}
    */
   blur(): void {
@@ -304,12 +307,6 @@ export default class fCanvas {
   noBlur(): void {
     this.__store.__attributeContext.alpha = false;
     this._createNewContext2d();
-  }
-  /**
-   * @return {boolean}
-   */
-  acceptDesync(): boolean {
-    return this.__store.__attributeContext.desynchronized;
   }
   /**
    * @return {void}
@@ -1203,4 +1200,4 @@ export default class fCanvas {
     return bindEvent("click", callback, this.$el);
   }
 }
-export const noopFCanvas: fCanvas = new fCanvas();
+export const noopFCanvas: fCanvas = new fCanvas(0, 0);
