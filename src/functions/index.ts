@@ -291,3 +291,7 @@ export function cutImage(
 export function unlimited(value: number, min: number, max: number): boolean {
   return value < min || value > max;
 }
+
+function runScript(script: string): any {
+  return new Function(script)();
+}

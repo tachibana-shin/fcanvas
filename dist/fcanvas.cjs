@@ -331,6 +331,36 @@ class MyElement {
         return this.$parent.mouseY;
     }
     /**
+     * @return {numbe}
+     */
+    get movedX() {
+        return this.$parent.movedX;
+    }
+    /**
+     * @return {numbe}
+     */
+    get movedY() {
+        return this.$parent.movedY;
+    }
+    /**
+     * @return {numbe}
+     */
+    get pmouseX() {
+        return this.$parent.pmouseX;
+    }
+    /**
+     * @return {numbe}
+     */
+    get pmouseY() {
+        return this.$parent.pmouseY;
+    }
+    /**
+     * @return {boolean}
+     */
+    get mouseIsPressed() {
+        return this.$parent.mouseIsPressed;
+    }
+    /**
      * @return {number}
      */
     get windowWidth() {
@@ -1213,11 +1243,11 @@ async function setup(callback) {
     }
 }
 function __draw(callback, canvas) {
-    if (canvas.acceptClear === true) {
+    if (canvas.allowClear === true) {
         canvas.clear();
     }
     callback();
-    if (canvas.acceptLoop === true) {
+    if (canvas.allowLoop === true) {
         requestAnimationFrame(() => __draw(callback, canvas));
     }
 }
@@ -1330,7 +1360,7 @@ class fCanvas {
         this._id = fCanvas._count++;
         this._context2dCaching = null;
         this._stamentReady = new Stament();
-        this.__store = {
+        this.__store = Object.create({
             __translate: Object.create({
                 x: 0,
                 y: 0,
@@ -1361,22 +1391,38 @@ class fCanvas {
             _rectMode: "corner",
             _colorMode: "rgb",
             _useFloatPixel: true,
-        };
-        this.handlerEvent = (event) => {
+            _pmouseX: 0,
+            _pmouseY: 0,
+            _realMouseIsPressed: false,
+        });
+        this._handlerEvent = (event) => {
             try {
-                if (event.type !== "mouseout") {
-                    this.touches = getTouchInfo(this.$el, event.touches || [event]);
-                    this.changedTouches = getTouchInfo(this.$el, event.changedTouches || [event]);
+                this.__store._pmouseX = this.touches[0]?.x || 0;
+                this.__store._pmouseY = this.touches[0]?.y || 0;
+                this.touches =
+                    event.type !== "mouseout"
+                        ? getTouchInfo(this.$el, event.touches || [event])
+                        : [];
+                this.changedTouches = getTouchInfo(this.$el, event.changedTouches || [event]);
+                if (this.__store._preventTouch) {
+                    event.preventDefault();
                 }
-                else {
-                    this.touches = [];
+                if (this.__store._stopTouch) {
+                    event.stopPropagation();
                 }
-                this.__store._preventTouch && event.preventDefault();
-                this.__store._stopTouch && event.stopPropagation();
             }
-            catch (e) {
-                // throw e;
+            catch { }
+        };
+        this._handlerEventMousePress = (event) => {
+            if (event.type === "mousedown") {
+                this.__store._realMouseIsPressed = true;
+                return;
             }
+            if (event.type === "mouseup") {
+                this.__store._realMouseIsPressed = false;
+                return;
+            }
+            this.__store._realMouseIsPressed = event?.touches.length > 0;
         };
         this.touches = [];
         this.changedTouches = [];
@@ -1404,18 +1450,14 @@ class fCanvas {
             this._el = document.createElement("canvas");
         }
         switch (arguments.length) {
-            case 1:
-                this.mount(element);
-                break;
             case 2:
-                this.size(element, height);
+                this.size(element || 0, width || 0);
                 break;
             case 3:
-                this.mount(element);
-                this.size(width, height);
+                this.size(width || 0, height || 0);
                 break;
         }
-        this.restartEvents();
+        this._restartEvents(this._el);
     }
     /**
      * @return {HTMLCanvasElement}
@@ -1432,7 +1474,7 @@ class fCanvas {
         this.$el.width = width;
         this.$el.height = height;
     }
-    cancelEventsSystem() {
+    _cancelEventsSystem(el) {
         [
             "touchstart",
             "mouseover",
@@ -1441,26 +1483,37 @@ class fCanvas {
             "touchend",
             "mouseout",
         ].forEach((event) => {
-            this.$el.removeEventListener(event, this.handlerEvent);
+            el.removeEventListener(event, this._handlerEvent);
+        });
+        [
+            // for mouseIsPressed
+            "touchstart",
+            "mousedown",
+            "touchend",
+            "mouseup",
+        ].forEach((event) => {
+            el.removeEventListener(event, this._handlerEventMousePress);
         });
     }
-    restartEvents() {
-        this.cancelEventsSystem();
-        this.$el.addEventListener(isMobile() ? "touchstart" : "mouseover", this.handlerEvent, passive
+    _restartEvents(el) {
+        this._cancelEventsSystem(el);
+        el.addEventListener(isMobile() ? "touchstart" : "mouseover", this._handlerEvent, passive
             ? {
                 passive: true,
             }
             : undefined);
-        this.$el.addEventListener(isMobile() ? "touchmove" : "mousemove", this.handlerEvent, passive
+        el.addEventListener(isMobile() ? "touchmove" : "mousemove", this._handlerEvent, passive
             ? {
                 passive: true,
             }
             : undefined);
-        this.$el.addEventListener(isMobile() ? "touchend" : "mouseout", this.handlerEvent, passive
+        el.addEventListener(isMobile() ? "touchend" : "mouseout", this._handlerEvent, passive
             ? {
                 passive: true,
             }
             : undefined);
+        el.addEventListener(isMobile() ? "touchstart" : "mousedown", this._handlerEventMousePress);
+        el.addEventListener(isMobile() ? "touchend" : "mouseup", this._handlerEventMousePress);
     }
     /**
      * @return {*}  {boolean}
@@ -1487,10 +1540,34 @@ class fCanvas {
         return this.touches[0]?.y || null;
     }
     /**
+     * @return {numbe}
+     */
+    get movedX() {
+        return this.touches[this.touches.length - 1]?.x || 0;
+    }
+    /**
+     * @return {numbe}
+     */
+    get movedY() {
+        return this.touches[this.touches.length - 1]?.y || 0;
+    }
+    /**
+     * @return {numbe}
+     */
+    get pmouseX() {
+        return this.__store._pmouseX;
+    }
+    /**
+     * @return {numbe}
+     */
+    get pmouseY() {
+        return this.__store._pmouseY;
+    }
+    /**
      * @return {boolean}
      */
-    get interact() {
-        return this.touches.length > 0;
+    get mouseIsPressed() {
+        return this.__store._realMouseIsPressed;
     }
     /**
      * @return {number}
@@ -1581,9 +1658,10 @@ class fCanvas {
             }
         }
         if (this._el !== el) {
-            this.cancelEventsSystem();
+            this._cancelEventsSystem(this._el);
+            this._el = el;
+            this._restartEvents(el);
         }
-        this._el = el;
     }
     /**
      * @return {void}
@@ -1594,7 +1672,7 @@ class fCanvas {
     /**
      * @return {boolean}
      */
-    get acceptClear() {
+    get allowClear() {
         return this.__store._clear;
     }
     /**
@@ -2168,7 +2246,7 @@ class fCanvas {
     /**
      * @return {boolean}
      */
-    get acceptLoop() {
+    get allowLoop() {
         return this.__store._loop;
     }
     /**
@@ -3209,7 +3287,7 @@ Camera.Cursor = Cursor;
 
 function templateToArray(str) {
     if (str.replace(/^\s+|\s+$/g, "").match(/^{[^]*}$/)) {
-        str = decodeURIComponent(encodeURIComponent(str).replace(/%7b/gi, "[").replace(/%yd/gi, "]"));
+        str = decodeURIComponent(encodeURIComponent(str).replace(/%7b/gi, "[").replace(/%7d/gi, "]"));
         return new Function(`return ${str}`)();
     }
     else {
@@ -3296,12 +3374,12 @@ class ResourceTile {
         if (this.has(name)) {
             const { frame, rotated, sourceSize } = this.plist.frames[name];
             if (this.__caching.has(name) === false) {
-                const image = cutImage(this.image, +frame[0], +frame[1], +frame[2], +frame[3], rotated ? -90 : 0);
+                const image = cutImage(this.image, +frame[0][0], +frame[0][1], +frame[1][0], +frame[1][1], rotated ? -90 : 0);
                 this.__caching.set(name, Object.assign(image, {
                     image,
                     size: {
-                        width: +sourceSize[0] || +frame[2],
-                        height: +sourceSize[1] || +frame[3],
+                        width: +sourceSize[0] || +frame[1][0],
+                        height: +sourceSize[1] || +frame[1][1],
                     },
                 }));
             }
@@ -3468,15 +3546,22 @@ class Resource {
                 const resource = this._resourcesLoaded.get(resourceName);
                 if (resource) {
                     switch (info.type) {
-                        case "image":
-                        case "audio":
-                            return resource;
                         case "plist":
                             return resoucreProp
                                 ? resource.get(resoucreProp)
                                 : resource;
+                        case "json":
+                        case "map":
+                            let tmp = resource;
+                            _path.slice(1).forEach((prop) => {
+                                tmp = tmp?.[prop];
+                            });
+                            return tmp;
+                        case "image":
+                        case "audio":
+                        case "txt":
                         default:
-                            throw new Error(`fCanvas<Resource>: "can't get "${resourceName} because not support type "${info.type}".`);
+                            return resource;
                     }
                 }
                 throw new Error(`fCanvas<Resource>: "${resourceName} not exists.`);

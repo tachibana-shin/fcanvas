@@ -86,7 +86,12 @@ export default class fCanvas {
     _rectMode: RectMode;
     _colorMode: ColorType;
     _useFloatPixel: boolean;
-  } = {
+
+    _pmouseX: number;
+    _pmouseY: number;
+
+    _realMouseIsPressed: boolean;
+  } = Object.create({
     __translate: Object.create({
       x: 0,
       y: 0,
@@ -120,7 +125,12 @@ export default class fCanvas {
     _rectMode: "corner",
     _colorMode: "rgb",
     _useFloatPixel: true,
-  };
+
+    _pmouseX: 0,
+    _pmouseY: 0,
+
+    _realMouseIsPressed: false,
+  });
 
   constructor(width: number, height: number);
   constructor(element?: HTMLCanvasElement | string);
@@ -157,19 +167,15 @@ export default class fCanvas {
     }
 
     switch (arguments.length) {
-      case 1:
-        this.mount(element as HTMLCanvasElement | string);
-        break;
       case 2:
-        this.size(element as number, height as number);
+        this.size((element as number) || 0, width || 0);
         break;
       case 3:
-        this.mount(element as HTMLCanvasElement | string);
-        this.size(width as number, height as number);
+        this.size(width || 0, height || 0);
         break;
     }
 
-    this.restartEvents();
+    this._restartEvents(this._el);
   }
 
   /**
@@ -188,64 +194,100 @@ export default class fCanvas {
     this.$el.height = height;
   }
 
-  private handlerEvent = (event: any): void => {
+  private _handlerEvent = (event: any): void => {
     try {
-      if (event.type !== "mouseout") {
-        this.touches = getTouchInfo(this.$el, event.touches || [event]);
-        this.changedTouches = getTouchInfo(
-          this.$el,
-          event.changedTouches || [event]
-        );
-      } else {
-        this.touches = [];
+      this.__store._pmouseX = this.touches[0]?.x || 0;
+      this.__store._pmouseY = this.touches[0]?.y || 0;
+
+      this.touches =
+        event.type !== "mouseout"
+          ? getTouchInfo(this.$el, event.touches || [event])
+          : [];
+      this.changedTouches = getTouchInfo(
+        this.$el,
+        event.changedTouches || [event]
+      );
+      if (this.__store._preventTouch) {
+        event.preventDefault();
       }
-      this.__store._preventTouch && event.preventDefault();
-      this.__store._stopTouch && event.stopPropagation();
-    } catch (e) {
-      // throw e;
-    }
+      if (this.__store._stopTouch) {
+        event.stopPropagation();
+      }
+    } catch {}
   };
-  private cancelEventsSystem(): void {
+  private _handlerEventMousePress = (event: any): void => {
+    if (event.type === "mousedown") {
+      this.__store._realMouseIsPressed = true;
+      return;
+    }
+    if (event.type === "mouseup") {
+      this.__store._realMouseIsPressed = false;
+      return;
+    }
+
+    this.__store._realMouseIsPressed = event?.touches.length > 0;
+  };
+  private _cancelEventsSystem(el: Element): void {
     [
       "touchstart",
       "mouseover",
+
       "touchmove",
       "mousemove",
+
       "touchend",
       "mouseout",
     ].forEach((event: string): void => {
-      this.$el.removeEventListener(event, this.handlerEvent);
+      el.removeEventListener(event, this._handlerEvent);
+    });
+    [
+      // for mouseIsPressed
+      "touchstart",
+      "mousedown",
+      "touchend",
+      "mouseup",
+    ].forEach((event: string): void => {
+      el.removeEventListener(event, this._handlerEventMousePress);
     });
   }
-  private restartEvents(): void {
-    this.cancelEventsSystem();
+  private _restartEvents(el: Element): void {
+    this._cancelEventsSystem(el);
 
-    this.$el.addEventListener(
+    el.addEventListener(
       isMobile() ? "touchstart" : "mouseover",
-      this.handlerEvent,
+      this._handlerEvent,
       passive
         ? {
             passive: true,
           }
         : undefined
     );
-    this.$el.addEventListener(
+    el.addEventListener(
       isMobile() ? "touchmove" : "mousemove",
-      this.handlerEvent,
+      this._handlerEvent,
       passive
         ? {
             passive: true,
           }
         : undefined
     );
-    this.$el.addEventListener(
+    el.addEventListener(
       isMobile() ? "touchend" : "mouseout",
-      this.handlerEvent,
+      this._handlerEvent,
       passive
         ? {
             passive: true,
           }
         : undefined
+    );
+
+    el.addEventListener(
+      isMobile() ? "touchstart" : "mousedown",
+      this._handlerEventMousePress
+    );
+    el.addEventListener(
+      isMobile() ? "touchend" : "mouseup",
+      this._handlerEventMousePress
     );
   }
 
@@ -276,10 +318,34 @@ export default class fCanvas {
     return this.touches[0]?.y || null;
   }
   /**
+   * @return {numbe}
+   */
+  get movedX(): number {
+    return this.touches[this.touches.length - 1]?.x || 0;
+  }
+  /**
+   * @return {numbe}
+   */
+  get movedY(): number {
+    return this.touches[this.touches.length - 1]?.y || 0;
+  }
+  /**
+   * @return {numbe}
+   */
+  get pmouseX(): number {
+    return this.__store._pmouseX;
+  }
+  /**
+   * @return {numbe}
+   */
+  get pmouseY(): number {
+    return this.__store._pmouseY;
+  }
+  /**
    * @return {boolean}
    */
-  get interact(): boolean {
-    return this.touches.length > 0;
+  get mouseIsPressed(): boolean {
+    return this.__store._realMouseIsPressed;
   }
 
   /**
@@ -381,10 +447,10 @@ export default class fCanvas {
     }
 
     if (this._el !== el) {
-      this.cancelEventsSystem();
+      this._cancelEventsSystem(this._el);
+      this._el = el;
+      this._restartEvents(el);
     }
-
-    this._el = el;
   }
   /**
    * @return {void}
@@ -395,7 +461,7 @@ export default class fCanvas {
   /**
    * @return {boolean}
    */
-  get acceptClear(): boolean {
+  get allowClear(): boolean {
     return this.__store._clear;
   }
 
@@ -1133,7 +1199,7 @@ export default class fCanvas {
   /**
    * @return {boolean}
    */
-  get acceptLoop(): boolean {
+  get allowLoop(): boolean {
     return this.__store._loop;
   }
   /**

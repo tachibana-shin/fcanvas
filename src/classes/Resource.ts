@@ -187,17 +187,22 @@ export default class Resource {
 
         if (resource) {
           switch (info.type) {
-            case "image":
-            case "audio":
-              return resource;
             case "plist":
               return resoucreProp
                 ? (resource as ResourceTile).get(resoucreProp)
                 : resource;
+            case "json":
+            case "map":
+              let tmp = resource;
+              _path.slice(1).forEach((prop: string): void => {
+                tmp = (tmp as any)?.[prop];
+              });
+              return tmp;
+            case "image":
+            case "audio":
+            case "txt":
             default:
-              throw new Error(
-                `fCanvas<Resource>: "can't get "${resourceName} because not support type "${info.type}".`
-              );
+              return resource;
           }
         }
 

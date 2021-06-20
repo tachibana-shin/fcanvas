@@ -11,7 +11,7 @@ export interface ImageResource extends HTMLImageElement {
 function templateToArray(str: string): any {
   if (str.replace(/^\s+|\s+$/g, "").match(/^{[^]*}$/)) {
     str = decodeURIComponent(
-      encodeURIComponent(str).replace(/%7b/gi, "[").replace(/%yd/gi, "]")
+      encodeURIComponent(str).replace(/%7b/gi, "[").replace(/%7d/gi, "]")
     );
 
     return new Function(`return ${str}`)();
@@ -118,10 +118,10 @@ export class ResourceTile {
       if (this.__caching.has(name) === false) {
         const image = cutImage(
           this.image,
-          +frame[0],
-          +frame[1],
-          +frame[2],
-          +frame[3],
+          +frame[0][0],
+          +frame[0][1],
+          +frame[1][0],
+          +frame[1][1],
           rotated ? -90 : 0
         );
 
@@ -130,8 +130,8 @@ export class ResourceTile {
           Object.assign(image, {
             image,
             size: {
-              width: +sourceSize[0] || +frame[2],
-              height: +sourceSize[1] || +frame[3],
+              width: +sourceSize[0] || +frame[1][0],
+              height: +sourceSize[1] || +frame[1][1],
             },
           })
         );

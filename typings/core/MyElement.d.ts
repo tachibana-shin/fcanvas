@@ -92,6 +92,26 @@ export default abstract class MyElement {
      */
     get mouseY(): number | null;
     /**
+     * @return {numbe}
+     */
+    get movedX(): number;
+    /**
+     * @return {numbe}
+     */
+    get movedY(): number;
+    /**
+     * @return {numbe}
+     */
+    get pmouseX(): number;
+    /**
+     * @return {numbe}
+     */
+    get pmouseY(): number;
+    /**
+     * @return {boolean}
+     */
+    get mouseIsPressed(): boolean;
+    /**
      * @return {number}
      */
     get windowWidth(): number;
@@ -117,6 +137,7 @@ export default abstract class MyElement {
     fill(gradient: CanvasGradient): void;
     fill(image: CanvasImageSource): void;
     fill(color: number): void;
+    fill(): void;
     stroke(hue: number, saturation: number, lightness: number): void;
     stroke(hue: number, saturation: number, bright: number): void;
     stroke(red: number, green: number, blue: number): void;
@@ -128,6 +149,7 @@ export default abstract class MyElement {
     stroke(gradient: CanvasGradient): void;
     stroke(image: CanvasImageSource): void;
     stroke(color: number): void;
+    stroke(): void;
     /**
      * @return {void}
      */

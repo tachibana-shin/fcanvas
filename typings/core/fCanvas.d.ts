@@ -35,9 +35,10 @@ export default class fCanvas {
      * @memberof fCanvas
      */
     size(width: number, height: number): void;
-    private handlerEvent;
-    private cancelEventsSystem;
-    private restartEvents;
+    private _handlerEvent;
+    private _handlerEventMousePress;
+    private _cancelEventsSystem;
+    private _restartEvents;
     touches: InfoTouch[];
     changedTouches: InfoTouch[];
     /**
@@ -57,9 +58,25 @@ export default class fCanvas {
      */
     get mouseY(): number | null;
     /**
+     * @return {numbe}
+     */
+    get movedX(): number;
+    /**
+     * @return {numbe}
+     */
+    get movedY(): number;
+    /**
+     * @return {numbe}
+     */
+    get pmouseX(): number;
+    /**
+     * @return {numbe}
+     */
+    get pmouseY(): number;
+    /**
      * @return {boolean}
      */
-    get interact(): boolean;
+    get mouseIsPressed(): boolean;
     /**
      * @return {number}
      */
@@ -110,7 +127,7 @@ export default class fCanvas {
     /**
      * @return {boolean}
      */
-    get acceptClear(): boolean;
+    get allowClear(): boolean;
     /**
      * @param {LikeMyElement} element
      * @return {void}
@@ -347,7 +364,7 @@ export default class fCanvas {
     /**
      * @return {boolean}
      */
-    get acceptLoop(): boolean;
+    get allowLoop(): boolean;
     /**
      * @param {CallbackEvent} callback
      * @return {noop}

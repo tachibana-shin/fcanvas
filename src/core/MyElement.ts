@@ -199,6 +199,7 @@ export default abstract class MyElement {
   atan2(y: number, x: number): number {
     return this.$parent.atan2(y, x);
   }
+
   /**
    * @return {number | null}
    */
@@ -211,6 +212,37 @@ export default abstract class MyElement {
   get mouseY(): number | null {
     return this.$parent.mouseY;
   }
+  /**
+   * @return {numbe}
+   */
+  get movedX(): number {
+    return this.$parent.movedX;
+  }
+  /**
+   * @return {numbe}
+   */
+  get movedY(): number {
+    return this.$parent.movedY;
+  }
+  /**
+   * @return {numbe}
+   */
+  get pmouseX(): number {
+    return this.$parent.pmouseX;
+  }
+  /**
+   * @return {numbe}
+   */
+  get pmouseY(): number {
+    return this.$parent.pmouseY;
+  }
+  /**
+   * @return {boolean}
+   */
+  get mouseIsPressed(): boolean {
+    return this.$parent.mouseIsPressed;
+  }
+
   /**
    * @return {number}
    */
@@ -241,6 +273,7 @@ export default abstract class MyElement {
   fill(gradient: CanvasGradient): void;
   fill(image: CanvasImageSource): void;
   fill(color: number): void;
+  fill(): void
   fill(...args: any[]): void {
     this.$context2d.fillStyle = this.$parent._toRgb(args as ParamsToRgb);
     this.$context2d.fill();
@@ -261,6 +294,7 @@ export default abstract class MyElement {
   stroke(gradient: CanvasGradient): void;
   stroke(image: CanvasImageSource): void;
   stroke(color: number): void;
+  stroke(): void
   /**
    * @param  {number} red
    * @param  {number} green

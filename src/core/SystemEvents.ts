@@ -43,11 +43,11 @@ export async function setup(callback: {
 }
 
 function __draw(callback: { (): void }, canvas: fCanvas): void {
-  if (canvas.acceptClear === true) {
+  if (canvas.allowClear === true) {
     canvas.clear();
   }
   callback();
-  if (canvas.acceptLoop === true) {
+  if (canvas.allowLoop === true) {
     requestAnimationFrame(() => __draw(callback, canvas));
   }
 }
