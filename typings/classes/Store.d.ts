@@ -23,6 +23,6 @@ declare class Store {
      * @param {CallbackEvent} callback
      * @return {any}
      */
-    $watch(key: string, callback: CallbackEvent): () => void;
+    $watch(key: string, callback: CallbackEvent): import("../utils").noop;
 }
 export default Store;

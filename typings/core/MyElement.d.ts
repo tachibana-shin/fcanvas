@@ -2,9 +2,6 @@ import { noop, Offset } from "../utils/index";
 import fCanvas, { DirectionPattern } from "./fCanvas";
 declare type LineJoin = "bevel" | "round" | "miter";
 declare type LineCap = "butt" | "round" | "square";
-export interface LikeMyElement extends MyElement {
-    [propName: string]: any;
-}
 export default abstract class MyElement {
     private static _count;
     update?: noop;
@@ -24,21 +21,17 @@ export default abstract class MyElement {
      * @return {any}
      */
     constructor(canvas?: fCanvas);
-    /**
-     * @return {HTMLCanvasElement}
-     */
-    get $el(): HTMLCanvasElement;
     _run(canvas: fCanvas): void;
     /**
-     * @param {LikeMyElement} element
+     * @param {MyElement} element
      * @return {void}
      */
-    add(...elements: LikeMyElement[]): void;
+    add(...elements: MyElement[]): void;
     /**
-     * @param {LikeMyElement} element
+     * @param {MyElement} element
      * @return {void}
      */
-    run(element: LikeMyElement): void;
+    run(element: MyElement): void;
     /**
      * @return {fCanvas}
      */
@@ -119,72 +112,47 @@ export default abstract class MyElement {
      * @return {number}
      */
     get windowHeight(): number;
+    fill(hue: number, saturation: number, lightness: number, alpha?: number): this;
+    fill(red: number, green: number, blue: number, alpha?: number): this;
+    fill(color?: string | CanvasGradient | CanvasImageSource | number): this;
+    stroke(hue: number, saturation: number, lightness: number, alpha?: number): this;
+    stroke(red: number, green: number, blue: number, alpha?: number): this;
+    stroke(color?: string | CanvasGradient | CanvasImageSource | number): this;
     /**
-     * @param  {number} red
-     * @param  {number} green
-     * @param  {number} blue
-     * @param  {number} alpha
-     * @returns void
+     * @return {this}
      */
-    fill(hue: number, saturation: number, lightness: number): void;
-    fill(hue: number, saturation: number, bright: number): void;
-    fill(red: number, green: number, blue: number): void;
-    fill(hue: number, saturation: number, lightness: number, alpha: number): void;
-    fill(hue: number, saturation: number, bright: number, alpha: number): void;
-    fill(red: number, green: number, blue: number, alpha: number): void;
-    fill(color: string): void;
-    fill(colors: Array<number>): void;
-    fill(gradient: CanvasGradient): void;
-    fill(image: CanvasImageSource): void;
-    fill(color: number): void;
-    fill(): void;
-    stroke(hue: number, saturation: number, lightness: number): void;
-    stroke(hue: number, saturation: number, bright: number): void;
-    stroke(red: number, green: number, blue: number): void;
-    stroke(hue: number, saturation: number, lightness: number, alpha: number): void;
-    stroke(hue: number, saturation: number, bright: number, alpha: number): void;
-    stroke(red: number, green: number, blue: number, alpha: number): void;
-    stroke(color: string): void;
-    stroke(colors: Array<number>): void;
-    stroke(gradient: CanvasGradient): void;
-    stroke(image: CanvasImageSource): void;
-    stroke(color: number): void;
-    stroke(): void;
-    /**
-     * @return {void}
-     */
-    noFill(): void;
+    noFill(): this;
     lineWidth(): number;
-    lineWidth(width: number): void;
+    lineWidth(width: number): this;
     miterLimit(): number;
-    miterLimit(value: number): void;
+    miterLimit(value: number): this;
     shadowOffset(): Offset;
-    shadowOffset(x: number, y: number): void;
+    shadowOffset(x: number, y: number): this;
     /**
      * @param {string} text
      * @return {number}
      */
     measureText(text: string): number;
     /**
-     * @return {void}
+     * @return {this}
      */
-    begin(): void;
+    begin(): this;
     /**
-     * @return {void}
+     * @return {this}
      */
-    close(): void;
+    close(): this;
     /**
-     * @return {void}
+     * @return {this}
      */
-    save(): void;
+    save(): this;
     /**
-     * @return {void}
+     * @return {this}
      */
-    restore(): void;
+    restore(): this;
     rotate(): number;
-    rotate(angle: number): void;
+    rotate(angle: number): this;
     translate(): Offset;
-    translate(x: number, y: number): void;
+    translate(x: number, y: number): this;
     /**
      * @param  {number} x
      * @param  {number} y
@@ -192,9 +160,9 @@ export default abstract class MyElement {
      * @param  {number} astart
      * @param  {number} astop
      * @param  {boolean} reverse?
-     * @returns void
+     * @returns this
      */
-    arc(x: number, y: number, radius: number, astart: number, astop: number, reverse?: boolean): void;
+    arc(x: number, y: number, radius: number, astart: number, astop: number, reverse?: boolean): this;
     /**
      * @param  {number} x
      * @param  {number} y
@@ -202,16 +170,17 @@ export default abstract class MyElement {
      * @param  {number} astart
      * @param  {number} astop
      * @param  {boolean} reverse?
+     * @returns {this}
      */
-    pie(x: number, y: number, radius: number, astart: number, astop: number, reverse?: boolean): void;
+    pie(x: number, y: number, radius: number, astart: number, astop: number, reverse?: boolean): this;
     /**
      * @param  {number} x1
      * @param  {number} y1
      * @param  {number} x2
      * @param  {number} y2
-     * @returns void
+     * @returns {this}
      */
-    line(x1: number, y1: number, x2: number, y2: number): void;
+    line(x1: number, y1: number, x2: number, y2: number): this;
     /**
      * @param  {number} x
      * @param  {number} y
@@ -220,22 +189,22 @@ export default abstract class MyElement {
      * @param  {number} astart
      * @param  {number} astop
      * @param  {number} reverse
-     * @returns void
+     * @returns {this}
      */
-    ellipse(x: number, y: number, radius1: number, radius2: number, astart: number, astop: number, reverse: number): void;
+    ellipse(x: number, y: number, radius1: number, radius2: number, astart: number, astop: number, reverse: number): this;
     /**
      * @param  {number} x
      * @param  {number} y
      * @param  {number} radius
-     * @returns void
+     * @returns {this}
      */
-    circle(x: number, y: number, radius: number): void;
+    circle(x: number, y: number, radius: number): this;
     /**
      * @param  {number} x
      * @param  {number} y
-     * @returns void
+     * @returns {this}
      */
-    point(x: number, y: number): void;
+    point(x: number, y: number): this;
     /**
      * @param  {number} x1
      * @param  {number} y1
@@ -243,14 +212,14 @@ export default abstract class MyElement {
      * @param  {number} y2
      * @param  {number} x3
      * @param  {number} y3
-     * @returns void
+     * @returns {this}
      */
-    triange(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number): void;
-    drawImage(image: CanvasImageSource, x: number, y: number): void;
-    drawImage(image: CanvasImageSource, x: number, y: number, width: number, height: number): void;
-    drawImage(image: CanvasImageSource, sx: number, sy: number, swidth: number, sheight: number, x: number, y: number, width: number, height: number): void;
-    rRect(x: number, y: number, width: number, height: number, radius: string | number): void;
-    rRect(x: number, y: number, width: number, height: number, radiusLeft: string | number, radiusRight: string | number): void;
+    triange(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number): this;
+    drawImage(image: CanvasImageSource, x: number, y: number): this;
+    drawImage(image: CanvasImageSource, x: number, y: number, width: number, height: number): this;
+    drawImage(image: CanvasImageSource, sx: number, sy: number, swidth: number, sheight: number, x: number, y: number, width: number, height: number): this;
+    rRect(x: number, y: number, width: number, height: number, radius: string | number): this;
+    rRect(x: number, y: number, width: number, height: number, radiusLeft: string | number, radiusRight: string | number): this;
     /**
      * @param  {number} x
      * @param  {number} y
@@ -260,24 +229,26 @@ export default abstract class MyElement {
      * @param  {string|number} radiusTopRight
      * @param  {string|number} radiusBottomRight
      * @param  {string|number} radiusBottomLeft
-     * @returns void
+     * @returns {this}
      */
-    rRect(x: number, y: number, width: number, height: number, radiusTopLeft: string | number, radiusTopRight: string | number, radiusBottomRight: string | number, radiusBottomLeft: string | number): void;
+    rRect(x: number, y: number, width: number, height: number, radiusTopLeft: string | number, radiusTopRight: string | number, radiusBottomRight: string | number, radiusBottomLeft: string | number): this;
     /**
      * @param {number} x
      * @param {number} y
      * @param {number} width
      * @param {number} height
      * @memberof MyElement
+     * @returns {this}
      */
-    rect(x: number, y: number, width: number, height: number): void;
+    rect(x: number, y: number, width: number, height: number): this;
     /**
      * @param  {number} cpx
      * @param  {number} cpy
      * @param  {number} x
      * @param  {number} y
+     * @return {this}
      */
-    quadratic(cpx: number, cpy: number, x: number, y: number): void;
+    quadratic(cpx: number, cpy: number, x: number, y: number): this;
     /**
      * @param {number} cp1x
      * @param {number} cp1y
@@ -285,67 +256,67 @@ export default abstract class MyElement {
      * @param {number} cp2y
      * @param {number} x
      * @param {number} y
-     * @return {void}
+     * @return {this}
      */
-    bezier(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): void;
+    bezier(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): this;
     /**
      * @param {number} x
      * @param {number} y
-     * @return {void}
+     * @return {this}
      */
-    move(x: number, y: number): void;
+    move(x: number, y: number): this;
     /**
      * @param {number} x
      * @param {number} y
-     * @return {void}
+     * @return {this}
      */
-    to(x: number, y: number): void;
-    /**
-     * @param {string} text
-     * @param {number} x
-     * @param {number} y
-     * @param {number} maxWidth?
-     * @return {void}
-     */
-    fillText(text: string, x: number, y: number, maxWidth?: number): void;
+    to(x: number, y: number): this;
     /**
      * @param {string} text
      * @param {number} x
      * @param {number} y
      * @param {number} maxWidth?
-     * @return {void}
+     * @return {this}
      */
-    strokeText(text: string, x: number, y: number, maxWidth?: number): void;
+    fillText(text: string, x: number, y: number, maxWidth?: number): this;
+    /**
+     * @param {string} text
+     * @param {number} x
+     * @param {number} y
+     * @param {number} maxWidth?
+     * @return {this}
+     */
+    strokeText(text: string, x: number, y: number, maxWidth?: number): this;
     /**
      * @param {number} x
      * @param {number} y
      * @param {number} width
      * @param {number} height
-     * @return {void}
+     * @return {this}
      */
-    fillRect(x: number, y: number, width: number, height: number): void;
+    fillRect(x: number, y: number, width: number, height: number): this;
     /**
      * @param {number} x
      * @param {number} y
      * @param {number} width
      * @param {number} height
-     * @return {void}
+     * @return {this}
      */
-    strokeRect(x: number, y: number, width: number, height: number): void;
+    strokeRect(x: number, y: number, width: number, height: number): this;
     lineDashOffset(): number;
-    lineDashOffset(value: number): void;
+    lineDashOffset(value: number): this;
     lineDash(): number[];
-    lineDash(segments: number[]): void;
-    lineDash(...segments: number[]): void;
+    lineDash(segments: number[]): this;
+    lineDash(...segments: number[]): this;
     /**
      * @param {number} x1
      * @param {number} y1
      * @param {number} x2
      * @param {number} y2
      * @param {number} radius
-     * @return {void}
+     * @return {this}
      */
-    arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void;
+    arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): this;
     /**
      * @param {number} x
      * @param {number} y
@@ -367,8 +338,8 @@ export default abstract class MyElement {
      * @return {ImageData}
      */
     getImageData(x: number, y: number, width: number, height: number): ImageData;
-    putImageData(imageData: ImageData, x: number, y: number): void;
-    putImageData(imageData: ImageData, x: number, y: number, xs: number, ys: number, width: number, height: number): void;
+    putImageData(imageData: ImageData, x: number, y: number): this;
+    putImageData(imageData: ImageData, x: number, y: number, xs: number, ys: number, width: number, height: number): this;
     /**
      * @param {CanvasImageSource} image
      * @param {"repeat"|"repeat-x"|"repeat-y"|"no-repeat"} direction
@@ -394,28 +365,20 @@ export default abstract class MyElement {
      */
     createLinearGradient(x: number, y: number, width: number, height: number): CanvasGradient;
     lineJoin(): LineJoin;
-    lineJoin(type: LineJoin): void;
+    lineJoin(type: LineJoin): this;
     lineCap(): LineCap;
-    lineCap(value: LineCap): void;
+    lineCap(value: LineCap): this;
     shadowBlur(): number;
-    shadowBlur(opacity: number): void;
-    shadowColor(hue: number, saturation: number, lightness: number): void;
-    shadowColor(hue: number, saturation: number, bright: number): void;
-    shadowColor(red: number, green: number, blue: number): void;
-    shadowColor(hue: number, saturation: number, lightness: number, alpha: number): void;
-    shadowColor(hue: number, saturation: number, bright: number, alpha: number): void;
-    shadowColor(red: number, green: number, blue: number, alpha: number): void;
-    shadowColor(color: string): void;
-    shadowColor(colors: Array<number>): void;
-    shadowColor(gradient: CanvasGradient): void;
-    shadowColor(image: CanvasImageSource): void;
-    shadowColor(color: number): void;
-    drawFocusIfNeeded(element: Element): void;
-    drawFocusIfNeeded(path: Path2D, element: Element): void;
-    polyline(...points: number[]): void;
-    polyline(...points: [number, number][]): void;
-    polygon(...points: number[]): void;
-    polygon(...points: [number, number][]): void;
+    shadowBlur(opacity: number): this;
+    shadowColor(hue: number, saturation: number, lightness: number, alpha?: number): this;
+    shadowColor(red: number, green: number, blue: number, alpha?: number): this;
+    shadowColor(color?: string | CanvasGradient | CanvasImageSource | number): this;
+    drawFocusIfNeeded(element: Element): this;
+    drawFocusIfNeeded(path: Path2D, element: Element): this;
+    polyline(...points: number[]): this;
+    polyline(...points: [number, number][]): this;
+    polygon(...points: number[]): this;
+    polygon(...points: [number, number][]): this;
 }
 export declare class Point3D extends MyElement {
     x: number;
@@ -466,5 +429,7 @@ export declare class Point3DCenter extends MyElement {
     get(value: number): number;
     get(prop: string): number;
 }
-export declare function createElement(callback: noop): MyElement;
+export declare function createElement(callback: {
+    (canvas: MyElement): void;
+}): MyElement;
 export {};

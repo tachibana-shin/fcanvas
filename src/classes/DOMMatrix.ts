@@ -1,5 +1,5 @@
 const DOMatrix =
-  window.DOMMatrix ||
+window.DOMMatrix ||
   class {
     a: number = 1;
     b: number = 0;

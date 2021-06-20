@@ -8,6 +8,17 @@ export interface noop {
   (): void;
 }
 
+export interface Offset {
+  x: number;
+  y: number;
+}
+
+export interface InfoTouch extends Offset {
+  winX: number;
+  winY: number;
+  id: any;
+}
+
 export const requestAnimationFrame:
   | typeof globalThis.requestAnimationFrame
   | typeof globalThis.setTimeout =
@@ -76,10 +87,6 @@ function trim(string: string | null): string {
   }
 }
 
-/**
- * @param {string} font
- * @return {InfoFont}
- */
 export function fontToArray(font: string): InfoFont {
   const _font = font.split(" ");
   if (_font.length === 2) {
@@ -97,14 +104,8 @@ export function fontToArray(font: string): InfoFont {
   };
 }
 
-/**
- * @param {string|number} string
- * @param {number} fi
- * @param {number} fontSize?
- * @return {number}
- */
 export function AutoToPx(
-  string: string | number | undefined,
+  string: string | number,
   fi: number,
   fontSize?: number
 ): number {
@@ -145,29 +146,13 @@ export function AutoToPx(
       case "%":
         return (fi / 100) * number;
       default:
-        return +number;
+        return number;
     }
   } else {
-    return parseFloat(string + "");
+    return string
   }
 }
 
-export interface Offset {
-  x: number;
-  y: number;
-}
-
-export interface InfoTouch extends Offset {
-  winX: number;
-  winY: number;
-  id: any;
-}
-
-/**
- * @param {HTMLCanvasElement} element
- * @param {any[]} touches
- * @return {InfoTouch[]}
- */
 export function getTouchInfo(
   element: HTMLCanvasElement,
   touches: any[]
@@ -211,10 +196,6 @@ export function isMobile(): boolean {
   );
 }
 
-/**
- * @param {number|string|boolean} value
- * @return {number}
- */
 export function extractNumber(value: any): number {
   if (typeof value === "number") {
     return value;
@@ -227,7 +208,7 @@ export function bindEvent(
   name: string,
   callback: any,
   element: Element | Window | typeof globalThis
-): { (): void } {
+): noop {
   element.addEventListener(name, callback);
   return () => {
     element.removeEventListener(name, callback);

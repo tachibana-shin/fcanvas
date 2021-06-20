@@ -1,18 +1,17 @@
 {
   "name": "fcanvas",
-  "version": "0.0.5-b45",
+  "version": "0.0.5-b46",
   "main": "dist/fcanvas.js",
   "exports": {
     ".": {
       "module": "./dist/fcanvas.esm.js",
       "require": "./dist/fcanvas.js",
-      "import": "./dist/fcanvas.cjs"
+      "import": "./dist/fcanvas.esm.js"
     },
     "./": "./"
   },
-  "module": "dist/fcanvas.esm.js",
+  "module": "dist/fcanvas.es5.esm.js",
   "unpkg": "dist/fcanvas.esm.js",
-  "types": "typings/index.d.ts",
   "typings": "typings/index.d.ts",
   "files": [
     "dist",
@@ -26,17 +25,16 @@
     "@babel/plugin-transform-runtime": "^7.13.15",
     "@babel/preset-env": "^7.0.0-rc.1",
     "@babel/register": "^7.0.0-rc.1",
+    "@rollup/plugin-babel": "^5.3.0",
     "babel-loader": "^8.2.2",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "babel-preset-env": "^1.7.0",
     "eslint": "^7.27.0",
     "rollup": "^2.45.2",
-    "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript": "^1.0.1",
     "rollup-plugin-typescript2": "^0.30.0",
     "typescript": "4.2.4"
   },

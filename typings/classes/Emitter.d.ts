@@ -1,3 +1,4 @@
+import { noop } from "../utils/index";
 export interface CallbackEvent {
     (...args: any[]): void;
 }
@@ -7,11 +8,7 @@ export default class Emitter {
      * @param {any} typeofcallback==="function"
      * @return {any}
      */
-    on(name: string, callback: {
-        (): void;
-    }): {
-        (): void;
-    };
+    on(name: string, callback: noop): noop;
     /**
      * @param {string} name
      * @param {CallbackEvent} callback?

@@ -1,9 +1,4 @@
-import MyElement, {
-  Point3D,
-  LikeMyElement,
-  Point3DCenter,
-  createElement,
-} from "./MyElement";
+import MyElement, { Point3D, Point3DCenter, createElement } from "./MyElement";
 import {
   AutoToPx,
   fontToArray,
@@ -59,10 +54,11 @@ export default class fCanvas {
 
   private readonly _id: number = fCanvas._count++;
   private _el: HTMLCanvasElement;
-  private _context2dCaching: CanvasRenderingContext2D | null = null;
   private readonly _stamentReady: Stament = new Stament();
 
   private readonly __store: {
+    _context2dCaching: CanvasRenderingContext2D | null;
+
     __translate: HightTransform;
     __scale: HightTransform;
     __rotate: {
@@ -92,6 +88,8 @@ export default class fCanvas {
 
     _realMouseIsPressed: boolean;
   } = Object.create({
+    _context2dCaching: null,
+
     __translate: Object.create({
       x: 0,
       y: 0,
@@ -355,7 +353,7 @@ export default class fCanvas {
     return this._id;
   }
   private _createNewContext2d(): void {
-    this._context2dCaching = this.$el.getContext(
+    this.__store._context2dCaching = this.$el.getContext(
       "2d",
       this.__store.__attributeContext
     ) as CanvasRenderingContext2D;
@@ -408,11 +406,11 @@ export default class fCanvas {
    * @return {CanvasRenderingContext2D}
    */
   get $context2d(): CanvasRenderingContext2D {
-    if (this._context2dCaching === null) {
+    if (this.__store._context2dCaching === null) {
       this._createNewContext2d();
     }
 
-    return this._context2dCaching as CanvasRenderingContext2D;
+    return this.__store._context2dCaching as CanvasRenderingContext2D;
   }
 
   /**
@@ -466,10 +464,10 @@ export default class fCanvas {
   }
 
   /**
-   * @param {LikeMyElement} element
+   * @param {MyElement} element
    * @return {void}
    */
-  run(...elements: LikeMyElement[]): void {
+  run(...elements: MyElement[]): void {
     let index = 0;
     const { length } = elements;
 
@@ -627,7 +625,7 @@ export default class fCanvas {
     if (value === undefined) {
       return size;
     } else {
-      value = AutoToPx(value, size, size);
+      value = AutoToPx(value, size, size) || 16;
       this.font([weight, `${value}px`, family].join(" "));
     }
   }
@@ -1202,68 +1200,80 @@ export default class fCanvas {
   get allowLoop(): boolean {
     return this.__store._loop;
   }
+  on(name: string, callback: CallbackEvent): noop {
+    return bindEvent(name, callback, this.$el);
+  }
+  off(resultEvent: noop): void;
+  off(name: string, callback: CallbackEvent): void;
+  off(name: string | noop, callback?: CallbackEvent): void {
+    if (typeof name === "function") {
+      name();
+    } else {
+      this.$el.removeEventListener(name, callback as CallbackEvent);
+    }
+  }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   mouseIn(callback: CallbackEvent): noop {
-    return bindEvent("mouseover", callback, this.$el);
+    return this.on("mouseover", callback);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   mouseOut(callback: CallbackEvent): noop {
-    return bindEvent("mouseout", callback, this.$el);
+    return this.on("mouseout", callback);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   touchStart(callback: CallbackEvent): noop {
-    return bindEvent("touchstart", callback, this.$el);
+    return this.on("touchstart", callback);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   touchMove(callback: CallbackEvent): noop {
-    return bindEvent("touchmove", callback, this.$el);
+    return this.on("touchmove", callback);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   touchEnd(callback: CallbackEvent): noop {
-    return bindEvent("touchend", callback, this.$el);
+    return this.on("touchend", callback);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   mouseMove(callback: CallbackEvent): noop {
-    return bindEvent("mousemove", callback, this.$el);
+    return this.on("mousemove", callback);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   mouseUp(callback: CallbackEvent): noop {
-    return bindEvent("mouseup", callback, this.$el);
+    return this.on("mouseup", callback);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   mouseDown(callback: CallbackEvent): noop {
-    return bindEvent("mousedown", callback, this.$el);
+    return this.on("mousedown", callback);
   }
   /**
    * @param {CallbackEvent} callback
    * @return {noop}
    */
   mouseClicked(callback: CallbackEvent): noop {
-    return bindEvent("click", callback, this.$el);
+    return this.on("click", callback);
   }
 }
 export const noopFCanvas: fCanvas = new fCanvas(0, 0);

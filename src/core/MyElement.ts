@@ -8,10 +8,6 @@ type ParamsDrawImage =
 type LineJoin = "bevel" | "round" | "miter";
 type LineCap = "butt" | "round" | "square";
 
-export interface LikeMyElement extends MyElement {
-  [propName: string]: any;
-}
-
 export default abstract class MyElement {
   private static _count: number = 0;
   public update?: noop;
@@ -45,7 +41,7 @@ export default abstract class MyElement {
     };
   } = Object.create(null);
   private _idActiveNow: number = -1;
-  private readonly _queue: LikeMyElement[] = [];
+  private readonly _queue: MyElement[] = [];
 
   private __addEl(canvas: fCanvas): void {
     if (canvas.id in this._els === false) {
@@ -67,12 +63,6 @@ export default abstract class MyElement {
     this.__addEl(canvas);
   }
 
-  /**
-   * @return {HTMLCanvasElement}
-   */
-  get $el(): HTMLCanvasElement {
-    return this.$parent.$el;
-  }
   _run(canvas: fCanvas): void {
     this.__addEl(canvas);
     this._idActiveNow = canvas.id;
@@ -114,17 +104,17 @@ export default abstract class MyElement {
     this._idActiveNow = -1;
   }
   /**
-   * @param {LikeMyElement} element
+   * @param {MyElement} element
    * @return {void}
    */
-  add(...elements: LikeMyElement[]): void {
+  add(...elements: MyElement[]): void {
     this._queue.push(...elements);
   }
   /**
-   * @param {LikeMyElement} element
+   * @param {MyElement} element
    * @return {void}
    */
-  run(element: LikeMyElement): void {
+  run(element: MyElement): void {
     this.$parent.run(element);
   }
   /**
@@ -255,112 +245,105 @@ export default abstract class MyElement {
   get windowHeight(): number {
     return this.$parent.windowHeight;
   }
+  fill(
+    hue: number,
+    saturation: number,
+    lightness: number,
+    alpha?: number
+  ): this;
+  fill(red: number, green: number, blue: number, alpha?: number): this;
+  fill(color?: string | CanvasGradient | CanvasImageSource | number): this;
   /**
-   * @param  {number} red
-   * @param  {number} green
-   * @param  {number} blue
-   * @param  {number} alpha
-   * @returns void
+   * @param  {number} red?
+   * @param  {number} green?
+   * @param  {number} blue?
+   * @param  {number} alpha=1
+   * @returns {this}
    */
-  fill(hue: number, saturation: number, lightness: number): void;
-  fill(hue: number, saturation: number, bright: number): void;
-  fill(red: number, green: number, blue: number): void;
-  fill(hue: number, saturation: number, lightness: number, alpha: number): void;
-  fill(hue: number, saturation: number, bright: number, alpha: number): void;
-  fill(red: number, green: number, blue: number, alpha: number): void;
-  fill(color: string): void;
-  fill(colors: Array<number>): void;
-  fill(gradient: CanvasGradient): void;
-  fill(image: CanvasImageSource): void;
-  fill(color: number): void;
-  fill(): void
-  fill(...args: any[]): void {
+  fill(...args: ParamsToRgb): this {
     this.$context2d.fillStyle = this.$parent._toRgb(args as ParamsToRgb);
     this.$context2d.fill();
+
+    return this;
   }
-  stroke(hue: number, saturation: number, lightness: number): void;
-  stroke(hue: number, saturation: number, bright: number): void;
-  stroke(red: number, green: number, blue: number): void;
   stroke(
     hue: number,
     saturation: number,
     lightness: number,
-    alpha: number
-  ): void;
-  stroke(hue: number, saturation: number, bright: number, alpha: number): void;
-  stroke(red: number, green: number, blue: number, alpha: number): void;
-  stroke(color: string): void;
-  stroke(colors: Array<number>): void;
-  stroke(gradient: CanvasGradient): void;
-  stroke(image: CanvasImageSource): void;
-  stroke(color: number): void;
-  stroke(): void
+    alpha?: number
+  ): this;
+  stroke(red: number, green: number, blue: number, alpha?: number): this;
+  stroke(color?: string | CanvasGradient | CanvasImageSource | number): this;
   /**
-   * @param  {number} red
-   * @param  {number} green
-   * @param  {number} blue
-   * @param  {number} alpha
-   * @returns void
+   * @param  {number} red?
+   * @param  {number} green?
+   * @param  {number} blue?
+   * @param  {number} alpha=1
+   * @returns {this}
    */
-  stroke(...args: any[]): void {
+  stroke(...args: any[]): this {
     this.$context2d.strokeStyle = this.$parent._toRgb(args as ParamsToRgb);
     this.$context2d.stroke();
+
+    return this;
   }
   /**
-   * @return {void}
+   * @return {this}
    */
-  noFill(): void {
-    this.fill(0, 0, 0, 0);
+  noFill(): this {
+    return this.fill(0, 0, 0, 0);
   }
   lineWidth(): number;
-  lineWidth(width: number): void;
+  lineWidth(width: number): this;
   /**
    * @param {number} value?
-   * @return {number|void}
+   * @return {number|this}
    */
-  lineWidth(value?: number): number | void {
+  lineWidth(value?: number): number | this {
     if (value === undefined) {
       return this.$context2d.lineWidth;
-    } else {
-      this.$context2d.lineWidth = this.$parent._getPixel(value);
     }
+    this.$context2d.lineWidth = this.$parent._getPixel(value);
+
+    return this;
   }
   miterLimit(): number;
-  miterLimit(value: number): void;
+  miterLimit(value: number): this;
   /**
    * @param {number} value?
-   * @return {number|void}
+   * @return {number|this}
    */
-  miterLimit(value?: number): number | void {
+  miterLimit(value?: number): number | this {
     if (value === undefined) {
       return this.$context2d.miterLimit;
-    } else {
-      if (this.lineJoin() !== "miter") {
-        this.lineJoin("miter");
-      }
-
-      this.$context2d.miterLimit = value;
     }
+    this.lineJoin("miter");
+
+    this.$context2d.miterLimit = value;
+
+    return this;
   }
   shadowOffset(): Offset;
-  shadowOffset(x: number, y: number): void;
+  shadowOffset(x: number, y: number): this;
   /**
    * @param {number} x?
    * @param {number} y?
-   * @return {void|{ x: number, y: number }}
+   * @return {this|Offset}
    */
-  shadowOffset(x?: number, y?: number): Offset | void {
+  shadowOffset(x?: number, y?: number): Offset | this {
     if (arguments.length === 0) {
       return {
         x: this.$context2d.shadowOffsetX,
         y: this.$context2d.shadowOffsetY,
       };
-    } else {
-      [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [
-        this.$parent._getPixel(x || 0),
-        this.$parent._getPixel(y || 0),
-      ];
     }
+
+    [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [
+      this.$parent._getPixel(x || 0),
+      this.$parent._getPixel(y || 0),
+    ];
+
+    return this;
   }
   /**
    * @param {string} text
@@ -370,54 +353,66 @@ export default abstract class MyElement {
     return this.$parent.measureText(text);
   }
   /**
-   * @return {void}
+   * @return {this}
    */
-  begin(): void {
+  begin(): this {
     this.$context2d.beginPath();
+
+    return this;
   }
   /**
-   * @return {void}
+   * @return {this}
    */
-  close(): void {
+  close(): this {
     this.$context2d.closePath();
+
+    return this;
   }
   /**
-   * @return {void}
+   * @return {this}
    */
-  save(): void {
+  save(): this {
     this.$parent.save();
+
+    return this;
   }
   /**
-   * @return {void}
+   * @return {this}
    */
-  restore(): void {
+  restore(): this {
     this.$parent.restore();
+
+    return this;
   }
   rotate(): number;
-  rotate(angle: number): void;
+  rotate(angle: number): this;
   /**
    * @param {number} angle?
-   * @return {number | void}
+   * @return {number | this}
    */
-  rotate(angle?: number): number | void {
+  rotate(angle?: number): number | this {
     if (angle === undefined) {
       return this.$parent.rotate();
     }
     this.$parent.rotate(angle);
+
+    return this;
   }
   translate(): Offset;
-  translate(x: number, y: number): void;
+  translate(x: number, y: number): this;
   /**
    * @param {number} x?
    * @param {number} y?
-   * @return {any}
+   * @return {offset|this}
    */
-  translate(x?: number, y?: number): Offset | void {
+  translate(x?: number, y?: number): Offset | this {
     if (arguments.length === 0) {
       return this.$parent.translate();
     }
 
     this.$parent.translate(x as number, y as number);
+
+    return this;
   }
   /**
    * @param  {number} x
@@ -426,7 +421,7 @@ export default abstract class MyElement {
    * @param  {number} astart
    * @param  {number} astop
    * @param  {boolean} reverse?
-   * @returns void
+   * @returns this
    */
   arc(
     x: number,
@@ -435,7 +430,7 @@ export default abstract class MyElement {
     astart: number,
     astop: number,
     reverse?: boolean
-  ): void {
+  ): this {
     this.begin();
     this.$context2d.arc(
       this.$parent._getPixel(x),
@@ -446,6 +441,8 @@ export default abstract class MyElement {
       reverse
     );
     this.close();
+
+    return this;
   }
   /**
    * @param  {number} x
@@ -454,6 +451,7 @@ export default abstract class MyElement {
    * @param  {number} astart
    * @param  {number} astop
    * @param  {boolean} reverse?
+   * @returns {this}
    */
   pie(
     x: number,
@@ -462,24 +460,19 @@ export default abstract class MyElement {
     astart: number,
     astop: number,
     reverse?: boolean
-  ) {
-    this.begin();
-    this.move(x, y);
-    this.arc(x, y, radius, astart, astop, reverse);
-    this.to(x, y);
-    this.close();
+  ): this {
+    return this.move(x, y).arc(x, y, radius, astart, astop, reverse).to(x, y);
   }
   /**
    * @param  {number} x1
    * @param  {number} y1
    * @param  {number} x2
    * @param  {number} y2
-   * @returns void
+   * @returns {this}
    */
-  line(x1: number, y1: number, x2: number, y2: number): void {
+  line(x1: number, y1: number, x2: number, y2: number): this {
     // this.begin();
-    this.move(x1, y1);
-    this.to(x2, y2);
+    return this.move(x1, y1).to(x2, y2);
     // this.close();fix
   }
   /**
@@ -490,7 +483,7 @@ export default abstract class MyElement {
    * @param  {number} astart
    * @param  {number} astop
    * @param  {number} reverse
-   * @returns void
+   * @returns {this}
    */
   ellipse(
     x: number,
@@ -500,7 +493,7 @@ export default abstract class MyElement {
     astart: number,
     astop: number,
     reverse: number
-  ): void {
+  ): this {
     this.begin();
     this.$context2d.ellipse(
       this.$parent._getPixel(x),
@@ -512,15 +505,17 @@ export default abstract class MyElement {
       reverse
     );
     this.close();
+
+    return this;
   }
   /**
    * @param  {number} x
    * @param  {number} y
    * @param  {number} radius
-   * @returns void
+   * @returns {this}
    */
-  circle(x: number, y: number, radius: number): void {
-    this.arc(
+  circle(x: number, y: number, radius: number): this {
+    return this.arc(
       x,
       y,
       radius,
@@ -531,10 +526,10 @@ export default abstract class MyElement {
   /**
    * @param  {number} x
    * @param  {number} y
-   * @returns void
+   * @returns {this}
    */
-  point(x: number, y: number): void {
-    this.circle(x, y, 1);
+  point(x: number, y: number): this {
+    return this.circle(x, y, 1);
   }
   /**
    * @param  {number} x1
@@ -543,7 +538,7 @@ export default abstract class MyElement {
    * @param  {number} y2
    * @param  {number} x3
    * @param  {number} y3
-   * @returns void
+   * @returns {this}
    */
   triange(
     x1: number,
@@ -552,22 +547,18 @@ export default abstract class MyElement {
     y2: number,
     x3: number,
     y3: number
-  ): void {
-    this.begin();
-    this.move(x1, y1);
-    this.to(x2, y2);
-    this.to(x3, y3);
-    this.close();
+  ): this {
+    return this.move(x1, y1).to(x2, y2).to(x3, y3);
   }
 
-  drawImage(image: CanvasImageSource, x: number, y: number): void;
+  drawImage(image: CanvasImageSource, x: number, y: number): this;
   drawImage(
     image: CanvasImageSource,
     x: number,
     y: number,
     width: number,
     height: number
-  ): void;
+  ): this;
   drawImage(
     image: CanvasImageSource,
     sx: number,
@@ -578,7 +569,7 @@ export default abstract class MyElement {
     y: number,
     width: number,
     height: number
-  ): void;
+  ): this;
   /**
    * @param  {CanvasImageSource} image
    * @param  {number} sx?
@@ -589,11 +580,13 @@ export default abstract class MyElement {
    * @param  {number} y
    * @param  {number} width
    * @param  {number} height
-   * @returns void
+   * @returns {this}
    */
-  drawImage(image: CanvasImageSource, ...args: number[]): void {
+  drawImage(image: CanvasImageSource, ...args: number[]): this {
     // @ts-expect-error
     this.$context2d.drawImage(image, ...(args as ParamsDrawImage));
+
+    return this;
   }
   rRect(
     x: number,
@@ -601,7 +594,7 @@ export default abstract class MyElement {
     width: number,
     height: number,
     radius: string | number
-  ): void;
+  ): this;
   rRect(
     x: number,
     y: number,
@@ -609,7 +602,7 @@ export default abstract class MyElement {
     height: number,
     radiusLeft: string | number,
     radiusRight: string | number
-  ): void;
+  ): this;
   /**
    * @param  {number} x
    * @param  {number} y
@@ -619,7 +612,7 @@ export default abstract class MyElement {
    * @param  {string|number} radiusTopRight
    * @param  {string|number} radiusBottomRight
    * @param  {string|number} radiusBottomLeft
-   * @returns void
+   * @returns {this}
    */
   rRect(
     x: number,
@@ -630,7 +623,7 @@ export default abstract class MyElement {
     radiusTopRight: string | number,
     radiusBottomRight: string | number,
     radiusBottomLeft: string | number
-  ): void;
+  ): this;
   rRect(
     x: number,
     y: number,
@@ -640,24 +633,26 @@ export default abstract class MyElement {
     radiusTopRight?: string | number,
     radiusBottomRight?: string | number,
     radiusBottomLeft?: string | number
-  ): void {
+  ): this {
     this.begin();
     [x, y, w, h] = this.$parent._argsRect(x, y, w, h);
 
     const fontSize = this.$parent.fontSize();
     const arc = [
-      AutoToPx(radiusTopLeft, w, fontSize),
-      AutoToPx(radiusTopRight, h, fontSize),
-      AutoToPx(radiusBottomRight, w, fontSize),
-      AutoToPx(radiusBottomLeft, h, fontSize),
+      AutoToPx(radiusTopLeft || 0, w, fontSize),
+      AutoToPx(radiusTopRight || 0, h, fontSize),
+      AutoToPx(radiusBottomRight || 0, w, fontSize),
+      AutoToPx(radiusBottomLeft || 0, h, fontSize),
     ];
-    this.move(x, y);
-    this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
-    this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
-    this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
-    this.arcTo(x, y, x + w - arc[0], y, arc[0]);
+    this.move(x, y)
+      .arcTo(x + w, y, x + w, y + h - arc[1], arc[1])
+      .arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2])
+      .arcTo(x, y + h, x, y + h - arc[3], arc[3])
+      .arcTo(x, y, x + w - arc[0], y, arc[0]);
 
     this.close();
+
+    return this;
   }
   /**
    * @param {number} x
@@ -665,8 +660,9 @@ export default abstract class MyElement {
    * @param {number} width
    * @param {number} height
    * @memberof MyElement
+   * @returns {this}
    */
-  rect(x: number, y: number, width: number, height: number): void {
+  rect(x: number, y: number, width: number, height: number): this {
     this.begin();
     [x, y, width, height] = this.$parent._argsRect(x, y, width, height);
     this.$context2d.rect(
@@ -676,15 +672,20 @@ export default abstract class MyElement {
       height
     );
     this.close();
+
+    return this;
   }
   /**
    * @param  {number} cpx
    * @param  {number} cpy
    * @param  {number} x
    * @param  {number} y
+   * @return {this}
    */
-  quadratic(cpx: number, cpy: number, x: number, y: number): void {
+  quadratic(cpx: number, cpy: number, x: number, y: number): this {
     this.$context2d.quadraticCurveTo(cpx, cpy, x, y);
+
+    return this;
   }
   /**
    * @param {number} cp1x
@@ -693,7 +694,7 @@ export default abstract class MyElement {
    * @param {number} cp2y
    * @param {number} x
    * @param {number} y
-   * @return {void}
+   * @return {this}
    */
   bezier(
     cp1x: number,
@@ -702,108 +703,124 @@ export default abstract class MyElement {
     cp2y: number,
     x: number,
     y: number
-  ): void {
+  ): this {
     this.$context2d.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+
+    return this;
   }
   /**
    * @param {number} x
    * @param {number} y
-   * @return {void}
+   * @return {this}
    */
-  move(x: number, y: number): void {
+  move(x: number, y: number): this {
     this.$context2d.moveTo(
       this.$parent._getPixel(x),
       this.$parent._getPixel(y)
     );
+
+    return this;
   }
   /**
    * @param {number} x
    * @param {number} y
-   * @return {void}
+   * @return {this}
    */
-  to(x: number, y: number): void {
+  to(x: number, y: number): this {
     this.$context2d.lineTo(
       this.$parent._getPixel(x),
       this.$parent._getPixel(y)
     );
+
+    return this;
   }
   /**
    * @param {string} text
    * @param {number} x
    * @param {number} y
    * @param {number} maxWidth?
-   * @return {void}
+   * @return {this}
    */
-  fillText(text: string, x: number, y: number, maxWidth?: number): void {
+  fillText(text: string, x: number, y: number, maxWidth?: number): this {
     this.$context2d.fillText(
       text,
       this.$parent._getPixel(x),
       this.$parent._getPixel(y),
       maxWidth
     );
+
+    return this;
   }
   /**
    * @param {string} text
    * @param {number} x
    * @param {number} y
    * @param {number} maxWidth?
-   * @return {void}
+   * @return {this}
    */
-  strokeText(text: string, x: number, y: number, maxWidth?: number): void {
+  strokeText(text: string, x: number, y: number, maxWidth?: number): this {
     this.$context2d.strokeText(
       text,
       this.$parent._getPixel(x),
       this.$parent._getPixel(y),
       maxWidth
     );
+
+    return this;
   }
   /**
    * @param {number} x
    * @param {number} y
    * @param {number} width
    * @param {number} height
-   * @return {void}
+   * @return {this}
    */
-  fillRect(x: number, y: number, width: number, height: number): void {
+  fillRect(x: number, y: number, width: number, height: number): this {
     this.$context2d.fillRect(
       this.$parent._getPixel(x),
       this.$parent._getPixel(y),
       width,
       height
     );
+
+    return this;
   }
   /**
    * @param {number} x
    * @param {number} y
    * @param {number} width
    * @param {number} height
-   * @return {void}
+   * @return {this}
    */
-  strokeRect(x: number, y: number, width: number, height: number): void {
+  strokeRect(x: number, y: number, width: number, height: number): this {
     this.$context2d.strokeRect(
       this.$parent._getPixel(x),
       this.$parent._getPixel(y),
       width,
       height
     );
+
+    return this;
   }
   lineDashOffset(): number;
-  lineDashOffset(value: number): void;
+  lineDashOffset(value: number): this;
   /**
    * @param {number} value?
-   * @return {any}
+   * @return {this|number}
    */
-  lineDashOffset(value?: number): number | void {
+  lineDashOffset(value?: number): number | this {
     if (value === undefined) {
       return this.$context2d.lineDashOffset;
     }
 
     this.$context2d.lineDashOffset = value;
+
+    return this;
   }
   lineDash(): number[];
-  lineDash(segments: number[]): void;
-  lineDash(...segments: number[]): void;
-  lineDash(...segments: Array<number[] | number>): number[] | void {
+  lineDash(segments: number[]): this;
+  lineDash(...segments: number[]): this;
+  lineDash(...segments: Array<number[] | number>): number[] | this {
     if (segments.length === 0) {
       return this.$context2d.getLineDash();
     }
@@ -813,6 +830,8 @@ export default abstract class MyElement {
     }
 
     this.$context2d.setLineDash(segments as number[]);
+
+    return this;
   }
   /**
    * @param {number} x1
@@ -820,9 +839,9 @@ export default abstract class MyElement {
    * @param {number} x2
    * @param {number} y2
    * @param {number} radius
-   * @return {void}
+   * @return {this}
    */
-  arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void {
+  arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): this {
     this.$context2d.arcTo(
       this.$parent._getPixel(x1),
       this.$parent._getPixel(y1),
@@ -830,6 +849,8 @@ export default abstract class MyElement {
       this.$parent._getPixel(y2),
       radius
     );
+
+    return this;
   }
   /**
    * @param {number} x
@@ -861,7 +882,7 @@ export default abstract class MyElement {
   getImageData(x: number, y: number, width: number, height: number): ImageData {
     return this.$parent.getImageData(x, y, width, height);
   }
-  putImageData(imageData: ImageData, x: number, y: number): void;
+  putImageData(imageData: ImageData, x: number, y: number): this;
   putImageData(
     imageData: ImageData,
     x: number,
@@ -870,7 +891,7 @@ export default abstract class MyElement {
     ys: number,
     width: number,
     height: number
-  ): void;
+  ): this;
   /**
    * @param {ImageData} imageData
    * @param {number} x
@@ -879,7 +900,7 @@ export default abstract class MyElement {
    * @param {number} ys?
    * @param {number} width?
    * @param {number} height?
-   * @return {void}
+   * @return {this}
    */
   putImageData(
     imageData: ImageData,
@@ -889,7 +910,7 @@ export default abstract class MyElement {
     ys?: number,
     width?: number,
     height?: number
-  ): void {
+  ): this {
     if (arguments.length === 7) {
       this.$parent.putImageData(
         imageData,
@@ -903,6 +924,8 @@ export default abstract class MyElement {
     } else {
       this.$parent.putImageData(imageData, x, y);
     }
+
+    return this;
   }
   /**
    * @param {CanvasImageSource} image
@@ -951,86 +974,83 @@ export default abstract class MyElement {
   }
 
   lineJoin(): LineJoin;
-  lineJoin(type: LineJoin): void;
+  lineJoin(type: LineJoin): this;
   /**
    * @param {"bevel"|"round"|"miter"} type?
-   * @return {any}
+   * @return {LineJoin|this}
    */
-  lineJoin(type?: LineJoin): LineJoin | void {
-    if (type !== undefined) {
-      this.$context2d.lineJoin = type;
-    } else {
+  lineJoin(type?: LineJoin): LineJoin | this {
+    if (type === undefined) {
       return this.$context2d.lineJoin;
     }
+
+    this.$context2d.lineJoin = type;
+
+    return this;
   }
   lineCap(): LineCap;
-  lineCap(value: LineCap): void;
+  lineCap(value: LineCap): this;
   /**
    * @param {"butt"|"round"|"square"} value?
-   * @return {any}
+   * @return {LineCap|this}
    */
-  lineCap(value?: LineCap): LineCap | void {
-    if (value !== undefined) {
-      this.$context2d.lineCap = value;
-    } else {
+  lineCap(value?: LineCap): LineCap | this {
+    if (value === undefined) {
       return this.$context2d.lineCap;
     }
+    this.$context2d.lineCap = value;
+    return this;
   }
   shadowBlur(): number;
-  shadowBlur(opacity: number): void;
+  shadowBlur(opacity: number): this;
   /**
    * @param {number} opacity?
-   * @return {any}
+   * @return {number|this}
    */
-  shadowBlur(opacity?: number): number | void {
+  shadowBlur(opacity?: number): number | this {
     if (opacity === undefined) {
       return this.$context2d.shadowBlur;
     }
 
     this.$context2d.shadowBlur = opacity;
+
+    return this;
   }
 
-  shadowColor(hue: number, saturation: number, lightness: number): void;
-  shadowColor(hue: number, saturation: number, bright: number): void;
-  shadowColor(red: number, green: number, blue: number): void;
   shadowColor(
     hue: number,
     saturation: number,
     lightness: number,
-    alpha: number
-  ): void;
+    alpha?: number
+  ): this;
+  shadowColor(red: number, green: number, blue: number, alpha?: number): this;
   shadowColor(
-    hue: number,
-    saturation: number,
-    bright: number,
-    alpha: number
-  ): void;
-  shadowColor(red: number, green: number, blue: number, alpha: number): void;
-  shadowColor(color: string): void;
-  shadowColor(colors: Array<number>): void;
-  shadowColor(gradient: CanvasGradient): void;
-  shadowColor(image: CanvasImageSource): void;
-  shadowColor(color: number): void;
+    color?: string | CanvasGradient | CanvasImageSource | number
+  ): this;
   /**
-   * @param {ParamsToRgb} ...args
-   * @return {void}
+   * @param {any[]} ...args
+   * @return {this}
    */
-  shadowColor(...args: ParamsToRgb): void {
-    this.$context2d.shadowColor = this.$parent._toRgb(args);
+  shadowColor(...args: any[]): this {
+    this.$context2d.shadowColor = this.$parent._toRgb(args as ParamsToRgb);
+
+    return this;
   }
-  drawFocusIfNeeded(element: Element): void;
-  drawFocusIfNeeded(path: Path2D, element: Element): void;
-  drawFocusIfNeeded(path: Element | Path2D, element?: Element): void {
+  drawFocusIfNeeded(element: Element): this;
+  drawFocusIfNeeded(path: Path2D, element: Element): this;
+  drawFocusIfNeeded(path: Element | Path2D, element?: Element): this {
     if (element === undefined) {
       this.$context2d.drawFocusIfNeeded(path as Element);
     } else {
       this.$context2d.drawFocusIfNeeded(path as Path2D, element);
     }
+
+    return this;
   }
 
-  polyline(...points: number[]): void;
-  polyline(...points: [number, number][]): void;
-  polyline(...points: number[] | Array<[number, number]>): void {
+  polyline(...points: number[]): this;
+  polyline(...points: [number, number][]): this;
+  polyline(...points: number[] | Array<[number, number]>): this {
     if (points.length > 0) {
       if (Array.isArray(points[0])) {
         this.move(points[0][0], points[0][1]);
@@ -1059,10 +1079,12 @@ export default abstract class MyElement {
         }
       }
     }
+
+    return this;
   }
-  polygon(...points: number[]): void;
-  polygon(...points: [number, number][]): void;
-  polygon(...points: number[] | Array<[number, number]>): void {
+  polygon(...points: number[]): this;
+  polygon(...points: [number, number][]): this;
+  polygon(...points: number[] | Array<[number, number]>): this {
     if (Array.isArray(points[0])) {
       this.polyline(...(points as [number, number][]), points[0]);
     } else {
@@ -1072,6 +1094,8 @@ export default abstract class MyElement {
         points[1] as number
       );
     }
+
+    return this;
   }
 }
 
@@ -1176,18 +1200,12 @@ export class Point3DCenter extends MyElement {
   }
 }
 
-export function createElement(callback: noop): MyElement {
+export function createElement(callback: {
+  (canvas: MyElement): void;
+}): MyElement {
   return new (class extends MyElement {
-    draw = callback;
+    draw: noop = () => {
+      callback(this);
+    };
   })();
 }
-
-// class App extends Polyline3D {
-//   constructor(...points, x, y, z) {
-//     super(...points, x, y, z);
-//   }
-
-//   draw() {
-//     this.poly();
-//   }
-// }

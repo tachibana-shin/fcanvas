@@ -1,4 +1,4 @@
-import MyElement, { Point3D, LikeMyElement, Point3DCenter, createElement } from "./MyElement";
+import MyElement, { Point3D, Point3DCenter, createElement } from "./MyElement";
 import { InfoTouch, noop, Offset } from "../utils/index";
 import { CallbackEvent } from "../classes/Emitter";
 declare type AngleType = "degress" | "radial";
@@ -19,7 +19,6 @@ export default class fCanvas {
     private static _count;
     private readonly _id;
     private _el;
-    private _context2dCaching;
     private readonly _stamentReady;
     private readonly __store;
     constructor(width: number, height: number);
@@ -129,10 +128,10 @@ export default class fCanvas {
      */
     get allowClear(): boolean;
     /**
-     * @param {LikeMyElement} element
+     * @param {MyElement} element
      * @return {void}
      */
-    run(...elements: LikeMyElement[]): void;
+    run(...elements: MyElement[]): void;
     /**
      * @return {number}
      */
@@ -365,6 +364,9 @@ export default class fCanvas {
      * @return {boolean}
      */
     get allowLoop(): boolean;
+    on(name: string, callback: CallbackEvent): noop;
+    off(resultEvent: noop): void;
+    off(name: string, callback: CallbackEvent): void;
     /**
      * @param {CallbackEvent} callback
      * @return {noop}

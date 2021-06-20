@@ -45,10 +45,6 @@ function trim(string) {
         return string.replace(/^\s+|\s+$/g, "");
     }
 }
-/**
- * @param {string} font
- * @return {InfoFont}
- */
 function fontToArray(font) {
     const _font = font.split(" ");
     if (_font.length === 2) {
@@ -64,12 +60,6 @@ function fontToArray(font) {
         weight: trim(_font[0]),
     };
 }
-/**
- * @param {string|number} string
- * @param {number} fi
- * @param {number} fontSize?
- * @return {number}
- */
 function AutoToPx(string, fi, fontSize) {
     if (typeof string === "string") {
         string = trim(string);
@@ -97,18 +87,13 @@ function AutoToPx(string, fi, fontSize) {
             case "%":
                 return (fi / 100) * number;
             default:
-                return +number;
+                return number;
         }
     }
     else {
-        return parseFloat(string + "");
+        return string;
     }
 }
-/**
- * @param {HTMLCanvasElement} element
- * @param {any[]} touches
- * @return {InfoTouch[]}
- */
 function getTouchInfo(element, touches) {
     const rect = element.getBoundingClientRect();
     const sx = element.scrollWidth / element.width || 1;
@@ -138,10 +123,6 @@ function isMobile() {
     return (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(agent) ||
         /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw-(n|u)|c55\/|capi|ccwa|cdm-|cell|chtm|cldc|cmd-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc-s|devi|dica|dmob|do(c|p)o|ds(12|-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(-|_)|g1 u|g560|gene|gf-5|g-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd-(m|p|t)|hei-|hi(pt|ta)|hp( i|ip)|hs-c|ht(c(-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i-(20|go|ma)|i230|iac( |-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|-[a-w])|libw|lynx|m1-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|-([1-8]|c))|phil|pire|pl(ay|uc)|pn-2|po(ck|rt|se)|prox|psio|pt-g|qa-a|qc(07|12|21|32|60|-[2-7]|i-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h-|oo|p-)|sdk\/|se(c(-|0|1)|47|mc|nd|ri)|sgh-|shar|sie(-|m)|sk-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h-|v-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl-|tdg-|tel(i|m)|tim-|t-mo|to(pl|sh)|ts(70|m-|m3|m5)|tx-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas-|your|zeto|zte-/i.test(agent.substr(0, 4)));
 }
-/**
- * @param {number|string|boolean} value
- * @return {number}
- */
 function extractNumber(value) {
     if (typeof value === "number") {
         return value;
@@ -193,12 +174,6 @@ class MyElement {
             };
         }
     }
-    /**
-     * @return {HTMLCanvasElement}
-     */
-    get $el() {
-        return this.$parent.$el;
-    }
     _run(canvas) {
         this.__addEl(canvas);
         this._idActiveNow = canvas.id;
@@ -232,14 +207,14 @@ class MyElement {
         this._idActiveNow = -1;
     }
     /**
-     * @param {LikeMyElement} element
+     * @param {MyElement} element
      * @return {void}
      */
     add(...elements) {
         this._queue.push(...elements);
     }
     /**
-     * @param {LikeMyElement} element
+     * @param {MyElement} element
      * @return {void}
      */
     run(element) {
@@ -368,58 +343,63 @@ class MyElement {
     get windowHeight() {
         return this.$parent.windowHeight;
     }
+    /**
+     * @param  {number} red?
+     * @param  {number} green?
+     * @param  {number} blue?
+     * @param  {number} alpha=1
+     * @returns {this}
+     */
     fill(...args) {
         this.$context2d.fillStyle = this.$parent._toRgb(args);
         this.$context2d.fill();
+        return this;
     }
     /**
-     * @param  {number} red
-     * @param  {number} green
-     * @param  {number} blue
-     * @param  {number} alpha
-     * @returns void
+     * @param  {number} red?
+     * @param  {number} green?
+     * @param  {number} blue?
+     * @param  {number} alpha=1
+     * @returns {this}
      */
     stroke(...args) {
         this.$context2d.strokeStyle = this.$parent._toRgb(args);
         this.$context2d.stroke();
+        return this;
     }
     /**
-     * @return {void}
+     * @return {this}
      */
     noFill() {
-        this.fill(0, 0, 0, 0);
+        return this.fill(0, 0, 0, 0);
     }
     /**
      * @param {number} value?
-     * @return {number|void}
+     * @return {number|this}
      */
     lineWidth(value) {
         if (value === undefined) {
             return this.$context2d.lineWidth;
         }
-        else {
-            this.$context2d.lineWidth = this.$parent._getPixel(value);
-        }
+        this.$context2d.lineWidth = this.$parent._getPixel(value);
+        return this;
     }
     /**
      * @param {number} value?
-     * @return {number|void}
+     * @return {number|this}
      */
     miterLimit(value) {
         if (value === undefined) {
             return this.$context2d.miterLimit;
         }
-        else {
-            if (this.lineJoin() !== "miter") {
-                this.lineJoin("miter");
-            }
-            this.$context2d.miterLimit = value;
-        }
+        this.lineJoin("miter");
+        this.$context2d.miterLimit = value;
+        return this;
     }
     /**
      * @param {number} x?
      * @param {number} y?
-     * @return {void|{ x: number, y: number }}
+     * @return {this|Offset}
      */
     shadowOffset(x, y) {
         if (arguments.length === 0) {
@@ -428,12 +408,11 @@ class MyElement {
                 y: this.$context2d.shadowOffsetY,
             };
         }
-        else {
-            [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [
-                this.$parent._getPixel(x || 0),
-                this.$parent._getPixel(y || 0),
-            ];
-        }
+        [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [
+            this.$parent._getPixel(x || 0),
+            this.$parent._getPixel(y || 0),
+        ];
+        return this;
     }
     /**
      * @param {string} text
@@ -443,49 +422,55 @@ class MyElement {
         return this.$parent.measureText(text);
     }
     /**
-     * @return {void}
+     * @return {this}
      */
     begin() {
         this.$context2d.beginPath();
+        return this;
     }
     /**
-     * @return {void}
+     * @return {this}
      */
     close() {
         this.$context2d.closePath();
+        return this;
     }
     /**
-     * @return {void}
+     * @return {this}
      */
     save() {
         this.$parent.save();
+        return this;
     }
     /**
-     * @return {void}
+     * @return {this}
      */
     restore() {
         this.$parent.restore();
+        return this;
     }
     /**
      * @param {number} angle?
-     * @return {number | void}
+     * @return {number | this}
      */
     rotate(angle) {
         if (angle === undefined) {
             return this.$parent.rotate();
         }
         this.$parent.rotate(angle);
+        return this;
     }
     /**
      * @param {number} x?
      * @param {number} y?
-     * @return {any}
+     * @return {offset|this}
      */
     translate(x, y) {
         if (arguments.length === 0) {
             return this.$parent.translate();
         }
         this.$parent.translate(x, y);
+        return this;
     }
     /**
      * @param  {number} x
@@ -494,12 +479,13 @@ class MyElement {
      * @param  {number} astart
      * @param  {number} astop
      * @param  {boolean} reverse?
-     * @returns void
+     * @returns this
      */
     arc(x, y, radius, astart, astop, reverse) {
         this.begin();
         this.$context2d.arc(this.$parent._getPixel(x), this.$parent._getPixel(y), radius, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop) - Math.PI / 2, reverse);
         this.close();
+        return this;
     }
     /**
      * @param  {number} x
@@ -508,25 +494,21 @@ class MyElement {
      * @param  {number} astart
      * @param  {number} astop
      * @param  {boolean} reverse?
+     * @returns {this}
      */
     pie(x, y, radius, astart, astop, reverse) {
-        this.begin();
-        this.move(x, y);
-        this.arc(x, y, radius, astart, astop, reverse);
-        this.to(x, y);
-        this.close();
+        return this.move(x, y).arc(x, y, radius, astart, astop, reverse).to(x, y);
     }
     /**
      * @param  {number} x1
      * @param  {number} y1
      * @param  {number} x2
      * @param  {number} y2
-     * @returns void
+     * @returns {this}
      */
     line(x1, y1, x2, y2) {
         // this.begin();
-        this.move(x1, y1);
-        this.to(x2, y2);
+        return this.move(x1, y1).to(x2, y2);
         // this.close();fix
     }
     /**
@@ -537,29 +519,30 @@ class MyElement {
      * @param  {number} astart
      * @param  {number} astop
      * @param  {number} reverse
-     * @returns void
+     * @returns {this}
      */
     ellipse(x, y, radius1, radius2, astart, astop, reverse) {
         this.begin();
         this.$context2d.ellipse(this.$parent._getPixel(x), this.$parent._getPixel(y), radius1, radius2, this.$parent._toRadius(astart) - Math.PI / 2, this.$parent._toRadius(astop), reverse);
         this.close();
+        return this;
     }
     /**
      * @param  {number} x
      * @param  {number} y
      * @param  {number} radius
-     * @returns void
+     * @returns {this}
      */
     circle(x, y, radius) {
-        this.arc(x, y, radius, 0, this.$parent.angleMode() === "degress" ? 360 : Math.PI * 2);
+        return this.arc(x, y, radius, 0, this.$parent.angleMode() === "degress" ? 360 : Math.PI * 2);
     }
     /**
      * @param  {number} x
      * @param  {number} y
-     * @returns void
+     * @returns {this}
      */
     point(x, y) {
-        this.circle(x, y, 1);
+        return this.circle(x, y, 1);
     }
     /**
      * @param  {number} x1
@@ -568,14 +551,10 @@ class MyElement {
      * @param  {number} y2
      * @param  {number} x3
      * @param  {number} y3
-     * @returns void
+     * @returns {this}
      */
     triange(x1, y1, x2, y2, x3, y3) {
-        this.begin();
-        this.move(x1, y1);
-        this.to(x2, y2);
-        this.to(x3, y3);
-        this.close();
+        return this.move(x1, y1).to(x2, y2).to(x3, y3);
     }
     /**
      * @param  {CanvasImageSource} image
@@ -587,28 +566,30 @@ class MyElement {
      * @param  {number} y
      * @param  {number} width
      * @param  {number} height
-     * @returns void
+     * @returns {this}
      */
     drawImage(image, ...args) {
         // @ts-expect-error
         this.$context2d.drawImage(image, ...args);
+        return this;
     }
     rRect(x, y, w, h, radiusTopLeft, radiusTopRight, radiusBottomRight, radiusBottomLeft) {
         this.begin();
         [x, y, w, h] = this.$parent._argsRect(x, y, w, h);
         const fontSize = this.$parent.fontSize();
         const arc = [
-            AutoToPx(radiusTopLeft, w, fontSize),
-            AutoToPx(radiusTopRight, h, fontSize),
-            AutoToPx(radiusBottomRight, w, fontSize),
-            AutoToPx(radiusBottomLeft, h, fontSize),
+            AutoToPx(radiusTopLeft || 0, w, fontSize),
+            AutoToPx(radiusTopRight || 0, h, fontSize),
+            AutoToPx(radiusBottomRight || 0, w, fontSize),
+            AutoToPx(radiusBottomLeft || 0, h, fontSize),
         ];
-        this.move(x, y);
-        this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
-        this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
-        this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
-        this.arcTo(x, y, x + w - arc[0], y, arc[0]);
+        this.move(x, y)
+            .arcTo(x + w, y, x + w, y + h - arc[1], arc[1])
+            .arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2])
+            .arcTo(x, y + h, x, y + h - arc[3], arc[3])
+            .arcTo(x, y, x + w - arc[0], y, arc[0]);
         this.close();
+        return this;
     }
     /**
      * @param {number} x
@@ -616,21 +597,25 @@ class MyElement {
      * @param {number} width
      * @param {number} height
      * @memberof MyElement
+     * @returns {this}
      */
     rect(x, y, width, height) {
         this.begin();
         [x, y, width, height] = this.$parent._argsRect(x, y, width, height);
         this.$context2d.rect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
         this.close();
+        return this;
     }
     /**
      * @param  {number} cpx
      * @param  {number} cpy
      * @param  {number} x
      * @param  {number} y
+     * @return {this}
      */
     quadratic(cpx, cpy, x, y) {
         this.$context2d.quadraticCurveTo(cpx, cpy, x, y);
+        return this;
     }
     /**
      * @param {number} cp1x
@@ -639,76 +624,84 @@ class MyElement {
      * @param {number} cp2y
      * @param {number} x
      * @param {number} y
-     * @return {void}
+     * @return {this}
      */
     bezier(cp1x, cp1y, cp2x, cp2y, x, y) {
         this.$context2d.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+        return this;
     }
     /**
      * @param {number} x
      * @param {number} y
-     * @return {void}
+     * @return {this}
      */
     move(x, y) {
         this.$context2d.moveTo(this.$parent._getPixel(x), this.$parent._getPixel(y));
+        return this;
     }
     /**
      * @param {number} x
      * @param {number} y
-     * @return {void}
+     * @return {this}
      */
     to(x, y) {
         this.$context2d.lineTo(this.$parent._getPixel(x), this.$parent._getPixel(y));
+        return this;
     }
     /**
      * @param {string} text
      * @param {number} x
      * @param {number} y
      * @param {number} maxWidth?
-     * @return {void}
+     * @return {this}
      */
     fillText(text, x, y, maxWidth) {
         this.$context2d.fillText(text, this.$parent._getPixel(x), this.$parent._getPixel(y), maxWidth);
+        return this;
     }
     /**
      * @param {string} text
      * @param {number} x
      * @param {number} y
      * @param {number} maxWidth?
-     * @return {void}
+     * @return {this}
      */
     strokeText(text, x, y, maxWidth) {
         this.$context2d.strokeText(text, this.$parent._getPixel(x), this.$parent._getPixel(y), maxWidth);
+        return this;
     }
     /**
      * @param {number} x
      * @param {number} y
      * @param {number} width
      * @param {number} height
-     * @return {void}
+     * @return {this}
      */
     fillRect(x, y, width, height) {
         this.$context2d.fillRect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
+        return this;
     }
     /**
      * @param {number} x
      * @param {number} y
      * @param {number} width
      * @param {number} height
-     * @return {void}
+     * @return {this}
      */
     strokeRect(x, y, width, height) {
         this.$context2d.strokeRect(this.$parent._getPixel(x), this.$parent._getPixel(y), width, height);
+        return this;
     }
     /**
      * @param {number} value?
-     * @return {any}
+     * @return {this|number}
      */
     lineDashOffset(value) {
         if (value === undefined) {
             return this.$context2d.lineDashOffset;
         }
         this.$context2d.lineDashOffset = value;
+        return this;
     }
     lineDash(...segments) {
         if (segments.length === 0) {
@@ -718,6 +711,7 @@ class MyElement {
             this.$context2d.setLineDash(segments[0]);
         }
         this.$context2d.setLineDash(segments);
+        return this;
     }
     /**
      * @param {number} x1
@@ -725,10 +719,11 @@ class MyElement {
      * @param {number} x2
      * @param {number} y2
      * @param {number} radius
-     * @return {void}
+     * @return {this}
      */
     arcTo(x1, y1, x2, y2, radius) {
         this.$context2d.arcTo(this.$parent._getPixel(x1), this.$parent._getPixel(y1), this.$parent._getPixel(x2), this.$parent._getPixel(y2), radius);
+        return this;
     }
     /**
      * @param {number} x
@@ -761,7 +756,7 @@ class MyElement {
      * @param {number} ys?
      * @param {number} width?
      * @param {number} height?
-     * @return {void}
+     * @return {this}
      */
     putImageData(imageData, x, y, xs, ys, width, height) {
         if (arguments.length === 7) {
@@ -770,6 +765,7 @@ class MyElement {
         else {
             this.$parent.putImageData(imageData, x, y);
         }
+        return this;
     }
     /**
      * @param {CanvasImageSource} image
@@ -803,44 +799,44 @@ class MyElement {
     }
     /**
      * @param {"bevel"|"round"|"miter"} type?
-     * @return {any}
+     * @return {LineJoin|this}
      */
     lineJoin(type) {
-        if (type !== undefined) {
-            this.$context2d.lineJoin = type;
-        }
-        else {
+        if (type === undefined) {
             return this.$context2d.lineJoin;
         }
+        this.$context2d.lineJoin = type;
+        return this;
     }
     /**
      * @param {"butt"|"round"|"square"} value?
-     * @return {any}
+     * @return {LineCap|this}
      */
     lineCap(value) {
-        if (value !== undefined) {
-            this.$context2d.lineCap = value;
-        }
-        else {
+        if (value === undefined) {
             return this.$context2d.lineCap;
         }
+        this.$context2d.lineCap = value;
+        return this;
     }
     /**
      * @param {number} opacity?
-     * @return {any}
+     * @return {number|this}
      */
     shadowBlur(opacity) {
         if (opacity === undefined) {
             return this.$context2d.shadowBlur;
         }
         this.$context2d.shadowBlur = opacity;
+        return this;
     }
     /**
-     * @param {ParamsToRgb} ...args
-     * @return {void}
+     * @param {any[]} ...args
+     * @return {this}
      */
     shadowColor(...args) {
         this.$context2d.shadowColor = this.$parent._toRgb(args);
+        return this;
     }
     drawFocusIfNeeded(path, element) {
         if (element === undefined) {
@@ -849,6 +845,7 @@ class MyElement {
         else {
             this.$context2d.drawFocusIfNeeded(path, element);
         }
+        return this;
     }
     polyline(...points) {
         if (points.length > 0) {
@@ -873,6 +870,7 @@ class MyElement {
                 }
             }
         }
+        return this;
     }
     polygon(...points) {
         if (Array.isArray(points[0])) {
@@ -881,6 +879,7 @@ class MyElement {
         else {
             this.polyline(...points, points[0], points[1]);
         }
+        return this;
     }
 }
 MyElement._count = 0;
@@ -975,18 +974,12 @@ function createElement(callback) {
     return new (class extends MyElement {
         constructor() {
             super(...arguments);
-            this.draw = callback;
+            this.draw = () => {
+                callback(this);
+            };
         }
     })();
 }
-// class App extends Polyline3D {
-//   constructor(...points, x, y, z) {
-//     super(...points, x, y, z);
-//   }
-//   draw() {
-//     this.poly();
-//   }
-// }
 
 class Emitter {
     constructor() {
@@ -1210,8 +1203,11 @@ class Stament {
 let inited = false;
 const emitter = new Emitter();
 /**
- * @param {any} document.readyState==="complete"
- * @return {any}
+ * @export
+ * @param {({
+ *   (): Promise<void> | void;
+ * })} callback
+ * @return {*}  {Promise<void>}
  */
 async function setup(callback) {
     if (document.readyState === "complete") {
@@ -1270,7 +1266,7 @@ function draw(callback, canvas) {
 /**
  * @param {CallbackEvent} callback
  * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
+ * @return {noop}
  */
 function keyPressed(callback, element = window) {
     return bindEvent("keydown", callback, element);
@@ -1278,15 +1274,7 @@ function keyPressed(callback, element = window) {
 /**
  * @param {CallbackEvent} callback
  * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
- */
-function keyUp(callback, element = window) {
-    return bindEvent("keyup", callback, element);
-}
-/**
- * @param {CallbackEvent} callback
- * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
+ * @return {noop}
  */
 function changeSize(callback, element = window) {
     return bindEvent("resize", callback, element);
@@ -1294,7 +1282,7 @@ function changeSize(callback, element = window) {
 /**
  * @param {CallbackEvent} callback
  * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
+ * @return {noop}
  */
 function mouseWheel(callback, element = window) {
     return bindEvent("wheel", callback, element);
@@ -1302,7 +1290,7 @@ function mouseWheel(callback, element = window) {
 /**
  * @param {CallbackEvent} callback
  * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
+ * @return {noop}
  */
 function mousePressed(callback, element = window) {
     return bindEvent("mousedown", callback, element);
@@ -1310,7 +1298,7 @@ function mousePressed(callback, element = window) {
 /**
  * @param {CallbackEvent} callback
  * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
+ * @return {noop}
  */
 function mouseClicked(callback, element = window) {
     return bindEvent("click", callback, element);
@@ -1318,7 +1306,7 @@ function mouseClicked(callback, element = window) {
 /**
  * @param {CallbackEvent} callback
  * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
+ * @return {noop}
  */
 function mouseMoved(callback, element = window) {
     return bindEvent("mousemove", callback, element);
@@ -1326,7 +1314,7 @@ function mouseMoved(callback, element = window) {
 /**
  * @param {CallbackEvent} callback
  * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
+ * @return {noop}
  */
 function touchStart(callback, element = window) {
     return bindEvent("touchstart", callback, element);
@@ -1334,7 +1322,7 @@ function touchStart(callback, element = window) {
 /**
  * @param {CallbackEvent} callback
  * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
+ * @return {noop}
  */
 function touchMove(callback, element = window) {
     return bindEvent("touchmove", callback, element);
@@ -1342,7 +1330,7 @@ function touchMove(callback, element = window) {
 /**
  * @param {CallbackEvent} callback
  * @param {Window|HTMLElement=window} element
- * @return {{ (): void }}
+ * @return {noop}
  */
 function touchEnd(callback, element = window) {
     return bindEvent("touchend", callback, element);
@@ -1354,9 +1342,9 @@ class fCanvas {
      */
     constructor(element, width, height) {
         this._id = fCanvas._count++;
-        this._context2dCaching = null;
         this._stamentReady = new Stament();
         this.__store = Object.create({
+            _context2dCaching: null,
             __translate: Object.create({
                 x: 0,
                 y: 0,
@@ -1572,7 +1560,7 @@ class fCanvas {
         return this._id;
     }
     _createNewContext2d() {
-        this._context2dCaching = this.$el.getContext("2d", this.__store.__attributeContext);
+        this.__store._context2dCaching = this.$el.getContext("2d", this.__store.__attributeContext);
     }
     /**
      * @return {void}
@@ -1621,10 +1609,10 @@ class fCanvas {
      * @return {CanvasRenderingContext2D}
      */
     get $context2d() {
-        if (this._context2dCaching === null) {
+        if (this.__store._context2dCaching === null) {
             this._createNewContext2d();
         }
-        return this._context2dCaching;
+        return this.__store._context2dCaching;
     }
     /**
      * @param {HTMLElement=document.body} parent
@@ -1672,7 +1660,7 @@ class fCanvas {
         return this.__store._clear;
     }
     /**
-     * @param {LikeMyElement} element
+     * @param {MyElement} element
      * @return {void}
      */
     run(...elements) {
@@ -1813,7 +1801,7 @@ class fCanvas {
             return size;
         }
         else {
-            value = AutoToPx(value, size, size);
+            value = AutoToPx(value, size, size) || 16;
             this.font([weight, `${value}px`, family].join(" "));
         }
     }
@@ -2245,68 +2233,79 @@ class fCanvas {
     get allowLoop() {
         return this.__store._loop;
     }
+    on(name, callback) {
+        return bindEvent(name, callback, this.$el);
+    }
+    off(name, callback) {
+        if (typeof name === "function") {
+            name();
+        }
+        else {
+            this.$el.removeEventListener(name, callback);
+        }
+    }
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
     mouseIn(callback) {
-        return bindEvent("mouseover", callback, this.$el);
+        return this.on("mouseover", callback);
     }
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
     mouseOut(callback) {
-        return bindEvent("mouseout", callback, this.$el);
+        return this.on("mouseout", callback);
     }
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
     touchStart(callback) {
-        return bindEvent("touchstart", callback, this.$el);
+        return this.on("touchstart", callback);
     }
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
     touchMove(callback) {
-        return bindEvent("touchmove", callback, this.$el);
+        return this.on("touchmove", callback);
     }
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
     touchEnd(callback) {
-        return bindEvent("touchend", callback, this.$el);
+        return this.on("touchend", callback);
     }
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
     mouseMove(callback) {
-        return bindEvent("mousemove", callback, this.$el);
+        return this.on("mousemove", callback);
     }
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
     mouseUp(callback) {
-        return bindEvent("mouseup", callback, this.$el);
+        return this.on("mouseup", callback);
     }
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
     mouseDown(callback) {
-        return bindEvent("mousedown", callback, this.$el);
+        return this.on("mousedown", callback);
     }
     /**
      * @param {CallbackEvent} callback
      * @return {noop}
      */
     mouseClicked(callback) {
-        return bindEvent("click", callback, this.$el);
+        return this.on("click", callback);
     }
 }
 fCanvas.Element = MyElement;
@@ -2977,6 +2976,13 @@ function loadAudio(src) {
 function map(value, start, stop, min, max) {
     return ((value - start) * (max - min)) / (stop - start) + min;
 }
+/**
+ * @export
+ * @param {number} ratio
+ * @param {number} width
+ * @param {number} height
+ * @return {*}  {[number, number]}
+ */
 function aspectRatio(ratio, width, height) {
     /// ratio = width / height => height = width / ratio
     const nwidth = ratio * height;
@@ -2988,6 +2994,10 @@ function aspectRatio(ratio, width, height) {
         return [nwidth, height];
     }
 }
+/**
+ * @param {any[]} ...args
+ * @return {any}
+ */
 function random(...args) {
     if (args.length === 1) {
         if (args[0] !== null &&
@@ -3715,4 +3725,4 @@ function interferingsBoolean(el, ...otherEl) {
 }
 
 export default fCanvas;
-export { Animate, Camera, Emitter, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, draw, even, getDirectionElement, hypot, interferings, interferingsBoolean, isMobile, isTouch, keyPressed, keyUp, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, unlimited };
+export { Animate, Camera, Emitter, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, draw, even, getDirectionElement, hypot, interferings, interferingsBoolean, isMobile, isTouch, keyPressed, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, unlimited };

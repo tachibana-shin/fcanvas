@@ -2714,9 +2714,6 @@ img {
 			<a href="core_systemevents.html#keypressed" class="tsd-kind-icon">key<wbr>Pressed</a>
 		</li>
 		<li class=" tsd-kind-function tsd-parent-kind-module">
-			<a href="core_systemevents.html#keyup" class="tsd-kind-icon">key<wbr>Up</a>
-		</li>
-		<li class=" tsd-kind-function tsd-parent-kind-module">
 			<a href="core_systemevents.html#mouseclicked" class="tsd-kind-icon">mouse<wbr>Clicked</a>
 		</li>
 		<li class=" tsd-kind-function tsd-parent-kind-module">
@@ -2754,7 +2751,6 @@ img {
 							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#changesize" class="tsd-kind-icon">change<wbr>Size</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#draw" class="tsd-kind-icon">draw</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#keypressed" class="tsd-kind-icon">key<wbr>Pressed</a></li>
-							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#keyup" class="tsd-kind-icon">key<wbr>Up</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#mouseclicked" class="tsd-kind-icon">mouse<wbr>Clicked</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#mousemoved" class="tsd-kind-icon">mouse<wbr>Moved</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-module"><a href="core_systemevents.html#mousepressed" class="tsd-kind-icon">mouse<wbr>Pressed</a></li>
@@ -2774,13 +2770,13 @@ img {
 				<a name="changesize" class="tsd-anchor"></a>
 				<h3>change<wbr>Size</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">change<wbr>Size<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">change<wbr>Size<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/afb49cf/src/core/SystemEvents.ts#L100">src/core/SystemEvents.ts:100</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/c16a60a/src/core/SystemEvents.ts#L91">src/core/SystemEvents.ts:91</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2792,19 +2788,7 @@ img {
 								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></h4>
 					</li>
 				</ul>
 			</section>
@@ -2812,31 +2796,19 @@ img {
 				<a name="draw" class="tsd-anchor"></a>
 				<h3>draw</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">draw<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span>, canvas<span class="tsd-signature-symbol">?: </span><a href="../classes/core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">draw<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a>, canvas<span class="tsd-signature-symbol">?: </span><a href="../classes/core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/afb49cf/src/core/SystemEvents.ts#L60">src/core/SystemEvents.ts:60</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/c16a60a/src/core/SystemEvents.ts#L62">src/core/SystemEvents.ts:62</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>callback: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h5>
-								<ul class="tsd-parameters">
-									<li class="tsd-parameter-signature">
-										<ul class="tsd-signatures tsd-kind-type-literal">
-											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-										</ul>
-										<ul class="tsd-descriptions">
-											<li class="tsd-description">
-												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-											</li>
-										</ul>
-									</li>
-								</ul>
+								<h5>callback: <a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></h5>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> canvas: <a href="../classes/core_fcanvas.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h5>
@@ -2850,13 +2822,13 @@ img {
 				<a name="keypressed" class="tsd-anchor"></a>
 				<h3>key<wbr>Pressed</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">key<wbr>Pressed<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">key<wbr>Pressed<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/afb49cf/src/core/SystemEvents.ts#L78">src/core/SystemEvents.ts:78</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/c16a60a/src/core/SystemEvents.ts#L80">src/core/SystemEvents.ts:80</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2868,57 +2840,7 @@ img {
 								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-				<a name="keyup" class="tsd-anchor"></a>
-				<h3>key<wbr>Up</h3>
-				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">key<wbr>Up<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/afb49cf/src/core/SystemEvents.ts#L89">src/core/SystemEvents.ts:89</a></li>
-							</ul>
-						</aside>
-						<h4 class="tsd-parameters-title">Parameters</h4>
-						<ul class="tsd-parameters">
-							<li>
-								<h5>callback: <a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a></h5>
-							</li>
-							<li>
-								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
-							</li>
-						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></h4>
 					</li>
 				</ul>
 			</section>
@@ -2926,13 +2848,13 @@ img {
 				<a name="mouseclicked" class="tsd-anchor"></a>
 				<h3>mouse<wbr>Clicked</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">mouse<wbr>Clicked<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">mouse<wbr>Clicked<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/afb49cf/src/core/SystemEvents.ts#L133">src/core/SystemEvents.ts:133</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/c16a60a/src/core/SystemEvents.ts#L124">src/core/SystemEvents.ts:124</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2944,19 +2866,7 @@ img {
 								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></h4>
 					</li>
 				</ul>
 			</section>
@@ -2964,13 +2874,13 @@ img {
 				<a name="mousemoved" class="tsd-anchor"></a>
 				<h3>mouse<wbr>Moved</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">mouse<wbr>Moved<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">mouse<wbr>Moved<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/afb49cf/src/core/SystemEvents.ts#L144">src/core/SystemEvents.ts:144</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/c16a60a/src/core/SystemEvents.ts#L135">src/core/SystemEvents.ts:135</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2982,19 +2892,7 @@ img {
 								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></h4>
 					</li>
 				</ul>
 			</section>
@@ -3002,13 +2900,13 @@ img {
 				<a name="mousepressed" class="tsd-anchor"></a>
 				<h3>mouse<wbr>Pressed</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">mouse<wbr>Pressed<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">mouse<wbr>Pressed<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/afb49cf/src/core/SystemEvents.ts#L122">src/core/SystemEvents.ts:122</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/c16a60a/src/core/SystemEvents.ts#L113">src/core/SystemEvents.ts:113</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3020,19 +2918,7 @@ img {
 								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></h4>
 					</li>
 				</ul>
 			</section>
@@ -3040,13 +2926,13 @@ img {
 				<a name="mousewheel" class="tsd-anchor"></a>
 				<h3>mouse<wbr>Wheel</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">mouse<wbr>Wheel<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">mouse<wbr>Wheel<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/afb49cf/src/core/SystemEvents.ts#L111">src/core/SystemEvents.ts:111</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/c16a60a/src/core/SystemEvents.ts#L102">src/core/SystemEvents.ts:102</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3058,19 +2944,7 @@ img {
 								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></h4>
 					</li>
 				</ul>
 			</section>
@@ -3084,9 +2958,15 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/afb49cf/src/core/SystemEvents.ts#L13">src/core/SystemEvents.ts:13</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/c16a60a/src/core/SystemEvents.ts#L15">src/core/SystemEvents.ts:15</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<dl class="tsd-comment-tags">
+								<dt>export</dt>
+								<dd></dd>
+							</dl>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
@@ -3106,6 +2986,7 @@ img {
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<p>{Promise<void>}</p>
 					</li>
 				</ul>
 			</section>
@@ -3113,13 +2994,13 @@ img {
 				<a name="touchend" class="tsd-anchor"></a>
 				<h3>touch<wbr>End</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">touch<wbr>End<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">touch<wbr>End<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/afb49cf/src/core/SystemEvents.ts#L177">src/core/SystemEvents.ts:177</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/c16a60a/src/core/SystemEvents.ts#L168">src/core/SystemEvents.ts:168</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3131,19 +3012,7 @@ img {
 								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></h4>
 					</li>
 				</ul>
 			</section>
@@ -3151,13 +3020,13 @@ img {
 				<a name="touchmove" class="tsd-anchor"></a>
 				<h3>touch<wbr>Move</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">touch<wbr>Move<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">touch<wbr>Move<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/afb49cf/src/core/SystemEvents.ts#L166">src/core/SystemEvents.ts:166</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/c16a60a/src/core/SystemEvents.ts#L157">src/core/SystemEvents.ts:157</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3169,19 +3038,7 @@ img {
 								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></h4>
 					</li>
 				</ul>
 			</section>
@@ -3189,13 +3046,13 @@ img {
 				<a name="touchstart" class="tsd-anchor"></a>
 				<h3>touch<wbr>Start</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">touch<wbr>Start<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">touch<wbr>Start<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../interfaces/classes_emitter.callbackevent.html" class="tsd-signature-type" data-tsd-kind="Interface">CallbackEvent</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/afb49cf/src/core/SystemEvents.ts#L155">src/core/SystemEvents.ts:155</a></li>
+								<li>Defined in <a href="https://github.com/NguyenThanh1995/fcanvas/blob/c16a60a/src/core/SystemEvents.ts#L146">src/core/SystemEvents.ts:146</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3207,19 +3064,7 @@ img {
 								<h5>element: <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = ...</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="../interfaces/utils.noop.html" class="tsd-signature-type" data-tsd-kind="Interface">noop</a></h4>
 					</li>
 				</ul>
 			</section>

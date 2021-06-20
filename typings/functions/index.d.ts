@@ -25,11 +25,14 @@ export declare function loadAudio(src: string): Promise<HTMLAudioElement>;
  * @return {number}
  */
 export declare function map(value: number, start: number, stop: number, min: number, max: number): number;
-export declare function aspectRatio(ratio: number, width: number, height: number): [number, number];
 /**
- * @param {any[]} ...args
- * @return {any}
+ * @export
+ * @param {number} ratio
+ * @param {number} width
+ * @param {number} height
+ * @return {*}  {[number, number]}
  */
+export declare function aspectRatio(ratio: number, width: number, height: number): [number, number];
 declare function random(value: number): number;
 declare function random<T>(array: T[]): T;
 declare function random(start: number, stop: number): number;

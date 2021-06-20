@@ -1,6 +1,6 @@
 const path = require("path");
 const rollup = require("rollup");
-const babel = require("rollup-plugin-babel");
+const { babel, getBabelOutputPlugin } = require("@rollup/plugin-babel");
 const { terser } = require("rollup-plugin-terser");
 const resolve = require("rollup-plugin-node-resolve");
 const commonjs = require("rollup-plugin-commonjs");
@@ -14,6 +14,7 @@ async function build(options, _outputOptions) {
       exports: "named",
       file: path.resolve(__dirname, _outputOptions.filename),
       name: "fcanvas",
+      plugins: _outputOptions.plugins || [],
     };
     const { output } = await bundle.generate(outputOptions);
     await bundle.write(outputOptions);
@@ -32,41 +33,30 @@ function blue(str) {
   return "\x1b[1m\x1b[34m" + str + "\x1b[39m\x1b[22m";
 }
 
+
 build(
   {
     input: path.resolve(__dirname, "src/index.ts"),
     plugins: [
       resolve(),
+      commonjs(),
       typescript({
         clean: true,
         declarationDir: path.resolve(__dirname, "typings"),
         tsconfig: "./tsconfig.json",
         useTsconfigDeclarationDir: true,
-      }),
-      commonjs(),
-      babel({
-        babelrc: false,
-        runtimeHelpers: true,
-        presets: ["@babel/preset-env"],
-        plugins: [
-          "@babel/plugin-proposal-class-properties",
-          "@babel/plugin-proposal-optional-chaining",
-          "@babel/plugin-proposal-object-rest-spread",
-          [
-            "@babel/plugin-transform-runtime",
-            {
-              regenerator: true,
-            },
-          ],
-        ],
-        ignore: ["dist/*"],
-      }),
-      terser(),
+      })
     ],
   },
   {
-    format: "umd",
-    filename: "dist/fcanvas.js",
+    // format: "umd",
+    filename: "dist/fcanvas.es5.esm.js",
+    plugins: [
+      getBabelOutputPlugin({
+        presets: ["@babel/preset-env"],
+        plugins: [["@babel/plugin-transform-runtime"]],
+      }),
+    ],
   }
 );
 
@@ -84,7 +74,7 @@ build(
       commonjs(),
       babel({
         babelrc: false,
-        runtimeHelpers: true,
+        babelHelpers: true,
         // presets: ["@babel/preset-env"],
         plugins: [
           // "@babel/plugin-proposal-class-properties",
@@ -117,67 +107,17 @@ build(
         declarationDir: path.resolve(__dirname, "typings"),
         tsconfig: "./tsconfig.json",
         useTsconfigDeclarationDir: true,
-      }),
-      commonjs(),
-      babel({
-        // babelrc: false,
-        runtimeHelpers: true,
-        presets: ["@babel/preset-env"],
-        plugins: [
-          "transform-es2015-modules-commonjs",
-          "@babel/plugin-proposal-class-properties",
-          "@babel/plugin-proposal-optional-chaining",
-          "@babel/plugin-proposal-object-rest-spread",
-          [
-            "@babel/plugin-transform-runtime",
-            {
-              regenerator: true,
-            },
-          ],
-        ],
-        ignore: ["dist/*"],
-      }),
+      })
     ],
   },
   {
     format: "esm",
-    filename: "dist/fcanvas.node.esm.js",
-  }
-);
-
-build(
-  {
-    input: path.resolve(__dirname, "src/index.ts"),
+    filename: "dist/fcanvas.es5.esm.js",
     plugins: [
-      resolve(),
-      typescript({
-        clean: true,
-        declarationDir: path.resolve(__dirname, "typings"),
-        tsconfig: "./tsconfig.json",
-        useTsconfigDeclarationDir: true,
-      }),
-      commonjs(),
-      babel({
-        babelrc: false,
-        runtimeHelpers: true,
+      getBabelOutputPlugin({
         presets: ["@babel/preset-env"],
-        plugins: [
-          "@babel/plugin-proposal-class-properties",
-          "@babel/plugin-proposal-optional-chaining",
-          "@babel/plugin-proposal-object-rest-spread",
-          [
-            "@babel/plugin-transform-runtime",
-            {
-              regenerator: true,
-            },
-          ],
-        ],
-        ignore: ["dist/*"],
+        plugins: [["@babel/plugin-transform-runtime", { useESModules: true }]],
       }),
     ],
-  },
-  {
-    format: "cjs",
-    filename: "dist/fcanvas.cjs",
   }
 );
