@@ -352,6 +352,7 @@ export default class fCanvas {
      * @return {void}
      */
     noCursor(): void;
+    _setIdFrame(id: number): void;
     /**
      * @return {void}
      */

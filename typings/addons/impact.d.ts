@@ -4,6 +4,6 @@ interface ReturnInterfering {
     element: MyElement;
 }
 export declare function getDirectionElement(el1: any, el2: any): any;
-export declare function interferings(el: MyElement, ...otherEl: MyElement[]): ReturnInterfering | null;
-export declare function interferingsBoolean(el: MyElement, ...otherEl: MyElement[]): boolean;
+export declare function pressed(el: MyElement, ...otherEl: MyElement[]): ReturnInterfering | null;
+export declare function isPressed(el: MyElement, ...otherEl: MyElement[]): boolean;
 export {};

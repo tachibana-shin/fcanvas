@@ -1668,35 +1668,26 @@ function _setup2(_x) {
 
 function _setup() {
   _setup = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee6(callback) {
-    var ret;
     return _regeneratorRuntime.wrap(function _callee6$(_context6) {
       while (1) {
         switch (_context6.prev = _context6.next) {
           case 0:
             if (!(document.readyState === "complete")) {
-              _context6.next = 9;
+              _context6.next = 7;
               break;
             }
 
-            //// readyState === "complete"
-            ret = callback();
+            _context6.next = 3;
+            return callback();
 
-            if (!(ret && "length" in ret)) {
-              _context6.next = 5;
-              break;
-            }
-
-            _context6.next = 5;
-            return ret;
-
-          case 5:
+          case 3:
             inited = true;
             emitter.emit("load");
-            _context6.next = 11;
+            _context6.next = 9;
             break;
 
-          case 9:
-            _context6.next = 11;
+          case 7:
+            _context6.next = 9;
             return new Promise(function (resolve) {
               function load() {
                 document.removeEventListener("DOMContentLoaded", load);
@@ -1711,7 +1702,7 @@ function _setup() {
               window.addEventListener("load", load);
             });
 
-          case 11:
+          case 9:
           case "end":
             return _context6.stop();
         }
@@ -1722,16 +1713,17 @@ function _setup() {
 }
 
 function __draw(callback, canvas) {
-  if (canvas.allowClear === true) {
+  if ((canvas === null || canvas === void 0 ? void 0 : canvas.allowClear) === true) {
     canvas.clear();
   }
 
   callback();
 
-  if (canvas.allowLoop === true) {
-    requestAnimationFrame(function () {
-      return __draw(callback, canvas);
+  if (canvas ? canvas.allowLoop === true : false) {
+    var id = requestAnimationFrame(function () {
+      __draw(callback, canvas);
     });
+    canvas === null || canvas === void 0 ? void 0 : canvas._setIdFrame(id);
   }
 }
 /**
@@ -1743,13 +1735,9 @@ function __draw(callback, canvas) {
 
 function _draw(callback, canvas) {
   if (inited) {
-    if (!canvas) {
-      void callback();
-    } else {
-      void __draw(callback, canvas);
-    }
+    void __draw(callback, canvas);
   } else {
-    emitter.once("load", function () {
+    void emitter.once("load", function () {
       _draw(callback, canvas);
     });
   }
@@ -2899,6 +2887,8 @@ var fCanvas = /*#__PURE__*/function () {
     key: "resetTranslate",
     value: function resetTranslate() {
       this.$context2d.translate(-this.__store.__translate.sumX, -this.__store.__translate.sumY);
+      this.__store.__translate.sumX = 0;
+      this.__store.__translate.sumY = 0;
     }
     /**
      * @param {number} x?
@@ -2928,6 +2918,8 @@ var fCanvas = /*#__PURE__*/function () {
     key: "resetScale",
     value: function resetScale() {
       this.$context2d.translate(-this.__store.__scale.sumX, -this.__store.__scale.sumY);
+      this.__store.__translate.sumX = 0;
+      this.__store.__translate.sumY = 0;
     }
     /**
      * @param {any} fillRule?
@@ -3108,6 +3100,12 @@ var fCanvas = /*#__PURE__*/function () {
     key: "noCursor",
     value: function noCursor() {
       this.$el.style.cursor = "none";
+    } // TODO: for system callback
+
+  }, {
+    key: "_setIdFrame",
+    value: function _setIdFrame(id) {
+      this.__store._idFrame = id;
     }
     /**
      * @return {void}
@@ -5241,7 +5239,7 @@ function interfering(element1, element2) {
   return company ? false : null;
 }
 
-function interferings(el) {
+function pressed(el) {
   var _result2;
 
   var result;
@@ -5261,7 +5259,7 @@ function interferings(el) {
   return (_result2 = result) !== null && _result2 !== void 0 ? _result2 : null;
 }
 
-function interferingsBoolean(el) {
+function isPressed(el) {
   for (var _len19 = arguments.length, otherEl = new Array(_len19 > 1 ? _len19 - 1 : 0), _key20 = 1; _key20 < _len19; _key20++) {
     otherEl[_key20 - 1] = arguments[_key20];
   }
@@ -5272,4 +5270,4 @@ function interferingsBoolean(el) {
 }
 
 export default fCanvas;
-export { Animate, Camera, Emitter, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, _draw as draw, even, getDirectionElement, hypot, interferings, interferingsBoolean, isMobile, isTouch, keyPressed, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, random, randomInt, range, requestAnimationFrame, _setup2 as setup, touchEnd, touchMove, touchStart, unlimited };
+export { Animate, Camera, Emitter, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, _draw as draw, even, getDirectionElement, hypot, isMobile, isPressed, isTouch, keyPressed, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, pressed, random, randomInt, range, requestAnimationFrame, _setup2 as setup, touchEnd, touchMove, touchStart, unlimited };

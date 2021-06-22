@@ -1212,10 +1212,7 @@ const emitter = new Emitter();
 async function setup(callback) {
     if (document.readyState === "complete") {
         //// readyState === "complete"
-        const ret = callback();
-        if (ret && "length" in ret) {
-            await ret;
-        }
+        await callback();
         inited = true;
         emitter.emit("load");
     }
@@ -1235,12 +1232,15 @@ async function setup(callback) {
     }
 }
 function __draw(callback, canvas) {
-    if (canvas.allowClear === true) {
+    if (canvas?.allowClear === true) {
         canvas.clear();
     }
     callback();
-    if (canvas.allowLoop === true) {
-        requestAnimationFrame(() => __draw(callback, canvas));
+    if (canvas ? canvas.allowLoop === true : false) {
+        const id = requestAnimationFrame(() => {
+            __draw(callback, canvas);
+        });
+        canvas?._setIdFrame(id);
     }
 }
 /**
@@ -1250,15 +1250,10 @@ function __draw(callback, canvas) {
  */
 function draw(callback, canvas) {
     if (inited) {
-        if (!canvas) {
-            void callback();
-        }
-        else {
-            void __draw(callback, canvas);
-        }
+        void __draw(callback, canvas);
     }
     else {
-        emitter.once("load", () => {
+        void emitter.once("load", () => {
             draw(callback, canvas);
         });
     }
@@ -2069,6 +2064,8 @@ class fCanvas {
      */
     resetTranslate() {
         this.$context2d.translate(-this.__store.__translate.sumX, -this.__store.__translate.sumY);
+        this.__store.__translate.sumX = 0;
+        this.__store.__translate.sumY = 0;
     }
     /**
      * @param {number} x?
@@ -2091,6 +2088,8 @@ class fCanvas {
      */
     resetScale() {
         this.$context2d.translate(-this.__store.__scale.sumX, -this.__store.__scale.sumY);
+        this.__store.__translate.sumX = 0;
+        this.__store.__translate.sumY = 0;
     }
     /**
      * @param {any} fillRule?
@@ -2210,6 +2209,10 @@ class fCanvas {
      */
     noCursor() {
         this.$el.style.cursor = "none";
+    }
+    // TODO: for system callback
+    _setIdFrame(id) {
+        this.__store._idFrame = id;
     }
     /**
      * @return {void}
@@ -3709,7 +3712,7 @@ function interfering(element1, element2, company = true) {
     }
     return company ? false : null;
 }
-function interferings(el, ...otherEl) {
+function pressed(el, ...otherEl) {
     let result;
     otherEl.some((el2) => {
         const r = interfering(el, el2);
@@ -3720,9 +3723,9 @@ function interferings(el, ...otherEl) {
     });
     return result ?? null;
 }
-function interferingsBoolean(el, ...otherEl) {
+function isPressed(el, ...otherEl) {
     return otherEl.some((el2) => interfering(el, el2, false));
 }
 
 export default fCanvas;
-export { Animate, Camera, Emitter, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, draw, even, getDirectionElement, hypot, interferings, interferingsBoolean, isMobile, isTouch, keyPressed, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, unlimited };
+export { Animate, Camera, Emitter, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, draw, even, getDirectionElement, hypot, isMobile, isPressed, isTouch, keyPressed, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, pressed, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, unlimited };

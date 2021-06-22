@@ -261,7 +261,7 @@ export default abstract class MyElement {
    * @returns {this}
    */
   fill(...args: ParamsToRgb): this {
-    this.$context2d.fillStyle = this.$parent._toRgb(args as ParamsToRgb);
+    this.$context2d.fillStyle = this.$parent._toRgb(args);
     this.$context2d.fill();
 
     return this;
@@ -281,8 +281,8 @@ export default abstract class MyElement {
    * @param  {number} alpha=1
    * @returns {this}
    */
-  stroke(...args: any[]): this {
-    this.$context2d.strokeStyle = this.$parent._toRgb(args as ParamsToRgb);
+  stroke(...args: ParamsToRgb): this {
+    this.$context2d.strokeStyle = this.$parent._toRgb(args);
     this.$context2d.stroke();
 
     return this;
@@ -1031,8 +1031,8 @@ export default abstract class MyElement {
    * @param {any[]} ...args
    * @return {this}
    */
-  shadowColor(...args: any[]): this {
-    this.$context2d.shadowColor = this.$parent._toRgb(args as ParamsToRgb);
+  shadowColor(...args: ParamsToRgb): this {
+    this.$context2d.shadowColor = this.$parent._toRgb(args);
 
     return this;
   }

@@ -18,11 +18,7 @@ export async function setup(callback: {
   if (document.readyState === "complete") {
     //// readyState === "complete"
 
-    const ret = callback();
-
-    if (ret && "length" in ret) {
-      await ret;
-    }
+    await callback();
 
     inited = true;
     emitter.emit("load");
@@ -44,13 +40,17 @@ export async function setup(callback: {
   }
 }
 
-function __draw(callback: noop, canvas: fCanvas): void {
-  if (canvas.allowClear === true) {
+function __draw(callback: noop, canvas?: fCanvas): void {
+  if (canvas?.allowClear === true) {
     canvas.clear();
   }
   callback();
-  if (canvas.allowLoop === true) {
-    requestAnimationFrame(() => __draw(callback, canvas));
+  if (canvas ? canvas.allowLoop === true : false) {
+    const id: number = requestAnimationFrame((): void => {
+      __draw(callback, canvas);
+    });
+
+    canvas?._setIdFrame(id);
   }
 }
 
@@ -61,13 +61,9 @@ function __draw(callback: noop, canvas: fCanvas): void {
  */
 export function draw(callback: noop, canvas?: fCanvas): void {
   if (inited) {
-    if (!canvas) {
-      void callback();
-    } else {
-      void __draw(callback, canvas);
-    }
+    void __draw(callback, canvas);
   } else {
-    emitter.once("load", (): void => {
+    void emitter.once("load", (): void => {
       draw(callback, canvas);
     });
   }

@@ -978,6 +978,9 @@ export default class fCanvas {
       -this.__store.__translate.sumX,
       -this.__store.__translate.sumY
     );
+
+    this.__store.__translate.sumX = 0;
+    this.__store.__translate.sumY = 0;
   }
   scale(): Offset;
   scale(x: number, y: number): void;
@@ -1006,6 +1009,9 @@ export default class fCanvas {
       -this.__store.__scale.sumX,
       -this.__store.__scale.sumY
     );
+
+    this.__store.__translate.sumX = 0;
+    this.__store.__translate.sumY = 0;
   }
   clip(): void;
   clip(fillRule: RuleClip): void;
@@ -1177,6 +1183,10 @@ export default class fCanvas {
    */
   noCursor(): void {
     this.$el.style.cursor = "none";
+  }
+  // TODO: for system callback
+  _setIdFrame(id: number): void {
+    this.__store._idFrame = id;
   }
   /**
    * @return {void}
