@@ -1,82 +1,254 @@
-import loadResourceImage, {
-  ResourceTile,
-  ImageResource,
-} from "../addons/loadResourceImage";
-import { loadAudio, loadImage } from "../functions/index";
+import { trim } from "../utils/index";
+import { cutImage, loadImage, loadAudio } from "../functions/index";
 
-interface ResourceParam {
-  src: string;
-  lazy: boolean;
-  type: "image" | "audio" | "plist" | "json" | "txt" | "map";
-}
-interface ResourcesParams {
-  [propName: string]: ResourceParam;
+export interface ImageResource extends HTMLImageElement {
+  image: HTMLImageElement;
+  size: {
+    width: number;
+    height: number;
+  };
 }
 
-type ResourceType =
-  | ResourceTile
-  | HTMLImageElement
-  | HTMLAudioElement
-  | any[]
-  | Object
-  | String;
-export default class Resource {
-  private _resourcesLoaded: Map<string, ResourceType> = new Map();
-  private _desResources: ResourcesParams = Object.create(null);
+function convertValueXMLToArray(str: string): any[] {
+  if (/^{[^]*}$/.test(trim(str))) {
+    str = decodeURIComponent(
+      encodeURIComponent(str).replace(/%7b/gi, "[").replace(/%7d/gi, "]")
+    );
 
-  private _set(key: string, value: ResourceType): void {
-    (this as any)[key] = value;
+    return new Function(`return ${str}`)();
   }
-  private _delete(key: string): void {
-    if (key in this) {
-      delete (this as any)[key];
+
+  throw new Error(`fCanvas<Resource>: "${str}" a malformed field`);
+}
+
+function convertFieldToJson(keyItem: any): object {
+  const key = keyItem.textContent;
+  const value = keyItem.nextElementSibling;
+
+  if (value == null) {
+    throw new Error(
+      "fCanvas<loadResourceImage>: Error because syntax error in file plist."
+    );
+  }
+
+  if (value.tagName === "dict") {
+    let result = {};
+    Array.from(value.childNodes)
+      .filter((item: any) => item.tagName === "key")
+      .forEach((keyItem: any) => {
+        result = {
+          ...result,
+          ...convertFieldToJson(keyItem),
+        };
+      });
+
+    return {
+      [key]: result,
+    };
+  }
+  if (value.tagName === "array") {
+    let result: object[] = [];
+    Array.from(value.childNodes)
+      .filter((item: any) => item.tagName === "key")
+      .forEach((keyItem) => {
+        result.push(convertFieldToJson(keyItem));
+      });
+
+    return {
+      [key]: result,
+    };
+  }
+  if (value.tagName === "string") {
+    return {
+      [key]: convertValueXMLToArray(value.textContent),
+    };
+  }
+  if (value.tagName === "integer") {
+    return {
+      [key]: parseInt(value.textContent),
+    };
+  }
+  if (value.tagName === "float") {
+    return {
+      [key]: parseFloat(value.textContent),
+    };
+  }
+  if (value.tagName === "true") {
+    return {
+      [key]: true,
+    };
+  }
+  if (value.tagName === "false") {
+    return {
+      [key]: false,
+    };
+  }
+
+  return {};
+}
+function resolvePath(...params: string[]): string {
+  if (params[1].match(/^[a-z]+:\/\//i)) {
+    return params[1];
+  }
+
+  const root = ("" || params[0]).replace(/\/$/, "").split("/");
+  params[0] = root.slice(0, root.length - 1).join("/");
+
+  return params.join("/");
+}
+
+class TilesResource {
+  private tileRoot: HTMLImageElement;
+  private plist: {
+    [propName: string]: any;
+  };
+  private __caching: Map<string, ImageResource> = new Map();
+
+  constructor(image: HTMLImageElement, plist: object) {
+    this.tileRoot = image;
+    this.plist = plist;
+  }
+  /**
+   * @param {string} name
+   * @return {any}
+   */
+  get(name: string): ImageResource {
+    if (this.has(name)) {
+      const { frame, rotated, sourceSize } = this.plist.frames[name];
+
+      if (this.__caching.has(name) === false) {
+        const image = cutImage(
+          this.tileRoot,
+          +frame[0][0],
+          +frame[0][1],
+          +frame[1][0],
+          +frame[1][1],
+          rotated ? -90 : 0
+        );
+
+        this.__caching.set(
+          name,
+          Object.assign(image, {
+            image,
+            size: {
+              width: +sourceSize[0] || +frame[1][0],
+              height: +sourceSize[1] || +frame[1][1],
+            },
+          })
+        );
+      }
+
+      return this.__caching.get(name) as ImageResource;
+    } else {
+      throw new Error(
+        `fCanvas<addons/loadResourceImage>: Error does not exist this file "${name}" in declaration .plist`
+      );
     }
   }
+  /**
+   * @param {string} name
+   * @return {boolean}
+   */
+  has(name: string): boolean {
+    return name in this.plist.frames;
+  }
+}
+
+/**
+ * @param {string} path
+ * @return {Promise<TilesResource>}
+ */
+export async function loadResourceImage(path: string): Promise<TilesResource> {
+  if (path.match(/\.plist$/) == null) {
+    path += `.plist`;
+  }
+
+  const plist = await fetch(`${path}`)
+    .then((response) => response.text())
+    .then((str: string) => new DOMParser().parseFromString(str, "text/xml"));
+  let plistJson = {};
+
+  plist
+    .querySelectorAll("plist > dict:first-child > key")
+    .forEach((itemKey) => {
+      plistJson = {
+        ...plistJson,
+        ...convertFieldToJson(itemKey),
+      };
+    });
+
+  const image = await loadImage(
+    resolvePath(
+      path,
+      (plistJson as any)?.metadata.realTextureFileName ||
+        (plistJson as any)?.metadata.textureFileName
+    )
+  );
+
+  return new TilesResource(image, plistJson);
+
+  //// ----------------- convert to json ------------------
+}
+
+export default class Resource {
+  private resourceLoaded: Map<
+    string,
+    TilesResource | HTMLImageElement | HTMLAudioElement
+  > = new Map();
+  private resourceDescription: {
+    [propName: string]: {
+      src: string;
+      lazy: boolean;
+      type: "image" | "audio" | "plist";
+    };
+  } = Object.create(null);
+
   constructor(
-    resources: {
-      [propName: string]: string | ResourceParam;
+    description: {
+      [propName: string]:
+        | {
+            src: string;
+            lazy?: boolean;
+          }
+        | string;
     },
     autoLoad: boolean = true
   ) {
-    const desResources: ResourcesParams = {};
+    const resourceDescription = Object.create(null);
 
-    for (const prop in resources) {
-      ///
-      if (typeof resources[prop] === "object") {
-        desResources[prop] = {
-          ...(resources[prop] as object),
-        } as ResourceParam;
-      } else {
-        desResources[prop] = {
-          src: resources[prop] as string,
-          lazy: false,
-          type: "plist",
+    for (const prop in description) {
+      if (typeof description[prop] === "string") {
+        resourceDescription[prop] = {
+          src: description[prop],
+          lazy: true,
         };
+      } else {
+        resourceDescription[prop] = description[prop];
       }
     }
 
-    this._desResources = desResources;
+    this.resourceDescription = resourceDescription;
 
     /// observe
-    const { set, delete: _delete } = this._resourcesLoaded;
+    const { set, delete: _delete } = this.resourceLoaded;
     const $this = this;
 
-    this._resourcesLoaded.set = function (...params: any): any {
+    this.resourceLoaded.set = function (...params: any): any {
       /// call this._set
-      $this._set(params[0], params[1]);
+      ($this as any)[params[0]] = params[1];
       return set.apply(this, params);
     };
-    this._resourcesLoaded.delete = function (...params: any): any {
+    this.resourceLoaded.delete = function (...params: any): any {
       /// call this._set
-      $this._delete(params[0]);
+      delete ($this as any)[params[0]];
       return _delete.apply(this, params);
     };
 
     if (autoLoad) {
       const resourceAutoLoad: Promise<void>[] = [];
 
-      for (const prop in this._desResources) {
-        if (this._desResources[prop].lazy === false) {
+      for (const prop in this.resourceDescription) {
+        if ((this.resourceDescription[prop] as any).lazy === false) {
           resourceAutoLoad.push(this.load(prop));
         }
       }
@@ -93,78 +265,26 @@ export default class Resource {
     }
   }
 
-  isLoaded(name?: string): boolean {
-    if (name) {
-      return this._resourcesLoaded.has(name);
-    } else {
-      for (const prop in this._desResources) {
-        if (this._resourcesLoaded.has(prop) === false) {
-          return false;
-        }
-      }
-
-      return true;
-    }
-  }
-
   async load(name?: string): Promise<void> {
     if (name) {
-      if (name in this._desResources) {
+      if (name in this.resourceDescription) {
         if (this.isLoaded(name) === false) {
-          switch (this._desResources[name].type) {
+          const { src, type } = this.resourceDescription[name] as any;
+          switch (type) {
             case "image":
-              this._resourcesLoaded.set(
-                name,
-                await loadImage(this._desResources[name].src)
-              );
+              this.resourceLoaded.set(name, await loadImage(src));
               break;
             case "audio":
-              this._resourcesLoaded.set(
-                name,
-                await loadAudio(this._desResources[name].src)
-              );
+              this.resourceLoaded.set(name, await loadAudio(src));
               break;
             case "plist":
-              this._resourcesLoaded.set(
-                name,
-                await loadResourceImage(this._desResources[name].src)
-              );
-              break;
-            case "json":
-              this._resourcesLoaded.set(
-                name,
-                await fetch(this._desResources[name].src).then((res) =>
-                  res.json()
-                )
-              );
-              break;
-            case "txt":
-              this._resourcesLoaded.set(
-                name,
-                await fetch(this._desResources[name].src).then((res) =>
-                  res.text()
-                )
-              );
-              break;
-            case "map":
-              this._resourcesLoaded.set(
-                name,
-                await fetch(this._desResources[name].src)
-                  .then((res) => res.text())
-                  .then((text) =>
-                    text.split("\n").map((item) => item.split(" "))
-                  )
-              );
+              this.resourceLoaded.set(name, await loadResourceImage(src));
               break;
             default:
               console.warn(
-                `fCanvas<Resource>: can't load "${name} because it is "${this._desResources[name].type}`
+                `fCanvas<Resource>: can't load "${name} because it is "${type}`
               );
           }
-          this._resourcesLoaded.set(
-            name,
-            await loadResourceImage(this._desResources[name].src)
-          );
         } else {
           console.warn(`fCanvas<Resource>: "${name}" resource loaded.`);
         }
@@ -173,34 +293,46 @@ export default class Resource {
       }
     }
   }
-  get(path: string): ResourceType | ImageResource {
+  isLoaded(name?: string): boolean {
+    if (name) {
+      return this.resourceLoaded.has(name);
+    } else {
+      for (const prop in this.resourceDescription) {
+        if (this.resourceLoaded.has(prop) === false) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+  }
+
+  get(type: "image", path: string): HTMLImageElement;
+  get(type: "audio", path: string): HTMLAudioElement;
+  get(type: "plist", path: string): TilesResource;
+  get(
+    type: "image" | "audio" | "plist",
+    path: string
+  ): HTMLImageElement | HTMLAudioElement | TilesResource {
     const _path = path.split("/");
 
     const resourceName = _path[0];
     const resoucreProp = _path.slice(1).join("/");
 
-    const info: ResourceParam = this._desResources[resourceName];
+    const info = this.resourceDescription[resourceName];
 
-    if (info) {
-      if (this._resourcesLoaded.has(resourceName)) {
-        const resource = this._resourcesLoaded.get(resourceName);
+    if (info && info.type === type) {
+      if (this.resourceLoaded.has(resourceName)) {
+        const resource = this.resourceLoaded.get(resourceName);
 
         if (resource) {
           switch (info.type) {
             case "plist":
               return resoucreProp
-                ? (resource as ResourceTile).get(resoucreProp)
+                ? (resource as TilesResource).get(resoucreProp)
                 : resource;
-            case "json":
-            case "map":
-              let tmp = resource;
-              _path.slice(1).forEach((prop: string): void => {
-                tmp = (tmp as any)?.[prop];
-              });
-              return tmp;
             case "image":
             case "audio":
-            case "txt":
             default:
               return resource;
           }

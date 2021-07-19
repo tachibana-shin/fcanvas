@@ -4572,13 +4572,13 @@ var Camera = /*#__PURE__*/function () {
 
 Camera.Cursor = Cursor;
 
-function templateToArray(str) {
-  if (str.replace(/^\s+|\s+$/g, "").match(/^{[^]*}$/)) {
+function convertValueXMLToArray(str) {
+  if (/^{[^]*}$/.test(trim(str))) {
     str = decodeURIComponent(encodeURIComponent(str).replace(/%7b/gi, "[").replace(/%7d/gi, "]"));
     return new Function("return ".concat(str))();
-  } else {
-    return str;
   }
+
+  throw new Error("fCanvas<Resource>: \"".concat(str, "\" a malformed field"));
 }
 
 function convertFieldToJson(keyItem) {
@@ -4610,7 +4610,7 @@ function convertFieldToJson(keyItem) {
   }
 
   if (value.tagName === "string") {
-    return _defineProperty({}, key, templateToArray(value.textContent));
+    return _defineProperty({}, key, convertValueXMLToArray(value.textContent));
   }
 
   if (value.tagName === "integer") {
@@ -4646,12 +4646,12 @@ function resolvePath() {
   return params.join("/");
 }
 
-var ResourceTile = /*#__PURE__*/function () {
-  function ResourceTile(image, plist) {
-    _classCallCheck(this, ResourceTile);
+var TilesResource = /*#__PURE__*/function () {
+  function TilesResource(image, plist) {
+    _classCallCheck(this, TilesResource);
 
     this.__caching = new Map();
-    this.image = image;
+    this.tileRoot = image;
     this.plist = plist;
   }
   /**
@@ -4660,7 +4660,7 @@ var ResourceTile = /*#__PURE__*/function () {
    */
 
 
-  _createClass(ResourceTile, [{
+  _createClass(TilesResource, [{
     key: "get",
     value: function get(name) {
       if (this.has(name)) {
@@ -4670,7 +4670,7 @@ var ResourceTile = /*#__PURE__*/function () {
             sourceSize = _this$plist$frames$na.sourceSize;
 
         if (this.__caching.has(name) === false) {
-          var image = cutImage(this.image, +frame[0][0], +frame[0][1], +frame[1][0], +frame[1][1], rotated ? -90 : 0);
+          var image = cutImage(this.tileRoot, +frame[0][0], +frame[0][1], +frame[1][0], +frame[1][1], rotated ? -90 : 0);
 
           this.__caching.set(name, Object.assign(image, {
             image: image,
@@ -4698,11 +4698,11 @@ var ResourceTile = /*#__PURE__*/function () {
     }
   }]);
 
-  return ResourceTile;
+  return TilesResource;
 }();
 /**
  * @param {string} path
- * @return {Promise<ResourceTile>}
+ * @return {Promise<TilesResource>}
  */
 
 
@@ -4741,7 +4741,7 @@ function _loadResourceImage() {
 
           case 8:
             image = _context7.sent;
-            return _context7.abrupt("return", new ResourceTile(image, plistJson));
+            return _context7.abrupt("return", new TilesResource(image, plistJson));
 
           case 10:
           case "end":
@@ -4754,64 +4754,60 @@ function _loadResourceImage() {
 }
 
 var Resource = /*#__PURE__*/function () {
-  function Resource(resources) {
+  function Resource(description) {
     var _this17 = this;
 
     var autoLoad = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
     _classCallCheck(this, Resource);
 
-    this._resourcesLoaded = new Map();
-    this._desResources = Object.create(null);
-    var desResources = {};
+    this.resourceLoaded = new Map();
+    this.resourceDescription = Object.create(null);
+    var resourceDescription = Object.create(null);
 
-    for (var prop in resources) {
-      ///
-      if (_typeof(resources[prop]) === "object") {
-        desResources[prop] = _objectSpread({}, resources[prop]);
-      } else {
-        desResources[prop] = {
-          src: resources[prop],
-          lazy: false,
-          type: "plist"
+    for (var prop in description) {
+      if (typeof description[prop] === "string") {
+        resourceDescription[prop] = {
+          src: description[prop],
+          lazy: true
         };
+      } else {
+        resourceDescription[prop] = description[prop];
       }
     }
 
-    this._desResources = desResources; /// observe
+    this.resourceDescription = resourceDescription; /// observe
 
-    var _this$_resourcesLoade = this._resourcesLoaded,
-        set = _this$_resourcesLoade.set,
-        _delete = _this$_resourcesLoade["delete"];
+    var _this$resourceLoaded = this.resourceLoaded,
+        set = _this$resourceLoaded.set,
+        _delete = _this$resourceLoaded["delete"];
     var $this = this;
 
-    this._resourcesLoaded.set = function () {
+    this.resourceLoaded.set = function () {
       for (var _len16 = arguments.length, params = new Array(_len16), _key17 = 0; _key17 < _len16; _key17++) {
         params[_key17] = arguments[_key17];
       }
 
       /// call this._set
-      $this._set(params[0], params[1]);
-
+      $this[params[0]] = params[1];
       return set.apply(this, params);
     };
 
-    this._resourcesLoaded["delete"] = function () {
+    this.resourceLoaded["delete"] = function () {
       for (var _len17 = arguments.length, params = new Array(_len17), _key18 = 0; _key18 < _len17; _key18++) {
         params[_key18] = arguments[_key18];
       }
 
       /// call this._set
-      $this._delete(params[0]);
-
+      delete $this[params[0]];
       return _delete.apply(this, params);
     };
 
     if (autoLoad) {
       var resourceAutoLoad = [];
 
-      for (var _prop in this._desResources) {
-        if (this._desResources[_prop].lazy === false) {
+      for (var _prop in this.resourceDescription) {
+        if (this.resourceDescription[_prop].lazy === false) {
           resourceAutoLoad.push(this.load(_prop));
         }
       } // @ts-expect-error
@@ -4853,175 +4849,92 @@ var Resource = /*#__PURE__*/function () {
   }
 
   _createClass(Resource, [{
-    key: "_set",
-    value: function _set(key, value) {
-      this[key] = value;
-    }
-  }, {
-    key: "_delete",
-    value: function _delete(key) {
-      if (key in this) {
-        delete this[key];
-      }
-    }
-  }, {
-    key: "isLoaded",
-    value: function isLoaded(name) {
-      if (name) {
-        return this._resourcesLoaded.has(name);
-      } else {
-        for (var prop in this._desResources) {
-          if (this._resourcesLoaded.has(prop) === false) {
-            return false;
-          }
-        }
-
-        return true;
-      }
-    }
-  }, {
     key: "load",
     value: function () {
       var _load = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee5(name) {
+        var _this$resourceDescrip, src, type;
+
         return _regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
                 if (!name) {
-                  _context5.next = 61;
+                  _context5.next = 35;
                   break;
                 }
 
-                if (!(name in this._desResources)) {
-                  _context5.next = 60;
+                if (!(name in this.resourceDescription)) {
+                  _context5.next = 34;
                   break;
                 }
 
                 if (!(this.isLoaded(name) === false)) {
-                  _context5.next = 57;
+                  _context5.next = 31;
                   break;
                 }
 
-                _context5.t0 = this._desResources[name].type;
-                _context5.next = _context5.t0 === "image" ? 6 : _context5.t0 === "audio" ? 13 : _context5.t0 === "plist" ? 20 : _context5.t0 === "json" ? 27 : _context5.t0 === "txt" ? 34 : _context5.t0 === "map" ? 41 : 48;
+                _this$resourceDescrip = this.resourceDescription[name], src = _this$resourceDescrip.src, type = _this$resourceDescrip.type;
+                _context5.t0 = type;
+                _context5.next = _context5.t0 === "image" ? 7 : _context5.t0 === "audio" ? 14 : _context5.t0 === "plist" ? 21 : 28;
                 break;
 
-              case 6:
-                _context5.t1 = this._resourcesLoaded;
+              case 7:
+                _context5.t1 = this.resourceLoaded;
                 _context5.t2 = name;
-                _context5.next = 10;
-                return loadImage(this._desResources[name].src);
+                _context5.next = 11;
+                return loadImage(src);
 
-              case 10:
+              case 11:
                 _context5.t3 = _context5.sent;
 
                 _context5.t1.set.call(_context5.t1, _context5.t2, _context5.t3);
 
-                return _context5.abrupt("break", 49);
+                return _context5.abrupt("break", 29);
 
-              case 13:
-                _context5.t4 = this._resourcesLoaded;
+              case 14:
+                _context5.t4 = this.resourceLoaded;
                 _context5.t5 = name;
-                _context5.next = 17;
-                return loadAudio(this._desResources[name].src);
+                _context5.next = 18;
+                return loadAudio(src);
 
-              case 17:
+              case 18:
                 _context5.t6 = _context5.sent;
 
                 _context5.t4.set.call(_context5.t4, _context5.t5, _context5.t6);
 
-                return _context5.abrupt("break", 49);
+                return _context5.abrupt("break", 29);
 
-              case 20:
-                _context5.t7 = this._resourcesLoaded;
+              case 21:
+                _context5.t7 = this.resourceLoaded;
                 _context5.t8 = name;
-                _context5.next = 24;
-                return loadResourceImage(this._desResources[name].src);
+                _context5.next = 25;
+                return loadResourceImage(src);
 
-              case 24:
+              case 25:
                 _context5.t9 = _context5.sent;
 
                 _context5.t7.set.call(_context5.t7, _context5.t8, _context5.t9);
 
-                return _context5.abrupt("break", 49);
+                return _context5.abrupt("break", 29);
 
-              case 27:
-                _context5.t10 = this._resourcesLoaded;
-                _context5.t11 = name;
-                _context5.next = 31;
-                return fetch(this._desResources[name].src).then(function (res) {
-                  return res.json();
-                });
+              case 28:
+                console.warn("fCanvas<Resource>: can't load \"".concat(name, " because it is \"").concat(type));
+
+              case 29:
+                _context5.next = 32;
+                break;
 
               case 31:
-                _context5.t12 = _context5.sent;
-
-                _context5.t10.set.call(_context5.t10, _context5.t11, _context5.t12);
-
-                return _context5.abrupt("break", 49);
-
-              case 34:
-                _context5.t13 = this._resourcesLoaded;
-                _context5.t14 = name;
-                _context5.next = 38;
-                return fetch(this._desResources[name].src).then(function (res) {
-                  return res.text();
-                });
-
-              case 38:
-                _context5.t15 = _context5.sent;
-
-                _context5.t13.set.call(_context5.t13, _context5.t14, _context5.t15);
-
-                return _context5.abrupt("break", 49);
-
-              case 41:
-                _context5.t16 = this._resourcesLoaded;
-                _context5.t17 = name;
-                _context5.next = 45;
-                return fetch(this._desResources[name].src).then(function (res) {
-                  return res.text();
-                }).then(function (text) {
-                  return text.split("\n").map(function (item) {
-                    return item.split(" ");
-                  });
-                });
-
-              case 45:
-                _context5.t18 = _context5.sent;
-
-                _context5.t16.set.call(_context5.t16, _context5.t17, _context5.t18);
-
-                return _context5.abrupt("break", 49);
-
-              case 48:
-                console.warn("fCanvas<Resource>: can't load \"".concat(name, " because it is \"").concat(this._desResources[name].type));
-
-              case 49:
-                _context5.t19 = this._resourcesLoaded;
-                _context5.t20 = name;
-                _context5.next = 53;
-                return loadResourceImage(this._desResources[name].src);
-
-              case 53:
-                _context5.t21 = _context5.sent;
-
-                _context5.t19.set.call(_context5.t19, _context5.t20, _context5.t21);
-
-                _context5.next = 58;
-                break;
-
-              case 57:
                 console.warn("fCanvas<Resource>: \"".concat(name, "\" resource loaded."));
 
-              case 58:
-                _context5.next = 61;
+              case 32:
+                _context5.next = 35;
                 break;
 
-              case 60:
+              case 34:
                 console.error("fCanvas<Resource>: \"".concat(name, " resource not exists."));
 
-              case 61:
+              case 35:
               case "end":
                 return _context5.stop();
             }
@@ -5036,40 +4949,42 @@ var Resource = /*#__PURE__*/function () {
       return load;
     }()
   }, {
+    key: "isLoaded",
+    value: function isLoaded(name) {
+      if (name) {
+        return this.resourceLoaded.has(name);
+      } else {
+        for (var prop in this.resourceDescription) {
+          if (this.resourceLoaded.has(prop) === false) {
+            return false;
+          }
+        }
+
+        return true;
+      }
+    }
+  }, {
     key: "get",
-    value: function get(path) {
+    value: function get(type, path) {
       var _path = path.split("/");
 
       var resourceName = _path[0];
 
       var resoucreProp = _path.slice(1).join("/");
 
-      var info = this._desResources[resourceName];
+      var info = this.resourceDescription[resourceName];
 
-      if (info) {
-        if (this._resourcesLoaded.has(resourceName)) {
-          var resource = this._resourcesLoaded.get(resourceName);
+      if (info && info.type === type) {
+        if (this.resourceLoaded.has(resourceName)) {
+          var resource = this.resourceLoaded.get(resourceName);
 
           if (resource) {
             switch (info.type) {
               case "plist":
                 return resoucreProp ? resource.get(resoucreProp) : resource;
 
-              case "json":
-              case "map":
-                var tmp = resource;
-
-                _path.slice(1).forEach(function (prop) {
-                  var _tmp;
-
-                  tmp = (_tmp = tmp) === null || _tmp === void 0 ? void 0 : _tmp[prop];
-                });
-
-                return tmp;
-
               case "image":
               case "audio":
-              case "txt":
               default:
                 return resource;
             }
@@ -5239,7 +5154,7 @@ function interfering(element1, element2) {
   return company ? false : null;
 }
 
-function pressed(el) {
+function presser(el) {
   var _result2;
 
   var result;
@@ -5259,7 +5174,7 @@ function pressed(el) {
   return (_result2 = result) !== null && _result2 !== void 0 ? _result2 : null;
 }
 
-function isPressed(el) {
+function pressed(el) {
   for (var _len19 = arguments.length, otherEl = new Array(_len19 > 1 ? _len19 - 1 : 0), _key20 = 1; _key20 < _len19; _key20++) {
     otherEl[_key20 - 1] = arguments[_key20];
   }
@@ -5270,4 +5185,4 @@ function isPressed(el) {
 }
 
 export default fCanvas;
-export { Animate, Camera, Emitter, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, _draw as draw, even, getDirectionElement, hypot, isMobile, isPressed, isTouch, keyPressed, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, pressed, random, randomInt, range, requestAnimationFrame, _setup2 as setup, touchEnd, touchMove, touchStart, unlimited };
+export { Animate, Camera, Emitter, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, _draw as draw, even, getDirectionElement, hypot, isMobile, isTouch, keyPressed, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, pressed, presser, random, randomInt, range, requestAnimationFrame, _setup2 as setup, touchEnd, touchMove, touchStart, unlimited };

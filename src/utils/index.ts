@@ -79,7 +79,7 @@ export const windowSize: {
   },
 };
 
-function trim(string: string | null): string {
+export function trim(string: string | null): string {
   if (string == null) {
     return "null";
   } else {

@@ -3294,18 +3294,16 @@ class Camera {
 }
 Camera.Cursor = Cursor;
 
-function templateToArray(str) {
-    if (str.replace(/^\s+|\s+$/g, "").match(/^{[^]*}$/)) {
+function convertValueXMLToArray(str) {
+    if (/^{[^]*}$/.test(trim(str))) {
         str = decodeURIComponent(encodeURIComponent(str).replace(/%7b/gi, "[").replace(/%7d/gi, "]"));
         return new Function(`return ${str}`)();
     }
-    else {
-        return str;
-    }
+    throw new Error(`fCanvas<Resource>: "${str}" a malformed field`);
 }
 function convertFieldToJson(keyItem) {
     const key = keyItem.textContent;
-    let value = keyItem.nextElementSibling;
+    const value = keyItem.nextElementSibling;
     if (value == null) {
         throw new Error("fCanvas<loadResourceImage>: Error because syntax error in file plist.");
     }
@@ -3336,7 +3334,7 @@ function convertFieldToJson(keyItem) {
     }
     if (value.tagName === "string") {
         return {
-            [key]: templateToArray(value.textContent),
+            [key]: convertValueXMLToArray(value.textContent),
         };
     }
     if (value.tagName === "integer") {
@@ -3369,10 +3367,10 @@ function resolvePath(...params) {
     params[0] = root.slice(0, root.length - 1).join("/");
     return params.join("/");
 }
-class ResourceTile {
+class TilesResource {
     constructor(image, plist) {
         this.__caching = new Map();
-        this.image = image;
+        this.tileRoot = image;
         this.plist = plist;
     }
     /**
@@ -3383,7 +3381,7 @@ class ResourceTile {
         if (this.has(name)) {
             const { frame, rotated, sourceSize } = this.plist.frames[name];
             if (this.__caching.has(name) === false) {
-                const image = cutImage(this.image, +frame[0][0], +frame[0][1], +frame[1][0], +frame[1][1], rotated ? -90 : 0);
+                const image = cutImage(this.tileRoot, +frame[0][0], +frame[0][1], +frame[1][0], +frame[1][1], rotated ? -90 : 0);
                 this.__caching.set(name, Object.assign(image, {
                     image,
                     size: {
@@ -3408,7 +3406,7 @@ class ResourceTile {
 }
 /**
  * @param {string} path
- * @return {Promise<ResourceTile>}
+ * @return {Promise<TilesResource>}
  */
 async function loadResourceImage(path) {
     if (path.match(/\.plist$/) == null) {
@@ -3428,48 +3426,43 @@ async function loadResourceImage(path) {
     });
     const image = await loadImage(resolvePath(path, plistJson?.metadata.realTextureFileName ||
         plistJson?.metadata.textureFileName));
-    return new ResourceTile(image, plistJson);
+    return new TilesResource(image, plistJson);
     //// ----------------- convert to json ------------------
 }
-
 class Resource {
-    constructor(resources, autoLoad = true) {
-        this._resourcesLoaded = new Map();
-        this._desResources = Object.create(null);
-        const desResources = {};
-        for (const prop in resources) {
-            ///
-            if (typeof resources[prop] === "object") {
-                desResources[prop] = {
-                    ...resources[prop],
+    constructor(description, autoLoad = true) {
+        this.resourceLoaded = new Map();
+        this.resourceDescription = Object.create(null);
+        const resourceDescription = Object.create(null);
+        for (const prop in description) {
+            if (typeof description[prop] === "string") {
+                resourceDescription[prop] = {
+                    src: description[prop],
+                    lazy: true,
                 };
             }
             else {
-                desResources[prop] = {
-                    src: resources[prop],
-                    lazy: false,
-                    type: "plist",
-                };
+                resourceDescription[prop] = description[prop];
             }
         }
-        this._desResources = desResources;
+        this.resourceDescription = resourceDescription;
         /// observe
-        const { set, delete: _delete } = this._resourcesLoaded;
+        const { set, delete: _delete } = this.resourceLoaded;
         const $this = this;
-        this._resourcesLoaded.set = function (...params) {
+        this.resourceLoaded.set = function (...params) {
             /// call this._set
-            $this._set(params[0], params[1]);
+            $this[params[0]] = params[1];
             return set.apply(this, params);
         };
-        this._resourcesLoaded.delete = function (...params) {
+        this.resourceLoaded.delete = function (...params) {
             /// call this._set
-            $this._delete(params[0]);
+            delete $this[params[0]];
             return _delete.apply(this, params);
         };
         if (autoLoad) {
             const resourceAutoLoad = [];
-            for (const prop in this._desResources) {
-                if (this._desResources[prop].lazy === false) {
+            for (const prop in this.resourceDescription) {
+                if (this.resourceDescription[prop].lazy === false) {
                     resourceAutoLoad.push(this.load(prop));
                 }
             }
@@ -3485,56 +3478,24 @@ class Resource {
             });
         }
     }
-    _set(key, value) {
-        this[key] = value;
-    }
-    _delete(key) {
-        if (key in this) {
-            delete this[key];
-        }
-    }
-    isLoaded(name) {
-        if (name) {
-            return this._resourcesLoaded.has(name);
-        }
-        else {
-            for (const prop in this._desResources) {
-                if (this._resourcesLoaded.has(prop) === false) {
-                    return false;
-                }
-            }
-            return true;
-        }
-    }
     async load(name) {
         if (name) {
-            if (name in this._desResources) {
+            if (name in this.resourceDescription) {
                 if (this.isLoaded(name) === false) {
-                    switch (this._desResources[name].type) {
+                    const { src, type } = this.resourceDescription[name];
+                    switch (type) {
                         case "image":
-                            this._resourcesLoaded.set(name, await loadImage(this._desResources[name].src));
+                            this.resourceLoaded.set(name, await loadImage(src));
                             break;
                         case "audio":
-                            this._resourcesLoaded.set(name, await loadAudio(this._desResources[name].src));
+                            this.resourceLoaded.set(name, await loadAudio(src));
                             break;
                         case "plist":
-                            this._resourcesLoaded.set(name, await loadResourceImage(this._desResources[name].src));
-                            break;
-                        case "json":
-                            this._resourcesLoaded.set(name, await fetch(this._desResources[name].src).then((res) => res.json()));
-                            break;
-                        case "txt":
-                            this._resourcesLoaded.set(name, await fetch(this._desResources[name].src).then((res) => res.text()));
-                            break;
-                        case "map":
-                            this._resourcesLoaded.set(name, await fetch(this._desResources[name].src)
-                                .then((res) => res.text())
-                                .then((text) => text.split("\n").map((item) => item.split(" "))));
+                            this.resourceLoaded.set(name, await loadResourceImage(src));
                             break;
                         default:
-                            console.warn(`fCanvas<Resource>: can't load "${name} because it is "${this._desResources[name].type}`);
+                            console.warn(`fCanvas<Resource>: can't load "${name} because it is "${type}`);
                     }
-                    this._resourcesLoaded.set(name, await loadResourceImage(this._desResources[name].src));
                 }
                 else {
                     console.warn(`fCanvas<Resource>: "${name}" resource loaded.`);
@@ -3545,30 +3506,35 @@ class Resource {
             }
         }
     }
-    get(path) {
+    isLoaded(name) {
+        if (name) {
+            return this.resourceLoaded.has(name);
+        }
+        else {
+            for (const prop in this.resourceDescription) {
+                if (this.resourceLoaded.has(prop) === false) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    get(type, path) {
         const _path = path.split("/");
         const resourceName = _path[0];
         const resoucreProp = _path.slice(1).join("/");
-        const info = this._desResources[resourceName];
-        if (info) {
-            if (this._resourcesLoaded.has(resourceName)) {
-                const resource = this._resourcesLoaded.get(resourceName);
+        const info = this.resourceDescription[resourceName];
+        if (info && info.type === type) {
+            if (this.resourceLoaded.has(resourceName)) {
+                const resource = this.resourceLoaded.get(resourceName);
                 if (resource) {
                     switch (info.type) {
                         case "plist":
                             return resoucreProp
                                 ? resource.get(resoucreProp)
                                 : resource;
-                        case "json":
-                        case "map":
-                            let tmp = resource;
-                            _path.slice(1).forEach((prop) => {
-                                tmp = tmp?.[prop];
-                            });
-                            return tmp;
                         case "image":
                         case "audio":
-                        case "txt":
                         default:
                             return resource;
                     }
@@ -3712,7 +3678,7 @@ function interfering(element1, element2, company = true) {
     }
     return company ? false : null;
 }
-function pressed(el, ...otherEl) {
+function presser(el, ...otherEl) {
     let result;
     otherEl.some((el2) => {
         const r = interfering(el, el2);
@@ -3723,9 +3689,9 @@ function pressed(el, ...otherEl) {
     });
     return result ?? null;
 }
-function isPressed(el, ...otherEl) {
+function pressed(el, ...otherEl) {
     return otherEl.some((el2) => interfering(el, el2, false));
 }
 
 export default fCanvas;
-export { Animate, Camera, Emitter, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, draw, even, getDirectionElement, hypot, isMobile, isPressed, isTouch, keyPressed, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, pressed, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, unlimited };
+export { Animate, Camera, Emitter, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, draw, even, getDirectionElement, hypot, isMobile, isTouch, keyPressed, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, pressed, presser, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, unlimited };

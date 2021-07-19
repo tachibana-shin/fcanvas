@@ -161,7 +161,7 @@ function interfering(
   return company ? false : null;
 }
 
-export function pressed(
+export function presser(
   el: MyElement,
   ...otherEl: MyElement[]
 ): ReturnInterfering | null {
@@ -179,7 +179,7 @@ export function pressed(
   return result ?? null;
 }
 
-export function isPressed(
+export function pressed(
   el: MyElement,
   ...otherEl: MyElement[]
 ): boolean {

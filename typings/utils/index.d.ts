@@ -28,6 +28,7 @@ export declare const windowSize: {
         get(): number;
     };
 };
+export declare function trim(string: string | null): string;
 export declare function fontToArray(font: string): InfoFont;
 export declare function AutoToPx(string: string | number, fi: number, fontSize?: number): number;
 export declare function getTouchInfo(element: HTMLCanvasElement, touches: any[]): InfoTouch[];
