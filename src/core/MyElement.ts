@@ -1,5 +1,6 @@
 import { AutoToPx, noop, Offset } from "../utils/index";
 import fCanvas, { noopFCanvas, ParamsToRgb, DirectionPattern } from "./fCanvas";
+import Peers from "../classes/Peers";
 
 type ParamsDrawImage =
   | [number, number]
@@ -14,6 +15,9 @@ export default abstract class MyElement {
   public draw?: noop;
   public setup?: {
     (): object | void;
+  };
+  public updatePeer?: {
+    (groups: Peers): void;
   };
   public get type(): "rect" | "circle" | "point" | "unknown" {
     if ("x" in this && "y" in this) {
@@ -63,7 +67,7 @@ export default abstract class MyElement {
     this.__addEl(canvas);
   }
 
-  _run(canvas: fCanvas): void {
+  _run(canvas: fCanvas, peers?: Peers): void {
     this.__addEl(canvas);
     this._idActiveNow = canvas.id;
 
@@ -82,13 +86,24 @@ export default abstract class MyElement {
       this._els[this._idActiveNow].setuped = true;
     }
 
-    if (typeof this.update === "function") {
-      if (typeof this.draw === "function") {
+    if (peers) {
+      if (typeof this.updatePeer === "function") {
+        if (typeof this.draw === "function") {
+          this.draw();
+        }
+        this.updatePeer(peers);
+      } else if (typeof this.draw === "function") {
         this.draw();
       }
-      this.update();
-    } else if (typeof this.draw === "function") {
-      this.draw();
+    } else {
+      if (typeof this.update === "function") {
+        if (typeof this.draw === "function") {
+          this.draw();
+        }
+        this.update();
+      } else if (typeof this.draw === "function") {
+        this.draw();
+      }
     }
 
     if (this._queue.length > 0) {
@@ -1096,6 +1111,25 @@ export default abstract class MyElement {
     }
 
     return this;
+  }
+
+  /**
+   * @param {noop} program
+   * @memberof MyElement
+   */
+  drawing(program: noop): void {
+    this.begin();
+    program.call(this);
+    this.close();
+  }
+  /**
+   * @param {noop} program
+   * @memberof MyElement
+   */
+  backup(program: noop): void {
+    this.save();
+    program.call(this);
+    this.restore();
   }
 }
 

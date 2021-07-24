@@ -1,7 +1,7 @@
 import { trim } from "../utils/index";
 import { cutImage, loadImage, loadAudio } from "../functions/index";
 
-export interface ImageResource extends HTMLImageElement {
+interface ImageResource extends HTMLImageElement {
   image: HTMLImageElement;
   size: {
     width: number;
@@ -154,10 +154,6 @@ class TilesResource {
   }
 }
 
-/**
- * @param {string} path
- * @return {Promise<TilesResource>}
- */
 export async function loadResourceImage(path: string): Promise<TilesResource> {
   if (path.match(/\.plist$/) == null) {
     path += `.plist`;
