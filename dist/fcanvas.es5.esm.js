@@ -229,7 +229,7 @@ var MyElement = /*#__PURE__*/function () {
     }
   }, {
     key: "_run",
-    value: function _run(canvas) {
+    value: function _run(canvas, peers) {
       this.__addEl(canvas);
 
       this._idActiveNow = canvas.id;
@@ -246,14 +246,26 @@ var MyElement = /*#__PURE__*/function () {
         this._els[this._idActiveNow].setuped = true;
       }
 
-      if (typeof this.update === "function") {
-        if (typeof this.draw === "function") {
+      if (peers) {
+        if (typeof this.updatePeer === "function") {
+          if (typeof this.draw === "function") {
+            this.draw();
+          }
+
+          this.updatePeer(peers);
+        } else if (typeof this.draw === "function") {
           this.draw();
         }
+      } else {
+        if (typeof this.update === "function") {
+          if (typeof this.draw === "function") {
+            this.draw();
+          }
 
-        this.update();
-      } else if (typeof this.draw === "function") {
-        this.draw();
+          this.update();
+        } else if (typeof this.draw === "function") {
+          this.draw();
+        }
       }
 
       if (this._queue.length > 0) {
@@ -1189,6 +1201,30 @@ var MyElement = /*#__PURE__*/function () {
       }
 
       return this;
+    }
+    /**
+     * @param {noop} program
+     * @memberof MyElement
+     */
+
+  }, {
+    key: "drawing",
+    value: function drawing(program) {
+      this.begin();
+      program.call(this);
+      this.close();
+    }
+    /**
+     * @param {noop} program
+     * @memberof MyElement
+     */
+
+  }, {
+    key: "backup",
+    value: function backup(program) {
+      this.save();
+      program.call(this);
+      this.restore();
     }
   }]);
 
@@ -4700,11 +4736,6 @@ var TilesResource = /*#__PURE__*/function () {
 
   return TilesResource;
 }();
-/**
- * @param {string} path
- * @return {Promise<TilesResource>}
- */
-
 
 function loadResourceImage(_x4) {
   return _loadResourceImage.apply(this, arguments);
@@ -5003,6 +5034,76 @@ var Resource = /*#__PURE__*/function () {
   return Resource;
 }();
 
+var Peers = /*#__PURE__*/function (_MyElement4) {
+  _inherits(Peers, _MyElement4);
+
+  var _super4 = _createSuper(Peers);
+
+  function Peers() {
+    var _this18;
+
+    _classCallCheck(this, Peers);
+
+    _this18 = _super4.apply(this, arguments);
+    _this18.peers = [];
+    return _this18;
+  }
+
+  _createClass(Peers, [{
+    key: "add",
+    value: function add(element) {
+      this.peers.push(element);
+    }
+  }, {
+    key: "_run",
+    value: function _run(canvas) {
+      var _this19 = this;
+
+      this.peers.forEach(function (element) {
+        element._run(canvas, _this19);
+      });
+    }
+  }, {
+    key: "forEach",
+    value: function forEach(callback) {
+      this.peers.forEach(callback);
+    }
+  }, {
+    key: "filter",
+    value: function filter(callback) {
+      this.peers = this.peers.filter(callback);
+    }
+  }, {
+    key: "filterOne",
+    value: function filterOne(callback) {
+      var peers = [];
+      this.peers.some(function () {
+        if (callback.apply(void 0, arguments)) {
+          peers.push(arguments.length <= 0 ? undefined : arguments[0]);
+          return false;
+        }
+
+        return true;
+      });
+    }
+  }, {
+    key: "remove",
+    value: function remove(element) {
+      if (element instanceof MyElement) {
+        this.filterOne(function (element1) {
+          return element !== element1;
+        });
+      } else {
+        this.filterOne(function (element) {
+          return element.id !== element;
+        });
+      }
+    }
+  }]);
+
+  return Peers;
+}(MyElement);
+
 function CircleImpact(circle1, circle2) {
   return Math.pow(circle1.x - circle2.x, 2) + Math.pow(circle1.y - circle2.y, 2) < Math.pow(circle1.radius + circle2.radius, 2);
 }
@@ -5185,4 +5286,4 @@ function pressed(el) {
 }
 
 export default fCanvas;
-export { Animate, Camera, Emitter, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, _draw as draw, even, getDirectionElement, hypot, isMobile, isTouch, keyPressed, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, pressed, presser, random, randomInt, range, requestAnimationFrame, _setup2 as setup, touchEnd, touchMove, touchStart, unlimited };
+export { Animate, Camera, Emitter, Peers, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, _draw as draw, even, getDirectionElement, hypot, isMobile, isTouch, keyPressed, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, pressed, presser, random, randomInt, range, requestAnimationFrame, _setup2 as setup, touchEnd, touchMove, touchStart, unlimited };

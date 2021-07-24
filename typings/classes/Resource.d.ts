@@ -1,4 +1,4 @@
-export interface ImageResource extends HTMLImageElement {
+interface ImageResource extends HTMLImageElement {
     image: HTMLImageElement;
     size: {
         width: number;
@@ -21,10 +21,6 @@ declare class TilesResource {
      */
     has(name: string): boolean;
 }
-/**
- * @param {string} path
- * @return {Promise<TilesResource>}
- */
 export declare function loadResourceImage(path: string): Promise<TilesResource>;
 export default class Resource {
     private resourceLoaded;

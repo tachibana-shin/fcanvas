@@ -174,7 +174,7 @@ class MyElement {
             };
         }
     }
-    _run(canvas) {
+    _run(canvas, peers) {
         this.__addEl(canvas);
         this._idActiveNow = canvas.id;
         if (typeof this.setup === "function" &&
@@ -187,14 +187,27 @@ class MyElement {
             }
             this._els[this._idActiveNow].setuped = true;
         }
-        if (typeof this.update === "function") {
-            if (typeof this.draw === "function") {
+        if (peers) {
+            if (typeof this.updatePeer === "function") {
+                if (typeof this.draw === "function") {
+                    this.draw();
+                }
+                this.updatePeer(peers);
+            }
+            else if (typeof this.draw === "function") {
                 this.draw();
             }
-            this.update();
         }
-        else if (typeof this.draw === "function") {
-            this.draw();
+        else {
+            if (typeof this.update === "function") {
+                if (typeof this.draw === "function") {
+                    this.draw();
+                }
+                this.update();
+            }
+            else if (typeof this.draw === "function") {
+                this.draw();
+            }
         }
         if (this._queue.length > 0) {
             const { length } = this._queue;
@@ -880,6 +893,24 @@ class MyElement {
             this.polyline(...points, points[0], points[1]);
         }
         return this;
+    }
+    /**
+     * @param {noop} program
+     * @memberof MyElement
+     */
+    drawing(program) {
+        this.begin();
+        program.call(this);
+        this.close();
+    }
+    /**
+     * @param {noop} program
+     * @memberof MyElement
+     */
+    backup(program) {
+        this.save();
+        program.call(this);
+        this.restore();
     }
 }
 MyElement._count = 0;
@@ -3404,10 +3435,6 @@ class TilesResource {
         return name in this.plist.frames;
     }
 }
-/**
- * @param {string} path
- * @return {Promise<TilesResource>}
- */
 async function loadResourceImage(path) {
     if (path.match(/\.plist$/) == null) {
         path += `.plist`;
@@ -3547,6 +3574,45 @@ class Resource {
         }
         else {
             throw new Error(`fCanvas<Resource>: "${resourceName}" not exitst.`);
+        }
+    }
+}
+
+class Peers extends MyElement {
+    constructor() {
+        super(...arguments);
+        this.peers = [];
+    }
+    add(element) {
+        this.peers.push(element);
+    }
+    _run(canvas) {
+        this.peers.forEach((element) => {
+            element._run(canvas, this);
+        });
+    }
+    forEach(callback) {
+        this.peers.forEach(callback);
+    }
+    filter(callback) {
+        this.peers = this.peers.filter(callback);
+    }
+    filterOne(callback) {
+        const peers = [];
+        this.peers.some((...params) => {
+            if (callback(...params)) {
+                peers.push(params[0]);
+                return false;
+            }
+            return true;
+        });
+    }
+    remove(element) {
+        if (element instanceof MyElement) {
+            this.filterOne((element1) => element !== element1);
+        }
+        else {
+            this.filterOne((element) => element.id !== element);
         }
     }
 }
@@ -3694,4 +3760,4 @@ function pressed(el, ...otherEl) {
 }
 
 export default fCanvas;
-export { Animate, Camera, Emitter, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, draw, even, getDirectionElement, hypot, isMobile, isTouch, keyPressed, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, pressed, presser, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, unlimited };
+export { Animate, Camera, Emitter, Peers, Resource, Store, Vector, aspectRatio, cancelAnimationFrame, changeSize, constrain, createElement, cutImage, draw, even, getDirectionElement, hypot, isMobile, isTouch, keyPressed, lerp, loadAudio, loadImage, loadResourceImage, map, mouseClicked, mouseMoved, mousePressed, mouseWheel, odd, passive, pressed, presser, random, randomInt, range, requestAnimationFrame, setup, touchEnd, touchMove, touchStart, unlimited };

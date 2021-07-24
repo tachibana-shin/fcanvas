@@ -1,5 +1,6 @@
 import { noop, Offset } from "../utils/index";
 import fCanvas, { DirectionPattern } from "./fCanvas";
+import Peers from "../classes/Peers";
 declare type LineJoin = "bevel" | "round" | "miter";
 declare type LineCap = "butt" | "round" | "square";
 export default abstract class MyElement {
@@ -8,6 +9,9 @@ export default abstract class MyElement {
     draw?: noop;
     setup?: {
         (): object | void;
+    };
+    updatePeer?: {
+        (groups: Peers): void;
     };
     get type(): "rect" | "circle" | "point" | "unknown";
     private readonly _id;
@@ -21,7 +25,7 @@ export default abstract class MyElement {
      * @return {any}
      */
     constructor(canvas?: fCanvas);
-    _run(canvas: fCanvas): void;
+    _run(canvas: fCanvas, peers?: Peers): void;
     /**
      * @param {MyElement} element
      * @return {void}
@@ -379,6 +383,16 @@ export default abstract class MyElement {
     polyline(...points: [number, number][]): this;
     polygon(...points: number[]): this;
     polygon(...points: [number, number][]): this;
+    /**
+     * @param {noop} program
+     * @memberof MyElement
+     */
+    drawing(program: noop): void;
+    /**
+     * @param {noop} program
+     * @memberof MyElement
+     */
+    backup(program: noop): void;
 }
 export declare class Point3D extends MyElement {
     x: number;
