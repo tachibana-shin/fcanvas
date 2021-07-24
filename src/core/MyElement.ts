@@ -11,14 +11,6 @@ type LineCap = "butt" | "round" | "square";
 
 export default abstract class MyElement {
   private static _count: number = 0;
-  public update?: noop;
-  public draw?: noop;
-  public setup?: {
-    (): object | void;
-  };
-  public updatePeer?: {
-    (groups: Peers): void;
-  };
   public get type(): "rect" | "circle" | "point" | "unknown" {
     if ("x" in this && "y" in this) {
       if ("width" in this && "height" in this) {
@@ -72,10 +64,10 @@ export default abstract class MyElement {
     this._idActiveNow = canvas.id;
 
     if (
-      typeof this.setup === "function" &&
+      typeof (this as any).setup === "function" &&
       this._els[this._idActiveNow].setuped === false
     ) {
-      const result = this.setup();
+      const result = (this as any).setup();
 
       if (result !== null && typeof result === "object") {
         for (const prop in result) {
@@ -87,22 +79,22 @@ export default abstract class MyElement {
     }
 
     if (peers) {
-      if (typeof this.updatePeer === "function") {
-        if (typeof this.draw === "function") {
-          this.draw();
+      if (typeof (this as any).updatePeer === "function") {
+        if (typeof (this as any).draw === "function") {
+          (this as any).draw();
         }
-        this.updatePeer(peers);
-      } else if (typeof this.draw === "function") {
-        this.draw();
+        (this as any).updatePeer(peers);
+      } else if (typeof (this as any).draw === "function") {
+        (this as any).draw();
       }
     } else {
-      if (typeof this.update === "function") {
-        if (typeof this.draw === "function") {
-          this.draw();
+      if (typeof (this as any).update === "function") {
+        if (typeof (this as any).draw === "function") {
+          (this as any).draw();
         }
-        this.update();
-      } else if (typeof this.draw === "function") {
-        this.draw();
+        (this as any).update();
+      } else if (typeof (this as any).draw === "function") {
+        (this as any).draw();
       }
     }
 

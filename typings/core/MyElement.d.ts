@@ -5,14 +5,6 @@ declare type LineJoin = "bevel" | "round" | "miter";
 declare type LineCap = "butt" | "round" | "square";
 export default abstract class MyElement {
     private static _count;
-    update?: noop;
-    draw?: noop;
-    setup?: {
-        (): object | void;
-    };
-    updatePeer?: {
-        (groups: Peers): void;
-    };
     get type(): "rect" | "circle" | "point" | "unknown";
     private readonly _id;
     get id(): number;
