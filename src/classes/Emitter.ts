@@ -8,10 +8,6 @@ export default class Emitter {
   private __events: {
     [name: string]: Array<CallbackEvent>;
   } = Object.create(null);
-  /**
-   * @param {any} typeofcallback==="function"
-   * @return {any}
-   */
   on(name: string, callback: noop): noop {
     if (typeof callback === "function") {
       if (name in this.__events) {
@@ -25,11 +21,6 @@ export default class Emitter {
       this.off(name, callback);
     };
   }
-  /**
-   * @param {string} name
-   * @param {CallbackEvent} callback?
-   * @return {void}
-   */
   off(name: string, callback?: CallbackEvent): void {
     if (typeof callback === "function") {
       this.__events[name] = this.__events[name].filter(
@@ -53,11 +44,6 @@ export default class Emitter {
      * @return {void}
      */
   }
-  /**
-   * @param {string} name
-   * @param {any[]} ...payload
-   * @return {void}
-   */
   emit(name: string, ...payload: any[]): void {
     if (name in this.__events) {
       for (
@@ -69,11 +55,6 @@ export default class Emitter {
       }
     }
   }
-  /**
-   * @param {string} name
-   * @param {CallbackEvent} callback
-   * @return {void}
-   */
   once(name: string, callback: CallbackEvent): void {
     const handler = (...args: any[]) => {
       callback(...args);

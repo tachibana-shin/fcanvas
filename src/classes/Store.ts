@@ -18,7 +18,7 @@ function reactiveDefine(
   if (value !== null && typeof value === "object") {
     /// reactive children
     if (Array.isArray(value)) {
-      /// bind to propertyes
+      /// bind to properties
       /// reactive method array
       if (!(value as ValueType).__reactive) {
         ["push", "pop", "shift", "unshift", "splice"].forEach(
@@ -102,10 +102,6 @@ function reactiveDefine(
 class Store {
   [propName: string]: any;
   private __emitter: Emitter = new Emitter();
-  /**
-   * @param {Object} store?
-   * @return {any}
-   */
   constructor(store?: { [propName: string]: any }) {
     for (const key in store) {
       this[key] = store[key];
@@ -115,12 +111,6 @@ class Store {
     });
   }
 
-  /**
-   * @param {Store|Object} object
-   * @param {string} key
-   * @param {any} value
-   * @return {void}
-   */
   $set(
     object:
       | Store
@@ -143,11 +133,6 @@ class Store {
 
     object[key] = value;
   }
-  /**
-   * @param {string} key
-   * @param {CallbackEvent} callback
-   * @return {any}
-   */
   $watch(key: string, callback: CallbackEvent) {
     return this.__emitter.on(key, callback);
   }

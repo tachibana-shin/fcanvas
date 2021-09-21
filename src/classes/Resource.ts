@@ -108,10 +108,6 @@ class TilesResource {
     this.tileRoot = image;
     this.plist = plist;
   }
-  /**
-   * @param {string} name
-   * @return {any}
-   */
   get(name: string): ImageResource {
     if (this.has(name)) {
       const { frame, rotated, sourceSize } = this.plist.frames[name];
@@ -145,10 +141,6 @@ class TilesResource {
       );
     }
   }
-  /**
-   * @param {string} name
-   * @return {boolean}
-   */
   has(name: string): boolean {
     return name in this.plist.frames;
   }
@@ -313,7 +305,7 @@ export default class Resource {
     const _path = path.split("/");
 
     const resourceName = _path[0];
-    const resoucreProp = _path.slice(1).join("/");
+    const resourceProp = _path.slice(1).join("/");
 
     const info = this.resourceDescription[resourceName];
 
@@ -324,8 +316,8 @@ export default class Resource {
         if (resource) {
           switch (info.type) {
             case "plist":
-              return resoucreProp
-                ? (resource as TilesResource).get(resoucreProp)
+              return resourceProp
+                ? (resource as TilesResource).get(resourceProp)
                 : resource;
             case "image":
             case "audio":
@@ -339,7 +331,7 @@ export default class Resource {
         throw new Error(`fCanvas<Resource>: "${resourceName} not loaded.`);
       }
     } else {
-      throw new Error(`fCanvas<Resource>: "${resourceName}" not exitst.`);
+      throw new Error(`fCanvas<Resource>: "${resourceName}" not exists.`);
     }
   }
 }

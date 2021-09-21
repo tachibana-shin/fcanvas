@@ -23,7 +23,6 @@ export const requestAnimationFrame:
   | typeof globalThis.requestAnimationFrame
   | typeof globalThis.setTimeout =
   window.requestAnimationFrame ||
-  window.webkitRequestAnimationFrame ||
   function (callback: Function): number {
     return setTimeout(callback, 100 / 6);
   };
@@ -31,7 +30,6 @@ export const cancelAnimationFrame:
   | typeof globalThis.cancelAnimationFrame
   | typeof globalThis.clearTimeout =
   window.cancelAnimationFrame ||
-  window.webkitCancelAnimationFrame ||
   function (timeoutId: any): void {
     clearTimeout(timeoutId);
   };

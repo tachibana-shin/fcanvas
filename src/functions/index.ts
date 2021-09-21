@@ -83,13 +83,13 @@ export function aspectRatio(
   height: number
 ): [number, number] {
   /// ratio = width / height => height = width / ratio
-  const nwidth = ratio * height;
-  const nheight = width / ratio;
+  const swidth = ratio * height;
+  const sheight = width / ratio;
 
-  if (width < nwidth) {
-    return [width, nheight];
+  if (width < swidth) {
+    return [width, sheight];
   } else {
-    return [nwidth, height];
+    return [swidth, height];
   }
 }
 function random(value: number): number;
@@ -256,7 +256,7 @@ export function cutImage(
   }
   /// ------------------ draw image canvas -----------------
   const rad: number = (rotate * Math.PI) / 180;
-  const [nwidth, nheight] = calcProjectedRectSizeOfRotatedRect(
+  const [swidth, sheight] = calcProjectedRectSizeOfRotatedRect(
     width,
     height,
     rad
@@ -272,12 +272,12 @@ export function cutImage(
     image,
     x,
     y,
-    nwidth,
-    nheight,
-    -nwidth / 2,
-    -nheight / 2,
-    nwidth,
-    nheight
+    swidth,
+    sheight,
+    -swidth / 2,
+    -sheight / 2,
+    swidth,
+    sheight
   );
   virualContext.restore();
   /// -----------------------------------------------------------

@@ -157,20 +157,20 @@ function splitNumberString(
   }
 }
 
-function converParams(
+function convertParams(
   ...params: number[]
 ): [InputStore, number | void, AnimateType | void];
-function converParams(
+function convertParams(
   params: InputStore,
   easing?: AnimateType,
   duration?: number
 ): [InputStore, number | void, AnimateType | void];
-function converParams(
+function convertParams(
   params: InputStore,
   duration?: number,
   easing?: AnimateType
 ): [InputStore, number | void, AnimateType | void];
-function converParams(
+function convertParams(
   ...params: any[]
 ): [InputStore, number | void, AnimateType | void] {
   let data: InputStore, time: number | void, easing: AnimateType | void;
@@ -209,11 +209,6 @@ export default class Animate {
       });
     }
   }
-  /**
-   * @param {string} key
-   * @return {*}  {(number | void)}
-   * @memberof Animate
-   */
   public get(key: string): number | void {
     return this.__data[key] as number | void;
   }
@@ -250,7 +245,7 @@ export default class Animate {
   constructor(params: StoreData, easing?: AnimateType, duration?: number);
   constructor(params: StoreData, duration?: number, easing?: AnimateType);
   constructor(...params: any[]) {
-    const [data, time, easing] = converParams(...params);
+    const [data, time, easing] = convertParams(...params);
 
     this.data = data ?? this.data;
     this.time = Number.isNaN(time) ? this.time : (time as number) ?? this.time;
@@ -312,7 +307,7 @@ export default class Animate {
   private _to(params: StoreData, easing?: AnimateType, duration?: number): void;
   private _to(params: StoreData, duration?: number, easing?: AnimateType): void;
   private _to(...params: any[]): void {
-    const [data, time, easing] = converParams(...params);
+    const [data, time, easing] = convertParams(...params);
 
     for (const key in data) {
       if (key in this.__data && key in this.__data.__observe) {
@@ -342,11 +337,11 @@ export default class Animate {
   public add(params: StoreData, easing?: AnimateType, duration?: number): void;
   public add(params: StoreData, duration?: number, easing?: AnimateType): void;
   public add(...params: any[]): void {
-    this.__queue.push(converParams(...params));
+    this.__queue.push(convertParams(...params));
   }
   public set(...params: number[]): void;
   public set(params: StoreData): void;
   public set(...params: any[]): void {
-    this.data = converParams(...params)[0];
+    this.data = convertParams(...params)[0];
   }
 }

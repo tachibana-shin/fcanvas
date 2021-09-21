@@ -39,13 +39,6 @@ export default class Vector {
   x: number;
   y: number;
   z: number;
-  /**
-   * Creates an instance of Vector.
-   * @param {number} [x=0]
-   * @param {number} [y=0]
-   * @param {number} [z=0]
-   * @memberof Vector
-   */
   constructor(x: number = 0, y: number = 0, z: number = 0) {
     [this.x, this.y, this.z] = [x, y, z];
   }
@@ -53,13 +46,6 @@ export default class Vector {
   set(vector: Vector): this;
   set(offset: [number?, number?, number?]): this;
   set(x?: number, y?: number, z?: number): this;
-  /**
-   * @param {(Vector | [number?, number?, number?] | number)} x
-   * @param {number} [y]
-   * @param {number} [z]
-   * @return {*}  {this}
-   * @memberof Vector
-   */
   set(
     x?: Vector | [number?, number?, number?] | number,
     y?: number,
@@ -85,10 +71,6 @@ export default class Vector {
     return this;
   }
 
-  /**
-   * @return {*}  {Vector}
-   * @memberof Vector
-   */
   copy(): Vector {
     return new Vector(this.x, this.y, this.z);
   }
@@ -96,13 +78,6 @@ export default class Vector {
   add(vector: Vector): this;
   add(offset: [number?, number?, number?]): this;
   add(x: number, y: number, z: number): this;
-  /**
-   * @param {(Vector | [number?, number?, number?] | number)} x
-   * @param {number} [y]
-   * @param {number} [z]
-   * @return {*}  {this}
-   * @memberof Vector
-   */
   add(
     x: Vector | [number?, number?, number?] | number,
     y?: number,
@@ -130,10 +105,6 @@ export default class Vector {
 
   rem(vector: Vector): void;
   rem(params: [number, number?, number?]): void;
-  /**
-   * @param {(Vector | [number, number?, number?])} x
-   * @memberof Vector
-   */
   rem(x: Vector | [number, number?, number?]): void {
     if (x instanceof Vector) {
       if (
@@ -198,13 +169,6 @@ export default class Vector {
   sub(vector: Vector): this;
   sub(offset: [number?, number?, number?]): this;
   sub(x: number, y: number, z: number): this;
-  /**
-   * @param {(Vector | [number?, number?, number?] | number)} x
-   * @param {number} [y]
-   * @param {number} [z]
-   * @return {*}  {this}
-   * @memberof Vector
-   */
   sub(
     x: Vector | [number?, number?, number?] | number,
     y?: number,
@@ -230,11 +194,6 @@ export default class Vector {
     return this;
   }
 
-  /**
-   * @param {number} n
-   * @return {*}  {this}
-   * @memberof Vector
-   */
   mult(n: number): this {
     this.x *= n;
     this.y *= n;
@@ -242,11 +201,6 @@ export default class Vector {
     return this;
   }
 
-  /**
-   * @param {number} n
-   * @return {*}  {this}
-   * @memberof Vector
-   */
   div(n: number): this {
     if (n === 0) {
       console.warn("div:", "divide by 0");
@@ -259,18 +213,10 @@ export default class Vector {
     return this;
   }
 
-  /**
-   * @return {*}  {number}
-   * @memberof Vector
-   */
   mag(): number {
     return Math.sqrt(this.magSq());
   }
 
-  /**
-   * @return {*}  {number}
-   * @memberof Vector
-   */
   magSq(): number {
     const { x, y, z } = this;
     return x * x + y * y + z * z;
@@ -278,13 +224,6 @@ export default class Vector {
 
   dot(vector: Vector): number;
   dot(x?: number, y?: number, z?: number): number;
-  /**
-   * @param {(number | Vector)} [x]
-   * @param {number} [y]
-   * @param {number} [z]
-   * @return {*}  {number}
-   * @memberof Vector
-   */
   dot(x?: number | Vector, y?: number, z?: number): number {
     if (x instanceof Vector) {
       return this.dot(x.x, x.y, x.z);
@@ -293,11 +232,6 @@ export default class Vector {
     return this.x * (x || 0) + this.y * (y || 0) + this.z * (z || 0);
   }
 
-  /**
-   * @param {Vector} v
-   * @return {*}  {Vector}
-   * @memberof Vector
-   */
   cross(v: Vector): Vector {
     return new Vector(
       this.y * v.z - this.z * v.y,
@@ -306,10 +240,6 @@ export default class Vector {
     );
   }
 
-  /**
-   * @return {*}  {this}
-   * @memberof Vector
-   */
   normalize(): this {
     const len = this.mag();
     if (len !== 0) {
@@ -318,11 +248,6 @@ export default class Vector {
     return this;
   }
 
-  /**
-   * @param {number} max
-   * @return {*}  {this}
-   * @memberof Vector
-   */
   limit(max: number): this {
     const mSq: number = this.magSq();
 
@@ -334,28 +259,14 @@ export default class Vector {
     return this;
   }
 
-  /**
-   * @param {number} n
-   * @return {*}  {this}
-   * @memberof Vector
-   */
   setMag(n: number): this {
     return this.normalize().mult(n);
   }
 
-  /**
-   * @return {*}  {number}
-   * @memberof Vector
-   */
   heading(): number {
     return Math.atan2(this.y, this.x);
   }
 
-  /**
-   * @param {number} angle
-   * @return {*}  {this}
-   * @memberof Vector
-   */
   rotate(angle: number): this {
     const newHeading: number = this.heading() + angle;
     const mag: number = this.mag();
@@ -364,11 +275,6 @@ export default class Vector {
     return this;
   }
 
-  /**
-   * @param {Vector} vector
-   * @return {*}  {number}
-   * @memberof Vector
-   */
   angleBetween(vector: Vector): number {
     const dotmagmag = this.dot(vector) / (this.mag() * vector.mag());
     const angle =
@@ -379,14 +285,6 @@ export default class Vector {
 
   lerp(vector: Vector, amt?: number): this;
   lerp(x?: number, y?: number, z?: number, amt?: number): this;
-  /**
-   * @param {(Vector | number)} [x=0]
-   * @param {number} [y=0]
-   * @param {number} [z=0]
-   * @param {number} [amt=0]
-   * @return {*}  {this}
-   * @memberof Vector
-   */
   lerp(
     x: Vector | number = 0,
     y: number = 0,
@@ -403,20 +301,11 @@ export default class Vector {
     return this;
   }
 
-  /**
-   * @param {Vector} surfaceNormal
-   * @return {*}  {this}
-   * @memberof Vector
-   */
   reflect(surfaceNormal: Vector): this {
     surfaceNormal.normalize();
     return this.sub(surfaceNormal.mult(2 * this.dot(surfaceNormal)));
   }
 
-  /**
-   * @return {*}  {[number, number, number]}
-   * @memberof Vector
-   */
   array(): [number, number, number] {
     return [this.x || 0, this.y || 0, this.z || 0];
   }
@@ -424,13 +313,6 @@ export default class Vector {
   equals(vector: Vector): boolean;
   equals(params: [number?, number?, number?]): boolean;
   equals(x?: number, y?: number, z?: number): boolean;
-  /**
-   * @param {(Vector | [number?, number?, number?] | number)} [x]
-   * @param {number} [y]
-   * @param {number} [z]
-   * @return {*}  {boolean}
-   * @memberof Vector
-   */
   equals(
     x?: Vector | [number?, number?, number?] | number,
     y?: number,
@@ -455,10 +337,6 @@ export default class Vector {
     return this.x === a && this.y === b && this.z === c;
   }
 
-  /**
-   * @return {*}  {string}
-   * @memberof Vector
-   */
   toString(): string {
     return "Vector: [" + this.array().join(", ") + "]";
   }

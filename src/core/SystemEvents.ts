@@ -2,7 +2,7 @@ import { requestAnimationFrame, bindEvent, noop } from "../utils/index";
 import Emitter, { CallbackEvent } from "../classes/Emitter";
 import fCanvas from "./fCanvas";
 
-let inited: boolean = false;
+let initd: boolean = false;
 const emitter: Emitter = new Emitter();
 
 /**
@@ -20,7 +20,7 @@ export async function setup(callback: {
 
     await callback();
 
-    inited = true;
+    initd = true;
     emitter.emit("load");
   } else {
     await new Promise<void>((resolve) => {
@@ -30,7 +30,7 @@ export async function setup(callback: {
 
         callback();
         resolve();
-        inited = true;
+        initd = true;
         emitter.emit("load");
       }
 
@@ -60,7 +60,7 @@ function __draw(callback: noop, canvas?: fCanvas): void {
  * @return {void}
  */
 export function draw(callback: noop, canvas?: fCanvas): void {
-  if (inited) {
+  if (initd) {
     void __draw(callback, canvas);
   } else {
     void emitter.once("load", (): void => {

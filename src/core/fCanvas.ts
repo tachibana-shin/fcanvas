@@ -137,9 +137,6 @@ export default class fCanvas {
     width?: number,
     height?: number
   );
-  /**
-   * @return {any}
-   */
   constructor(
     element?: HTMLCanvasElement | string | number,
     width?: number,
@@ -176,17 +173,9 @@ export default class fCanvas {
     this._restartEvents(this._el);
   }
 
-  /**
-   * @return {HTMLCanvasElement}
-   */
   get $el(): HTMLCanvasElement {
     return this._el;
   }
-  /**
-   * @param {number} width
-   * @param {number} height
-   * @memberof fCanvas
-   */
   public size(width: number, height: number): void {
     this.$el.width = width;
     this.$el.height = height;
@@ -291,64 +280,34 @@ export default class fCanvas {
 
   public touches: InfoTouch[] = [];
   public changedTouches: InfoTouch[] = [];
-  /**
-   * @return {*}  {boolean}
-   */
   public preventTouch(): void {
     this.__store._preventTouch = true;
   }
-  /**
-   * @return {*}  {boolean}
-   */
   public stopTouch(): void {
     this.__store._stopTouch = true;
   }
-  /**
-   * @return {number | null}
-   */
   get mouseX(): number | null {
     return this.touches[0]?.x || null;
   }
-  /**
-   * @return {number | null}
-   */
   get mouseY(): number | null {
     return this.touches[0]?.y || null;
   }
-  /**
-   * @return {numbe}
-   */
   get movedX(): number {
     return this.touches[this.touches.length - 1]?.x || 0;
   }
-  /**
-   * @return {numbe}
-   */
   get movedY(): number {
     return this.touches[this.touches.length - 1]?.y || 0;
   }
-  /**
-   * @return {numbe}
-   */
   get pmouseX(): number {
     return this.__store._pmouseX;
   }
-  /**
-   * @return {numbe}
-   */
   get pmouseY(): number {
     return this.__store._pmouseY;
   }
-  /**
-   * @return {boolean}
-   */
   get mouseIsPressed(): boolean {
     return this.__store._realMouseIsPressed;
   }
 
-  /**
-   * @return {number}
-   */
   get id(): number {
     return this._id;
   }
@@ -358,43 +317,25 @@ export default class fCanvas {
       this.__store.__attributeContext
     ) as CanvasRenderingContext2D;
   }
-  /**
-   * @return {void}
-   */
   blur(): void {
     this.__store.__attributeContext.alpha = true;
     this._createNewContext2d();
   }
-  /**
-   * @return {void}
-   */
   noBlur(): void {
     this.__store.__attributeContext.alpha = false;
     this._createNewContext2d();
   }
-  /**
-   * @return {void}
-   */
   desync(): void {
     this.__store.__attributeContext.desynchronized = true;
     this._createNewContext2d();
   }
-  /**
-   * @return {void}
-   */
   noDesync(): void {
     this.__store.__attributeContext.desynchronized = false;
     this._createNewContext2d();
   }
-  /**
-   * @return {void}
-   */
   useFloatPixel(): void {
     this.__store._useFloatPixel = true;
   }
-  /**
-   * @return {void}
-   */
   noFloatPixel(): void {
     this.__store._useFloatPixel = false;
   }
@@ -402,9 +343,6 @@ export default class fCanvas {
     return this.__store._useFloatPixel ? value : Math.round(value);
   }
 
-  /**
-   * @return {CanvasRenderingContext2D}
-   */
   get $context2d(): CanvasRenderingContext2D {
     if (this.__store._context2dCaching === null) {
       this._createNewContext2d();
@@ -413,18 +351,11 @@ export default class fCanvas {
     return this.__store._context2dCaching as CanvasRenderingContext2D;
   }
 
-  /**
-   * @param {HTMLElement=document.body} parent
-   * @return {void}
-   */
   append(parent: HTMLElement = document.body): void {
     if (parent.contains(this.$el) === false) {
       parent.appendChild(this.$el);
     }
   }
-  /**
-   * @param {(HTMLCanvasElement | string)} element
-   */
   mount(element: HTMLCanvasElement | string): void {
     let el: HTMLCanvasElement;
 
@@ -450,23 +381,13 @@ export default class fCanvas {
       this._restartEvents(el);
     }
   }
-  /**
-   * @return {void}
-   */
   noClear(): void {
     this.__store._clear = false;
   }
-  /**
-   * @return {boolean}
-   */
   get allowClear(): boolean {
     return this.__store._clear;
   }
 
-  /**
-   * @param {MyElement} element
-   * @return {void}
-   */
   run(...elements: MyElement[]): void {
     let index = 0;
     const { length } = elements;
@@ -476,54 +397,28 @@ export default class fCanvas {
     }
   }
 
-  /**
-   * @return {number}
-   */
   get width(): number {
     return this.$el.width;
   }
-  /**
-   * @param {number} value
-   * @return {any}
-   */
   set width(value: number) {
     this.$el.width = value;
   }
-  /**
-   * @return {number}
-   */
   get height(): number {
     return this.$el.height;
   }
-  /**
-   * @param {number} value
-   * @return {any}
-   */
   set height(value: number) {
     this.$el.height = value;
   }
-  /**
-   * @return {number}
-   */
   get windowWidth(): number {
     return windowSize.windowWidth.get();
   }
-  /**
-   * @return {number}
-   */
   get windowHeight(): number {
     return windowSize.windowHeight.get();
   }
 
-  /**
-   * @return {void}
-   */
   save(): void {
     this.$context2d.save();
   }
-  /**
-   * @return {void}
-   */
   restore(): void {
     this.$context2d.restore();
   }
@@ -580,10 +475,6 @@ export default class fCanvas {
 
   angleMode(): AngleType;
   angleMode(type: AngleType): void;
-  /**
-   * @param {AngleType} value?
-   * @return {any}
-   */
   angleMode(value?: AngleType): AngleType | void {
     if (value === undefined) {
       return this.__store._angleMode;
@@ -593,10 +484,6 @@ export default class fCanvas {
   }
   colorMode(): ColorType;
   colorMode(mode: ColorType): void;
-  /**
-   * @param {ColorType} value?
-   * @return {any}
-   */
   colorMode(value?: ColorType): ColorType | void {
     if (value === undefined) {
       return this.__store._colorMode;
@@ -615,10 +502,6 @@ export default class fCanvas {
   }
   fontSize(): number;
   fontSize(size: number): void;
-  /**
-   * @param {number} value?
-   * @return {any}
-   */
   fontSize(value?: number): number | void {
     const { size, weight, family } = fontToArray(this.font());
 
@@ -631,10 +514,6 @@ export default class fCanvas {
   }
   fontFamily(): string;
   fontFamily(font: string): void;
-  /**
-   * @param {string} value?
-   * @return {any}
-   */
   fontFamily(value?: string): string | void {
     const { size, weight, family } = fontToArray(this.font());
 
@@ -646,10 +525,6 @@ export default class fCanvas {
   }
   fontWeight(): string;
   fontWeight(weight: string): void;
-  /**
-   * @param {string} value?
-   * @return {any}
-   */
   fontWeight(value?: string): string | void {
     const { size, weight, family } = fontToArray(this.font());
 
@@ -659,13 +534,6 @@ export default class fCanvas {
       this.font([value, `${size}px`, family].join(" "));
     }
   }
-  /**
-   * @param {number=0} x
-   * @param {number=0} y
-   * @param {number=this.width} w
-   * @param {number=this.height} h
-   * @return {void}
-   */
   clear(
     x: number = 0,
     y: number = 0,
@@ -674,41 +542,21 @@ export default class fCanvas {
   ): void {
     this.$context2d.clearRect(x, y, w, h);
   }
-  /**
-   * @param {ParamsToRgb} ...params
-   * @return {void}
-   */
   background(...params: ParamsToRgb): void {
     this.$context2d.fillStyle = this._toRgb(params);
     this.$context2d.fill();
     this.$context2d.fillRect(0, 0, this.width, this.height);
   }
-  /**
-   * @param {CanvasImageSource} image
-   * @return {void}
-   */
   backgroundImage(image: CanvasImageSource): void {
     this.$context2d.drawImage(image, 0, 0, this.width, this.height);
   }
   createImageData(height: ImageData): ImageData;
   createImageData(width: number, height: number): ImageData;
-  /**
-   * @param {ImageData|number} width
-   * @param {number} height?
-   * @return {ImageData}
-   */
   createImageData(width: ImageData | number, height?: number): ImageData {
     return height
       ? this.$context2d.createImageData(width as number, height)
       : this.$context2d.createImageData(width as ImageData);
   }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {number} width
-   * @param {number} height
-   * @return {ImageData}
-   */
   getImageData(x: number, y: number, width: number, height: number): ImageData {
     return this.$context2d.getImageData(x, y, width, height);
   }
@@ -722,16 +570,6 @@ export default class fCanvas {
     width: number,
     height: number
   ): void;
-  /**
-   * @param {ImageData} imageData
-   * @param {number} x
-   * @param {number} y
-   * @param {number} xs?
-   * @param {number} ys?
-   * @param {number} width?
-   * @param {number} height?
-   * @return {void}
-   */
   putImageData(
     imageData: ImageData,
     x: number,
@@ -755,26 +593,12 @@ export default class fCanvas {
       this.$context2d.putImageData(imageData, x, y);
     }
   }
-  /**
-   * @param {CanvasImageSource} image
-   * @param {"repeat"|"repeat-x"|"repeat-y"|"no-repeat"} direction
-   * @return {CanvasPattern | null}
-   */
   createPattern(
     image: CanvasImageSource,
     direction: DirectionPattern
   ): CanvasPattern | null {
     return this.$context2d.createPattern(image, direction);
   }
-  /**
-   * @param {number} x1
-   * @param {number} y1
-   * @param {number} r1
-   * @param {number} x2
-   * @param {number} y2
-   * @param {number} r2
-   * @return {CanvasGradient}
-   */
   createRadialGradient(
     x1: number,
     y1: number,
@@ -785,13 +609,6 @@ export default class fCanvas {
   ): CanvasGradient {
     return this.$context2d.createRadialGradient(x1, y1, r1, x2, y2, r2);
   }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {number} width
-   * @param {number} height
-   * @return {CanvasGradient}
-   */
   createLinearGradient(
     x: number,
     y: number,
@@ -810,10 +627,6 @@ export default class fCanvas {
   }
   rotate(): number;
   rotate(value: number): void;
-  /**
-   * @param {number} value?
-   * @return {any}
-   */
   rotate(value?: number): number | void {
     if (value === undefined) {
       return this.__store.__rotate.now;
@@ -824,37 +637,19 @@ export default class fCanvas {
       this.__store.__rotate.sum += this.__store.__rotate.now % 360;
     }
   }
-  /**
-   * @return {void}
-   */
   resetRotate(): void {
     this.rotate(-this.__store.__rotate.sum);
   }
-  /**
-   * @return {void}
-   */
   resetTransform(): void {
     this.setTransform(1, 0, 0, 1, 0, 0);
   }
-  /**
-   * @param {noop} callback
-   * @return {*}  {MyElement}
-   */
   createElement = createElement;
-  /**
-   * @param {Function} callback
-   * @return {Promise<void>}
-   */
   async preload(callback: noop): Promise<void> {
     this.__store._existsPreload = true;
     await callback();
 
     this._stamentReady.emit("preloaded");
   }
-  /**
-   * @param {Function} callback
-   * @return {Promise<void>}
-   */
   async setup(callback: noop): Promise<void> {
     if (this.__store._existsPreload) {
       this._stamentReady.on("preloaded", async (): Promise<void> => {
@@ -866,10 +661,6 @@ export default class fCanvas {
       this._stamentReady.emit("setuped");
     }
   }
-  /**
-   * @param {Function} callback
-   * @return {void}
-   */
   draw(callback: noop): void {
     this._stamentReady.on("setuped", (): void => {
       draw(callback, this);
@@ -878,10 +669,6 @@ export default class fCanvas {
 
   font(): string;
   font(font: string): void;
-  /**
-   * @param {string} value?
-   * @return {any}
-   */
   font(value?: string): string | void {
     if (value === undefined) {
       return this.$context2d.font;
@@ -891,10 +678,6 @@ export default class fCanvas {
   }
   textAlign(): TextAlignType;
   textAlign(type: TextAlignType): void;
-  /**
-   * @param {TextAlignType} value?
-   * @return {any}
-   */
   textAlign(value?: TextAlignType): TextAlignType | void {
     if (value === undefined) {
       return this.$context2d.textAlign;
@@ -904,10 +687,6 @@ export default class fCanvas {
   }
   textBaseline(): TextBaselineType;
   textBaseline(middle: TextBaselineType): void;
-  /**
-   * @param {TextBaselineType} value?
-   * @return {any}
-   */
   textBaseline(value?: TextBaselineType): TextBaselineType | void {
     if (value === undefined) {
       return this.$context2d.textBaseline;
@@ -917,10 +696,6 @@ export default class fCanvas {
   }
   operation(): GlobalCompositeOperationType;
   operation(composite: GlobalCompositeOperationType): void;
-  /**
-   * @param {GlobalCompositeOperationType} value?
-   * @return {any}
-   */
   operation(
     value?: GlobalCompositeOperationType
   ): GlobalCompositeOperationType | void {
@@ -933,10 +708,6 @@ export default class fCanvas {
   }
   alpha(): number;
   alpha(alpha: number): void;
-  /**
-   * @param {number} alpha?
-   * @return {number | void}
-   */
   alpha(alpha?: number): number | void {
     if (alpha === undefined) {
       return this.$context2d.globalAlpha;
@@ -950,11 +721,6 @@ export default class fCanvas {
 
   translate(): Offset;
   translate(x: number, y: number): void;
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @return {any}
-   */
   translate(x?: number, y?: number): Offset | void {
     if (arguments.length === 0) {
       return {
@@ -970,9 +736,6 @@ export default class fCanvas {
     this.__store.__translate.sumX += x;
     this.__store.__translate.sumY += y;
   }
-  /**
-   * @return {void}
-   */
   resetTranslate(): void {
     this.$context2d.translate(
       -this.__store.__translate.sumX,
@@ -984,11 +747,6 @@ export default class fCanvas {
   }
   scale(): Offset;
   scale(x: number, y: number): void;
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @return {any}
-   */
   scale(x?: number, y?: number): Offset | void {
     if (arguments.length === 0) {
       return {
@@ -1001,9 +759,6 @@ export default class fCanvas {
     this.__store.__scale.sumX += x || 0;
     this.__store.__scale.sumY += y || 0;
   }
-  /**
-   * @return {void}
-   */
   resetScale(): void {
     this.$context2d.translate(
       -this.__store.__scale.sumX,
@@ -1016,11 +771,6 @@ export default class fCanvas {
   clip(): void;
   clip(fillRule: RuleClip): void;
   clip(path: Path2D, fillRule: RuleClip): void;
-  /**
-   * @param {any} fillRule?
-   * @param {any} path?
-   * @return {void}
-   */
   clip(fillRule?: any, path?: any): void {
     if (path === undefined) {
       this.$context2d.clip(fillRule);
@@ -1038,15 +788,6 @@ export default class fCanvas {
     dy: number
   ): void;
   transform(): DOMMatrix;
-  /**
-   * @param {number|DOMMatrix} m11?
-   * @param {number} m12?
-   * @param {number} m21?
-   * @param {number} m22?
-   * @param {number} dx?
-   * @param {number} dy?
-   * @return {any}
-   */
   transform(
     m11?: number | DOMMatrix,
     m12?: number,
@@ -1082,15 +823,6 @@ export default class fCanvas {
     dx: number,
     dy: number
   ): void;
-  /**
-   * @param {number|DOMMatrix} m11
-   * @param {number} m12?
-   * @param {number} m21?
-   * @param {number} m22?
-   * @param {number} dx?
-   * @param {number} dy?
-   * @return {void}
-   */
   setTransform(
     m11: number | DOMMatrix,
     m12?: number,
@@ -1114,73 +846,34 @@ export default class fCanvas {
     }
   }
 
-  /**
-   * @param {string} text
-   * @return {number}
-   */
   measureText(text: string): number {
     return this.$context2d.measureText(text).width;
   }
-  /**
-   * @param {number} angle
-   * @return {number}
-   */
   sin(angle: number): number {
     return Math.sin(this._toRadius(angle));
   }
-  /**
-   * @param {number} sin
-   * @return {number}
-   */
   asin(sin: number): number {
     return this._toDegress(Math.asin(sin));
   }
-  /**
-   * @param {number} angle
-   * @return {number}
-   */
   cos(angle: number): number {
     return Math.cos(this._toRadius(angle));
   }
-  /**
-   * @param {number} cos
-   * @return {number}
-   */
   acos(cos: number): number {
     return this._toDegress(Math.acos(cos));
   }
-  /**
-   * @param {number} angle
-   * @return {number}
-   */
   tan(angle: number): number {
     return Math.tan(this._toRadius(angle));
   }
-  /**
-   * @param {number} tan
-   * @return {number}
-   */
   atan(tan: number): number {
     return this._toDegress(Math.atan(tan));
   }
-  /**
-   * @param {number} y
-   * @param {number} x
-   * @return {number}
-   */
   atan2(y: number, x: number): number {
     return this._toDegress(Math.atan2(y, x));
   }
 
-  /**
-   * @return {void}
-   */
   cursor(): void {
     this.$el.style.cursor = "auto";
   }
-  /**
-   * @return {void}
-   */
   noCursor(): void {
     this.$el.style.cursor = "none";
   }
@@ -1188,25 +881,16 @@ export default class fCanvas {
   _setIdFrame(id: number): void {
     this.__store._idFrame = id;
   }
-  /**
-   * @return {void}
-   */
   loop(): void {
     this.__store._loop = true;
     this._stamentReady.emit("setuped");
   }
-  /**
-   * @return {void}
-   */
   noLoop(): void {
     this.__store._loop = false;
     if (this.__store._idFrame) {
       cancelAnimationFrame(this.__store._idFrame);
     }
   }
-  /**
-   * @return {boolean}
-   */
   get allowLoop(): boolean {
     return this.__store._loop;
   }
@@ -1222,66 +906,30 @@ export default class fCanvas {
       this.$el.removeEventListener(name, callback as CallbackEvent);
     }
   }
-  /**
-   * @param {CallbackEvent} callback
-   * @return {noop}
-   */
   mouseIn(callback: CallbackEvent): noop {
     return this.on("mouseover", callback);
   }
-  /**
-   * @param {CallbackEvent} callback
-   * @return {noop}
-   */
   mouseOut(callback: CallbackEvent): noop {
     return this.on("mouseout", callback);
   }
-  /**
-   * @param {CallbackEvent} callback
-   * @return {noop}
-   */
   touchStart(callback: CallbackEvent): noop {
     return this.on("touchstart", callback);
   }
-  /**
-   * @param {CallbackEvent} callback
-   * @return {noop}
-   */
   touchMove(callback: CallbackEvent): noop {
     return this.on("touchmove", callback);
   }
-  /**
-   * @param {CallbackEvent} callback
-   * @return {noop}
-   */
   touchEnd(callback: CallbackEvent): noop {
     return this.on("touchend", callback);
   }
-  /**
-   * @param {CallbackEvent} callback
-   * @return {noop}
-   */
   mouseMove(callback: CallbackEvent): noop {
     return this.on("mousemove", callback);
   }
-  /**
-   * @param {CallbackEvent} callback
-   * @return {noop}
-   */
   mouseUp(callback: CallbackEvent): noop {
     return this.on("mouseup", callback);
   }
-  /**
-   * @param {CallbackEvent} callback
-   * @return {noop}
-   */
   mouseDown(callback: CallbackEvent): noop {
     return this.on("mousedown", callback);
   }
-  /**
-   * @param {CallbackEvent} callback
-   * @return {noop}
-   */
   mouseClicked(callback: CallbackEvent): noop {
     return this.on("click", callback);
   }

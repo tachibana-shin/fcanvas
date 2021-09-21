@@ -47,10 +47,6 @@ export default abstract class MyElement {
       };
     }
   }
-  /**
-   * @param {fCanvas} canvas?
-   * @return {any}
-   */
   constructor(canvas?: fCanvas) {
     if (!(canvas instanceof fCanvas)) {
       canvas = noopFCanvas;
@@ -110,23 +106,12 @@ export default abstract class MyElement {
 
     this._idActiveNow = -1;
   }
-  /**
-   * @param {MyElement} element
-   * @return {void}
-   */
   add(...elements: MyElement[]): void {
     this._queue.push(...elements);
   }
-  /**
-   * @param {MyElement} element
-   * @return {void}
-   */
   run(element: MyElement): void {
     this.$parent.run(element);
   }
-  /**
-   * @return {fCanvas}
-   */
   get $parent(): fCanvas {
     const canvas = this._els[this._idActiveNow === -1 ? 0 : this._idActiveNow];
 
@@ -140,115 +125,56 @@ export default abstract class MyElement {
     }
   }
 
-  /**
-   * @return {CanvasRenderingContext2D}
-   */
   get $context2d(): CanvasRenderingContext2D {
     return this.$parent.$context2d;
   }
-  /**
-   * @param {number} angle
-   * @return {number}
-   */
   sin(angle: number): number {
     return this.$parent.sin(angle);
   }
-  /**
-   * @param {number} sin
-   * @return {number}
-   */
   asin(sin: number): number {
     return this.$parent.asin(sin);
   }
-  /**
-   * @param {number} angle
-   * @return {number}
-   */
   cos(angle: number): number {
     return this.$parent.cos(angle);
   }
-  /**
-   * @param {number} cos
-   * @return {number}
-   */
   acos(cos: number): number {
     return this.$parent.asin(cos);
   }
-  /**
-   * @param {number} angle
-   * @return {number}
-   */
   tan(angle: number): number {
     return this.$parent.tan(angle);
   }
-  /**
-   * @param {number} tan
-   * @return {number}
-   */
   atan(tan: number): number {
     return this.$parent.atan(tan);
   }
-  /**
-   * @param {number} y
-   * @param {number} x
-   * @return {number}
-   */
   atan2(y: number, x: number): number {
     return this.$parent.atan2(y, x);
   }
 
-  /**
-   * @return {number | null}
-   */
   get mouseX(): number | null {
     return this.$parent.mouseX;
   }
-  /**
-   * @return {number | null}
-   */
   get mouseY(): number | null {
     return this.$parent.mouseY;
   }
-  /**
-   * @return {numbe}
-   */
   get movedX(): number {
     return this.$parent.movedX;
   }
-  /**
-   * @return {numbe}
-   */
   get movedY(): number {
     return this.$parent.movedY;
   }
-  /**
-   * @return {numbe}
-   */
   get pmouseX(): number {
     return this.$parent.pmouseX;
   }
-  /**
-   * @return {numbe}
-   */
   get pmouseY(): number {
     return this.$parent.pmouseY;
   }
-  /**
-   * @return {boolean}
-   */
   get mouseIsPressed(): boolean {
     return this.$parent.mouseIsPressed;
   }
 
-  /**
-   * @return {number}
-   */
   get windowWidth(): number {
     return this.$parent.windowWidth;
   }
-  /**
-   * @return {number}
-   */
   get windowHeight(): number {
     return this.$parent.windowHeight;
   }
@@ -260,13 +186,6 @@ export default abstract class MyElement {
   ): this;
   fill(red: number, green: number, blue: number, alpha?: number): this;
   fill(color?: string | CanvasGradient | CanvasImageSource | number): this;
-  /**
-   * @param  {number} red?
-   * @param  {number} green?
-   * @param  {number} blue?
-   * @param  {number} alpha=1
-   * @returns {this}
-   */
   fill(...args: ParamsToRgb): this {
     this.$context2d.fillStyle = this.$parent._toRgb(args);
     this.$context2d.fill();
@@ -281,31 +200,17 @@ export default abstract class MyElement {
   ): this;
   stroke(red: number, green: number, blue: number, alpha?: number): this;
   stroke(color?: string | CanvasGradient | CanvasImageSource | number): this;
-  /**
-   * @param  {number} red?
-   * @param  {number} green?
-   * @param  {number} blue?
-   * @param  {number} alpha=1
-   * @returns {this}
-   */
   stroke(...args: ParamsToRgb): this {
     this.$context2d.strokeStyle = this.$parent._toRgb(args);
     this.$context2d.stroke();
 
     return this;
   }
-  /**
-   * @return {this}
-   */
   noFill(): this {
     return this.fill(0, 0, 0, 0);
   }
   lineWidth(): number;
   lineWidth(width: number): this;
-  /**
-   * @param {number} value?
-   * @return {number|this}
-   */
   lineWidth(value?: number): number | this {
     if (value === undefined) {
       return this.$context2d.lineWidth;
@@ -316,10 +221,6 @@ export default abstract class MyElement {
   }
   miterLimit(): number;
   miterLimit(value: number): this;
-  /**
-   * @param {number} value?
-   * @return {number|this}
-   */
   miterLimit(value?: number): number | this {
     if (value === undefined) {
       return this.$context2d.miterLimit;
@@ -332,11 +233,6 @@ export default abstract class MyElement {
   }
   shadowOffset(): Offset;
   shadowOffset(x: number, y: number): this;
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @return {this|Offset}
-   */
   shadowOffset(x?: number, y?: number): Offset | this {
     if (arguments.length === 0) {
       return {
@@ -352,40 +248,24 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param {string} text
-   * @return {number}
-   */
   measureText(text: string): number {
     return this.$parent.measureText(text);
   }
-  /**
-   * @return {this}
-   */
   begin(): this {
     this.$context2d.beginPath();
 
     return this;
   }
-  /**
-   * @return {this}
-   */
   close(): this {
     this.$context2d.closePath();
 
     return this;
   }
-  /**
-   * @return {this}
-   */
   save(): this {
     this.$parent.save();
 
     return this;
   }
-  /**
-   * @return {this}
-   */
   restore(): this {
     this.$parent.restore();
 
@@ -393,10 +273,6 @@ export default abstract class MyElement {
   }
   rotate(): number;
   rotate(angle: number): this;
-  /**
-   * @param {number} angle?
-   * @return {number | this}
-   */
   rotate(angle?: number): number | this {
     if (angle === undefined) {
       return this.$parent.rotate();
@@ -407,11 +283,6 @@ export default abstract class MyElement {
   }
   translate(): Offset;
   translate(x: number, y: number): this;
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @return {offset|this}
-   */
   translate(x?: number, y?: number): Offset | this {
     if (arguments.length === 0) {
       return this.$parent.translate();
@@ -421,15 +292,6 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param  {number} x
-   * @param  {number} y
-   * @param  {number} radius
-   * @param  {number} astart
-   * @param  {number} astop
-   * @param  {boolean} reverse?
-   * @returns this
-   */
   arc(
     x: number,
     y: number,
@@ -451,15 +313,6 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param  {number} x
-   * @param  {number} y
-   * @param  {number} radius
-   * @param  {number} astart
-   * @param  {number} astop
-   * @param  {boolean} reverse?
-   * @returns {this}
-   */
   pie(
     x: number,
     y: number,
@@ -470,28 +323,11 @@ export default abstract class MyElement {
   ): this {
     return this.move(x, y).arc(x, y, radius, astart, astop, reverse).to(x, y);
   }
-  /**
-   * @param  {number} x1
-   * @param  {number} y1
-   * @param  {number} x2
-   * @param  {number} y2
-   * @returns {this}
-   */
   line(x1: number, y1: number, x2: number, y2: number): this {
     // this.begin();
     return this.move(x1, y1).to(x2, y2);
     // this.close();fix
   }
-  /**
-   * @param  {number} x
-   * @param  {number} y
-   * @param  {number} radius1
-   * @param  {number} radius2
-   * @param  {number} astart
-   * @param  {number} astop
-   * @param  {number} reverse
-   * @returns {this}
-   */
   ellipse(
     x: number,
     y: number,
@@ -515,12 +351,6 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param  {number} x
-   * @param  {number} y
-   * @param  {number} radius
-   * @returns {this}
-   */
   circle(x: number, y: number, radius: number): this {
     return this.arc(
       x,
@@ -530,24 +360,10 @@ export default abstract class MyElement {
       this.$parent.angleMode() === "degress" ? 360 : Math.PI * 2
     );
   }
-  /**
-   * @param  {number} x
-   * @param  {number} y
-   * @returns {this}
-   */
   point(x: number, y: number): this {
     return this.circle(x, y, 1);
   }
-  /**
-   * @param  {number} x1
-   * @param  {number} y1
-   * @param  {number} x2
-   * @param  {number} y2
-   * @param  {number} x3
-   * @param  {number} y3
-   * @returns {this}
-   */
-  triange(
+  triangle(
     x1: number,
     y1: number,
     x2: number,
@@ -577,18 +393,6 @@ export default abstract class MyElement {
     width: number,
     height: number
   ): this;
-  /**
-   * @param  {CanvasImageSource} image
-   * @param  {number} sx?
-   * @param  {number} sy?
-   * @param  {number} swidth?
-   * @param  {number} sheight?
-   * @param  {number} x
-   * @param  {number} y
-   * @param  {number} width
-   * @param  {number} height
-   * @returns {this}
-   */
   drawImage(image: CanvasImageSource, ...args: number[]): this {
     // @ts-expect-error
     this.$context2d.drawImage(image, ...(args as ParamsDrawImage));
@@ -610,17 +414,6 @@ export default abstract class MyElement {
     radiusLeft: string | number,
     radiusRight: string | number
   ): this;
-  /**
-   * @param  {number} x
-   * @param  {number} y
-   * @param  {number} width
-   * @param  {number} height
-   * @param  {string|number} radiusTopLeft
-   * @param  {string|number} radiusTopRight
-   * @param  {string|number} radiusBottomRight
-   * @param  {string|number} radiusBottomLeft
-   * @returns {this}
-   */
   rRect(
     x: number,
     y: number,
@@ -661,14 +454,6 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {number} width
-   * @param {number} height
-   * @memberof MyElement
-   * @returns {this}
-   */
   rect(x: number, y: number, width: number, height: number): this {
     this.begin();
     [x, y, width, height] = this.$parent._argsRect(x, y, width, height);
@@ -682,27 +467,11 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param  {number} cpx
-   * @param  {number} cpy
-   * @param  {number} x
-   * @param  {number} y
-   * @return {this}
-   */
   quadratic(cpx: number, cpy: number, x: number, y: number): this {
     this.$context2d.quadraticCurveTo(cpx, cpy, x, y);
 
     return this;
   }
-  /**
-   * @param {number} cp1x
-   * @param {number} cp1y
-   * @param {number} cp2x
-   * @param {number} cp2y
-   * @param {number} x
-   * @param {number} y
-   * @return {this}
-   */
   bezier(
     cp1x: number,
     cp1y: number,
@@ -715,11 +484,6 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @return {this}
-   */
   move(x: number, y: number): this {
     this.$context2d.moveTo(
       this.$parent._getPixel(x),
@@ -728,11 +492,6 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @return {this}
-   */
   to(x: number, y: number): this {
     this.$context2d.lineTo(
       this.$parent._getPixel(x),
@@ -741,13 +500,6 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param {string} text
-   * @param {number} x
-   * @param {number} y
-   * @param {number} maxWidth?
-   * @return {this}
-   */
   fillText(text: string, x: number, y: number, maxWidth?: number): this {
     this.$context2d.fillText(
       text,
@@ -758,13 +510,6 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param {string} text
-   * @param {number} x
-   * @param {number} y
-   * @param {number} maxWidth?
-   * @return {this}
-   */
   strokeText(text: string, x: number, y: number, maxWidth?: number): this {
     this.$context2d.strokeText(
       text,
@@ -775,13 +520,6 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {number} width
-   * @param {number} height
-   * @return {this}
-   */
   fillRect(x: number, y: number, width: number, height: number): this {
     this.$context2d.fillRect(
       this.$parent._getPixel(x),
@@ -792,13 +530,6 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {number} width
-   * @param {number} height
-   * @return {this}
-   */
   strokeRect(x: number, y: number, width: number, height: number): this {
     this.$context2d.strokeRect(
       this.$parent._getPixel(x),
@@ -811,10 +542,6 @@ export default abstract class MyElement {
   }
   lineDashOffset(): number;
   lineDashOffset(value: number): this;
-  /**
-   * @param {number} value?
-   * @return {this|number}
-   */
   lineDashOffset(value?: number): number | this {
     if (value === undefined) {
       return this.$context2d.lineDashOffset;
@@ -840,14 +567,6 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param {number} x1
-   * @param {number} y1
-   * @param {number} x2
-   * @param {number} y2
-   * @param {number} radius
-   * @return {this}
-   */
   arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): this {
     this.$context2d.arcTo(
       this.$parent._getPixel(x1),
@@ -859,19 +578,9 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @return {boolean}
-   */
   isPoint(x: number, y: number): boolean {
     return this.$context2d.isPointInPath(x, y);
   }
-  /**
-   * @param {any} width
-   * @param {number} height?
-   * @return {ImageData}
-   */
   createImageData(height: ImageData): ImageData;
   createImageData(width: number, height: number): ImageData;
   createImageData(width: ImageData | number, height?: number): ImageData {
@@ -879,13 +588,6 @@ export default abstract class MyElement {
       ? this.$parent.createImageData(width as number, height)
       : this.$parent.createImageData(width as ImageData);
   }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {number} width
-   * @param {number} height
-   * @return {ImageData}
-   */
   getImageData(x: number, y: number, width: number, height: number): ImageData {
     return this.$parent.getImageData(x, y, width, height);
   }
@@ -899,16 +601,6 @@ export default abstract class MyElement {
     width: number,
     height: number
   ): this;
-  /**
-   * @param {ImageData} imageData
-   * @param {number} x
-   * @param {number} y
-   * @param {number} xs?
-   * @param {number} ys?
-   * @param {number} width?
-   * @param {number} height?
-   * @return {this}
-   */
   putImageData(
     imageData: ImageData,
     x: number,
@@ -934,26 +626,12 @@ export default abstract class MyElement {
 
     return this;
   }
-  /**
-   * @param {CanvasImageSource} image
-   * @param {"repeat"|"repeat-x"|"repeat-y"|"no-repeat"} direction
-   * @return {CanvasPattern | null}
-   */
   createPattern(
     image: CanvasImageSource,
     direction: DirectionPattern
   ): CanvasPattern | null {
     return this.$parent.createPattern(image, direction);
   }
-  /**
-   * @param {number} x1
-   * @param {number} y1
-   * @param {number} r1
-   * @param {number} x2
-   * @param {number} y2
-   * @param {number} r2
-   * @return {CanvasGradient}
-   */
   createRadialGradient(
     x1: number,
     y1: number,
@@ -964,13 +642,6 @@ export default abstract class MyElement {
   ): CanvasGradient {
     return this.$parent.createRadialGradient(x1, y1, r1, x2, y2, r2);
   }
-  /**
-   * @param {number} x
-   * @param {number} y
-   * @param {number} width
-   * @param {number} height
-   * @return {CanvasGradient}
-   */
   createLinearGradient(
     x: number,
     y: number,
@@ -982,10 +653,6 @@ export default abstract class MyElement {
 
   lineJoin(): LineJoin;
   lineJoin(type: LineJoin): this;
-  /**
-   * @param {"bevel"|"round"|"miter"} type?
-   * @return {LineJoin|this}
-   */
   lineJoin(type?: LineJoin): LineJoin | this {
     if (type === undefined) {
       return this.$context2d.lineJoin;
@@ -997,10 +664,6 @@ export default abstract class MyElement {
   }
   lineCap(): LineCap;
   lineCap(value: LineCap): this;
-  /**
-   * @param {"butt"|"round"|"square"} value?
-   * @return {LineCap|this}
-   */
   lineCap(value?: LineCap): LineCap | this {
     if (value === undefined) {
       return this.$context2d.lineCap;
@@ -1010,10 +673,6 @@ export default abstract class MyElement {
   }
   shadowBlur(): number;
   shadowBlur(opacity: number): this;
-  /**
-   * @param {number} opacity?
-   * @return {number|this}
-   */
   shadowBlur(opacity?: number): number | this {
     if (opacity === undefined) {
       return this.$context2d.shadowBlur;
@@ -1034,10 +693,6 @@ export default abstract class MyElement {
   shadowColor(
     color?: string | CanvasGradient | CanvasImageSource | number
   ): this;
-  /**
-   * @param {any[]} ...args
-   * @return {this}
-   */
   shadowColor(...args: ParamsToRgb): this {
     this.$context2d.shadowColor = this.$parent._toRgb(args);
 
@@ -1105,19 +760,11 @@ export default abstract class MyElement {
     return this;
   }
 
-  /**
-   * @param {noop} program
-   * @memberof MyElement
-   */
   drawing(program: noop): void {
     this.begin();
     program.call(this);
     this.close();
   }
-  /**
-   * @param {noop} program
-   * @memberof MyElement
-   */
   backup(program: noop): void {
     this.save();
     program.call(this);
@@ -1130,40 +777,22 @@ export class Point3D extends MyElement {
   y: number = 0;
   z: number = 0;
 
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @param {number} z?
-   * @return {any}
-   */
   constructor(x?: number, y?: number, z?: number) {
     super();
     [this.x, this.y, this.z] = [x || 0, y || 0, z || 0];
   }
-  /**
-   * @param {number} angle
-   * @return {void}
-   */
   rotateX(angle: number): void {
     this.y =
       this.y * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
     this.z =
       -this.y * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
   }
-  /**
-   * @param {number} angle
-   * @return {void}
-   */
   rotateY(angle: number): void {
     this.x =
       this.x * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
     this.z =
       -this.x * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
   }
-  /**
-   * @param {number} angle
-   * @return {void}
-   */
   rotateZ(angle: number): void {
     this.x =
       this.x * this.$parent.cos(angle) - this.y * this.$parent.sin(angle);
@@ -1178,12 +807,6 @@ export class Point3DCenter extends MyElement {
   private __y: number;
   private __z: number = 0;
 
-  /**
-   * @param {number} x?
-   * @param {number} y?
-   * @param {number} z?
-   * @return {any}
-   */
   constructor(x: number, y: number, z?: number) {
     super();
     [this.__x, this.__y, this.__z] = [x, y, z || 0];
