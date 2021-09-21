@@ -31,8 +31,8 @@
   },
   "scripts": {
     "build": "rollup -c rollup.config.ts",
-    "prepublish": "npm run build",
-    "docs": "typedoc --disableOutputCheck --theme minimal src"
+    "prepublishOnly": "yarn build",
+    "docs": "typedoc src"
   },
   "author": "Tachibana Shin",
   "repository": {
