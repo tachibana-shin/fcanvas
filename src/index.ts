@@ -1,5 +1,6 @@
-export { default } from "./core/fCanvas";
+import fCanvas from "./core/fCanvas";
 
+export default fCanvas;
 export { default as Emitter } from "./classes/Emitter";
 export { default as Store } from "./classes/Store";
 export { default as Vector } from "./classes/Vector";
