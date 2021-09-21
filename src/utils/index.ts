@@ -211,7 +211,7 @@ export function extractNumber(value: any): number {
   return parseFloat(`${value}`);
 }
 
-type ListEvents = {
+export type ListEvents = {
   readonly [name: string]: Event;
 } & {
   readonly keydown: KeyboardEvent;
@@ -220,6 +220,8 @@ type ListEvents = {
   readonly mousedown: MouseEvent;
   readonly click: MouseEvent;
   readonly mousemove: MouseEvent;
+  readonly mouseout: MouseEvent;
+  readonly mouseover: MouseEvent;
   readonly touchstart: TouchEvent;
   readonly touchmove: TouchEvent;
   readonly touchend: TouchEvent;

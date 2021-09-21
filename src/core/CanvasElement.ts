@@ -6,6 +6,16 @@ import fCanvas, { DirectionPattern, noopFCanvas, ParamsToRgb } from "./fCanvas";
 type LineJoin = "bevel" | "round" | "miter";
 type LineCap = "butt" | "round" | "square";
 
+// eslint-disable-next-line functional/no-let
+let canvasInstance: fCanvas | null = null;
+export function setCanvasInstance(canvas: fCanvas | null): void {
+  canvasInstance = canvas;
+}
+export function unsetCanvasInstance(): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  canvasInstance = null;
+}
+
 export abstract class CanvasElement {
   // eslint-disable-next-line functional/prefer-readonly-type
   private static _count = 0;

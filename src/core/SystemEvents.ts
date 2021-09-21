@@ -2,29 +2,40 @@ import mitt from "mitt";
 
 import { bindEvent, noop, requestAnimationFrame } from "../utils/index";
 
+import { setCanvasInstance, unsetCanvasInstance } from "./CanvasElement";
 import fCanvas from "./fCanvas";
 
 // eslint-disable-next-line functional/no-let
 let initd = false;
-const emitter = mitt();
+const emitter = mitt<{
+  readonly load: void;
+}>();
 
-export async function setup(callback: {
-  (): Promise<void> | void;
-}): Promise<void> {
+export async function setup(
+  callback: {
+    (): Promise<void> | void;
+  },
+  canvas?: fCanvas
+): Promise<void> {
   if (document.readyState === "complete") {
     //// readyState === "complete"
 
+    setCanvasInstance(canvas ?? null);
     await callback();
+    unsetCanvasInstance();
 
     initd = true;
     emitter.emit("load");
   } else {
     await new Promise<void>((resolve) => {
-      function load() {
+      async function load() {
         document.removeEventListener("DOMContentLoaded", load);
         window.removeEventListener("load", load);
 
-        callback();
+        setCanvasInstance(canvas ?? null);
+        await callback();
+        unsetCanvasInstance();
+
         resolve();
         initd = true;
         emitter.emit("load");
@@ -40,7 +51,11 @@ function __draw(callback: noop, canvas?: fCanvas): void {
   if (canvas?.allowClear === true) {
     canvas.clear();
   }
+
+  setCanvasInstance(canvas ?? null);
   callback();
+  unsetCanvasInstance();
+
   if (canvas ? canvas.allowLoop === true : false) {
     const id: number = requestAnimationFrame((): void => {
       __draw(callback, canvas);

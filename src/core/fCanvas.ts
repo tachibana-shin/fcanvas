@@ -7,6 +7,7 @@ import {
   getTouchInfo,
   InfoTouch,
   isMobile,
+  ListEvents,
   noop,
   Offset,
   passive,
@@ -46,14 +47,14 @@ type RuleClip = "nonzero" | "evenodd";
 export type DirectionPattern = "repeat" | "repeat-x" | "repeat-y" | "no-repeat";
 
 type HightTransform = {
-   // eslint-disable-next-line functional/prefer-readonly-type
-   x: number;
-   // eslint-disable-next-line functional/prefer-readonly-type
-   y: number;
-   // eslint-disable-next-line functional/prefer-readonly-type
-   sumX: number;
-   // eslint-disable-next-line functional/prefer-readonly-type
-   sumY: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  x: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  y: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  sumX: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  sumY: number;
 };
 
 export default class fCanvas {
@@ -67,61 +68,60 @@ export default class fCanvas {
   private readonly _id: number = fCanvas._count++;
   // eslint-disable-next-line functional/prefer-readonly-type
   private _el: HTMLCanvasElement;
-  private readonly _stamentReady: Stament = new Stament();
-
+  private readonly hooks: Stament = new Stament();
   private readonly __store: {
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _context2dCaching: CanvasRenderingContext2D | null;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _context2dCaching: CanvasRenderingContext2D | null;
 
-     // eslint-disable-next-line functional/prefer-readonly-type
-     __translate: HightTransform;
-     // eslint-disable-next-line functional/prefer-readonly-type
-     __scale: HightTransform;
-     // eslint-disable-next-line functional/prefer-readonly-type
-     __rotate: {
-     // eslint-disable-next-line functional/prefer-readonly-type
-     now: number;
-     // eslint-disable-next-line functional/prefer-readonly-type
-     sum: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    __translate: HightTransform;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    __scale: HightTransform;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    __rotate: {
+      // eslint-disable-next-line functional/prefer-readonly-type
+      now: number;
+      // eslint-disable-next-line functional/prefer-readonly-type
+      sum: number;
     };
-     // eslint-disable-next-line functional/prefer-readonly-type
-     __attributeContext: {
-     // eslint-disable-next-line functional/prefer-readonly-type
-     alpha: boolean;
-     // eslint-disable-next-line functional/prefer-readonly-type
-     desynchronized: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    __attributeContext: {
+      // eslint-disable-next-line functional/prefer-readonly-type
+      alpha: boolean;
+      // eslint-disable-next-line functional/prefer-readonly-type
+      desynchronized: boolean;
     };
 
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _clear: boolean;
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _loop: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _clear: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _loop: boolean;
 
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _preventTouch: boolean;
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _stopTouch: boolean;
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _idFrame: number | null;
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _existsPreload: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _preventTouch: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _stopTouch: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _idFrame: number | null;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _existsPreload: boolean;
 
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _angleMode: AngleType;
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _rectMode: RectMode;
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _colorMode: ColorType;
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _useFloatPixel: boolean;
-     
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _pmouseX: number;
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _pmouseY: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _angleMode: AngleType;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _rectMode: RectMode;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _colorMode: ColorType;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _useFloatPixel: boolean;
 
-     // eslint-disable-next-line functional/prefer-readonly-type
-     _realMouseIsPressed: boolean;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _pmouseX: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _pmouseY: number;
+
+    // eslint-disable-next-line functional/prefer-readonly-type
+    _realMouseIsPressed: boolean;
   } = Object.create({
     _context2dCaching: null,
 
@@ -223,12 +223,11 @@ export default class fCanvas {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private readonly _handlerEvent = (event: any): void => {
     try {
-    // eslint-disable-next-line functional/immutable-data
+      // eslint-disable-next-line functional/immutable-data
       this.__store._pmouseX = this.touches[0]?.x || 0;
-    // eslint-disable-next-line functional/immutable-data
+      // eslint-disable-next-line functional/immutable-data
       this.__store._pmouseY = this.touches[0]?.y || 0;
 
-    
       this.touches =
         event.type !== "mouseout"
           ? getTouchInfo(this.$el, event.touches || [event])
@@ -243,7 +242,7 @@ export default class fCanvas {
       if (this.__store._stopTouch) {
         event.stopPropagation();
       }
-    // eslint-disable-next-line no-empty
+      // eslint-disable-next-line no-empty
     } catch {}
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -259,7 +258,7 @@ export default class fCanvas {
       return;
     }
 
-      // eslint-disable-next-line functional/immutable-data
+    // eslint-disable-next-line functional/immutable-data
     this.__store._realMouseIsPressed = event?.touches.length > 0;
   };
   private _cancelEventsSystem(el: Element): void {
@@ -703,7 +702,7 @@ export default class fCanvas {
         // eslint-disable-next-line functional/immutable-data
         (this.__store.__rotate.now = this._toRadius(value))
       );
-        // eslint-disable-next-line functional/immutable-data
+      // eslint-disable-next-line functional/immutable-data
       this.__store.__rotate.sum += this.__store.__rotate.now % 360;
     }
   }
@@ -714,26 +713,26 @@ export default class fCanvas {
     this.setTransform(1, 0, 0, 1, 0, 0);
   }
   readonly createElement = createElement;
-  async preload(callback: noop): Promise<void> {
-        // eslint-disable-next-line functional/immutable-data
+  async preload(callback: noop | (() => Promise<void>)): Promise<void> {
+    // eslint-disable-next-line functional/immutable-data
     this.__store._existsPreload = true;
     await callback();
 
-    this._stamentReady.emit("preloaded");
+    this.hooks.emit("preloaded");
   }
-  async setup(callback: noop): Promise<void> {
+  async setup(callback: noop | (() => Promise<void>)): Promise<void> {
     if (this.__store._existsPreload) {
-      this._stamentReady.on("preloaded", async (): Promise<void> => {
-        await setup(callback);
-        this._stamentReady.emit("setuped");
+      this.hooks.on("preloaded", async (): Promise<void> => {
+        await setup(callback, this);
+        this.hooks.emit("setuped");
       });
     } else {
-      await setup(callback);
-      this._stamentReady.emit("setuped");
+      await setup(callback, this);
+      this.hooks.emit("setuped");
     }
   }
   draw(callback: noop): void {
-    this._stamentReady.on("setuped", (): void => {
+    this.hooks.on("setuped", (): void => {
       draw(callback, this);
     });
   }
@@ -745,7 +744,7 @@ export default class fCanvas {
       return this.$context2d.font;
     }
 
-        // eslint-disable-next-line functional/immutable-data
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.font = value;
   }
   textAlign(): TextAlignType;
@@ -755,7 +754,7 @@ export default class fCanvas {
       return this.$context2d.textAlign;
     }
 
-        // eslint-disable-next-line functional/immutable-data
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.textAlign = value;
   }
   textBaseline(): TextBaselineType;
@@ -765,7 +764,7 @@ export default class fCanvas {
       return this.$context2d.textBaseline;
     }
 
-        // eslint-disable-next-line functional/immutable-data
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.textBaseline = value;
   }
   operation(): GlobalCompositeOperationType;
@@ -778,7 +777,7 @@ export default class fCanvas {
         .globalCompositeOperation as GlobalCompositeOperationType;
     }
 
-        // eslint-disable-next-line functional/immutable-data
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.globalCompositeOperation = value;
   }
   alpha(): number;
@@ -788,7 +787,7 @@ export default class fCanvas {
       return this.$context2d.globalAlpha;
     }
 
-        // eslint-disable-next-line functional/immutable-data
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.globalAlpha = alpha;
   }
   resetAlpha(): void {
@@ -975,7 +974,7 @@ export default class fCanvas {
   loop(): void {
     // eslint-disable-next-line functional/immutable-data
     this.__store._loop = true;
-    this._stamentReady.emit("setuped");
+    this.hooks.emit("setuped");
   }
   noLoop(): void {
     // eslint-disable-next-line functional/immutable-data
@@ -987,43 +986,37 @@ export default class fCanvas {
   get allowLoop(): boolean {
     return this.__store._loop;
   }
-  on(name: string, callback: noop): noop {
+  on<Name extends keyof ListEvents>(
+    name: Name,
+    callback: (ev: ListEvents[Name]) => void
+  ): noop {
     return bindEvent(name, callback, this.$el);
   }
-  off(resultEvent: noop): void;
-  off(name: string, callback: noop): void;
-  off(name: string | noop, callback?: noop): void {
-    if (typeof name === "function") {
-      name();
-    } else {
-      this.$el.removeEventListener(name, callback as noop);
-    }
-  }
-  mouseIn(callback: noop): noop {
+  mouseIn(callback: (ev: MouseEvent) => void): noop {
     return this.on("mouseover", callback);
   }
-  mouseOut(callback: noop): noop {
+  mouseOut(callback: (ev: MouseEvent) => void): noop {
     return this.on("mouseout", callback);
   }
-  touchStart(callback: noop): noop {
+  touchStart(callback: (ev: TouchEvent) => void): noop {
     return this.on("touchstart", callback);
   }
-  touchMove(callback: noop): noop {
+  touchMove(callback: (ev: TouchEvent) => void): noop {
     return this.on("touchmove", callback);
   }
-  touchEnd(callback: noop): noop {
+  touchEnd(callback: (ev: TouchEvent) => void): noop {
     return this.on("touchend", callback);
   }
-  mouseMove(callback: noop): noop {
+  mouseMove(callback: (ev: MouseEvent) => void): noop {
     return this.on("mousemove", callback);
   }
-  mouseUp(callback: noop): noop {
+  mouseUp(callback: (ev: Event) => void): noop {
     return this.on("mouseup", callback);
   }
-  mouseDown(callback: noop): noop {
+  mouseDown(callback: (ev: MouseEvent) => void): noop {
     return this.on("mousedown", callback);
   }
-  mouseClicked(callback: noop): noop {
+  mouseClicked(callback: (ev: MouseEvent) => void): noop {
     return this.on("click", callback);
   }
 }
