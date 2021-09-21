@@ -15,7 +15,7 @@
   "typings": "typings/index.d.ts",
   "files": [
     "dist",
-    "typings"
+    "types"
   ],
   "license": "MIT",
   "devDependencies": {
