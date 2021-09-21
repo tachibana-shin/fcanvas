@@ -4,3 +4,4 @@ yarn-error.log
 node-types/
 dist
 docs
+types

@@ -175,9 +175,6 @@ export function getTouchInfo(
   return _touches;
 }
 
-/**
- * @return {boolean}
- */
 export function isMobile(): boolean {
   const agent =
     typeof navigator === "undefined"

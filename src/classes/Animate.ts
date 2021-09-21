@@ -70,15 +70,6 @@ function getAnimate(
       return start + (distance / steps) * currentProgress;
   }
 }
-/**
- * @param {AnimateType} type
- * @param {number} start
- * @param {number} stop
- * @param {number} frame
- * @param {number} frames
- * @param {number=3} power
- * @return {number}
- */
 
 function getValueInFrame(
   type: AnimateType,

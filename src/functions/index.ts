@@ -1,18 +1,8 @@
 import { extractNumber } from "../utils/index";
 
-/**
- * @param {number} value
- * @param {number} min
- * @param {number} max
- * @return {number}
- */
 export function constrain(value: number, min: number, max: number): number {
   return Math.min(Math.max(min, value), max);
 }
-/**
- * @param {string} src
- * @return {Promise<HTMLImageElement>}
- */
 export function loadImage(src: string): Promise<HTMLImageElement> {
   const img = new Image();
   img.src = src;
@@ -30,11 +20,6 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
     img.addEventListener("error", error);
   });
 }
-/**
- *
- * @param {string} src
- * @return {Promise<HTMLAudioElement>}
- */
 export function loadAudio(src: string): Promise<HTMLAudioElement> {
   const audio = document.createElement("audio");
   audio.src = src;
@@ -53,14 +38,6 @@ export function loadAudio(src: string): Promise<HTMLAudioElement> {
     audio.addEventListener("error", error);
   });
 }
-/**
- * @param {number} value
- * @param {number} start
- * @param {number} stop
- * @param {number} min
- * @param {number} max
- * @return {number}
- */
 export function map(
   value: number,
   start: number,
@@ -70,13 +47,6 @@ export function map(
 ): number {
   return ((value - start) * (max - min)) / (stop - start) + min;
 }
-/**
- * @export
- * @param {number} ratio
- * @param {number} width
- * @param {number} height
- * @return {*}  {[number, number]}
- */
 export function aspectRatio(
   ratio: number,
   width: number,
@@ -95,10 +65,6 @@ export function aspectRatio(
 function random(value: number): number;
 function random<T>(array: T[]): T;
 function random(start: number, stop: number): number;
-/**
- * @param {any[]} ...args
- * @return {any}
- */
 function random(...args: any[]): any {
   if (args.length === 1) {
     if (
@@ -118,11 +84,6 @@ function random(...args: any[]): any {
 
 function randomInt(value: number): number;
 function randomInt(start: number, stop: number): number;
-/**
- * @param {number} start
- * @param {number} stop?
- * @return {number}
- */
 function randomInt(start: number, stop?: number): number {
   if (stop === undefined) {
     return Math.round(random(start));
@@ -133,12 +94,6 @@ function randomInt(start: number, stop?: number): number {
 
 function range(start: number, stop: number, step: number): number;
 function range(start: string, stop: string, step: number): string;
-/**
- * @param {any} start
- * @param {any} stop
- * @param {number} step
- * @return {any}
- */
 function range(start: any, stop: any, step: number): any {
   step = step || 1;
   const arr = [];
@@ -174,20 +129,10 @@ function range(start: any, stop: any, step: number): any {
 
 export { random, randomInt, range };
 
-/**
- * @param {number} start
- * @param {number} stop
- * @param {number} amt
- * @return {number}
- */
 export function lerp(start: number, stop: number, amt: number): number {
   return amt * (stop - start) + start;
 }
 
-/**
- * @param {number[]} ...args
- * @return {number}
- */
 export const hypot =
   typeof Math.hypot === "function"
     ? Math.hypot
@@ -199,12 +144,6 @@ export const hypot =
         return Math.sqrt(result);
       };
 
-/**
- * @param {number} value
- * @param {number} max
- * @param {number} prevent
- * @return {number}
- */
 export function odd(value: number, prevent: number, max: number): number {
   if (value === max) {
     return prevent;
@@ -212,12 +151,6 @@ export function odd(value: number, prevent: number, max: number): number {
 
   return value + 1;
 }
-/**
- * @param {number} value
- * @param {number} min
- * @param {number} prevent
- * @return {number}
- */
 export function even(value: number, min: number, prevent: number): number {
   if (value === min) {
     return prevent;
@@ -288,13 +221,6 @@ export function cutImage(
   return imageCuted;
 }
 
-/**
- * @export
- * @param {number} value
- * @param {number} min
- * @param {number} max
- * @return {*}  {boolean}
- */
 export function unlimited(value: number, min: number, max: number): boolean {
   return value < min || value > max;
 }

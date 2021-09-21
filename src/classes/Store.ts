@@ -99,30 +99,26 @@ function reactiveDefine(
   }
 }
 
-class Store {
+class Store<
+  State extends {
+    [propName: string]: any;
+  }
+> {
   [propName: string]: any;
   private __emitter: Emitter = new Emitter();
-  constructor(store?: { [propName: string]: any }) {
+  constructor(store: State) {
     for (const key in store) {
-      this[key] = store[key];
+      (this as any)[key] = store[key];
     }
     reactiveDefine(this, (paths: string[], oldVal: any, newVal: any): void => {
       this.__emitter.emit(paths.join("."), oldVal, newVal);
     });
   }
 
-  $set(
-    object:
-      | Store
-      | {
-          [propName: string]: any;
-        },
-    key: string,
-    value: any
-  ): void {
+  $set(object: Store<State> | State, key: string, value: any): void {
     if (!(key in object)) {
       //reactive
-      object[key] = undefined;
+      (object as any)[key] = undefined;
       reactiveDefine(
         object,
         (paths: string[], oldVal: any, newVal: any): void => {
@@ -131,7 +127,7 @@ class Store {
       );
     }
 
-    object[key] = value;
+    (object as any)[key] = value;
   }
   $watch(key: string, callback: CallbackEvent) {
     return this.__emitter.on(key, callback);
