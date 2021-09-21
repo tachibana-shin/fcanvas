@@ -36,21 +36,19 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.30.0",
-    "typescript": "4.2.4"
+    "typescript": "^4.2.4"
   },
   "scripts": {
-    "build:rollup": "node build.js",
-    "build": "npm run build:rollup && npm run docs",
-    "prepare": "npm run build",
-    "docs": "typedoc --disableOutputCheck --theme minimal src",
-    "push": "yarn publish && git add . && git commit -m . && git push"
+    "build": "node build.js",
+    "prepublish": "npm run build",
+    "docs": "typedoc --disableOutputCheck --theme minimal src"
   },
-  "author": "Nguyen Thanh",
+  "author": "Tachibana Shin",
   "repository": {
     "type": "git",
-    "url": "git://github.com/nguyenthanh1995/fcanvas.git"
+    "url": "git://github.com/tachibana-shin/fcanvas.git"
   },
-  "homepage": "https://nguyenthanh1995.github.io/fcanvas",
+  "homepage": "https://tachibana-shin.github.io/fcanvas",
   "keywords": [
     "fCanvas"
   ]

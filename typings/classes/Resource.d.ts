@@ -10,15 +10,7 @@ declare class TilesResource {
     private plist;
     private __caching;
     constructor(image: HTMLImageElement, plist: object);
-    /**
-     * @param {string} name
-     * @return {any}
-     */
     get(name: string): ImageResource;
-    /**
-     * @param {string} name
-     * @return {boolean}
-     */
     has(name: string): boolean;
 }
 export declare function loadResourceImage(path: string): Promise<TilesResource>;

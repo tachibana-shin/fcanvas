@@ -5,11 +5,6 @@ declare type StoreData = number[] | {
 export default class Animate {
     private __data;
     private set data(value);
-    /**
-     * @param {string} key
-     * @return {*}  {(number | void)}
-     * @memberof Animate
-     */
     get(key: string): number | void;
     private __fps;
     private __eventsStore;
