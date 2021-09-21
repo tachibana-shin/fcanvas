@@ -1,13 +1,15 @@
-import MyElement from "../core/MyElement";
+import { CanvasElement } from "../core/CanvasElement";
 import fCanvas from "../core/fCanvas";
 
-interface CallbackAddons<T = void> {
-  (element: MyElement, index: number, peers: MyElement[]): T;
-}
-export default class Peers extends MyElement {
-  public peers: MyElement[] = [];
+type CallbackAddons<T = void> = {
+  (element: CanvasElement, index: number, peers: readonly CanvasElement[]): T;
+};
+export default class Peers extends CanvasElement {
+  // eslint-disable-next-line functional/prefer-readonly-type
+  public readonly peers: CanvasElement[] = [];
 
-  add(element: MyElement): void {
+  add(element: CanvasElement): void {
+    // eslint-disable-next-line functional/immutable-data
     this.peers.push(element);
   }
 
@@ -21,13 +23,17 @@ export default class Peers extends MyElement {
     this.peers.forEach(callback);
   }
   filter(callback: CallbackAddons<boolean>): void {
-    this.peers = this.peers.filter(callback);
+    // eslint-disable-next-line functional/immutable-data
+    this.peers.push(...this.peers.splice(0).filter(callback));
   }
   filterOne(callback: CallbackAddons<boolean>): void {
-    const peers: MyElement[] = [];
+    // eslint-disable-next-line functional/prefer-readonly-type
+    const peers: CanvasElement[] = [];
 
+    // eslint-disable-next-line functional/functional-parameters
     this.peers.some((...params): boolean => {
       if (callback(...params)) {
+        // eslint-disable-next-line functional/immutable-data
         peers.push(params[0]);
         return false;
       }
@@ -35,8 +41,8 @@ export default class Peers extends MyElement {
       return true;
     });
   }
-  remove(element: number | MyElement): void {
-    if (element instanceof MyElement) {
+  remove(element: number | CanvasElement): void {
+    if (element instanceof CanvasElement) {
       this.filterOne((element1) => element !== element1);
     } else {
       this.filterOne(

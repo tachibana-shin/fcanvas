@@ -1,38 +1,37 @@
+import { CanvasElement } from "../core/CanvasElement";
 import fCanvas from "../core/fCanvas";
-import MyElement from "../core/MyElement";
 import { constrain } from "../functions/index";
-import { noop, Offset } from "../utils/index";
+import { noop } from "../utils/index";
 
-interface ViewPort {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-interface Range {
-  min: number;
-  max: number;
-  default: number;
+type ViewPort = {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+};
+type Range = {
+  readonly min: number;
+  readonly max: number;
+  readonly default: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
   current: number;
-  dynamic: boolean;
-}
-interface ConfigCursor {
-  x: Range;
-  y: Range;
-}
+  readonly dynamic: boolean;
+};
+type ConfigCursor = {
+  readonly x: Range;
+  readonly y: Range;
+};
 
 class Cursor {
-  private _camera: Camera;
-  private _config: ConfigCursor;
+  private readonly _camera: Camera;
+  private readonly _config: ConfigCursor;
 
   public get x(): number {
     return this._config.x.current;
   }
-  public set x(value: number) {}
   public get y(): number {
     return this._config.y.current;
   }
-  public set y(value: number) {}
 
   constructor(camera: Camera, config: ConfigCursor) {
     this._camera = camera;
@@ -50,7 +49,7 @@ class Cursor {
               ? this[prop] > this._config[prop].min
               : this[prop] < this._config[prop].max
           ) {
-            this[prop] += dist;
+            this._config[prop].current += dist;
             return false;
           }
         } else {
@@ -60,7 +59,7 @@ class Cursor {
               : this._camera.isLimitY()) === (dist < 0 ? -1 : 1)
           ) {
             if (this[prop] > this._config[prop].min) {
-              this[prop] += dist;
+              this._config[prop].current += dist;
             }
           }
         }
@@ -73,15 +72,21 @@ class Cursor {
 }
 
 export default class Camera {
-  static Cursor: typeof Cursor = Cursor;
-  private _canvas: fCanvas;
-  private _viewport: ViewPort;
-  private _offset: Offset = Object.create({
+  static readonly Cursor: typeof Cursor = Cursor;
+  private readonly _canvas: fCanvas;
+  private readonly _viewport: ViewPort;
+  private readonly _offset: {
+    // eslint-disable-next-line functional/prefer-readonly-type
+    x: number;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    y: number;
+  } = Object.create({
     x: 0,
     y: 0,
   });
-  private _watchers: {
-    [propName: string]: Function[];
+  private readonly _watchers: {
+    // eslint-disable-next-line @typescript-eslint/ban-types, functional/prefer-readonly-type
+    readonly [propName: string]: Function[];
   } = Object.create(null);
 
   public get x(): number {
@@ -89,6 +94,7 @@ export default class Camera {
   }
   public set x(value: number) {
     const old = this._offset.x;
+    // eslint-disable-next-line functional/no-let
     let allowChange = true;
     this._watchers.x?.forEach((callback) => {
       if (callback(value, old) === false) {
@@ -97,6 +103,7 @@ export default class Camera {
     });
 
     if (allowChange) {
+      // eslint-disable-next-line functional/immutable-data
       this._offset.x = value;
     }
   }
@@ -105,6 +112,7 @@ export default class Camera {
   }
   public set y(value: number) {
     const old = this._offset.y;
+    // eslint-disable-next-line functional/no-let
     let allowChange = true;
     this._watchers.y?.forEach((callback) => {
       if (callback(value, old) === false) {
@@ -113,19 +121,23 @@ export default class Camera {
     });
 
     if (allowChange) {
+      // eslint-disable-next-line functional/immutable-data
       this._offset.y = value;
     }
   }
   public $watch(
     name: string,
     callback: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (newValue: any, oldValue: any): void;
     }
   ): noop {
     if (name in this._watchers === false) {
-      this._watchers[name] = [];
+      // eslint-disable-next-line functional/immutable-data
+      this._watchers[name].splice(0);
     }
 
+    // eslint-disable-next-line functional/immutable-data
     this._watchers[name].push(callback);
 
     return () => {
@@ -134,6 +146,7 @@ export default class Camera {
       );
 
       if (index && index !== -1) {
+        // eslint-disable-next-line functional/immutable-data
         this._watchers[name].splice(index, 1);
       }
     };
@@ -156,7 +169,7 @@ export default class Camera {
     };
   }
 
-  public getXOffset(value: number, diffSpeed: number = 1): number {
+  public getXOffset(value: number, diffSpeed = 1): number {
     return (
       value -
       constrain(
@@ -166,7 +179,7 @@ export default class Camera {
       )
     );
   }
-  public getYOffset(value: number, diffSpeed: number = 1): number {
+  public getYOffset(value: number, diffSpeed = 1): number {
     return (
       value -
       constrain(
@@ -199,15 +212,17 @@ export default class Camera {
     return 0;
   }
 
-  public isXInViewBox(element: MyElement, diffSpeed: number): boolean;
+  public isXInViewBox(element: CanvasElement, diffSpeed: number): boolean;
   public isXInViewBox(value: number, width: number, diffSpeed: number): boolean;
   public isXInViewBox(
-    value: number | MyElement,
-    width: number = 0,
-    diffSpeed: number = 1
+    value: number | CanvasElement,
+    width = 0,
+    diffSpeed = 1
   ): boolean {
-    if (value instanceof MyElement) {
+    if (value instanceof CanvasElement) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       width = (value as any).width || 0;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       value = ((value as any).x as number) || 0;
     }
 
@@ -215,19 +230,21 @@ export default class Camera {
 
     return value + width > 0 || value < this._canvas.width;
   }
-  public isYInViewBox(element: MyElement, diffSpeed: number): boolean;
+  public isYInViewBox(element: CanvasElement, diffSpeed: number): boolean;
   public isYInViewBox(
     value: number,
     height: number,
     diffSpeed: number
   ): boolean;
   public isYInViewBox(
-    value: number | MyElement,
-    height: number = 0,
-    diffSpeed: number = 1
+    value: number | CanvasElement,
+    height = 0,
+    diffSpeed = 1
   ): boolean {
-    if (value instanceof MyElement) {
+    if (value instanceof CanvasElement) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       height = (value as any).height || 0;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       value = ((value as any).y as number) || 0;
     }
 
@@ -237,7 +254,7 @@ export default class Camera {
   }
 
   public isInViewBox(
-    element: MyElement,
+    element: CanvasElement,
     diffSpeedX: number,
     diffSpeedY: number
   ): boolean;
@@ -250,14 +267,14 @@ export default class Camera {
     diffSpeedY: number
   ): boolean;
   public isInViewBox(
-    x: MyElement | number,
+    x: CanvasElement | number,
     y: number,
-    width: number = 0,
-    height: number = 0,
-    diffSpeedX: number = 1,
-    diffSpeedY: number = 1
+    width = 0,
+    height = 0,
+    diffSpeedX = 1,
+    diffSpeedY = 1
   ): boolean {
-    if (x instanceof MyElement) {
+    if (x instanceof CanvasElement) {
       return (
         this.isXInViewBox(x, diffSpeedX) && this.isYInViewBox(x, diffSpeedY)
       );

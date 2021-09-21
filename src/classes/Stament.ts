@@ -1,10 +1,9 @@
-import { CallbackEvent } from "./Emitter";
 import Store from "./Store";
 
 class Stament {
-  private __store: Store = new Store();
+  private readonly __store = new Store({});
 
-  on(name: string, callback: CallbackEvent): void {
+  on(name: string, callback: () => void): void {
     if (this.__store[name]) {
       callback();
     } else {

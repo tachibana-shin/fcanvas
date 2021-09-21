@@ -1,12 +1,18 @@
 const DOMatrix =
-window.DOMMatrix ||
+  window.DOMMatrix ||
   class {
-    a: number = 1;
-    b: number = 0;
-    c: number = 0;
-    d: number = 1;
-    e: number = 0;
-    f: number = 0;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    a = 1;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    b = 0;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    c = 0;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    d = 1;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    e = 0;
+    // eslint-disable-next-line functional/prefer-readonly-type
+    f = 0;
     /**
      * @param {string} css
      * @return {any}
@@ -18,7 +24,9 @@ window.DOMMatrix ||
       vnode.style.top = vnode.style.left = -9e99 + "px";
       vnode.style.transform = css;
       document.documentElement.appendChild(vnode);
-      let { transform }: { transform: string } = getComputedStyle(vnode);
+      // eslint-disable-next-line functional/no-let
+      let { transform }: { readonly transform: string } =
+        getComputedStyle(vnode);
 
       if (transform === "none") {
         transform = "1, 0, 0, 1, 0, 0";

@@ -1,16 +1,14 @@
-import { AutoToPx, noop, Offset } from "../utils/index";
-import fCanvas, { noopFCanvas, ParamsToRgb, DirectionPattern } from "./fCanvas";
 import Peers from "../classes/Peers";
+import { AutoToPx, noop, Offset } from "../utils/index";
 
-type ParamsDrawImage =
-  | [number, number]
-  | [number, number, number, number]
-  | [number, number, number, number, number, number, number, number];
+import fCanvas, { DirectionPattern, noopFCanvas, ParamsToRgb } from "./fCanvas";
+
 type LineJoin = "bevel" | "round" | "miter";
 type LineCap = "butt" | "round" | "square";
 
-export default abstract class MyElement {
-  private static _count: number = 0;
+export abstract class CanvasElement {
+  // eslint-disable-next-line functional/prefer-readonly-type
+  private static _count = 0;
   public get type(): "rect" | "circle" | "point" | "unknown" {
     if ("x" in this && "y" in this) {
       if ("width" in this && "height" in this) {
@@ -26,102 +24,87 @@ export default abstract class MyElement {
 
     return "unknown";
   }
-  private readonly _id: number = MyElement._count++;
+  // eslint-disable-next-line functional/immutable-data
+  private readonly _id: number = CanvasElement._count++;
   public get id(): number {
     return this._id;
   }
-  private readonly _els: {
-    [propName: string]: {
-      canvas: fCanvas;
-      setuped: boolean;
-    };
-  } = Object.create(null);
-  private _idActiveNow: number = -1;
-  private readonly _queue: MyElement[] = [];
+  // eslint-disable-next-line functional/prefer-readonly-type
+  private canvasInstance: fCanvas | null = null;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  private readonly _queue: CanvasElement[] = [];
 
-  private __addEl(canvas: fCanvas): void {
-    if (canvas.id in this._els === false) {
-      this._els[canvas.id] = {
-        canvas,
-        setuped: false,
-      };
-    }
-  }
   constructor(canvas?: fCanvas) {
     if (!(canvas instanceof fCanvas)) {
       canvas = noopFCanvas;
     }
-
-    this.__addEl(canvas);
   }
 
   _run(canvas: fCanvas, peers?: Peers): void {
-    this.__addEl(canvas);
-    this._idActiveNow = canvas.id;
-
-    if (
-      typeof (this as any).setup === "function" &&
-      this._els[this._idActiveNow].setuped === false
-    ) {
-      const result = (this as any).setup();
-
-      if (result !== null && typeof result === "object") {
-        for (const prop in result) {
-          (this as any)[prop] = (result as any)[prop];
-        }
-      }
-
-      this._els[this._idActiveNow].setuped = true;
-    }
+    this.canvasInstance = canvas;
 
     if (peers) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (typeof (this as any).updatePeer === "function") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (typeof (this as any).draw === "function") {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (this as any).draw();
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (this as any).updatePeer(peers);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } else if (typeof (this as any).draw === "function") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (this as any).draw();
       }
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (typeof (this as any).update === "function") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (typeof (this as any).draw === "function") {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (this as any).draw();
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (this as any).update();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } else if (typeof (this as any).draw === "function") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (this as any).draw();
       }
     }
 
     if (this._queue.length > 0) {
       const { length } = this._queue;
+      // eslint-disable-next-line functional/no-let
       let index = 0;
 
+      // eslint-disable-next-line functional/no-loop-statement
       while (index < length) {
         this.run(this._queue[index]);
         index++;
       }
     }
 
-    this._idActiveNow = -1;
+    this.canvasInstance = null;
   }
-  add(...elements: MyElement[]): void {
+  // eslint-disable-next-line functional/functional-parameters
+  add(...elements: readonly CanvasElement[]): void {
+    // eslint-disable-next-line functional/immutable-data
     this._queue.push(...elements);
   }
-  run(element: MyElement): void {
+  run(element: CanvasElement): void {
     this.$parent.run(element);
   }
   get $parent(): fCanvas {
-    const canvas = this._els[this._idActiveNow === -1 ? 0 : this._idActiveNow];
-
-    if (canvas?.canvas instanceof fCanvas) {
-      return canvas.canvas;
+    if (this.canvasInstance instanceof fCanvas) {
+      return this.canvasInstance;
     } else {
-      console.warn(
+      // eslint-disable-next-line functional/no-throw-statement
+      throw new Error(
         "fCanvas: The current referenced version of the fCanvas.run function is incorrect."
       );
-      return this._els[0].canvas;
     }
   }
 
@@ -186,7 +169,9 @@ export default abstract class MyElement {
   ): this;
   fill(red: number, green: number, blue: number, alpha?: number): this;
   fill(color?: string | CanvasGradient | CanvasImageSource | number): this;
+  // eslint-disable-next-line functional/functional-parameters
   fill(...args: ParamsToRgb): this {
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.fillStyle = this.$parent._toRgb(args);
     this.$context2d.fill();
 
@@ -200,7 +185,9 @@ export default abstract class MyElement {
   ): this;
   stroke(red: number, green: number, blue: number, alpha?: number): this;
   stroke(color?: string | CanvasGradient | CanvasImageSource | number): this;
+  // eslint-disable-next-line functional/functional-parameters
   stroke(...args: ParamsToRgb): this {
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.strokeStyle = this.$parent._toRgb(args);
     this.$context2d.stroke();
 
@@ -215,6 +202,7 @@ export default abstract class MyElement {
     if (value === undefined) {
       return this.$context2d.lineWidth;
     }
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.lineWidth = this.$parent._getPixel(value);
 
     return this;
@@ -227,6 +215,7 @@ export default abstract class MyElement {
     }
     this.lineJoin("miter");
 
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.miterLimit = value;
 
     return this;
@@ -234,6 +223,7 @@ export default abstract class MyElement {
   shadowOffset(): Offset;
   shadowOffset(x: number, y: number): this;
   shadowOffset(x?: number, y?: number): Offset | this {
+    // eslint-disable-next-line functional/functional-parameters
     if (arguments.length === 0) {
       return {
         x: this.$context2d.shadowOffsetX,
@@ -284,6 +274,7 @@ export default abstract class MyElement {
   translate(): Offset;
   translate(x: number, y: number): this;
   translate(x?: number, y?: number): Offset | this {
+    // eslint-disable-next-line functional/functional-parameters
     if (arguments.length === 0) {
       return this.$parent.translate();
     }
@@ -393,9 +384,15 @@ export default abstract class MyElement {
     width: number,
     height: number
   ): this;
-  drawImage(image: CanvasImageSource, ...args: number[]): this {
-    // @ts-expect-error
-    this.$context2d.drawImage(image, ...(args as ParamsDrawImage));
+  // eslint-disable-next-line functional/functional-parameters
+  drawImage(image: CanvasImageSource, ...args: readonly number[]): this {
+    // eslint-disable-next-line prefer-spread
+    this.$context2d.drawImage.apply(this.$context2d, [
+      image,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...(args as readonly any[]),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ] as any);
 
     return this;
   }
@@ -547,14 +544,18 @@ export default abstract class MyElement {
       return this.$context2d.lineDashOffset;
     }
 
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.lineDashOffset = value;
 
     return this;
   }
-  lineDash(): number[];
-  lineDash(segments: number[]): this;
-  lineDash(...segments: number[]): this;
-  lineDash(...segments: Array<number[] | number>): number[] | this {
+  lineDash(): readonly number[];
+  lineDash(segments: readonly number[]): this;
+  lineDash(...segments: readonly number[]): this;
+  lineDash(
+    // eslint-disable-next-line functional/functional-parameters
+    ...segments: ReadonlyArray<readonly number[] | number>
+  ): readonly number[] | this {
     if (segments.length === 0) {
       return this.$context2d.getLineDash();
     }
@@ -563,7 +564,7 @@ export default abstract class MyElement {
       this.$context2d.setLineDash(segments[0]);
     }
 
-    this.$context2d.setLineDash(segments as number[]);
+    this.$context2d.setLineDash(segments as readonly number[]);
 
     return this;
   }
@@ -610,6 +611,7 @@ export default abstract class MyElement {
     width?: number,
     height?: number
   ): this {
+    // eslint-disable-next-line functional/functional-parameters
     if (arguments.length === 7) {
       this.$parent.putImageData(
         imageData,
@@ -658,6 +660,7 @@ export default abstract class MyElement {
       return this.$context2d.lineJoin;
     }
 
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.lineJoin = type;
 
     return this;
@@ -668,6 +671,7 @@ export default abstract class MyElement {
     if (value === undefined) {
       return this.$context2d.lineCap;
     }
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.lineCap = value;
     return this;
   }
@@ -678,6 +682,7 @@ export default abstract class MyElement {
       return this.$context2d.shadowBlur;
     }
 
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.shadowBlur = opacity;
 
     return this;
@@ -693,7 +698,9 @@ export default abstract class MyElement {
   shadowColor(
     color?: string | CanvasGradient | CanvasImageSource | number
   ): this;
+  // eslint-disable-next-line functional/functional-parameters
   shadowColor(...args: ParamsToRgb): this {
+    // eslint-disable-next-line functional/immutable-data
     this.$context2d.shadowColor = this.$parent._toRgb(args);
 
     return this;
@@ -710,30 +717,37 @@ export default abstract class MyElement {
     return this;
   }
 
-  polyline(...points: number[]): this;
-  polyline(...points: [number, number][]): this;
-  polyline(...points: number[] | Array<[number, number]>): this {
+  polyline(...points: readonly number[]): this;
+  polyline(...points: readonly (readonly [number, number])[]): this;
+  polyline(
+    // eslint-disable-next-line functional/functional-parameters
+    ...points: readonly number[] | ReadonlyArray<readonly [number, number]>
+  ): this {
     if (points.length > 0) {
       if (Array.isArray(points[0])) {
         this.move(points[0][0], points[0][1]);
 
+        // eslint-disable-next-line functional/no-let
         let index = 1;
         const { length } = points;
 
+        // eslint-disable-next-line functional/no-loop-statement
         while (index < length) {
           this.to(
-            (points[index] as [number, number])[0],
-            (points[index] as [number, number])[1]
+            (points[index] as readonly [number, number])[0],
+            (points[index] as readonly [number, number])[1]
           );
           index++;
         }
       } else {
         if (points.length > 1) {
-          this.move(points[0], points[1] as number);
+          this.move(points[0] as number, points[1] as number);
 
+          // eslint-disable-next-line functional/no-let
           let index = 2;
           const { length } = points;
 
+          // eslint-disable-next-line functional/no-loop-statement
           while (index < length - 1) {
             this.to(points[index] as number, points[index + 1] as number);
             index += 2;
@@ -744,14 +758,17 @@ export default abstract class MyElement {
 
     return this;
   }
-  polygon(...points: number[]): this;
-  polygon(...points: [number, number][]): this;
-  polygon(...points: number[] | Array<[number, number]>): this {
+  polygon(...points: readonly number[]): this;
+  polygon(...points: readonly (readonly [number, number])[]): this;
+  polygon(
+    // eslint-disable-next-line functional/functional-parameters
+    ...points: readonly number[] | ReadonlyArray<readonly [number, number]>
+  ): this {
     if (Array.isArray(points[0])) {
-      this.polyline(...(points as [number, number][]), points[0]);
+      this.polyline(...(points as readonly number[]), points[0] as number);
     } else {
       this.polyline(
-        ...(points as number[]),
+        ...(points as readonly number[]),
         points[0] as number,
         points[1] as number
       );
@@ -772,10 +789,13 @@ export default abstract class MyElement {
   }
 }
 
-export class Point3D extends MyElement {
-  x: number = 0;
-  y: number = 0;
-  z: number = 0;
+export class Point3D extends CanvasElement {
+  // eslint-disable-next-line functional/prefer-readonly-type
+  x = 0;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  y = 0;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  z = 0;
 
   constructor(x?: number, y?: number, z?: number) {
     super();
@@ -801,11 +821,14 @@ export class Point3D extends MyElement {
   }
 }
 
-export class Point3DCenter extends MyElement {
-  private static persistent = 1000;
+export class Point3DCenter extends CanvasElement {
+  private static readonly persistent = 1000;
+  // eslint-disable-next-line functional/prefer-readonly-type
   private __x: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
   private __y: number;
-  private __z: number = 0;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  private __z: number;
 
   constructor(x: number, y: number, z?: number) {
     super();
@@ -845,15 +868,16 @@ export class Point3DCenter extends MyElement {
       return this.scale * prop;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.scale * (this as any)[prop];
   }
 }
 
 export function createElement(callback: {
-  (canvas: MyElement): void;
-}): MyElement {
-  return new (class extends MyElement {
-    draw: noop = () => {
+  (canvas: CanvasElement): void;
+}): CanvasElement {
+  return new (class extends CanvasElement {
+    readonly draw: noop = () => {
       callback(this);
     };
   })();

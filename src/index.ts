@@ -1,7 +1,6 @@
 import fCanvas from "./core/fCanvas";
 
 export default fCanvas;
-export { default as Emitter } from "./classes/Emitter";
 export { default as Store } from "./classes/Store";
 export { default as Vector } from "./classes/Vector";
 export { default as Animate } from "./classes/Animate";
@@ -17,5 +16,5 @@ export {
 } from "./utils/index";
 export * from "./functions/index";
 export * from "./core/SystemEvents";
-export { createElement } from "./core/MyElement";
+export * from "./core/CanvasElement";
 export * from "./addons/impact";

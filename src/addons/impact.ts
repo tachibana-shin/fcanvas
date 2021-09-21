@@ -1,19 +1,19 @@
-import MyElement from "../core/MyElement";
+import type { CanvasElement } from "../core/CanvasElement";
 import { Offset } from "../utils/index";
 
-interface ReturnInterfering {
-  direction: number;
-  element: MyElement;
-}
+type ReturnInterfering = {
+  readonly direction: number;
+  readonly element: CanvasElement;
+};
 
 function CircleImpact(
-  circle1: MyElement &
+  circle1: CanvasElement &
     Offset & {
-      radius: number;
+      readonly radius: number;
     },
-  circle2: MyElement &
+  circle2: CanvasElement &
     Offset & {
-      radius: number;
+      readonly radius: number;
     }
 ): boolean {
   return (
@@ -22,9 +22,9 @@ function CircleImpact(
   );
 }
 function CircleImpactPoint(
-  circle: MyElement &
+  circle: CanvasElement &
     Offset & {
-      radius: number;
+      readonly radius: number;
     },
   x: number | null,
   y: number | null
@@ -35,14 +35,14 @@ function CircleImpactPoint(
   return (x - circle.x) ** 2 + (y - circle.y) ** 2 < circle.radius ** 2;
 }
 function CircleImpactRect(
-  circle: MyElement &
+  circle: CanvasElement &
     Offset & {
-      radius: number;
+      readonly radius: number;
     },
-  rect: MyElement &
+  rect: CanvasElement &
     Offset & {
-      width: number;
-      height: number;
+      readonly width: number;
+      readonly height: number;
     }
 ): boolean {
   const x = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
@@ -54,15 +54,15 @@ function CircleImpactRect(
   return distance < circle.radius ** 2;
 }
 function RectImpact(
-  rect1: MyElement &
+  rect1: CanvasElement &
     Offset & {
-      width: number;
-      height: number;
+      readonly width: number;
+      readonly height: number;
     },
-  rect2: MyElement &
+  rect2: CanvasElement &
     Offset & {
-      width: number;
-      height: number;
+      readonly width: number;
+      readonly height: number;
     }
 ): boolean {
   return (
@@ -74,10 +74,10 @@ function RectImpact(
 }
 
 function RectImpactPoint(
-  rect: MyElement &
+  rect: CanvasElement &
     Offset & {
-      width: number;
-      height: number;
+      readonly width: number;
+      readonly height: number;
     },
   x: number,
   y: number
@@ -90,21 +90,22 @@ function RectImpactPoint(
   );
 }
 
-function isRect(el: MyElement): el is MyElement & {
-  width: number;
-  height: number;
+function isRect(el: CanvasElement): el is CanvasElement & {
+  readonly width: number;
+  readonly height: number;
 } {
   return el.type === "rect";
 }
-function isCircle(el: MyElement): el is MyElement & {
-  radius: number;
+function isCircle(el: CanvasElement): el is CanvasElement & {
+  readonly radius: number;
 } {
   return el.type === "circle";
 }
-function isPoint(el: MyElement): el is MyElement & Offset {
+function isPoint(el: CanvasElement): el is CanvasElement & Offset {
   return el.type === "point";
 }
-function getOffset(el: MyElement & Offset): Offset {
+function getOffset(el: CanvasElement & Offset): Offset {
+  // eslint-disable-next-line functional/no-let
   let { x, y } = el;
   if (isRect(el)) {
     [x, y] = el.$parent._argsRect(el.x, el.y, el.width, el.height);
@@ -116,19 +117,19 @@ function getOffset(el: MyElement & Offset): Offset {
 }
 
 export function getDirectionElement(
-  el1: MyElement & Offset,
-  el2: MyElement & Offset
+  el1: CanvasElement & Offset,
+  el2: CanvasElement & Offset
 ): number {
-  let { x: x1, y: y1 } = getOffset(el1);
-  let { x: x2, y: y2 } = getOffset(el2);
+  const { x: x1, y: y1 } = getOffset(el1);
+  const { x: x2, y: y2 } = getOffset(el2);
 
   return (Math.atan2(x2 - x1, y2 - y1) * 180) / Math.PI;
 }
 
 function interfering(
-  element1: MyElement & Offset,
-  element2: MyElement & Offset,
-  company: boolean = true
+  element1: CanvasElement & Offset,
+  element2: CanvasElement & Offset,
+  company = true
 ): ReturnInterfering | boolean | null {
   if (isRect(element1)) {
     if (isRect(element2)) {
@@ -207,9 +208,11 @@ function interfering(
 }
 
 export function presser(
-  el: MyElement & Offset,
-  ...otherEl: (MyElement & Offset)[]
+  el: CanvasElement & Offset,
+  // eslint-disable-next-line functional/functional-parameters
+  ...otherEl: readonly (CanvasElement & Offset)[]
 ): ReturnInterfering | null {
+  // eslint-disable-next-line functional/no-let
   let result;
 
   otherEl.some((el2) => {
@@ -225,8 +228,9 @@ export function presser(
 }
 
 export function pressed(
-  el: MyElement & Offset,
-  ...otherEl: (MyElement & Offset)[]
+  el: CanvasElement & Offset,
+  // eslint-disable-next-line functional/functional-parameters
+  ...otherEl: readonly (CanvasElement & Offset)[]
 ): boolean {
   return otherEl.some((el2) => interfering(el, el2, false));
 }

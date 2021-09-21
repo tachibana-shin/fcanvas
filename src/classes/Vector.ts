@@ -1,13 +1,18 @@
+/* eslint-disable prefer-rest-params */
+/* eslint-disable functional/functional-parameters */
+/* eslint-disable functional/immutable-data */
 function calculateRemainder2D(
   xComponent: number,
   yComponent: number,
   vector: Vector
 ): typeof vector {
   if (xComponent !== 0) {
+    
     vector.x = vector.x % xComponent;
   }
 
   if (yComponent !== 0) {
+    
     vector.y = vector.y % yComponent;
   }
 
@@ -36,18 +41,21 @@ function calculateRemainder3D(
 }
 
 export default class Vector {
+  // eslint-disable-next-line functional/prefer-readonly-type
   x: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
   y: number;
+  // eslint-disable-next-line functional/prefer-readonly-type
   z: number;
-  constructor(x: number = 0, y: number = 0, z: number = 0) {
+  constructor(x = 0, y = 0, z = 0) {
     [this.x, this.y, this.z] = [x, y, z];
   }
 
   set(vector: Vector): this;
-  set(offset: [number?, number?, number?]): this;
+  set(offset: readonly [number?, number?, number?]): this;
   set(x?: number, y?: number, z?: number): this;
   set(
-    x?: Vector | [number?, number?, number?] | number,
+    x?: Vector | readonly [number?, number?, number?] | number,
     y?: number,
     z?: number
   ): this {
@@ -76,10 +84,10 @@ export default class Vector {
   }
 
   add(vector: Vector): this;
-  add(offset: [number?, number?, number?]): this;
+  add(offset: readonly [number?, number?, number?]): this;
   add(x: number, y: number, z: number): this;
   add(
-    x: Vector | [number?, number?, number?] | number,
+    x: Vector | readonly [number?, number?, number?] | number,
     y?: number,
     z?: number
   ): this {
@@ -104,8 +112,8 @@ export default class Vector {
   }
 
   rem(vector: Vector): void;
-  rem(params: [number, number?, number?]): void;
-  rem(x: Vector | [number, number?, number?]): void {
+  rem(params: readonly [number, number?, number?]): void;
+  rem(x: Vector | readonly [number, number?, number?]): void {
     if (x instanceof Vector) {
       if (
         Number.isFinite(x.x) &&
@@ -147,7 +155,7 @@ export default class Vector {
         }
       }
     } else if (arguments.length === 3) {
-      var _vectorComponents = [].slice.call(arguments);
+      const _vectorComponents = [].slice.call(arguments);
 
       if (
         _vectorComponents.every(function (element) {
@@ -167,10 +175,10 @@ export default class Vector {
   }
 
   sub(vector: Vector): this;
-  sub(offset: [number?, number?, number?]): this;
+  sub(offset: readonly [number?, number?, number?]): this;
   sub(x: number, y: number, z: number): this;
   sub(
-    x: Vector | [number?, number?, number?] | number,
+    x: Vector | readonly [number?, number?, number?] | number,
     y?: number,
     z?: number
   ): this {
@@ -287,9 +295,9 @@ export default class Vector {
   lerp(x?: number, y?: number, z?: number, amt?: number): this;
   lerp(
     x: Vector | number = 0,
-    y: number = 0,
-    z: number = 0,
-    amt: number = 0
+    y = 0,
+    z = 0,
+    amt = 0
   ): this {
     if (x instanceof Vector) {
       return this.lerp(x.x, x.y, x.z, y);
@@ -306,18 +314,19 @@ export default class Vector {
     return this.sub(surfaceNormal.mult(2 * this.dot(surfaceNormal)));
   }
 
-  array(): [number, number, number] {
+  array(): readonly [number, number, number] {
     return [this.x || 0, this.y || 0, this.z || 0];
   }
 
   equals(vector: Vector): boolean;
-  equals(params: [number?, number?, number?]): boolean;
+  equals(params: readonly [number?, number?, number?]): boolean;
   equals(x?: number, y?: number, z?: number): boolean;
   equals(
-    x?: Vector | [number?, number?, number?] | number,
+    x?: Vector | readonly [number?, number?, number?] | number,
     y?: number,
     z?: number
   ): boolean {
+    // eslint-disable-next-line functional/no-let
     let a, b, c;
 
     if (x instanceof Vector) {

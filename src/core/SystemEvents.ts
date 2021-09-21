@@ -1,9 +1,12 @@
-import { requestAnimationFrame, bindEvent, noop } from "../utils/index";
-import Emitter, { CallbackEvent } from "../classes/Emitter";
+import mitt from "mitt";
+
+import { bindEvent, noop, requestAnimationFrame } from "../utils/index";
+
 import fCanvas from "./fCanvas";
 
-let initd: boolean = false;
-const emitter: Emitter = new Emitter();
+// eslint-disable-next-line functional/no-let
+let initd = false;
+const emitter = mitt();
 
 export async function setup(callback: {
   (): Promise<void> | void;
@@ -51,61 +54,62 @@ export function draw(callback: noop, canvas?: fCanvas): void {
   if (initd) {
     void __draw(callback, canvas);
   } else {
-    void emitter.once("load", (): void => {
+    void emitter.on("load", function handler() {
       draw(callback, canvas);
+      emitter.off("load", handler);
     });
   }
 }
 export function keyPressed(
-  callback: CallbackEvent,
+  callback: (ev: KeyboardEvent) => void,
   element: Window | HTMLElement = window
 ): noop {
   return bindEvent("keydown", callback, element);
 }
 export function changeSize(
-  callback: CallbackEvent,
+  callback: (ev: Event) => void,
   element: Window | HTMLElement = window
 ): noop {
   return bindEvent("resize", callback, element);
 }
 export function mouseWheel(
-  callback: CallbackEvent,
+  callback: (ev: WheelEvent) => void,
   element: Window | HTMLElement = window
 ): noop {
   return bindEvent("wheel", callback, element);
 }
 export function mousePressed(
-  callback: CallbackEvent,
+  callback: (ev: MouseEvent) => void,
   element: Window | HTMLElement = window
 ): noop {
   return bindEvent("mousedown", callback, element);
 }
 export function mouseClicked(
-  callback: CallbackEvent,
+  callback: (ev: MouseEvent) => void,
   element: Window | HTMLElement = window
 ): noop {
   return bindEvent("click", callback, element);
 }
 export function mouseMoved(
-  callback: CallbackEvent,
+  callback: (ev: MouseEvent) => void,
   element: Window | HTMLElement = window
 ): noop {
   return bindEvent("mousemove", callback, element);
 }
 export function touchStart(
-  callback: CallbackEvent,
+  callback: (ev: TouchEvent) => void,
   element: Window | HTMLElement = window
 ): noop {
   return bindEvent("touchstart", callback, element);
 }
 export function touchMove(
-  callback: CallbackEvent,
+  callback: (ev: TouchEvent) => void,
   element: Window | HTMLElement = window
 ): noop {
   return bindEvent("touchmove", callback, element);
 }
 export function touchEnd(
-  callback: CallbackEvent,
+  callback: (ev: TouchEvent) => void,
   element: Window | HTMLElement = window
 ): noop {
   return bindEvent("touchend", callback, element);

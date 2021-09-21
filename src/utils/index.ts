@@ -1,28 +1,30 @@
-interface InfoFont {
-  size: number;
-  family: string;
-  weight: string;
-}
+type InfoFont = {
+  readonly size: number;
+  readonly family: string;
+  readonly weight: string;
+};
 
-export interface noop {
+export type noop = {
   (): void;
-}
+};
 
-export interface Offset {
-  x: number;
-  y: number;
-}
+export type Offset = {
+  readonly x: number;
+  readonly y: number;
+};
 
-export interface InfoTouch extends Offset {
-  winX: number;
-  winY: number;
-  id: any;
-}
+export type InfoTouch = Offset & {
+  readonly winX: number;
+  readonly winY: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly id: any;
+};
 
 export const requestAnimationFrame:
   | typeof globalThis.requestAnimationFrame
   | typeof globalThis.setTimeout =
   window.requestAnimationFrame ||
+  // eslint-disable-next-line @typescript-eslint/ban-types
   function (callback: Function): number {
     return setTimeout(callback, 100 / 6);
   };
@@ -30,6 +32,7 @@ export const cancelAnimationFrame:
   | typeof globalThis.cancelAnimationFrame
   | typeof globalThis.clearTimeout =
   window.cancelAnimationFrame ||
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function (timeoutId: any): void {
     clearTimeout(timeoutId);
   };
@@ -37,11 +40,13 @@ export const cancelAnimationFrame:
 export const isTouch: boolean =
   "ontouchstart" in window || "onmsgesturechange" in window;
 
-let supportPassive: boolean = false;
+// eslint-disable-next-line functional/no-let
+let supportPassive = false;
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 function noop() {}
 try {
-  let opts = Object.defineProperty({}, "passive", {
+  const opts = Object.defineProperty({}, "passive", {
     get(): boolean {
       supportPassive = true;
       return false;
@@ -56,10 +61,12 @@ try {
 export const passive: boolean = supportPassive;
 
 export const windowSize: {
-  windowWidth: {
+  readonly windowWidth: {
+    // eslint-disable-next-line functional/no-method-signature
     get(): number;
   };
-  windowHeight: {
+  readonly windowHeight: {
+    // eslint-disable-next-line functional/no-method-signature
     get(): number;
   };
 } = {
@@ -147,23 +154,27 @@ export function AutoToPx(
         return number;
     }
   } else {
-    return string
+    return string;
   }
 }
 
 export function getTouchInfo(
   element: HTMLCanvasElement,
-  touches: any[]
-): InfoTouch[] {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  touches: readonly any[]
+): readonly InfoTouch[] {
   const rect = element.getBoundingClientRect();
   const sx = element.scrollWidth / element.width || 1;
   const sy = element.scrollHeight / element.height || 1;
   const _touches = [],
     length = touches.length;
+  // eslint-disable-next-line functional/no-let
   let i = 0,
     touch;
+  // eslint-disable-next-line functional/no-loop-statement
   while (i < length) {
     touch = touches[i++];
+    // eslint-disable-next-line functional/immutable-data
     _touches.push({
       x: (touch.clientX - rect.left) / sx,
       y: (touch.clientY - rect.top) / sy,
@@ -191,6 +202,7 @@ export function isMobile(): boolean {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function extractNumber(value: any): number {
   if (typeof value === "number") {
     return value;
@@ -199,13 +211,32 @@ export function extractNumber(value: any): number {
   return parseFloat(`${value}`);
 }
 
-export function bindEvent(
-  name: string,
-  callback: any,
+type ListEvents = {
+  readonly [name: string]: Event;
+} & {
+  readonly keydown: KeyboardEvent;
+  readonly resize: Event;
+  readonly wheel: WheelEvent;
+  readonly mousedown: MouseEvent;
+  readonly click: MouseEvent;
+  readonly mousemove: MouseEvent;
+  readonly touchstart: TouchEvent;
+  readonly touchmove: TouchEvent;
+  readonly touchend: TouchEvent;
+};
+export function bindEvent<Name extends keyof ListEvents>(
+  name: Name,
+  callback: (ev: ListEvents[Name]) => void,
   element: Element | Window | typeof globalThis
 ): noop {
-  element.addEventListener(name, callback);
+  element.addEventListener(
+    name as string,
+    callback as EventListenerOrEventListenerObject
+  );
   return () => {
-    element.removeEventListener(name, callback);
+    element.removeEventListener(
+      name as string,
+      callback as EventListenerOrEventListenerObject
+    );
   };
 }
