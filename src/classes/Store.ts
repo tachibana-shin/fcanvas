@@ -23,24 +23,20 @@ function toProxy(
       return target[p];
     },
     set(target, p, value) {
-      try {
-        // call watch
-        const oldValue = target[p];
+      // call watch
+      const oldValue = target[p];
 
-        if (oldValue !== value) {
-          // eslint-disable-next-line functional/immutable-data
-          target[p] = value;
-          emitter.emit("*", [
-            [...path, p].map((e) => e.toString()),
-            value,
-            oldValue,
-          ]);
-        }
-
-        return true;
-      } catch {
-        return false;
+      if (oldValue !== value) {
+        // eslint-disable-next-line functional/immutable-data
+        target[p] = value;
+        emitter.emit("*", [
+          [...path, p].map((e) => e.toString()),
+          value,
+          oldValue,
+        ]);
       }
+
+      return true;
     },
     deleteProperty(target, p) {
       try {
@@ -111,4 +107,3 @@ export function createStore<T = any>(obj: T) {
     value: toProxy(obj, [], emitter) as T,
   };
 }
-

@@ -1,4 +1,4 @@
-import fCanvas, { Animate } from "../../dist/fcanvas.esm.js";
+import fCanvas, { createAnimate } from "../../dist/fcanvas.esm.js";
 
 const canvas = new fCanvas();
 
@@ -10,24 +10,34 @@ canvas.setup(() => {
 });
 
 class App extends fCanvas.CanvasElement {
-  offset = new Animate([0, 0], 3000, "ease");
+  offset = createAnimate(
+    {
+      x: 0,
+      y: 0,
+    },
+    3000,
+    "ease"
+  );
 
   draw() {
     this.fill(0);
-    this.rect(this.offset[0], this.offset[1], 40, 40);
+    this.rect(this.offset.x, this.offset.y, 40, 40);
   }
   update() {
-    this.offset.action();
+    this.offset.increment();
   }
 }
 
 const app = new App();
 self.app = app;
 canvas.draw(() => {
-  app.render()
+  app.render();
 });
 
 canvas.mouseClicked(() => {
   console.log("click");
-  app.offset.add([canvas.mouseX, canvas.mouseY]);
+  app.offset.add({
+    x: canvas.mouseX,
+    y: canvas.mouseY,
+  });
 });

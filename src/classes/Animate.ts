@@ -119,7 +119,7 @@ class Animate<
       this.emitter.emit("done");
 
       if (this.queue.length > 0) {
-        this.to(
+        this._to(
           this.queue[0].state,
           this.queue[0].duration,
           this.queue[0].easing
@@ -151,6 +151,12 @@ class Animate<
         start: state[prop] as unknown as number,
         to: state[prop] as unknown as number,
       };
+
+      Object.defineProperty(this, prop, {
+        get: (): number => {
+          return this.get(prop);
+        },
+      });
     }
     this.store = store;
     this.time = duration;
@@ -172,7 +178,7 @@ class Animate<
   cancel(prop?: keyof State): void {
     if (prop) {
       // eslint-disable-next-line functional/immutable-data
-      this.store[prop].to = this.get(prop);
+      this.store[prop].start = this.get(prop);
       this.emitter.emit("cancel", prop);
     } else {
       // eslint-disable-next-line functional/no-loop-statement
@@ -181,7 +187,7 @@ class Animate<
       }
     }
   }
-  to(state: State, duration = 0, easing: AnimateType = "ease"): void {
+  private _to(state: State, duration?: number, easing?: AnimateType): void {
     // eslint-disable-next-line functional/no-loop-statement
     for (const prop in state) {
       this.cancel(prop);
@@ -192,13 +198,17 @@ class Animate<
     this.frame = 0;
     this.time = duration ?? this.time;
     this.easing = easing ?? this.easing;
+  }
+  to(state: State, duration?: number, easing?: AnimateType): void {
+    this._to(state, duration, easing);
+
     // eslint-disable-next-line functional/immutable-data
     this.queue.splice(0);
   }
   get running(): boolean {
     return this.frame < this.frames;
   }
-  add(state: State, duration = 0, easing: AnimateType = "ease"): void {
+  add(state: State, duration?: number, easing?: AnimateType): void {
     // eslint-disable-next-line functional/immutable-data
     this.queue.push({ state, duration, easing });
   }

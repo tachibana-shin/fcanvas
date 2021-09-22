@@ -188,8 +188,6 @@ export async function loadResourceImage(path: string): Promise<TilesResource> {
   );
 
   return new TilesResource(image, plistJson);
-
-  //// ----------------- convert to json ------------------
 }
 
 export default class Resource {
