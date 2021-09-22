@@ -1,10 +1,9 @@
-import { extractNumber } from "../utils/index";
-
 export function constrain(value: number, min: number, max: number): number {
   return Math.min(Math.max(min, value), max);
 }
 export function loadImage(src: string): Promise<HTMLImageElement> {
   const img = new Image();
+  // eslint-disable-next-line functional/immutable-data
   img.src = src;
   return new Promise<HTMLImageElement>((resolve, reject) => {
     function loaded() {
@@ -12,7 +11,7 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
       img.removeEventListener("load", loaded);
     }
 
-    function error(err: any) {
+    function error(err: unknown) {
       reject(err);
       img.removeEventListener("error", error);
     }
@@ -22,6 +21,7 @@ export function loadImage(src: string): Promise<HTMLImageElement> {
 }
 export function loadAudio(src: string): Promise<HTMLAudioElement> {
   const audio = document.createElement("audio");
+  // eslint-disable-next-line functional/immutable-data
   audio.src = src;
   return new Promise<HTMLAudioElement>((resolve, reject) => {
     function loaded(): void {
@@ -29,7 +29,7 @@ export function loadAudio(src: string): Promise<HTMLAudioElement> {
       audio.removeEventListener("load", loaded);
     }
 
-    function error(err: any): void {
+    function error(err: unknown): void {
       reject(err);
       audio.removeEventListener("error", error);
     }
@@ -51,7 +51,7 @@ export function aspectRatio(
   ratio: number,
   width: number,
   height: number
-): [number, number] {
+): readonly [number, number] {
   /// ratio = width / height => height = width / ratio
   const swidth = ratio * height;
   const sheight = width / ratio;
@@ -63,9 +63,10 @@ export function aspectRatio(
   }
 }
 function random(value: number): number;
-function random<T>(array: T[]): T;
+function random<T>(array: readonly T[]): T;
 function random(start: number, stop: number): number;
-function random(...args: any[]): any {
+// eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
+function random(...args: readonly any[]): any {
   if (args.length === 1) {
     if (
       args[0] !== null &&
@@ -94,9 +95,11 @@ function randomInt(start: number, stop?: number): number {
 
 function range(start: number, stop: number, step: number): number;
 function range(start: string, stop: string, step: number): string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function range(start: any, stop: any, step: number): any {
   step = step || 1;
   const arr = [];
+  // eslint-disable-next-line functional/no-let
   let isChar = false;
 
   if (stop === undefined) (stop = start), (start = 1);
@@ -108,17 +111,22 @@ function range(start: any, stop: any, step: number): any {
   }
 
   if (start !== stop && Math.abs(stop - start) < Math.abs(step))
+    // eslint-disable-next-line functional/no-throw-statement
     throw new Error("range(): step exceeds the specified range.");
 
   if (stop > start) {
     step < 0 && (step *= -1);
+    // eslint-disable-next-line functional/no-loop-statement
     while (start <= stop) {
+      // eslint-disable-next-line functional/immutable-data
       arr.push(isChar ? String.fromCharCode(start) : start);
       start += step;
     }
   } else {
     step > 0 && (step *= -1);
+    // eslint-disable-next-line functional/no-loop-statement
     while (start >= stop) {
+      // eslint-disable-next-line functional/immutable-data
       arr.push(isChar ? String.fromCharCode(start) : start);
       start += step;
     }
@@ -136,10 +144,13 @@ export function lerp(start: number, stop: number, amt: number): number {
 export const hypot =
   typeof Math.hypot === "function"
     ? Math.hypot
-    : (...args: number[]): number => {
+    : // eslint-disable-next-line functional/functional-parameters
+      (...args: readonly number[]): number => {
         const len = args.length;
+        // eslint-disable-next-line functional/no-let
         let i = 0,
           result = 0;
+        // eslint-disable-next-line functional/no-loop-statement
         while (i < len) result += Math.pow(args[i++], 2);
         return Math.sqrt(result);
       };
@@ -164,7 +175,7 @@ function calcProjectedRectSizeOfRotatedRect(
   width: number,
   height: number,
   rad: number
-): [number, number] {
+): readonly [number, number] {
   const rectProjectedWidth: number =
     Math.abs(width * Math.cos(rad)) + Math.abs(height * Math.sin(rad));
   const rectProjectedHeight: number =
@@ -173,14 +184,15 @@ function calcProjectedRectSizeOfRotatedRect(
   return [rectProjectedWidth, rectProjectedHeight];
 }
 
+// eslint-disable-next-line functional/no-let
 let virualContext: CanvasRenderingContext2D;
 export function cutImage(
   image: CanvasImageSource,
-  x: number = 0,
-  y: number = 0,
-  width: number = extractNumber(`${image.width}`),
-  height: number = extractNumber(`${image.height}`),
-  rotate: number = 0
+  x = 0,
+  y = 0,
+  width: number = parseFloat(`${image.width}`),
+  height: number = parseFloat(`${image.height}`),
+  rotate = 0
 ): HTMLImageElement {
   if (virualContext === undefined) {
     virualContext = document
@@ -195,7 +207,9 @@ export function cutImage(
     rad
   );
 
+  // eslint-disable-next-line functional/immutable-data
   virualContext.canvas.width = width;
+  // eslint-disable-next-line functional/immutable-data
   virualContext.canvas.height = height;
 
   virualContext.save();
@@ -216,6 +230,7 @@ export function cutImage(
   /// -----------------------------------------------------------
 
   const imageCuted = new Image();
+  // eslint-disable-next-line functional/immutable-data
   imageCuted.src = virualContext.canvas.toDataURL();
   virualContext.clearRect(0, 0, width, height);
   return imageCuted;

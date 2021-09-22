@@ -202,15 +202,6 @@ export function isMobile(): boolean {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function extractNumber(value: any): number {
-  if (typeof value === "number") {
-    return value;
-  }
-
-  return parseFloat(`${value}`);
-}
-
 export type ListEvents = {
   readonly [name: string]: Event;
 } & {

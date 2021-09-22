@@ -15,7 +15,7 @@ canvas.setup(() => {
   camera.setCursor(100, 100, 50, 50);
 });
 
-class App extends fCanvas.Element {
+class App extends fCanvas.CanvasElement {
   draw() {
     for (let index = 0; index < VIEWPORT_WIDTH / 10; index++) {
       if (camera.inViewBox(index * 10, 100, 5, 5)) {
@@ -31,11 +31,16 @@ class App extends fCanvas.Element {
     this.circle(100, 200, 25);
     this.fill("blue");
 
-    const image = this.getImageData(0, 0, this.$parent.width, this.$parent.height)
+    const image = this.getImageData(
+      0,
+      0,
+      this.$parent.width,
+      this.$parent.height
+    );
 
-    this.$parent.clear()
+    this.$parent.clear();
 
-    this.putImageData(image, 0, 0)
+    this.putImageData(image, 0, 0);
   }
 }
 const app = new App();

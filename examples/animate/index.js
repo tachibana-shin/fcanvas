@@ -9,7 +9,7 @@ canvas.setup(() => {
   canvas.append();
 });
 
-class App extends fCanvas.Element {
+class App extends fCanvas.CanvasElement {
   offset = new Animate([0, 0], 3000, "ease");
 
   draw() {
@@ -24,7 +24,7 @@ class App extends fCanvas.Element {
 const app = new App();
 self.app = app;
 canvas.draw(() => {
-  canvas.run(app);
+  app.render()
 });
 
 canvas.mouseClicked(() => {

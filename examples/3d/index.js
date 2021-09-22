@@ -8,7 +8,7 @@ const camera = {
   angleX: 0,
   angleY: 0,
 };
-class Point3D extends fCanvas.Element {
+class Point3D extends fCanvas.CanvasElement {
   x = 0;
   y = 0;
   z = 0;
@@ -35,7 +35,7 @@ class Point3D extends fCanvas.Element {
   }
 }
 let a = 0;
-class Element3D extends fCanvas.Element {
+class Element3D extends fCanvas.CanvasElement {
   static scalePerspective = 0.8;
   x = 0;
   y = 0;
@@ -78,7 +78,7 @@ class Dot extends Element3D {
   draw() {
     this.fill(0);
     // this.$parent.save();
-    this.$parent.globalAlpha(this.alpha);
+    this.$parent.alpha(this.alpha);
     // this.circle(this.x, this.y, 10)
     this.rect(this.xpj, this.ypj, 40 * this.scale, 40 * this.scale);
   }
@@ -109,7 +109,7 @@ canvas.setup(() => {
   }
 
   dots.forEach((dot) => {
-    canvas.run(dot);
+    dot.render()
     // dot.x *= canvas.cos(45)
     // dot.y *= canvas.sin(-90)
 
@@ -123,7 +123,7 @@ canvas.setup(() => {
 
 canvas.draw(() => {
   dots.forEach((dot) => {
-    canvas.run(dot);
+    dot.render()
     // dot.z--
     // dot.rotateX(1)
     // dot.y = dot.y * canvas.cos(1) - dot.z * canvas.sin(1)
