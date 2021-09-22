@@ -19,6 +19,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@types/plist": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "cspell": "^4.1.0",
@@ -52,6 +53,8 @@
     "fCanvas"
   ],
   "dependencies": {
-    "mitt": "^3.0.0"
+    "mitt": "^3.0.0",
+    "path-cross": "^0.0.3",
+    "plist": "^3.0.4"
   }
 }
