@@ -61,6 +61,7 @@ export default class fCanvas {
   static readonly CanvasElement: typeof CanvasElement = CanvasElement;
   static readonly Point3D: typeof Point3D = Point3D;
   static readonly Point3DCenter: typeof Point3DCenter = Point3DCenter;
+  readonly createElement = createElement;
   // eslint-disable-next-line functional/prefer-readonly-type
   private static _count = 0;
 
@@ -68,7 +69,10 @@ export default class fCanvas {
   private readonly _id: number = fCanvas._count++;
   // eslint-disable-next-line functional/prefer-readonly-type
   private _el: HTMLCanvasElement;
-  private readonly hooks: Stament = new Stament();
+  readonly hooks = new Stament({
+    preloaded: false,
+    setuped: false,
+  });
   private readonly __store: {
     // eslint-disable-next-line functional/prefer-readonly-type
     _context2dCaching: CanvasRenderingContext2D | null;
@@ -456,7 +460,7 @@ export default class fCanvas {
 
     // eslint-disable-next-line functional/no-loop-statement
     while (index < length) {
-      elements[index++]._run(this);
+      elements[index++].render(this);
     }
   }
 
@@ -712,7 +716,6 @@ export default class fCanvas {
   resetTransform(): void {
     this.setTransform(1, 0, 0, 1, 0, 0);
   }
-  readonly createElement = createElement;
   async preload(callback: noop | (() => Promise<void>)): Promise<void> {
     // eslint-disable-next-line functional/immutable-data
     this.__store._existsPreload = true;
@@ -1020,4 +1023,3 @@ export default class fCanvas {
     return this.on("click", callback);
   }
 }
-export const noopFCanvas: fCanvas = new fCanvas(0, 0);

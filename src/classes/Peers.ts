@@ -1,9 +1,20 @@
-import { CanvasElement } from "../core/CanvasElement";
-import fCanvas from "../core/fCanvas";
+import { CanvasElement, getCanvasInstance } from "../core/CanvasElement";
 
 type CallbackAddons<T = void> = {
   (element: CanvasElement, index: number, peers: readonly CanvasElement[]): T;
 };
+
+function existsCbFilter(
+  pr: CanvasElement & {
+    // eslint-disable-next-line functional/prefer-readonly-type
+    readonly filter?: (index: number, peers: CanvasElement[]) => boolean | void;
+  }
+): pr is CanvasElement & {
+  // eslint-disable-next-line functional/prefer-readonly-type
+  readonly filter: (index: number, peers: CanvasElement[]) => boolean | void;
+} {
+  return typeof pr.filter === "function";
+}
 export default class Peers extends CanvasElement {
   // eslint-disable-next-line functional/prefer-readonly-type
   public readonly peers: CanvasElement[] = [];
@@ -13,9 +24,13 @@ export default class Peers extends CanvasElement {
     this.peers.push(element);
   }
 
-  _run(canvas: fCanvas): void {
-    this.peers.forEach((element) => {
-      element._run(canvas, this);
+  render(canvas = getCanvasInstance()): void {
+    this.peers.filter((element, index, peers) => {
+      element.render(canvas);
+
+      if (existsCbFilter(element)) {
+        return element.filter(index, peers);
+      }
     });
   }
 

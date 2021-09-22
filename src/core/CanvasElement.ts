@@ -1,7 +1,6 @@
-import Peers from "../classes/Peers";
 import { AutoToPx, noop, Offset } from "../utils/index";
 
-import fCanvas, { DirectionPattern, noopFCanvas, ParamsToRgb } from "./fCanvas";
+import fCanvas, { DirectionPattern, ParamsToRgb } from "./fCanvas";
 
 type LineJoin = "bevel" | "round" | "miter";
 type LineCap = "butt" | "round" | "square";
@@ -12,8 +11,29 @@ export function setCanvasInstance(canvas: fCanvas | null): void {
   canvasInstance = canvas;
 }
 export function unsetCanvasInstance(): void {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canvasInstance = null;
+}
+export function getCanvasInstance(): fCanvas | null {
+  return canvasInstance;
+}
+
+function existsCbDraw(
+  el: CanvasElement & {
+    readonly draw?: () => void;
+  }
+): el is CanvasElement & {
+  readonly draw: () => void;
+} {
+  return typeof el.draw === "function";
+}
+function existsCbUpdate(
+  el: CanvasElement & {
+    readonly update?: () => void;
+  }
+): el is CanvasElement & {
+  readonly update: () => void;
+} {
+  return typeof el.update === "function";
 }
 
 export abstract class CanvasElement {
@@ -41,68 +61,20 @@ export abstract class CanvasElement {
   }
   // eslint-disable-next-line functional/prefer-readonly-type
   private canvasInstance: fCanvas | null = null;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  private readonly _queue: CanvasElement[] = [];
 
-  constructor(canvas?: fCanvas) {
-    if (!(canvas instanceof fCanvas)) {
-      canvas = noopFCanvas;
-    }
-  }
-
-  _run(canvas: fCanvas, peers?: Peers): void {
+  render(canvas = getCanvasInstance()): void {
     this.canvasInstance = canvas;
 
-    if (peers) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if (typeof (this as any).updatePeer === "function") {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if (typeof (this as any).draw === "function") {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (this as any).draw();
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (this as any).updatePeer(peers);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } else if (typeof (this as any).draw === "function") {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (this as any).draw();
+    if (existsCbUpdate(this)) {
+      if (existsCbDraw(this)) {
+        this.draw();
       }
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if (typeof (this as any).update === "function") {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if (typeof (this as any).draw === "function") {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (this as any).draw();
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (this as any).update();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } else if (typeof (this as any).draw === "function") {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (this as any).draw();
-      }
-    }
-
-    if (this._queue.length > 0) {
-      const { length } = this._queue;
-      // eslint-disable-next-line functional/no-let
-      let index = 0;
-
-      // eslint-disable-next-line functional/no-loop-statement
-      while (index < length) {
-        this.run(this._queue[index]);
-        index++;
-      }
+      this.update();
+    } else if (existsCbDraw(this)) {
+      this.draw();
     }
 
     this.canvasInstance = null;
-  }
-  // eslint-disable-next-line functional/functional-parameters
-  add(...elements: readonly CanvasElement[]): void {
-    // eslint-disable-next-line functional/immutable-data
-    this._queue.push(...elements);
   }
   run(element: CanvasElement): void {
     this.$parent.run(element);

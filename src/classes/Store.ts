@@ -1,162 +1,114 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import mitt from "mitt";
+import mitt, { Emitter } from "mitt";
 
-type ValueType = {
-  readonly [propName: string]: any;
-} & {
-  readonly __reactive?: boolean;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  __store?: {
-    // eslint-disable-next-line functional/prefer-readonly-type
-    [propName: string]: any;
-  };
-};
-
-function reactiveDefine(
-  value: ValueType | null,
-  callback: {
-    (path: readonly string[], oldValue: any, newValue: any): void;
-  },
-  parent: ReadonlyArray<string> = []
-) {
-  if (value !== null && typeof value === "object") {
-    /// reactive children
-    if (Array.isArray(value)) {
-      /// bind to properties
-      /// reactive method array
-      if (!(value as ValueType).__reactive) {
-        ["push", "pop", "shift", "unshift", "splice"].forEach(
-          (name: string): void => {
-            const proto = value[name as any];
-
-            // eslint-disable-next-line functional/immutable-data
-            Object.defineProperty(value, name, {
-              writable: false,
-              enumerable: false,
-              configurable: true,
-              value() {
-                // eslint-disable-next-line functional/functional-parameters, prefer-rest-params
-                const newValue = proto.apply(this, arguments);
-
-                callback([...parent], this, newValue);
-
-                return newValue;
-              },
-            });
-          }
-        );
-
-        // eslint-disable-next-line functional/immutable-data
-        Object.defineProperty(value, "__reactive", {
-          writable: false,
-          enumerable: false,
-          configurable: true,
-          value: true,
-        });
-      }
-      ////
-      value.forEach((item: any, index) => {
-        if (item !== null && typeof item === "object") {
-          reactiveDefine(item, callback, [...parent, index + ""]);
-        }
-      });
-    } else {
-      //// if object ===> reactive attribute
-      /// create __store if not exists
-      /// reactive social
-      if (!(value as ValueType).__reactive) {
-        // eslint-disable-next-line functional/immutable-data
-        Object.defineProperty(value, "__store", {
-          writable: true,
-          enumerable: false,
-          configurable: true,
-          value: { ...value },
-        });
-        // eslint-disable-next-line functional/immutable-data
-        Object.defineProperty(value, "__reactive", {
-          writable: false,
-          enumerable: false,
-          configurable: true,
-          value: true,
-        });
-      } else {
-        // eslint-disable-next-line functional/immutable-data
-        value.__store = { ...value };
-      }
-
-      // eslint-disable-next-line functional/no-loop-statement
-      for (const key in value) {
-        // eslint-disable-next-line functional/immutable-data
-        Object.defineProperty(value, key, {
-          get(): any {
-            return value.__store?.[key as string];
-          },
-          enumerable: true,
-          set(newValue: any): void {
-            const old = value.__store?.[key as string];
-
-            if (value.__store) {
-              // eslint-disable-next-line functional/immutable-data
-              value.__store[key as string] = newValue;
-            }
-
-            if (newValue !== old) {
-              reactiveDefine(newValue, callback, [...parent, key]);
-              callback([...parent, key], old, newValue);
-            }
-          },
-        });
-        reactiveDefine(value[key as string], callback, [...parent, key]);
-      }
-    }
+// eslint-disable-next-line @typescript-eslint/ban-types
+const weakCache = new WeakMap<Object, any>();
+function toProxy(
+  obj: any,
+  path: readonly (string | symbol)[] = [],
+  emitter: Emitter<{
+    readonly [path: string]: readonly [readonly string[], unknown, unknown];
+  }>
+): typeof obj {
+  if (weakCache.has(obj)) {
+    return weakCache.get(obj);
   }
+
+  const proxy = new Proxy(obj, {
+    get(target, p) {
+      if (typeof target[p] === "object") {
+        return toProxy(target[p], [...path, p], emitter);
+      }
+
+      return target[p];
+    },
+    set(target, p, value) {
+      try {
+        // call watch
+        const oldValue = target[p];
+
+        if (oldValue !== value) {
+          // eslint-disable-next-line functional/immutable-data
+          target[p] = value;
+          emitter.emit("*", [
+            [...path, p].map((e) => e.toString()),
+            value,
+            oldValue,
+          ]);
+        }
+
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    deleteProperty(target, p) {
+      try {
+        // call watch
+        const oldValue = target[p];
+        // eslint-disable-next-line functional/immutable-data
+        if (delete target[p] === false) {
+          // eslint-disable-next-line functional/no-throw-statement
+          throw new Error("DELETE_FAILED");
+        }
+        emitter.emit("*", [
+          [...path, p].map((e) => e.toString()),
+          void 0,
+          oldValue,
+        ]);
+
+        return true;
+      } catch {
+        return false;
+      }
+    },
+  });
+
+  weakCache.set(obj, proxy);
+
+  return proxy;
 }
 
-class Store<
-  State extends {
-    readonly [propName: string]: any;
-  }
-> {
-  readonly [propName: string]: any;
-  private readonly __emitter = mitt<{
-    readonly [key: string]: readonly [any, any];
+export function createStore<T = any>(obj: T) {
+  const emitter = mitt<{
+    readonly [path: string]: readonly [readonly string[], unknown, unknown];
   }>();
-  constructor(store: State) {
-    // eslint-disable-next-line functional/no-loop-statement
-    for (const key in store) {
-      (this as any)[key] = store[key];
-    }
-    reactiveDefine(
-      this,
-      (paths: readonly string[], oldVal: any, newVal: any): void => {
-        this.__emitter.emit(paths.join("."), [oldVal, newVal]);
-      }
-    );
-  }
-
-  $set(object: Store<State> | State, key: string, value: any): void {
-    if (!(key in object)) {
-      //reactive
-      // eslint-disable-next-line functional/immutable-data
-      (object as any)[key] = undefined;
-      reactiveDefine(
-        object,
-        (paths: readonly string[], oldVal: any, newVal: any): void => {
-          this.__emitter.emit(paths.join("."), [oldVal, newVal]);
+  return {
+    watch<N = any, O = N>(
+      path: string,
+      cb: (newValue: N, oldValue: O) => void,
+      {
+        immediate = false,
+        deep = false,
+      }: {
+        readonly immediate?: boolean;
+        readonly deep?: boolean;
+      } = {}
+    ) {
+      const handler = ([pathEmit, newValue, oldValue]: readonly [
+        readonly string[],
+        any,
+        any
+      ]) => {
+        if (
+          path === pathEmit.join(".") ||
+          (deep ? pathEmit.join(".").startsWith(`${path}.`) : false)
+        ) {
+          // emit
+          cb(newValue, oldValue);
         }
-      );
-    }
+      };
 
-    // eslint-disable-next-line functional/immutable-data
-    (object as any)[key] = value;
-  }
-  $watch(key: string, callback: (oldValue: any, newValue: any) => void) {
-    const handler = ([oldValue, newValue]: readonly [any, any]) =>
-      callback(newValue, oldValue);
-    this.__emitter.on(key, handler);
+      if (immediate) {
+        const val = path.split(".").reduce((obj: any, p) => obj[p], obj);
+        cb(val, val);
+      }
 
-    return () => this.__emitter.off(key, handler);
-  }
+      emitter.on("*", handler);
+
+      return () => emitter.off("*", handler);
+    },
+    value: toProxy(obj, [], emitter) as T,
+  };
 }
 
-export default Store;

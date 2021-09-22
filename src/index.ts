@@ -6,8 +6,9 @@ export {
   Point3D,
   Point3DCenter,
   createElement,
+  getCanvasInstance,
 } from "./core/CanvasElement";
-export { default as Store } from "./classes/Store";
+export { createStore } from "./classes/Store";
 export { default as Vector } from "./classes/Vector";
 export { default as Animate } from "./classes/Animate";
 export { default as Camera } from "./classes/Camera";

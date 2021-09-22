@@ -1,20 +1,27 @@
-import Store from "./Store";
+import { createStore } from "./Store";
 
-class Stament {
-  private readonly __store = new Store({});
+class Stament<
+  States extends {
+    readonly [name: string]: boolean;
+  }
+> {
+  private readonly store;
+  constructor(obj: States) {
+    this.store = createStore<States>(obj);
+  }
 
-  on(name: string, callback: () => void): void {
-    if (this.__store[name]) {
+  on(name: keyof States, callback: () => void): void {
+    if (this.store.value[name]) {
       callback();
     } else {
-      const watcher = this.__store.$watch(name, () => {
+      const watcher = this.store.watch(name as string, () => {
         callback();
         watcher();
       });
     }
   }
-  emit(name: string): void {
-    this.__store.$set(this.__store, name, true);
+  emit(name: keyof States): void {
+    (this.store.value[name] as boolean) = true;
   }
 }
 
