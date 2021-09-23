@@ -8,7 +8,10 @@ import { name } from "./package.json";
 export default {
   input: "src/index.ts",
   plugins: [
-    resolve(),
+    resolve({
+      browser: true,
+      preferBuiltins: false,
+    }),
     commonjs(),
     babel({
       babelrc: false,
@@ -35,7 +38,13 @@ export default {
   ],
   output: [
     {
-      file: `dist/${name}.min.js`,
+      file: `dist/${name}.umd.js`,
+      format: "umd",
+      plugins: [],
+      name: `${name}`,
+    },
+    {
+      file: `dist/${name}.umd.min.js`,
       format: "umd",
       plugins: [terser()],
       name: `${name}`,
@@ -44,6 +53,13 @@ export default {
       file: `dist/${name}.esm.js`,
       format: "esm",
       plugins: [],
+      exports: "auto",
+    },
+    {
+      file: `dist/${name}.esm.min.js`,
+      format: "esm",
+      plugins: [terser()],
+      exports: "auto",
     },
   ],
 };

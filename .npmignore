@@ -2,3 +2,5 @@ examples/
 docs/
 src/
 .vscode/
+demo/
+.github/

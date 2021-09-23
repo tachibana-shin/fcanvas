@@ -1,5 +1,5 @@
 import { dirname, extname, join } from "path-cross";
-import { parse } from "plist";
+import parse from "plist/lib/parse.js";
 
 import { cutImage, loadImage } from "../functions/index";
 import { trim } from "../utils/index";

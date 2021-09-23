@@ -1,17 +1,17 @@
 {
   "name": "fcanvas",
-  "version": "0.0.5-b51",
-  "main": "dist/fcanvas.min.js",
+  "version": "0.0.5-b52",
+  "main": "dist/fcanvas.umd.js",
   "exports": {
     ".": {
       "module": "./dist/fcanvas.esm.js",
-      "require": "./dist/fcanvas.min.js",
+      "require": "./dist/fcanvas.umd.js",
       "import": "./dist/fcanvas.esm.js"
     },
     "./": "./"
   },
-  "module": "dist/fcanvas.min.js",
-  "unpkg": "dist/fcanvas.esm.js",
+  "module": "dist/fcanvas.umd.js",
+  "unpkg": "dist/fcanvas.esm.min.js",
   "typings": "typings/index.d.ts",
   "files": [
     "dist",

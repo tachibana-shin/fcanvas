@@ -61,7 +61,7 @@ export abstract class CanvasElement {
   }
   // eslint-disable-next-line functional/prefer-readonly-type
   private canvasInstance: fCanvas | null = null;
-
+  
   render(canvas = getCanvasInstance()): void {
     this.canvasInstance = canvas;
 
