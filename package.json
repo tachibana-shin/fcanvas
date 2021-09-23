@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "0.0.5-b52",
+  "version": "0.0.5-b53",
   "main": "dist/fcanvas.umd.js",
   "exports": {
     ".": {
@@ -10,9 +10,9 @@
     },
     "./": "./"
   },
-  "module": "dist/fcanvas.umd.js",
+  "module": "dist/fcanvas.esm.js",
   "unpkg": "dist/fcanvas.esm.min.js",
-  "typings": "typings/index.d.ts",
+  "types": "types/index.d.ts",
   "files": [
     "dist",
     "types"
@@ -28,6 +28,9 @@
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-functional": "^3.0.2",
     "eslint-plugin-import": "^2.22.0",
+    "mitt": "^3.0.0",
+    "path-cross": "^0.0.3",
+    "plist": "^3.0.4",
     "prettier": "^2.1.1",
     "rollup": "^2.45.2",
     "rollup-plugin-babel": "^4.4.0",
@@ -51,10 +54,5 @@
   "homepage": "https://tachibana-shin.github.io/fcanvas",
   "keywords": [
     "fCanvas"
-  ],
-  "dependencies": {
-    "mitt": "^3.0.0",
-    "path-cross": "^0.0.3",
-    "plist": "^3.0.4"
-  }
+  ]
 }
