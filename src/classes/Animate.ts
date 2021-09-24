@@ -83,10 +83,11 @@ export function createAnimate<
   state: State,
   duration?: number,
   easing?: AnimateType
-): Animate<State> & State {
-  return new Animate(state, duration, easing) as Animate<State> & State;
+): AnimateClass<State> & State {
+  return new AnimateClass(state, duration, easing) as AnimateClass<State> &
+    State;
 }
-class Animate<
+class AnimateClass<
   State extends
     | readonly number[]
     | {

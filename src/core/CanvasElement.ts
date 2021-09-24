@@ -47,8 +47,6 @@ function compressTypeToImage(
   return true;
 }
 export abstract class CanvasElement {
-  // eslint-disable-next-line functional/prefer-readonly-type
-  private static _count = 0;
   public get type(): "rect" | "circle" | "point" | "unknown" {
     if ("x" in this && "y" in this) {
       if ("width" in this && "height" in this) {
@@ -63,11 +61,6 @@ export abstract class CanvasElement {
     }
 
     return "unknown";
-  }
-  // eslint-disable-next-line functional/immutable-data
-  private readonly _id: number = CanvasElement._count++;
-  public get id(): number {
-    return this._id;
   }
   // eslint-disable-next-line functional/prefer-readonly-type
   private canvasInstance: fCanvas | null = null;
@@ -100,9 +93,7 @@ export abstract class CanvasElement {
     }
   }
 
-  get $context2d(): CanvasRenderingContext2D {
-    return this.fcanvas.$context2d;
-  }
+  // > share object
   sin(angle: number): number {
     return this.fcanvas.sin(angle);
   }
@@ -153,6 +144,8 @@ export abstract class CanvasElement {
   get windowHeight(): number {
     return this.fcanvas.windowHeight;
   }
+  // > /shared
+
   fill(
     hue: number,
     saturation: number,
@@ -164,8 +157,8 @@ export abstract class CanvasElement {
   // eslint-disable-next-line functional/functional-parameters
   fill(...args: ParamsToRgb): void {
     // eslint-disable-next-line functional/immutable-data
-    this.$context2d.fillStyle = this.fcanvas._toRgb(args);
-    this.$context2d.fill();
+    this.fcanvas.ctx.fillStyle = this.fcanvas._toRgb(args);
+    this.fcanvas.ctx.fill();
   }
   stroke(
     hue: number,
@@ -178,8 +171,8 @@ export abstract class CanvasElement {
   // eslint-disable-next-line functional/functional-parameters
   stroke(...args: ParamsToRgb): void {
     // eslint-disable-next-line functional/immutable-data
-    this.$context2d.strokeStyle = this.fcanvas._toRgb(args);
-    this.$context2d.stroke();
+    this.fcanvas.ctx.strokeStyle = this.fcanvas._toRgb(args);
+    this.fcanvas.ctx.stroke();
   }
   noFill(): void {
     return this.fill(0, 0, 0, 0);
@@ -188,21 +181,21 @@ export abstract class CanvasElement {
   lineWidth(width: number): void;
   lineWidth(value?: number): number | void {
     if (value === undefined) {
-      return this.$context2d.lineWidth;
+      return this.fcanvas.ctx.lineWidth;
     }
     // eslint-disable-next-line functional/immutable-data
-    this.$context2d.lineWidth = this.fcanvas._getPixel(value);
+    this.fcanvas.ctx.lineWidth = this.fcanvas._getPixel(value);
   }
   miterLimit(): number;
   miterLimit(value: number): void;
   miterLimit(value?: number): number | void {
     if (value === undefined) {
-      return this.$context2d.miterLimit;
+      return this.fcanvas.ctx.miterLimit;
     }
     this.lineJoin("miter");
 
     // eslint-disable-next-line functional/immutable-data
-    this.$context2d.miterLimit = value;
+    this.fcanvas.ctx.miterLimit = value;
   }
   shadowOffset(): ReadonlyOffset;
   shadowOffset(x: number, y: number): void;
@@ -210,12 +203,12 @@ export abstract class CanvasElement {
     // eslint-disable-next-line functional/functional-parameters
     if (arguments.length === 0) {
       return {
-        x: this.$context2d.shadowOffsetX,
-        y: this.$context2d.shadowOffsetY,
+        x: this.fcanvas.ctx.shadowOffsetX,
+        y: this.fcanvas.ctx.shadowOffsetY,
       };
     }
 
-    [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [
+    [this.fcanvas.ctx.shadowOffsetX, this.fcanvas.ctx.shadowOffsetY] = [
       this.fcanvas._getPixel(x || 0),
       this.fcanvas._getPixel(y || 0),
     ];
@@ -224,10 +217,10 @@ export abstract class CanvasElement {
     return this.fcanvas.measureText(text);
   }
   begin(): void {
-    this.$context2d.beginPath();
+    this.fcanvas.ctx.beginPath();
   }
   close(): void {
-    this.$context2d.closePath();
+    this.fcanvas.ctx.closePath();
   }
   save(): void {
     this.fcanvas.save();
@@ -262,7 +255,7 @@ export abstract class CanvasElement {
     reverse?: boolean
   ): void {
     this.begin();
-    this.$context2d.arc(
+    this.fcanvas.ctx.arc(
       this.fcanvas._getPixel(x),
       this.fcanvas._getPixel(y),
       radius,
@@ -300,7 +293,7 @@ export abstract class CanvasElement {
     reverse: number
   ): void {
     this.begin();
-    this.$context2d.ellipse(
+    this.fcanvas.ctx.ellipse(
       this.fcanvas._getPixel(x),
       this.fcanvas._getPixel(y),
       radius1,
@@ -358,7 +351,7 @@ export abstract class CanvasElement {
   // eslint-disable-next-line functional/functional-parameters
   drawImage(image: CanvasImageSource, ...args: readonly number[]): void {
     // eslint-disable-next-line prefer-spread
-    this.$context2d.drawImage.apply(this.$context2d, [
+    this.fcanvas.ctx.drawImage.apply(this.fcanvas.ctx, [
       image,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(args as readonly any[]),
@@ -555,7 +548,7 @@ export abstract class CanvasElement {
   rect(x: number, y: number, width: number, height: number): void {
     this.begin();
     [x, y, width, height] = this.fcanvas._argsRect(x, y, width, height);
-    this.$context2d.rect(
+    this.fcanvas.ctx.rect(
       this.fcanvas._getPixel(x),
       this.fcanvas._getPixel(y),
       width,
@@ -564,7 +557,7 @@ export abstract class CanvasElement {
     this.close();
   }
   quadratic(cpx: number, cpy: number, x: number, y: number): void {
-    this.$context2d.quadraticCurveTo(cpx, cpy, x, y);
+    this.fcanvas.ctx.quadraticCurveTo(cpx, cpy, x, y);
   }
   bezier(
     cp1x: number,
@@ -574,22 +567,22 @@ export abstract class CanvasElement {
     x: number,
     y: number
   ): void {
-    this.$context2d.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+    this.fcanvas.ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
   }
   move(x: number, y: number): void {
-    this.$context2d.moveTo(
+    this.fcanvas.ctx.moveTo(
       this.fcanvas._getPixel(x),
       this.fcanvas._getPixel(y)
     );
   }
   to(x: number, y: number): void {
-    this.$context2d.lineTo(
+    this.fcanvas.ctx.lineTo(
       this.fcanvas._getPixel(x),
       this.fcanvas._getPixel(y)
     );
   }
   fillText(text: string, x: number, y: number, maxWidth?: number): void {
-    this.$context2d.fillText(
+    this.fcanvas.ctx.fillText(
       text,
       this.fcanvas._getPixel(x),
       this.fcanvas._getPixel(y),
@@ -597,7 +590,7 @@ export abstract class CanvasElement {
     );
   }
   strokeText(text: string, x: number, y: number, maxWidth?: number): void {
-    this.$context2d.strokeText(
+    this.fcanvas.ctx.strokeText(
       text,
       this.fcanvas._getPixel(x),
       this.fcanvas._getPixel(y),
@@ -605,7 +598,7 @@ export abstract class CanvasElement {
     );
   }
   fillRect(x: number, y: number, width: number, height: number): void {
-    this.$context2d.fillRect(
+    this.fcanvas.ctx.fillRect(
       this.fcanvas._getPixel(x),
       this.fcanvas._getPixel(y),
       width,
@@ -613,7 +606,7 @@ export abstract class CanvasElement {
     );
   }
   strokeRect(x: number, y: number, width: number, height: number): void {
-    this.$context2d.strokeRect(
+    this.fcanvas.ctx.strokeRect(
       this.fcanvas._getPixel(x),
       this.fcanvas._getPixel(y),
       width,
@@ -624,11 +617,11 @@ export abstract class CanvasElement {
   lineDashOffset(value: number): void;
   lineDashOffset(value?: number): number | void {
     if (value === undefined) {
-      return this.$context2d.lineDashOffset;
+      return this.fcanvas.ctx.lineDashOffset;
     }
 
     // eslint-disable-next-line functional/immutable-data
-    this.$context2d.lineDashOffset = value;
+    this.fcanvas.ctx.lineDashOffset = value;
   }
   lineDash(): readonly number[];
   lineDash(segments: readonly number[]): void;
@@ -638,17 +631,17 @@ export abstract class CanvasElement {
     ...segments: ReadonlyArray<readonly number[] | number>
   ): readonly number[] | void {
     if (segments.length === 0) {
-      return this.$context2d.getLineDash();
+      return this.fcanvas.ctx.getLineDash();
     }
 
     if (Array.isArray(segments[0])) {
-      this.$context2d.setLineDash(segments[0]);
+      this.fcanvas.ctx.setLineDash(segments[0]);
     }
 
-    this.$context2d.setLineDash(segments as readonly number[]);
+    this.fcanvas.ctx.setLineDash(segments as readonly number[]);
   }
   arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void {
-    this.$context2d.arcTo(
+    this.fcanvas.ctx.arcTo(
       this.fcanvas._getPixel(x1),
       this.fcanvas._getPixel(y1),
       this.fcanvas._getPixel(x2),
@@ -657,7 +650,7 @@ export abstract class CanvasElement {
     );
   }
   isPoint(x: number, y: number): boolean {
-    return this.$context2d.isPointInPath(x, y);
+    return this.fcanvas.ctx.isPointInPath(x, y);
   }
   createImageData(height: ImageData): ImageData;
   createImageData(width: number, height: number): ImageData;
@@ -732,30 +725,30 @@ export abstract class CanvasElement {
   lineJoin(type: LineJoin): void;
   lineJoin(type?: LineJoin): LineJoin | void {
     if (type === undefined) {
-      return this.$context2d.lineJoin;
+      return this.fcanvas.ctx.lineJoin;
     }
 
     // eslint-disable-next-line functional/immutable-data
-    this.$context2d.lineJoin = type;
+    this.fcanvas.ctx.lineJoin = type;
   }
   lineCap(): LineCap;
   lineCap(value: LineCap): void;
   lineCap(value?: LineCap): LineCap | void {
     if (value === undefined) {
-      return this.$context2d.lineCap;
+      return this.fcanvas.ctx.lineCap;
     }
     // eslint-disable-next-line functional/immutable-data
-    this.$context2d.lineCap = value;
+    this.fcanvas.ctx.lineCap = value;
   }
   shadowBlur(): number;
   shadowBlur(opacity: number): void;
   shadowBlur(opacity?: number): number | void {
     if (opacity === undefined) {
-      return this.$context2d.shadowBlur;
+      return this.fcanvas.ctx.shadowBlur;
     }
 
     // eslint-disable-next-line functional/immutable-data
-    this.$context2d.shadowBlur = opacity;
+    this.fcanvas.ctx.shadowBlur = opacity;
   }
 
   shadowColor(
@@ -771,15 +764,15 @@ export abstract class CanvasElement {
   // eslint-disable-next-line functional/functional-parameters
   shadowColor(...args: ParamsToRgb): void {
     // eslint-disable-next-line functional/immutable-data
-    this.$context2d.shadowColor = this.fcanvas._toRgb(args);
+    this.fcanvas.ctx.shadowColor = this.fcanvas._toRgb(args);
   }
   drawFocusIfNeeded(element: Element): void;
   drawFocusIfNeeded(path: Path2D, element: Element): void;
   drawFocusIfNeeded(path: Element | Path2D, element?: Element): void {
     if (element === undefined) {
-      this.$context2d.drawFocusIfNeeded(path as Element);
+      this.fcanvas.ctx.drawFocusIfNeeded(path as Element);
     } else {
-      this.$context2d.drawFocusIfNeeded(path as Path2D, element);
+      this.fcanvas.ctx.drawFocusIfNeeded(path as Path2D, element);
     }
   }
 

@@ -38,7 +38,7 @@ function calculateRemainder3D(
   return this;
 }
 
-export default class Vector {
+export class Vector {
   // eslint-disable-next-line functional/prefer-readonly-type
   x: number;
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -346,4 +346,8 @@ export default class Vector {
   toString(): string {
     return "Vector: [" + this.array().join(", ") + "]";
   }
+}
+
+export function createVector(x = 0, y = 0, z = 0): Vector {
+  return new Vector(x, y, z);
 }

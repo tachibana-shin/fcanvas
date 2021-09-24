@@ -62,7 +62,7 @@ class Cursor {
   }
 }
 
-export default class Camera {
+export class Camera {
   static readonly Cursor: typeof Cursor = Cursor;
   private readonly _canvas: fCanvas;
   private readonly _viewport: ViewPort;
@@ -276,4 +276,14 @@ export default class Camera {
       this.isYInViewBox(y, height, diffSpeedY)
     );
   }
+}
+
+export function createCamera(
+  canvas: fCanvas,
+  x: number,
+  y: number,
+  width: number,
+  height: number
+): Camera {
+  return new Camera(canvas, x, y, width, height);
 }

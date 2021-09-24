@@ -42,7 +42,7 @@ function passValueOfPlistToJSON<T = number>(value: string): readonly T[] {
   throw new Error(`fCanvas<Resource>: "${value}" a malformed field`);
 }
 
-class Resource {
+export class Resource {
   private readonly plist: Plist;
   private readonly tile: HTMLImageElement;
   private readonly cache = new Map<string, ImageResource>();

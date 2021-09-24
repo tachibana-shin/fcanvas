@@ -1,6 +1,4 @@
-import fCanvas from "./core/fCanvas";
-
-export default fCanvas;
+export { default } from "./core/fCanvas";
 export {
   CanvasElement,
   Point3D,
@@ -9,11 +7,11 @@ export {
   getCanvasInstance,
 } from "./core/CanvasElement";
 export { createStore } from "./classes/Store";
-export { default as Vector } from "./classes/Vector";
+export { createVector, Vector } from "./classes/Vector";
 export { createAnimate } from "./classes/Animate";
-export { default as Camera } from "./classes/Camera";
-export { createResource } from "./classes/Resource";
-export { default as Peers } from "./classes/Peers";
+export { createCamera, Camera } from "./classes/Camera";
+export { createResource, Resource } from "./classes/Resource";
+export { createCanvasList, CanvasList } from "./classes/CanvasList";
 export {
   requestAnimationFrame,
   cancelAnimationFrame,
