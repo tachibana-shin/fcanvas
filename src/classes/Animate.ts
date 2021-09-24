@@ -97,7 +97,7 @@ class AnimateClass<
   private readonly fps = 1000 / 60;
   // eslint-disable-next-line functional/prefer-readonly-type
   private readonly queue: {
-    readonly state: State;
+    readonly state: Partial<State>;
     readonly duration?: number;
     readonly easing?: AnimateType;
   }[] = [];
@@ -188,7 +188,7 @@ class AnimateClass<
       }
     }
   }
-  private _to(state: State, duration?: number, easing?: AnimateType): void {
+  private _to(state: Partial<State>, duration?: number, easing?: AnimateType): void {
     // eslint-disable-next-line functional/no-loop-statement
     for (const prop in state) {
       this.cancel(prop);
@@ -200,7 +200,7 @@ class AnimateClass<
     this.time = duration ?? this.time;
     this.easing = easing ?? this.easing;
   }
-  to(state: State, duration?: number, easing?: AnimateType): void {
+  to(state: Partial<State>, duration?: number, easing?: AnimateType): void {
     this._to(state, duration, easing);
 
     // eslint-disable-next-line functional/immutable-data
@@ -209,7 +209,7 @@ class AnimateClass<
   get running(): boolean {
     return this.frame < this.frames;
   }
-  add(state: State, duration?: number, easing?: AnimateType): void {
+  add(state: Partial<State>, duration?: number, easing?: AnimateType): void {
     // eslint-disable-next-line functional/immutable-data
     this.queue.push({ state, duration, easing });
   }

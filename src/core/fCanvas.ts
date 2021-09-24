@@ -68,100 +68,61 @@ export default class fCanvas {
     preloaded: false,
     setuped: false,
   });
-  private readonly env: {
-    // eslint-disable-next-line functional/prefer-readonly-type
-    context2dCaching: CanvasRenderingContext2D | null;
+  private readonly env = Object.create({
+    context2dCaching: <CanvasRenderingContext2D | null>null,
 
-    // eslint-disable-next-line functional/prefer-readonly-type
-    translate: HightTransform;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    scale: HightTransform;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    rotate: {
-      // eslint-disable-next-line functional/prefer-readonly-type
-      now: number;
-      // eslint-disable-next-line functional/prefer-readonly-type
-      sum: number;
-    };
-    // eslint-disable-next-line functional/prefer-readonly-type
-    attributeContext: {
-      // eslint-disable-next-line functional/prefer-readonly-type
-      alpha: boolean;
-      // eslint-disable-next-line functional/prefer-readonly-type
-      desynchronized: boolean;
-    };
-
-    // eslint-disable-next-line functional/prefer-readonly-type
-    clear: boolean;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    loop: boolean;
-
-    // eslint-disable-next-line functional/prefer-readonly-type
-    preventTouch: boolean;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    stopTouch: boolean;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    idFrame: number | null;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    existsPreload: boolean;
-
-    // eslint-disable-next-line functional/prefer-readonly-type
-    angleMode: AngleType;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    rectMode: RectMode;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    colorMode: ColorType;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    useFloatPixel: boolean;
-
-    // eslint-disable-next-line functional/prefer-readonly-type
-    pmouseX: number;
-    // eslint-disable-next-line functional/prefer-readonly-type
-    pmouseY: number;
-
-    // eslint-disable-next-line functional/prefer-readonly-type
-    realMouseIsPressed: boolean;
-  } = Object.create({
-    context2dCaching: null,
-
-    translate: Object.create({
+    translate: <HightTransform>Object.create({
       x: 0,
       y: 0,
       sumX: 0,
       sumY: 0,
     }),
-    scale: Object.create({
+    scale: <HightTransform>Object.create({
       x: 0,
       y: 0,
       sumX: 0,
       sumY: 0,
     }),
-    rotate: Object.create({
+    rotate: <
+      {
+        // eslint-disable-next-line functional/prefer-readonly-type
+        now: number;
+        // eslint-disable-next-line functional/prefer-readonly-type
+        sum: number;
+      }
+    >Object.create({
       now: 0,
       sum: 0,
     }),
-    attributeContext: Object.create({
+    attributeContext: <
+      {
+        // eslint-disable-next-line functional/prefer-readonly-type
+        alpha: boolean;
+        // eslint-disable-next-line functional/prefer-readonly-type
+        desynchronized: boolean;
+      }
+    >Object.create({
       alpha: true,
       desynchronized: false,
     }),
 
-    clear: true,
-    loop: true,
+    clear: <boolean>true,
+    loop: <boolean>true,
 
-    preventTouch: false,
-    stopTouch: false,
-    idFrame: null,
-    existsPreload: false,
+    preventTouch: <boolean>false,
+    stopTouch: <boolean>false,
+    idFrame: <number | null>null,
+    existsPreload: <boolean>false,
 
-    angleMode: "degress",
-    rectMode: "corner",
-    colorMode: "rgb",
-    useFloatPixel: true,
+    angleMode: <AngleType>"degress",
+    rectMode: <RectMode>"corner",
+    colorMode: <ColorType>"rgb",
+    useFloatPixel: <boolean>true,
 
-    pmouseX: 0,
-    pmouseY: 0,
+    pmouseX: <number>0,
+    pmouseY: <number>0,
 
-    realMouseIsPressed: false,
+    realMouseIsPressed: <boolean>false,
   });
 
   constructor(width: number, height: number);
@@ -606,7 +567,9 @@ export default class fCanvas {
     alpha?: number
   ): void;
   background(red: number, green: number, blue: number, alpha?: number): void;
-  background(color?: string | CanvasGradient |CanvasPattern| CanvasImageSource | number): void;
+  background(
+    color?: string | CanvasGradient | CanvasPattern | CanvasImageSource | number
+  ): void;
   // eslint-disable-next-line functional/functional-parameters
   background(...params: ParamsToRgb): void {
     // eslint-disable-next-line functional/immutable-data

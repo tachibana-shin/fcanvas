@@ -6,6 +6,7 @@ export {
   createElement,
   getCanvasInstance,
 } from "./core/CanvasElement";
+export { createCanvasElement } from "./core/createCanvasElement";
 export { createStore } from "./classes/Store";
 export { createVector, Vector } from "./classes/Vector";
 export { createAnimate } from "./classes/Animate";
