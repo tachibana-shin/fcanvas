@@ -599,6 +599,14 @@ export default class fCanvas {
   clear(x = 0, y = 0, w: number = this.width, h: number = this.height): void {
     this.ctx.clearRect(x, y, w, h);
   }
+  background(
+    hue: number,
+    saturation: number,
+    lightness: number,
+    alpha?: number
+  ): void;
+  background(red: number, green: number, blue: number, alpha?: number): void;
+  background(color?: string | CanvasGradient |CanvasPattern| CanvasImageSource | number): void;
   // eslint-disable-next-line functional/functional-parameters
   background(...params: ParamsToRgb): void {
     // eslint-disable-next-line functional/immutable-data
@@ -656,8 +664,8 @@ export default class fCanvas {
   createPattern(
     image: CanvasImageSource,
     direction: DirectionPattern
-  ): CanvasPattern | null {
-    return this.ctx.createPattern(image, direction);
+  ): CanvasPattern {
+    return this.ctx.createPattern(image, direction) as CanvasPattern;
   }
   createRadialGradient(
     x1: number,

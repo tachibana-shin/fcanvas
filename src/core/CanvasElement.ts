@@ -153,7 +153,9 @@ export abstract class CanvasElement {
     alpha?: number
   ): void;
   fill(red: number, green: number, blue: number, alpha?: number): void;
-  fill(color?: string | CanvasGradient | CanvasImageSource | number): void;
+  fill(
+    color?: string | CanvasGradient | CanvasImageSource | CanvasPattern | number
+  ): void;
   // eslint-disable-next-line functional/functional-parameters
   fill(...args: ParamsToRgb): void {
     // eslint-disable-next-line functional/immutable-data
@@ -167,7 +169,9 @@ export abstract class CanvasElement {
     alpha?: number
   ): void;
   stroke(red: number, green: number, blue: number, alpha?: number): void;
-  stroke(color?: string | CanvasGradient | CanvasImageSource | number): void;
+  stroke(
+    color?: string | CanvasGradient | CanvasPattern | CanvasImageSource | number
+  ): void;
   // eslint-disable-next-line functional/functional-parameters
   stroke(...args: ParamsToRgb): void {
     // eslint-disable-next-line functional/immutable-data
