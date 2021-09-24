@@ -9,6 +9,12 @@ type ImageResource = HTMLImageElement & {
     readonly width: number;
     readonly height: number;
   };
+  readonly sourceColorRect: {
+    readonly width: number;
+    readonly height: number;
+    readonly x: number;
+    readonly y: number;
+  };
   readonly offset: {
     readonly x: number;
     readonly y: number;
@@ -58,7 +64,8 @@ class Resource {
 
   get(name: string): ImageResource {
     if (this.has(name)) {
-      const { frame, rotated, sourceSize, offset } = this.plist.frames[name];
+      const { frame, rotated, sourceSize, sourceColorRect, offset } =
+        this.plist.frames[name];
 
       if (this.cache.has(name) === false) {
         const [[xCutStart, yCutStart], [xCutStop, yCutStop]] =
@@ -74,6 +81,8 @@ class Resource {
         );
 
         const [width, height] = passValueOfPlistToJSON(sourceSize);
+        const [[xColorRect, yColorRect], [widthColorRect, heightColorRect]] =
+          passValueOfPlistToJSON<readonly [number, number]>(sourceColorRect);
         const [x, y] = passValueOfPlistToJSON(offset);
         this.cache.set(
           name,
@@ -82,6 +91,12 @@ class Resource {
             sourceSize: {
               width,
               height,
+            },
+            sourceColorRect: {
+              x: xColorRect,
+              y: yColorRect,
+              width: widthColorRect,
+              height: heightColorRect,
             },
             offset: {
               x,
