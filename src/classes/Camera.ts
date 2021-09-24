@@ -1,14 +1,9 @@
 import { CanvasElement } from "../core/CanvasElement";
 import fCanvas from "../core/fCanvas";
 import { constrain } from "../functions/index";
-import { noop } from "../utils/index";
+import type { noop, ReadonlyOffset, ReadonlySize } from "../types/index";
 
-type ViewPort = {
-  readonly x: number;
-  readonly y: number;
-  readonly width: number;
-  readonly height: number;
-};
+type ViewPort = ReadonlyOffset & ReadonlySize;
 type Range = {
   readonly min: number;
   readonly max: number;
@@ -17,14 +12,10 @@ type Range = {
   current: number;
   readonly dynamic: boolean;
 };
-type ConfigCursor = {
-  readonly x: Range;
-  readonly y: Range;
-};
 
 class Cursor {
   private readonly _camera: Camera;
-  private readonly _config: ConfigCursor;
+  private readonly _config: ReadonlyOffset<Range>;
 
   public get x(): number {
     return this._config.x.current;
@@ -33,12 +24,12 @@ class Cursor {
     return this._config.y.current;
   }
 
-  constructor(camera: Camera, config: ConfigCursor) {
+  constructor(camera: Camera, config: ReadonlyOffset<Range>) {
     this._camera = camera;
 
     this._config = config;
 
-    const watch = (prop: keyof ConfigCursor) => {
+    const watch = (prop: keyof ReadonlyOffset<Range>) => {
       this._camera.$watch(prop, (newValue, oldValue) => {
         const dist = newValue - oldValue;
         // min = this._config.x.min;

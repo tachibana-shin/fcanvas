@@ -2,42 +2,40 @@
 /* eslint-disable functional/functional-parameters */
 /* eslint-disable functional/immutable-data */
 function calculateRemainder2D(
+  this: Vector,
   xComponent: number,
-  yComponent: number,
-  vector: Vector
-): typeof vector {
+  yComponent: number
+) {
   if (xComponent !== 0) {
-    
-    vector.x = vector.x % xComponent;
+    this.x %= xComponent;
   }
 
   if (yComponent !== 0) {
-    
-    vector.y = vector.y % yComponent;
+    this.y %= yComponent;
   }
 
-  return vector;
+  return this;
 }
 
 function calculateRemainder3D(
+  this: Vector,
   xComponent: number,
   yComponent: number,
-  zComponent: number,
-  vector: Vector
-): typeof vector {
+  zComponent: number
+) {
   if (xComponent !== 0) {
-    vector.x = vector.x % xComponent;
+    this.x %= xComponent;
   }
 
   if (yComponent !== 0) {
-    vector.y = vector.y % yComponent;
+    this.y %= yComponent;
   }
 
   if (zComponent !== 0) {
-    vector.z = vector.z % zComponent;
+    this.z %= zComponent;
   }
 
-  return vector;
+  return this;
 }
 
 export default class Vector {
@@ -120,7 +118,7 @@ export default class Vector {
         Number.isFinite(x.y) &&
         Number.isFinite(x.z)
       ) {
-        calculateRemainder3D(x.x, x.y, x.z, this);
+        calculateRemainder3D.call(this, x.x, x.y, x.z);
       }
     } else if (x instanceof Array) {
       if (
@@ -129,11 +127,11 @@ export default class Vector {
         })
       ) {
         if (x.length === 2) {
-          calculateRemainder2D(x[0], x[1] as number, this);
+          calculateRemainder2D.call(this, x[0], x[1] as number);
         }
 
         if (x.length === 3) {
-          calculateRemainder3D(x[0], x[1] as number, x[2] as number, this);
+          calculateRemainder3D.call(this, x[0], x[1] as number, x[2] as number);
         }
       }
     } else if (arguments.length === 1) {
@@ -151,7 +149,11 @@ export default class Vector {
         })
       ) {
         if (vectorComponents.length === 2) {
-          calculateRemainder2D(vectorComponents[0], vectorComponents[1], this);
+          calculateRemainder2D.call(
+            this,
+            vectorComponents[0],
+            vectorComponents[1]
+          );
         }
       }
     } else if (arguments.length === 3) {
@@ -163,11 +165,11 @@ export default class Vector {
         })
       ) {
         if (_vectorComponents.length === 3) {
-          calculateRemainder3D(
+          calculateRemainder3D.call(
+            this,
             _vectorComponents[0],
             _vectorComponents[1],
-            _vectorComponents[2],
-            this
+            _vectorComponents[2]
           );
         }
       }
@@ -293,12 +295,7 @@ export default class Vector {
 
   lerp(vector: Vector, amt?: number): this;
   lerp(x?: number, y?: number, z?: number, amt?: number): this;
-  lerp(
-    x: Vector | number = 0,
-    y = 0,
-    z = 0,
-    amt = 0
-  ): this {
+  lerp(x: Vector | number = 0, y = 0, z = 0, amt = 0): this {
     if (x instanceof Vector) {
       return this.lerp(x.x, x.y, x.z, y);
     }

@@ -1,5 +1,6 @@
 import { map } from "..";
-import { AutoToPx, noop, Offset } from "../utils/index";
+import type { noop, ReadonlyOffset } from "../types/index";
+import { AutoToPx } from "../utils/index";
 
 import fCanvas, { DirectionPattern, ParamsToRgb } from "./fCanvas";
 
@@ -86,9 +87,9 @@ export abstract class CanvasElement {
     this.canvasInstance = null;
   }
   run(element: CanvasElement): void {
-    this.$parent.run(element);
+    this.fcanvas.run(element);
   }
-  get $parent(): fCanvas {
+  get fcanvas(): fCanvas {
     if (this.canvasInstance instanceof fCanvas) {
       return this.canvasInstance;
     } else {
@@ -100,57 +101,57 @@ export abstract class CanvasElement {
   }
 
   get $context2d(): CanvasRenderingContext2D {
-    return this.$parent.$context2d;
+    return this.fcanvas.$context2d;
   }
   sin(angle: number): number {
-    return this.$parent.sin(angle);
+    return this.fcanvas.sin(angle);
   }
   asin(sin: number): number {
-    return this.$parent.asin(sin);
+    return this.fcanvas.asin(sin);
   }
   cos(angle: number): number {
-    return this.$parent.cos(angle);
+    return this.fcanvas.cos(angle);
   }
   acos(cos: number): number {
-    return this.$parent.asin(cos);
+    return this.fcanvas.asin(cos);
   }
   tan(angle: number): number {
-    return this.$parent.tan(angle);
+    return this.fcanvas.tan(angle);
   }
   atan(tan: number): number {
-    return this.$parent.atan(tan);
+    return this.fcanvas.atan(tan);
   }
   atan2(y: number, x: number): number {
-    return this.$parent.atan2(y, x);
+    return this.fcanvas.atan2(y, x);
   }
 
   get mouseX(): number | null {
-    return this.$parent.mouseX;
+    return this.fcanvas.mouseX;
   }
   get mouseY(): number | null {
-    return this.$parent.mouseY;
+    return this.fcanvas.mouseY;
   }
   get movedX(): number {
-    return this.$parent.movedX;
+    return this.fcanvas.movedX;
   }
   get movedY(): number {
-    return this.$parent.movedY;
+    return this.fcanvas.movedY;
   }
   get pmouseX(): number {
-    return this.$parent.pmouseX;
+    return this.fcanvas.pmouseX;
   }
   get pmouseY(): number {
-    return this.$parent.pmouseY;
+    return this.fcanvas.pmouseY;
   }
   get mouseIsPressed(): boolean {
-    return this.$parent.mouseIsPressed;
+    return this.fcanvas.mouseIsPressed;
   }
 
   get windowWidth(): number {
-    return this.$parent.windowWidth;
+    return this.fcanvas.windowWidth;
   }
   get windowHeight(): number {
-    return this.$parent.windowHeight;
+    return this.fcanvas.windowHeight;
   }
   fill(
     hue: number,
@@ -163,7 +164,7 @@ export abstract class CanvasElement {
   // eslint-disable-next-line functional/functional-parameters
   fill(...args: ParamsToRgb): void {
     // eslint-disable-next-line functional/immutable-data
-    this.$context2d.fillStyle = this.$parent._toRgb(args);
+    this.$context2d.fillStyle = this.fcanvas._toRgb(args);
     this.$context2d.fill();
   }
   stroke(
@@ -177,7 +178,7 @@ export abstract class CanvasElement {
   // eslint-disable-next-line functional/functional-parameters
   stroke(...args: ParamsToRgb): void {
     // eslint-disable-next-line functional/immutable-data
-    this.$context2d.strokeStyle = this.$parent._toRgb(args);
+    this.$context2d.strokeStyle = this.fcanvas._toRgb(args);
     this.$context2d.stroke();
   }
   noFill(): void {
@@ -190,7 +191,7 @@ export abstract class CanvasElement {
       return this.$context2d.lineWidth;
     }
     // eslint-disable-next-line functional/immutable-data
-    this.$context2d.lineWidth = this.$parent._getPixel(value);
+    this.$context2d.lineWidth = this.fcanvas._getPixel(value);
   }
   miterLimit(): number;
   miterLimit(value: number): void;
@@ -203,9 +204,9 @@ export abstract class CanvasElement {
     // eslint-disable-next-line functional/immutable-data
     this.$context2d.miterLimit = value;
   }
-  shadowOffset(): Offset;
+  shadowOffset(): ReadonlyOffset;
   shadowOffset(x: number, y: number): void;
-  shadowOffset(x?: number, y?: number): Offset | void {
+  shadowOffset(x?: number, y?: number): ReadonlyOffset | void {
     // eslint-disable-next-line functional/functional-parameters
     if (arguments.length === 0) {
       return {
@@ -215,12 +216,12 @@ export abstract class CanvasElement {
     }
 
     [this.$context2d.shadowOffsetX, this.$context2d.shadowOffsetY] = [
-      this.$parent._getPixel(x || 0),
-      this.$parent._getPixel(y || 0),
+      this.fcanvas._getPixel(x || 0),
+      this.fcanvas._getPixel(y || 0),
     ];
   }
   measureText(text: string): number {
-    return this.$parent.measureText(text);
+    return this.fcanvas.measureText(text);
   }
   begin(): void {
     this.$context2d.beginPath();
@@ -229,28 +230,28 @@ export abstract class CanvasElement {
     this.$context2d.closePath();
   }
   save(): void {
-    this.$parent.save();
+    this.fcanvas.save();
   }
   restore(): void {
-    this.$parent.restore();
+    this.fcanvas.restore();
   }
   rotate(): number;
   rotate(angle: number): void;
   rotate(angle?: number): number | void {
     if (angle === undefined) {
-      return this.$parent.rotate();
+      return this.fcanvas.rotate();
     }
-    this.$parent.rotate(angle);
+    this.fcanvas.rotate(angle);
   }
-  translate(): Offset;
+  translate(): ReadonlyOffset;
   translate(x: number, y: number): void;
-  translate(x?: number, y?: number): Offset | void {
+  translate(x?: number, y?: number): ReadonlyOffset | void {
     // eslint-disable-next-line functional/functional-parameters
     if (arguments.length === 0) {
-      return this.$parent.translate();
+      return this.fcanvas.translate();
     }
 
-    this.$parent.translate(x as number, y as number);
+    this.fcanvas.translate(x as number, y as number);
   }
   arc(
     x: number,
@@ -262,11 +263,11 @@ export abstract class CanvasElement {
   ): void {
     this.begin();
     this.$context2d.arc(
-      this.$parent._getPixel(x),
-      this.$parent._getPixel(y),
+      this.fcanvas._getPixel(x),
+      this.fcanvas._getPixel(y),
       radius,
-      this.$parent._toRadius(astart) - Math.PI / 2,
-      this.$parent._toRadius(astop) - Math.PI / 2,
+      this.fcanvas._toRadius(astart) - Math.PI / 2,
+      this.fcanvas._toRadius(astop) - Math.PI / 2,
       reverse
     );
     this.close();
@@ -300,12 +301,12 @@ export abstract class CanvasElement {
   ): void {
     this.begin();
     this.$context2d.ellipse(
-      this.$parent._getPixel(x),
-      this.$parent._getPixel(y),
+      this.fcanvas._getPixel(x),
+      this.fcanvas._getPixel(y),
       radius1,
       radius2,
-      this.$parent._toRadius(astart) - Math.PI / 2,
-      this.$parent._toRadius(astop),
+      this.fcanvas._toRadius(astart) - Math.PI / 2,
+      this.fcanvas._toRadius(astop),
       reverse
     );
     this.close();
@@ -316,7 +317,7 @@ export abstract class CanvasElement {
       y,
       radius,
       0,
-      this.$parent.angleMode() === "degress" ? 360 : Math.PI * 2
+      this.fcanvas.angleMode() === "degress" ? 360 : Math.PI * 2
     );
   }
   point(x: number, y: number): void {
@@ -534,9 +535,9 @@ export abstract class CanvasElement {
     radiusBottomLeft?: string | number
   ): void {
     this.begin();
-    [x, y, w, h] = this.$parent._argsRect(x, y, w, h);
+    [x, y, w, h] = this.fcanvas._argsRect(x, y, w, h);
 
-    const fontSize = this.$parent.fontSize();
+    const fontSize = this.fcanvas.fontSize();
     const arc = [
       AutoToPx(radiusTopLeft || 0, w, fontSize),
       AutoToPx(radiusTopRight || 0, h, fontSize),
@@ -553,10 +554,10 @@ export abstract class CanvasElement {
   }
   rect(x: number, y: number, width: number, height: number): void {
     this.begin();
-    [x, y, width, height] = this.$parent._argsRect(x, y, width, height);
+    [x, y, width, height] = this.fcanvas._argsRect(x, y, width, height);
     this.$context2d.rect(
-      this.$parent._getPixel(x),
-      this.$parent._getPixel(y),
+      this.fcanvas._getPixel(x),
+      this.fcanvas._getPixel(y),
       width,
       height
     );
@@ -577,44 +578,44 @@ export abstract class CanvasElement {
   }
   move(x: number, y: number): void {
     this.$context2d.moveTo(
-      this.$parent._getPixel(x),
-      this.$parent._getPixel(y)
+      this.fcanvas._getPixel(x),
+      this.fcanvas._getPixel(y)
     );
   }
   to(x: number, y: number): void {
     this.$context2d.lineTo(
-      this.$parent._getPixel(x),
-      this.$parent._getPixel(y)
+      this.fcanvas._getPixel(x),
+      this.fcanvas._getPixel(y)
     );
   }
   fillText(text: string, x: number, y: number, maxWidth?: number): void {
     this.$context2d.fillText(
       text,
-      this.$parent._getPixel(x),
-      this.$parent._getPixel(y),
+      this.fcanvas._getPixel(x),
+      this.fcanvas._getPixel(y),
       maxWidth
     );
   }
   strokeText(text: string, x: number, y: number, maxWidth?: number): void {
     this.$context2d.strokeText(
       text,
-      this.$parent._getPixel(x),
-      this.$parent._getPixel(y),
+      this.fcanvas._getPixel(x),
+      this.fcanvas._getPixel(y),
       maxWidth
     );
   }
   fillRect(x: number, y: number, width: number, height: number): void {
     this.$context2d.fillRect(
-      this.$parent._getPixel(x),
-      this.$parent._getPixel(y),
+      this.fcanvas._getPixel(x),
+      this.fcanvas._getPixel(y),
       width,
       height
     );
   }
   strokeRect(x: number, y: number, width: number, height: number): void {
     this.$context2d.strokeRect(
-      this.$parent._getPixel(x),
-      this.$parent._getPixel(y),
+      this.fcanvas._getPixel(x),
+      this.fcanvas._getPixel(y),
       width,
       height
     );
@@ -648,10 +649,10 @@ export abstract class CanvasElement {
   }
   arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void {
     this.$context2d.arcTo(
-      this.$parent._getPixel(x1),
-      this.$parent._getPixel(y1),
-      this.$parent._getPixel(x2),
-      this.$parent._getPixel(y2),
+      this.fcanvas._getPixel(x1),
+      this.fcanvas._getPixel(y1),
+      this.fcanvas._getPixel(x2),
+      this.fcanvas._getPixel(y2),
       radius
     );
   }
@@ -662,11 +663,11 @@ export abstract class CanvasElement {
   createImageData(width: number, height: number): ImageData;
   createImageData(width: ImageData | number, height?: number): ImageData {
     return height
-      ? this.$parent.createImageData(width as number, height)
-      : this.$parent.createImageData(width as ImageData);
+      ? this.fcanvas.createImageData(width as number, height)
+      : this.fcanvas.createImageData(width as ImageData);
   }
   getImageData(x: number, y: number, width: number, height: number): ImageData {
-    return this.$parent.getImageData(x, y, width, height);
+    return this.fcanvas.getImageData(x, y, width, height);
   }
   putImageData(imageData: ImageData, x: number, y: number): void;
   putImageData(
@@ -689,7 +690,7 @@ export abstract class CanvasElement {
   ): void {
     // eslint-disable-next-line functional/functional-parameters
     if (arguments.length === 7) {
-      this.$parent.putImageData(
+      this.fcanvas.putImageData(
         imageData,
         x,
         y,
@@ -699,14 +700,14 @@ export abstract class CanvasElement {
         height as number
       );
     } else {
-      this.$parent.putImageData(imageData, x, y);
+      this.fcanvas.putImageData(imageData, x, y);
     }
   }
   createPattern(
     image: CanvasImageSource,
     direction: DirectionPattern
   ): CanvasPattern | null {
-    return this.$parent.createPattern(image, direction);
+    return this.fcanvas.createPattern(image, direction);
   }
   createRadialGradient(
     x1: number,
@@ -716,7 +717,7 @@ export abstract class CanvasElement {
     y2: number,
     r2: number
   ): CanvasGradient {
-    return this.$parent.createRadialGradient(x1, y1, r1, x2, y2, r2);
+    return this.fcanvas.createRadialGradient(x1, y1, r1, x2, y2, r2);
   }
   createLinearGradient(
     x: number,
@@ -724,7 +725,7 @@ export abstract class CanvasElement {
     width: number,
     height: number
   ): CanvasGradient {
-    return this.$parent.createLinearGradient(x, y, width, height);
+    return this.fcanvas.createLinearGradient(x, y, width, height);
   }
 
   lineJoin(): LineJoin;
@@ -770,7 +771,7 @@ export abstract class CanvasElement {
   // eslint-disable-next-line functional/functional-parameters
   shadowColor(...args: ParamsToRgb): void {
     // eslint-disable-next-line functional/immutable-data
-    this.$context2d.shadowColor = this.$parent._toRgb(args);
+    this.$context2d.shadowColor = this.fcanvas._toRgb(args);
   }
   drawFocusIfNeeded(element: Element): void;
   drawFocusIfNeeded(path: Path2D, element: Element): void;
@@ -864,21 +865,21 @@ export class Point3D extends CanvasElement {
   }
   rotateX(angle: number): void {
     this.y =
-      this.y * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
+      this.y * this.fcanvas.cos(angle) + this.z * this.fcanvas.sin(angle);
     this.z =
-      -this.y * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
+      -this.y * this.fcanvas.sin(angle) + this.z * this.fcanvas.cos(angle);
   }
   rotateY(angle: number): void {
     this.x =
-      this.x * this.$parent.cos(angle) + this.z * this.$parent.sin(angle);
+      this.x * this.fcanvas.cos(angle) + this.z * this.fcanvas.sin(angle);
     this.z =
-      -this.x * this.$parent.sin(angle) + this.z * this.$parent.cos(angle);
+      -this.x * this.fcanvas.sin(angle) + this.z * this.fcanvas.cos(angle);
   }
   rotateZ(angle: number): void {
     this.x =
-      this.x * this.$parent.cos(angle) - this.y * this.$parent.sin(angle);
+      this.x * this.fcanvas.cos(angle) - this.y * this.fcanvas.sin(angle);
     this.y =
-      this.x * this.$parent.sin(angle) + this.y * this.$parent.cos(angle);
+      this.x * this.fcanvas.sin(angle) + this.y * this.fcanvas.cos(angle);
   }
 }
 
@@ -900,7 +901,7 @@ export class Point3DCenter extends CanvasElement {
   }
   public get x(): number {
     return (
-      (this.__x - this.$parent.width / 2) * this.scale + this.$parent.width / 2
+      (this.__x - this.fcanvas.width / 2) * this.scale + this.fcanvas.width / 2
     );
   }
   public set x(value: number) {
@@ -908,8 +909,8 @@ export class Point3DCenter extends CanvasElement {
   }
   public get y(): number {
     return (
-      (this.__y - this.$parent.height / 2) * this.scale +
-      this.$parent.height / 2
+      (this.__y - this.fcanvas.height / 2) * this.scale +
+      this.fcanvas.height / 2
     );
   }
   public set y(value: number) {
@@ -935,11 +936,11 @@ export class Point3DCenter extends CanvasElement {
 }
 
 export function createElement(callback: {
-  (canvas: CanvasElement): void;
+  (this: CanvasElement, canvas: CanvasElement): void;
 }): CanvasElement {
   return new (class extends CanvasElement {
-    readonly draw: noop = () => {
-      callback(this);
-    };
+    draw() {
+      callback.bind(this)(this);
+    }
   })();
 }

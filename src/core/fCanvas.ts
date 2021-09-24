@@ -1,15 +1,13 @@
 import Stament from "../classes/Stament";
+import type { MouseOffset, noop, ReadonlyOffset } from "../types/index";
 import {
   AutoToPx,
   bindEvent,
   cancelAnimationFrame,
   fontToArray,
   getTouchInfo,
-  InfoTouch,
   isMobile,
   ListEvents,
-  noop,
-  Offset,
   passive,
   windowSize,
 } from "../utils/index";
@@ -61,7 +59,7 @@ export default class fCanvas {
   static readonly CanvasElement: typeof CanvasElement = CanvasElement;
   static readonly Point3D: typeof Point3D = Point3D;
   static readonly Point3DCenter: typeof Point3DCenter = Point3DCenter;
-  readonly createElement = createElement;
+  static readonly createElement = createElement;
   // eslint-disable-next-line functional/prefer-readonly-type
   private static _count = 0;
 
@@ -73,7 +71,7 @@ export default class fCanvas {
     preloaded: false,
     setuped: false,
   });
-  private readonly __store: {
+  private readonly env: {
     // eslint-disable-next-line functional/prefer-readonly-type
     _context2dCaching: CanvasRenderingContext2D | null;
 
@@ -228,9 +226,9 @@ export default class fCanvas {
   private readonly _handlerEvent = (event: any): void => {
     try {
       // eslint-disable-next-line functional/immutable-data
-      this.__store._pmouseX = this.touches[0]?.x || 0;
+      this.env._pmouseX = this.touches[0]?.x || 0;
       // eslint-disable-next-line functional/immutable-data
-      this.__store._pmouseY = this.touches[0]?.y || 0;
+      this.env._pmouseY = this.touches[0]?.y || 0;
 
       this.touches =
         event.type !== "mouseout"
@@ -240,10 +238,10 @@ export default class fCanvas {
         this.$el,
         event.changedTouches || [event]
       );
-      if (this.__store._preventTouch) {
+      if (this.env._preventTouch) {
         event.preventDefault();
       }
-      if (this.__store._stopTouch) {
+      if (this.env._stopTouch) {
         event.stopPropagation();
       }
       // eslint-disable-next-line no-empty
@@ -253,17 +251,17 @@ export default class fCanvas {
   private readonly _handlerEventMousePress = (event: any): void => {
     if (event.type === "mousedown") {
       // eslint-disable-next-line functional/immutable-data
-      this.__store._realMouseIsPressed = true;
+      this.env._realMouseIsPressed = true;
       return;
     }
     if (event.type === "mouseup") {
       // eslint-disable-next-line functional/immutable-data
-      this.__store._realMouseIsPressed = false;
+      this.env._realMouseIsPressed = false;
       return;
     }
 
     // eslint-disable-next-line functional/immutable-data
-    this.__store._realMouseIsPressed = event?.touches.length > 0;
+    this.env._realMouseIsPressed = event?.touches.length > 0;
   };
   private _cancelEventsSystem(el: Element): void {
     [
@@ -330,16 +328,16 @@ export default class fCanvas {
   }
 
   // eslint-disable-next-line functional/prefer-readonly-type
-  public touches: readonly InfoTouch[] = [];
+  public touches: readonly MouseOffset[] = [];
   // eslint-disable-next-line functional/prefer-readonly-type
-  public changedTouches: readonly InfoTouch[] = [];
+  public changedTouches: readonly MouseOffset[] = [];
   public preventTouch(): void {
     // eslint-disable-next-line functional/immutable-data
-    this.__store._preventTouch = true;
+    this.env._preventTouch = true;
   }
   public stopTouch(): void {
     // eslint-disable-next-line functional/immutable-data
-    this.__store._stopTouch = true;
+    this.env._stopTouch = true;
   }
   get mouseX(): number | null {
     return this.touches[0]?.x || null;
@@ -354,13 +352,13 @@ export default class fCanvas {
     return this.touches[this.touches.length - 1]?.y || 0;
   }
   get pmouseX(): number {
-    return this.__store._pmouseX;
+    return this.env._pmouseX;
   }
   get pmouseY(): number {
-    return this.__store._pmouseY;
+    return this.env._pmouseY;
   }
   get mouseIsPressed(): boolean {
-    return this.__store._realMouseIsPressed;
+    return this.env._realMouseIsPressed;
   }
 
   get id(): number {
@@ -368,49 +366,49 @@ export default class fCanvas {
   }
   private _createNewContext2d(): void {
     // eslint-disable-next-line functional/immutable-data
-    this.__store._context2dCaching = this.$el.getContext(
+    this.env._context2dCaching = this.$el.getContext(
       "2d",
-      this.__store.__attributeContext
+      this.env.__attributeContext
     ) as CanvasRenderingContext2D;
   }
   blur(): void {
     // eslint-disable-next-line functional/immutable-data
-    this.__store.__attributeContext.alpha = true;
+    this.env.__attributeContext.alpha = true;
     this._createNewContext2d();
   }
   noBlur(): void {
     // eslint-disable-next-line functional/immutable-data
-    this.__store.__attributeContext.alpha = false;
+    this.env.__attributeContext.alpha = false;
     this._createNewContext2d();
   }
   desync(): void {
     // eslint-disable-next-line functional/immutable-data
-    this.__store.__attributeContext.desynchronized = true;
+    this.env.__attributeContext.desynchronized = true;
     this._createNewContext2d();
   }
   noDesync(): void {
     // eslint-disable-next-line functional/immutable-data
-    this.__store.__attributeContext.desynchronized = false;
+    this.env.__attributeContext.desynchronized = false;
     this._createNewContext2d();
   }
   useFloatPixel(): void {
     // eslint-disable-next-line functional/immutable-data
-    this.__store._useFloatPixel = true;
+    this.env._useFloatPixel = true;
   }
   noFloatPixel(): void {
     // eslint-disable-next-line functional/immutable-data
-    this.__store._useFloatPixel = false;
+    this.env._useFloatPixel = false;
   }
   _getPixel(value: number): number {
-    return this.__store._useFloatPixel ? value : Math.round(value);
+    return this.env._useFloatPixel ? value : Math.round(value);
   }
 
   get $context2d(): CanvasRenderingContext2D {
-    if (this.__store._context2dCaching === null) {
+    if (this.env._context2dCaching === null) {
       this._createNewContext2d();
     }
 
-    return this.__store._context2dCaching as CanvasRenderingContext2D;
+    return this.env._context2dCaching as CanvasRenderingContext2D;
   }
 
   append(parent: HTMLElement = document.body): void {
@@ -446,10 +444,10 @@ export default class fCanvas {
   }
   noClear(): void {
     // eslint-disable-next-line functional/immutable-data
-    this.__store._clear = false;
+    this.env._clear = false;
   }
   get allowClear(): boolean {
-    return this.__store._clear;
+    return this.env._clear;
   }
 
   // eslint-disable-next-line functional/functional-parameters
@@ -493,14 +491,10 @@ export default class fCanvas {
   }
 
   _toRadius(value: number): number {
-    return this.__store._angleMode === "degress"
-      ? (value * Math.PI) / 180
-      : value;
+    return this.env._angleMode === "degress" ? (value * Math.PI) / 180 : value;
   }
   _toDegress(value: number): number {
-    return this.__store._angleMode === "degress"
-      ? (value * 180) / Math.PI
-      : value;
+    return this.env._angleMode === "degress" ? (value * 180) / Math.PI : value;
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _toRgb([red = 0, green = red, blue = green, alpha = 1]: ParamsToRgb): any {
@@ -513,9 +507,9 @@ export default class fCanvas {
       if (typeof red === "string") {
         return red;
       } else {
-        const after = this.__store._colorMode.match(/hsl|hsb/i) ? "%" : "";
+        const after = this.env._colorMode.match(/hsl|hsb/i) ? "%" : "";
 
-        return `${this.__store._colorMode}a(${[
+        return `${this.env._colorMode}a(${[
           red,
           green + after,
           blue + after,
@@ -530,7 +524,7 @@ export default class fCanvas {
     width: number,
     height: number
   ): readonly [number, number, number, number] {
-    switch (this.__store._rectMode) {
+    switch (this.env._rectMode) {
       case "center":
         return [x - width / 2, y - height / 2, width, height];
       case "radius":
@@ -547,31 +541,31 @@ export default class fCanvas {
   angleMode(type: AngleType): void;
   angleMode(value?: AngleType): AngleType | void {
     if (value === undefined) {
-      return this.__store._angleMode;
+      return this.env._angleMode;
     }
 
     // eslint-disable-next-line functional/immutable-data
-    this.__store._angleMode = value;
+    this.env._angleMode = value;
   }
   colorMode(): ColorType;
   colorMode(mode: ColorType): void;
   colorMode(value?: ColorType): ColorType | void {
     if (value === undefined) {
-      return this.__store._colorMode;
+      return this.env._colorMode;
     }
 
     // eslint-disable-next-line functional/immutable-data
-    this.__store._colorMode = value;
+    this.env._colorMode = value;
   }
   rectMode(): RectMode;
   rectMode(mode: RectMode): void;
   rectMode(value?: RectMode): RectMode | void {
     if (value === undefined) {
-      return this.__store._rectMode;
+      return this.env._rectMode;
     }
 
     // eslint-disable-next-line functional/immutable-data
-    this.__store._rectMode = value;
+    this.env._rectMode = value;
   }
   fontSize(): number;
   fontSize(size: number): void;
@@ -700,31 +694,31 @@ export default class fCanvas {
   rotate(value: number): void;
   rotate(value?: number): number | void {
     if (value === undefined) {
-      return this.__store.__rotate.now;
+      return this.env.__rotate.now;
     } else {
       this.$context2d.rotate(
         // eslint-disable-next-line functional/immutable-data
-        (this.__store.__rotate.now = this._toRadius(value))
+        (this.env.__rotate.now = this._toRadius(value))
       );
       // eslint-disable-next-line functional/immutable-data
-      this.__store.__rotate.sum += this.__store.__rotate.now % 360;
+      this.env.__rotate.sum += this.env.__rotate.now % 360;
     }
   }
   resetRotate(): void {
-    this.rotate(-this.__store.__rotate.sum);
+    this.rotate(-this.env.__rotate.sum);
   }
   resetTransform(): void {
     this.setTransform(1, 0, 0, 1, 0, 0);
   }
   async preload(callback: noop | (() => Promise<void>)): Promise<void> {
     // eslint-disable-next-line functional/immutable-data
-    this.__store._existsPreload = true;
+    this.env._existsPreload = true;
     await callback();
 
     this.hooks.emit("preloaded");
   }
   async setup(callback: noop | (() => Promise<void>)): Promise<void> {
-    if (this.__store._existsPreload) {
+    if (this.env._existsPreload) {
       this.hooks.on("preloaded", async (): Promise<void> => {
         await setup(callback, this);
         this.hooks.emit("setuped");
@@ -797,14 +791,14 @@ export default class fCanvas {
     this.alpha(1);
   }
 
-  translate(): Offset;
+  translate(): ReadonlyOffset;
   translate(x: number, y: number): void;
-  translate(x?: number, y?: number): Offset | void {
+  translate(x?: number, y?: number): ReadonlyOffset | void {
     // eslint-disable-next-line functional/functional-parameters
     if (arguments.length === 0) {
       return {
-        x: this.__store.__translate.x,
-        y: this.__store.__translate.y,
+        x: this.env.__translate.x,
+        y: this.env.__translate.y,
       };
     }
 
@@ -813,48 +807,45 @@ export default class fCanvas {
 
     this.$context2d.translate(x, y);
     // eslint-disable-next-line functional/immutable-data
-    this.__store.__translate.sumX += x;
+    this.env.__translate.sumX += x;
     // eslint-disable-next-line functional/immutable-data
-    this.__store.__translate.sumY += y;
+    this.env.__translate.sumY += y;
   }
   resetTranslate(): void {
     this.$context2d.translate(
-      -this.__store.__translate.sumX,
-      -this.__store.__translate.sumY
+      -this.env.__translate.sumX,
+      -this.env.__translate.sumY
     );
 
     // eslint-disable-next-line functional/immutable-data
-    this.__store.__translate.sumX = 0;
+    this.env.__translate.sumX = 0;
     // eslint-disable-next-line functional/immutable-data
-    this.__store.__translate.sumY = 0;
+    this.env.__translate.sumY = 0;
   }
-  scale(): Offset;
+  scale(): ReadonlyOffset;
   scale(x: number, y: number): void;
-  scale(x?: number, y?: number): Offset | void {
+  scale(x?: number, y?: number): ReadonlyOffset | void {
     // eslint-disable-next-line functional/functional-parameters
     if (arguments.length === 0) {
       return {
-        x: this.__store.__scale.x,
-        y: this.__store.__scale.y,
+        x: this.env.__scale.x,
+        y: this.env.__scale.y,
       };
     }
 
     this.$context2d.scale(x as number, y as number);
     // eslint-disable-next-line functional/immutable-data
-    this.__store.__scale.sumX += x || 0;
+    this.env.__scale.sumX += x || 0;
     // eslint-disable-next-line functional/immutable-data
-    this.__store.__scale.sumY += y || 0;
+    this.env.__scale.sumY += y || 0;
   }
   resetScale(): void {
-    this.$context2d.translate(
-      -this.__store.__scale.sumX,
-      -this.__store.__scale.sumY
-    );
+    this.$context2d.translate(-this.env.__scale.sumX, -this.env.__scale.sumY);
 
     // eslint-disable-next-line functional/immutable-data
-    this.__store.__translate.sumX = 0;
+    this.env.__translate.sumX = 0;
     // eslint-disable-next-line functional/immutable-data
-    this.__store.__translate.sumY = 0;
+    this.env.__translate.sumY = 0;
   }
   clip(): void;
   clip(fillRule: RuleClip): void;
@@ -972,22 +963,22 @@ export default class fCanvas {
   // TODO: for system callback
   _setIdFrame(id: number): void {
     // eslint-disable-next-line functional/immutable-data
-    this.__store._idFrame = id;
+    this.env._idFrame = id;
   }
   loop(): void {
     // eslint-disable-next-line functional/immutable-data
-    this.__store._loop = true;
+    this.env._loop = true;
     this.hooks.emit("setuped");
   }
   noLoop(): void {
     // eslint-disable-next-line functional/immutable-data
-    this.__store._loop = false;
-    if (this.__store._idFrame) {
-      cancelAnimationFrame(this.__store._idFrame);
+    this.env._loop = false;
+    if (this.env._idFrame) {
+      cancelAnimationFrame(this.env._idFrame);
     }
   }
   get allowLoop(): boolean {
-    return this.__store._loop;
+    return this.env._loop;
   }
   on<Name extends keyof ListEvents>(
     name: Name,

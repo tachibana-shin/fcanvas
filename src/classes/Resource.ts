@@ -2,23 +2,13 @@ import { dirname, extname, join } from "path-cross";
 import { parse } from "plist/lib/parse.js";
 
 import { cutImage, loadImage } from "../functions/index";
+import type { ReadonlyOffset, ReadonlySize } from "../types";
 import { trim } from "../utils/index";
 
 type ImageResource = HTMLImageElement & {
-  readonly sourceSize: {
-    readonly width: number;
-    readonly height: number;
-  };
-  readonly sourceColorRect: {
-    readonly width: number;
-    readonly height: number;
-    readonly x: number;
-    readonly y: number;
-  };
-  readonly offset: {
-    readonly x: number;
-    readonly y: number;
-  };
+  readonly sourceSize: ReadonlySize;
+  readonly sourceColorRect: ReadonlySize & ReadonlyOffset;
+  readonly offset: ReadonlyOffset;
 };
 type Plist = {
   readonly frames: {

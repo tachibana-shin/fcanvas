@@ -1,25 +1,17 @@
+import type { MouseOffset, noop } from "../types";
+
 type InfoFont = {
   readonly size: number;
   readonly family: string;
   readonly weight: string;
 };
 
-export type noop = {
-  (): void;
-};
-
-export type Offset = {
-  readonly x: number;
-  readonly y: number;
-};
-
-export type InfoTouch = Offset & {
-  readonly winX: number;
-  readonly winY: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly id: any;
-};
-
+export function generateUUID(): string {
+  return new Array(4)
+    .fill(0)
+    .map(() => Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16))
+    .join("-");
+}
 export const requestAnimationFrame:
   | typeof globalThis.requestAnimationFrame
   | typeof globalThis.setTimeout =
@@ -43,9 +35,10 @@ export const isTouch: boolean =
 // eslint-disable-next-line functional/no-let
 let supportPassive = false;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-function noop() {}
 try {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function, no-inner-declarations
+  function noop() {}
+
   const opts = Object.defineProperty({}, "passive", {
     get(): boolean {
       supportPassive = true;
@@ -162,7 +155,7 @@ export function getTouchInfo(
   element: HTMLCanvasElement,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   touches: readonly any[]
-): readonly InfoTouch[] {
+): readonly MouseOffset[] {
   const rect = element.getBoundingClientRect();
   const sx = element.scrollWidth / element.width || 1;
   const sy = element.scrollHeight / element.height || 1;
