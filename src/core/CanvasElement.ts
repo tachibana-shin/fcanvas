@@ -433,47 +433,51 @@ export abstract class CanvasElement {
         (frameWidth % width === 0 ? width : frameWidth % width) + offsetX;
       const heightCutRen =
         (frameHeight % height === 0 ? height : frameHeight % height) + offsetY;
+
+      const maxX = width === 0 ? 0 : Math.ceil(frameWidth / width);
+      const maxY = height === 0 ? 0 : Math.ceil(frameHeight / height);
+      // eslint-disable-next-line functional/no-let
+      let xIndex = 0,
+        yIndex = 0;
       // eslint-disable-next-line functional/no-loop-statement
-      for (
-        // eslint-disable-next-line functional/no-let
-        let xIndex = 0, maxX = width === 0 ? 0 : Math.ceil(frameWidth / width);
-        xIndex < maxX;
-        xIndex++
-      ) {
+      while (xIndex < maxX) {
+        yIndex = 0;
         // eslint-disable-next-line functional/no-loop-statement
-        for (
-          // eslint-disable-next-line functional/no-let
-          let yIndex = 0,
-            maxY = height === 0 ? 0 : Math.ceil(frameHeight / height);
-          yIndex < maxY;
-          yIndex++
-        ) {
+        while (yIndex < maxY) {
           // eslint-disable-next-line functional/no-let
           let xStartCut = 0,
             yStartCut = 0,
-            widthCut_1 = image.width,
-            heightCut_1 = image.height,
-            x_1 = x - offsetX + xIndex * width,
-            y_1 = y - offsetY + yIndex * height,
+            widthCut_1,
+            heightCut_1,
+            x_1,
+            y_1,
             widthCutRen_1 = width,
             heightCutRen_1 = height;
 
           if (xIndex === 0) {
             xStartCut = map(offsetX, 0, width, 0, image.width);
             x_1 = 0;
+          } else {
+            x_1 = x - offsetX + xIndex * width;
           }
           if (yIndex === 0) {
             yStartCut = map(offsetY, 0, height, 0, image.height);
             y_1 = 0;
+          } else {
+            y_1 = y - offsetY + yIndex * height;
           }
 
           if (xIndex === maxX - 1) {
             widthCut_1 = map(widthCutRen, 0, width, 0, image.width);
             widthCutRen_1 = widthCutRen;
+          } else {
+            widthCut_1 = image.width;
           }
           if (yIndex === maxY - 1) {
             heightCut_1 = map(heightCutRen, 0, height, 0, image.height);
             heightCutRen_1 = heightCutRen;
+          } else {
+            heightCut_1 = image.height;
           }
           this.drawImage(
             image,
@@ -486,9 +490,11 @@ export abstract class CanvasElement {
             widthCutRen_1,
             heightCutRen_1
           );
-          this.rect(x_1, y_1, widthCutRen_1, heightCutRen_1);
-          this.stroke();
+
+          yIndex++;
         }
+
+        xIndex++;
       }
     }
   }
