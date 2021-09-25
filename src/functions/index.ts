@@ -1,3 +1,5 @@
+import type { ReadonlySize } from "../types";
+
 export function constrain(value: number, min: number, max: number): number {
   return Math.min(Math.max(min, value), max);
 }
@@ -48,18 +50,23 @@ export function map(
   return ((value - start) * (max - min)) / (stop - start) + min;
 }
 export function aspectRatio(
-  ratio: number,
-  width: number,
-  height: number
-): readonly [number, number] {
+  { width, height }: ReadonlySize,
+  ratio: number
+): ReadonlySize {
   /// ratio = width / height => height = width / ratio
   const swidth = ratio * height;
   const sheight = width / ratio;
 
   if (width < swidth) {
-    return [width, sheight];
+    return {
+      width,
+      height: sheight,
+    };
   } else {
-    return [swidth, height];
+    return {
+      width: swidth,
+      height,
+    };
   }
 }
 function random(value: number): number;
@@ -81,16 +88,6 @@ function random(...args: readonly any[]): any {
   if (args.length === 2) {
     return args[0] + Math.random() * (args[1] - args[0]);
   }
-}
-
-function randomInt(value: number): number;
-function randomInt(start: number, stop: number): number;
-function randomInt(start: number, stop?: number): number {
-  if (stop === undefined) {
-    return Math.round(random(start));
-  }
-
-  return Math.round(random(start, stop));
 }
 
 function range(start: number, stop: number, step: number): number;
@@ -135,7 +132,7 @@ function range(start: any, stop: any, step: number): any {
   return arr;
 }
 
-export { random, randomInt, range };
+export { random, range };
 
 export function lerp(start: number, stop: number, amt: number): number {
   return amt * (stop - start) + start;
@@ -146,12 +143,13 @@ export const hypot =
     ? Math.hypot
     : // eslint-disable-next-line functional/functional-parameters
       (...args: readonly number[]): number => {
-        const len = args.length;
         // eslint-disable-next-line functional/no-let
-        let i = 0,
+        let len = args.length - 1,
           result = 0;
         // eslint-disable-next-line functional/no-loop-statement
-        while (i < len) result += Math.pow(args[i++], 2);
+        while (len > -1) {
+          result += Math.pow(args[len--], 2);
+        }
         return Math.sqrt(result);
       };
 

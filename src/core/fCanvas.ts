@@ -287,14 +287,14 @@ export default class fCanvas {
   }
 
   // eslint-disable-next-line functional/prefer-readonly-type
-  public touches: readonly MouseOffset[] = [];
+  touches: readonly MouseOffset[] = [];
   // eslint-disable-next-line functional/prefer-readonly-type
-  public changedTouches: readonly MouseOffset[] = [];
-  public preventTouch(): void {
+  changedTouches: readonly MouseOffset[] = [];
+  preventTouch(): void {
     // eslint-disable-next-line functional/immutable-data
     this.env.preventTouch = true;
   }
-  public stopTouch(): void {
+  stopTouch(): void {
     // eslint-disable-next-line functional/immutable-data
     this.env.stopTouch = true;
   }
@@ -404,18 +404,6 @@ export default class fCanvas {
   }
   get allowClear(): boolean {
     return this.env.clear;
-  }
-
-  // eslint-disable-next-line functional/functional-parameters
-  run(...elements: readonly CanvasElement[]): void {
-    // eslint-disable-next-line functional/no-let
-    let index = 0;
-    const { length } = elements;
-
-    // eslint-disable-next-line functional/no-loop-statement
-    while (index < length) {
-      elements[index++].render(this);
-    }
   }
 
   get width(): number {

@@ -2,7 +2,7 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": "./tsconfig.eslint.json"
   },
   "env": {
     "es6": true
@@ -15,7 +15,9 @@
   "plugins": [
     "import",
     "eslint-comments",
-    "functional"
+    "functional",
+    "jest",
+    "@typescript-eslint"
   ],
   "extends": [
     "eslint:recommended",
@@ -24,7 +26,8 @@
     "plugin:import/typescript",
     "plugin:functional/lite",
     "prettier",
-    "prettier/@typescript-eslint"
+    "prettier/@typescript-eslint",
+    "plugin:jest/recommended"
   ],
   "globals": {
     "console": true,

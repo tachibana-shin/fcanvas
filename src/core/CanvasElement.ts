@@ -79,9 +79,6 @@ export abstract class CanvasElement {
 
     this.canvasInstance = null;
   }
-  run(element: CanvasElement): void {
-    this.fcanvas.run(element);
-  }
   get fcanvas(): fCanvas {
     if (this.canvasInstance instanceof fCanvas) {
       return this.canvasInstance;

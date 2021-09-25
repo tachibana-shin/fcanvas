@@ -1,5 +1,5 @@
 import type { CanvasElement } from "../core/CanvasElement";
-import type { ReadonlyOffset } from "../types/index";
+import type { ReadonlyOffset, ReadonlySize } from "../types/index";
 
 type ReturnInterfering = {
   readonly direction: number;
@@ -39,11 +39,7 @@ function CircleImpactRect(
     ReadonlyOffset & {
       readonly radius: number;
     },
-  rect: CanvasElement &
-    ReadonlyOffset & {
-      readonly width: number;
-      readonly height: number;
-    }
+  rect: CanvasElement & ReadonlyOffset & ReadonlySize
 ): boolean {
   const x = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
   const y = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
@@ -54,16 +50,8 @@ function CircleImpactRect(
   return distance < circle.radius ** 2;
 }
 function RectImpact(
-  rect1: CanvasElement &
-    ReadonlyOffset & {
-      readonly width: number;
-      readonly height: number;
-    },
-  rect2: CanvasElement &
-    ReadonlyOffset & {
-      readonly width: number;
-      readonly height: number;
-    }
+  rect1: CanvasElement & ReadonlyOffset & ReadonlySize,
+  rect2: CanvasElement & ReadonlyOffset & ReadonlySize
 ): boolean {
   return (
     rect1.x < rect2.x + rect2.width &&
@@ -74,11 +62,7 @@ function RectImpact(
 }
 
 function RectImpactPoint(
-  rect: CanvasElement &
-    ReadonlyOffset & {
-      readonly width: number;
-      readonly height: number;
-    },
+  rect: CanvasElement & ReadonlyOffset & ReadonlySize,
   x: number,
   y: number
 ): boolean {
