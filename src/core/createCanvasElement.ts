@@ -50,7 +50,10 @@ type SetupFunction<
 > = (
   this: ComponentRenderProxy<Props, RawBindings, D, E, C, M>,
   props: Props
-) => RawBindings | void;
+) =>
+  | (RawBindings &
+      ThisType<ComponentRenderProxy<Props, RawBindings, D, E, C, M>>)
+  | void;
 
 type ComponentOptionsBase<
   Props,
@@ -102,7 +105,7 @@ type ComponentOptionsWithProps<
 > = ComponentOptionsBase<Props, D, C, M> & {
   readonly props?: PropsOptions;
   readonly emits?: E;
-  readonly setup?: SetupFunction<Props, {}, D, E, C, M>;
+  readonly setup?: SetupFunction<Props, RawBindings, D, E, C, M>;
 } & ThisType<ComponentRenderProxy<Props, RawBindings, D, E, C, M>>;
 type ComponentOptionsWithArrayProps<
   PropNames extends string = string,
