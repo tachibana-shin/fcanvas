@@ -232,7 +232,11 @@ type XConstructorProxy<
   Computed extends ComputedOptions,
   Methods extends MethodOptions
 > = {
-  new (options: ExtractPropTypes<PropsOptions>): ComponentRenderProxy<
+  new (
+    props: PropsOptions extends unknown | {}
+      ? void
+      : ExtractPropTypes<PropsOptions>
+  ): ComponentRenderProxy<
     ExtractPropTypes<PropsOptions>,
     RawBindings,
     Data,
