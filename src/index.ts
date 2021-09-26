@@ -3,7 +3,6 @@ export {
   CanvasElement,
   Point3D,
   Point3DCenter,
-  createElement,
   getCanvasInstance,
 } from "./core/CanvasElement";
 export { createCanvasElement } from "./core/createCanvasElement";

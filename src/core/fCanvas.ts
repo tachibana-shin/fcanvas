@@ -13,12 +13,6 @@ import {
   windowSize,
 } from "../utils/index";
 
-import {
-  CanvasElement,
-  createElement,
-  Point3D,
-  Point3DCenter,
-} from "./CanvasElement";
 import { draw, setup } from "./SystemEvents";
 
 type AngleType = "degress" | "radial";
@@ -57,11 +51,6 @@ type HightTransform = {
 };
 
 export default class fCanvas {
-  static readonly CanvasElement: typeof CanvasElement = CanvasElement;
-  static readonly Point3D: typeof Point3D = Point3D;
-  static readonly Point3DCenter: typeof Point3DCenter = Point3DCenter;
-  static readonly createElement = createElement;
-
   // eslint-disable-next-line functional/prefer-readonly-type
   private _el: HTMLCanvasElement;
   readonly hooks = new OneTimeEvent({

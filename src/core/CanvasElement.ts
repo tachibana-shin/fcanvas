@@ -928,13 +928,3 @@ export class Point3DCenter extends CanvasElement {
     return this.scale * (this as any)[prop];
   }
 }
-
-export function createElement(callback: {
-  (this: CanvasElement, canvas: CanvasElement): void;
-}): CanvasElement {
-  return new (class extends CanvasElement {
-    draw() {
-      callback.bind(this)(this);
-    }
-  })();
-}

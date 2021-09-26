@@ -48,7 +48,6 @@ type SetupFunction<
   C extends ComputedOptions,
   M extends MethodOptions
 > = (
-  this: ComponentRenderProxy<Props, RawBindings, D, E, C, M>,
   props: Props
 ) =>
   | (RawBindings &
