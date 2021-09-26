@@ -16,18 +16,13 @@ export const requestAnimationFrame:
   | typeof globalThis.requestAnimationFrame
   | typeof globalThis.setTimeout =
   window.requestAnimationFrame ||
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  function (callback: Function): number {
-    return setTimeout(callback, 100 / 6);
-  };
+  ((callback: Parameters<typeof setTimeout>[0]) =>
+    setTimeout(callback, 100 / 6));
 export const cancelAnimationFrame:
   | typeof globalThis.cancelAnimationFrame
   | typeof globalThis.clearTimeout =
   window.cancelAnimationFrame ||
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function (timeoutId: any): void {
-    clearTimeout(timeoutId);
-  };
+  ((callback: Parameters<typeof clearTimeout>[0]) => clearTimeout(callback));
 
 export const isTouch: boolean =
   "ontouchstart" in window || "onmsgesturechange" in window;
