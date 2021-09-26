@@ -360,10 +360,11 @@ function createCanvasElement<
         this,
         propsDefault,
         props,
-        (options.setup as any)?.call(this, props, this) || {},
+        (options.setup as any)?.call(this, props, this) || Object.create(null),
         options.data || Object.create(null),
-        options.methods?.map((item: Function) => item.bind(this)) ||
-          Object.create(null)
+        Object.keys(options.methods || Object.create(null)).map(
+          (item: string) => options.methods?.[item].bind(this)
+        ) || Object.create(null)
       );
 
       // eslint-disable-next-line functional/no-loop-statement
