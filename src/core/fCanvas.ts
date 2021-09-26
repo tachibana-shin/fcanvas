@@ -1,4 +1,4 @@
-import Stament from "../classes/Stament";
+import {OneTimeEvent} from "../classes/OneTimeEvent";
 import type { MouseOffset, noop, ReadonlyOffset } from "../types/index";
 import {
   AutoToPx,
@@ -64,7 +64,7 @@ export default class fCanvas {
 
   // eslint-disable-next-line functional/prefer-readonly-type
   private _el: HTMLCanvasElement;
-  readonly hooks = new Stament({
+  readonly hooks = new OneTimeEvent({
     preloaded: false,
     setuped: false,
   });

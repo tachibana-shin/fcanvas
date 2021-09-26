@@ -1,6 +1,6 @@
 import { createStore } from "./Store";
 
-class Stament<
+export class OneTimeEvent<
   States extends {
     readonly [name: string]: boolean;
   }
@@ -25,4 +25,10 @@ class Stament<
   }
 }
 
-export default Stament;
+export function createOneTimeEvent<
+  States extends {
+    readonly [name: string]: boolean;
+  }
+>(states: States): OneTimeEvent<States> {
+  return new OneTimeEvent(states);
+}

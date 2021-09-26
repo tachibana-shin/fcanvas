@@ -168,7 +168,7 @@ export function even(value: number, min: number, prevent: number): number {
   return value - 1;
 }
 
-///// https://jsfiddle.net/casamia743/xqh48gno/
+// > https://jsfiddle.net/casamia743/xqh48gno/
 function calcProjectedRectSizeOfRotatedRect(
   width: number,
   height: number,
@@ -182,21 +182,18 @@ function calcProjectedRectSizeOfRotatedRect(
   return [rectProjectedWidth, rectProjectedHeight];
 }
 
-// eslint-disable-next-line functional/no-let
-let virualContext: CanvasRenderingContext2D;
 export function cutImage(
   image: CanvasImageSource,
   x = 0,
   y = 0,
-  width: number = parseFloat(`${image.width}`),
-  height: number = parseFloat(`${image.height}`),
+  width: number = image.width as number,
+  height: number = image.height as number,
   rotate = 0
 ): HTMLImageElement {
-  if (virualContext === undefined) {
-    virualContext = document
-      .createElement("canvas")
-      .getContext("2d") as CanvasRenderingContext2D; /// never null
-  }
+  const virualContext = document
+    .createElement("canvas")
+    .getContext("2d") as CanvasRenderingContext2D; /// never null
+
   /// ------------------ draw image canvas -----------------
   const rad: number = (rotate * Math.PI) / 180;
   const [swidth, sheight] = calcProjectedRectSizeOfRotatedRect(

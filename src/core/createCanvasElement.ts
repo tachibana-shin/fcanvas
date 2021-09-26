@@ -40,8 +40,15 @@ type ComputedOptions = Record<
 type MethodOptions = {
   readonly [key: string]: Function;
 };
-type SetupFunction<Props, RawBindings = {}> = (
-  this: void,
+type SetupFunction<
+  Props,
+  RawBindings,
+  D,
+  E extends EmitsOptions,
+  C extends ComputedOptions,
+  M extends MethodOptions
+> = (
+  this: ComponentRenderProxy<Props, RawBindings, D, E, C, M>,
   props: Props
 ) => RawBindings | void;
 
@@ -54,7 +61,7 @@ type ComponentOptionsBase<
   readonly data?: ((this: Props, vm: Props) => D) | D;
   readonly computed?: C;
   readonly methods?: M;
-  readonly draw: noop;
+  readonly draw?: noop;
   readonly update?: noop;
 };
 
@@ -95,7 +102,7 @@ type ComponentOptionsWithProps<
 > = ComponentOptionsBase<Props, D, C, M> & {
   readonly props?: PropsOptions;
   readonly emits?: E;
-  readonly setup?: SetupFunction<Props, RawBindings>;
+  readonly setup?: SetupFunction<Props, {}, D, E, C, M>;
 } & ThisType<ComponentRenderProxy<Props, RawBindings, D, E, C, M>>;
 type ComponentOptionsWithArrayProps<
   PropNames extends string = string,
@@ -110,7 +117,7 @@ type ComponentOptionsWithArrayProps<
 > = ComponentOptionsBase<Props, D, C, M> & {
   readonly props?: readonly PropNames[];
   readonly emits?: E;
-  readonly setup?: SetupFunction<Props, RawBindings>;
+  readonly setup?: SetupFunction<Props, RawBindings, D, E, C, M>;
 } & ThisType<ComponentRenderProxy<Props, RawBindings, D, E, C, M>>;
 type ComponentOptionsWithoutProps<
   Props = unknown,
@@ -122,7 +129,7 @@ type ComponentOptionsWithoutProps<
 > = ComponentOptionsBase<Props, D, C, M> & {
   readonly props?: undefined;
   readonly emits?: E;
-  readonly setup?: SetupFunction<Props, RawBindings>;
+  readonly setup?: SetupFunction<Props, RawBindings, D, E, C, M>;
 } & ThisType<ComponentRenderProxy<Props, RawBindings, D, E, C, M>>;
 type ComponentPropsOptions<P = Data> =
   | ComponentObjectPropsOptions<P>
@@ -351,9 +358,10 @@ function createCanvasElement<
         this,
         propsDefault,
         props,
-        options.setup?.(props) || {},
+        (options.setup as any)?.call(this, props, this) || {},
         options.data || Object.create(null),
-        options.methods || Object.create(null)
+        options.methods?.map((item: Function) => item.bind(this)) ||
+          Object.create(null)
       );
 
       // eslint-disable-next-line functional/no-loop-statement
@@ -374,13 +382,14 @@ function createCanvasElement<
         }
       }
 
-      this.update = options.update;
+      this.draw = options.draw?.bind(this);
+      this.update = options.update?.bind(this);
     }
   };
 }
 
-export function PropType<obj = any>(): obj {
-  return void 0 as unknown as obj;
+export function PropType<T = any>(): T {
+  return undefined as unknown as T;
 }
 
 export { createCanvasElement };
