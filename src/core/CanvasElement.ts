@@ -451,13 +451,13 @@ export abstract class CanvasElement {
 
           if (xIndex === 0) {
             xStartCut = map(offsetX, 0, width, 0, image.width);
-            x_1 = 0;
+            x_1 = x;
           } else {
             x_1 = x - offsetX + xIndex * width;
           }
           if (yIndex === 0) {
             yStartCut = map(offsetY, 0, height, 0, image.height);
-            y_1 = 0;
+            y_1 = y;
           } else {
             y_1 = y - offsetY + yIndex * height;
           }
