@@ -24,4 +24,3 @@ export {
 } from "./utils/index";
 export * from "./functions/index";
 export * from "./core/SystemEvents";
-export * from "./addons/impact";

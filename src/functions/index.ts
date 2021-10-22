@@ -11,3 +11,5 @@ export { default as odd } from "./odd";
 export { default as even } from "./even";
 export { default as cutImage } from "./cutImage";
 export { default as isUnlimited } from "./isUnlimited";
+
+export * from "./intersects";
