@@ -191,7 +191,7 @@ function interfering(
   return company ? false : null;
 }
 
-export function presser(
+export function intersects(
   el: CanvasElement & ReadonlyOffset,
   // eslint-disable-next-line functional/functional-parameters
   ...otherEl: readonly (CanvasElement & ReadonlyOffset)[]
@@ -211,7 +211,7 @@ export function presser(
   return result ?? null;
 }
 
-export function pressed(
+export function intersected(
   el: CanvasElement & ReadonlyOffset,
   // eslint-disable-next-line functional/functional-parameters
   ...otherEl: readonly (CanvasElement & ReadonlyOffset)[]

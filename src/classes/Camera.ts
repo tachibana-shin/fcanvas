@@ -1,6 +1,6 @@
 import { CanvasElement } from "../core/CanvasElement";
 import fCanvas from "../core/fCanvas";
-import { constrain } from "../functions/index";
+import constrain from "../functions/constrain";
 import type { noop, ReadonlyOffset, ReadonlySize } from "../types/index";
 
 type ViewPort = ReadonlyOffset & ReadonlySize;

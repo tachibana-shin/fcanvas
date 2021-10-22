@@ -1,11 +1,12 @@
 import { dirname, extname, join } from "path-cross";
 import { parse } from "plist/lib/parse.js";
 
-import { cutImage, loadImage } from "../functions/index";
+import cutImage from "../functions/cutImage";
+import loadImage from "../functions/loadImage";
 import type { ReadonlyOffset, ReadonlySize } from "../types";
 import { trim } from "../utils/index";
 
-type ImageResource = HTMLImageElement & {
+type CanvasImageResource = HTMLCanvasElement & {
   readonly sourceSize: ReadonlySize;
   readonly sourceColorRect: ReadonlySize & ReadonlyOffset;
   readonly offset: ReadonlyOffset;
@@ -45,14 +46,14 @@ function passValueOfPlistToJSON<T = number>(value: string): readonly T[] {
 export class Resource {
   private readonly plist: Plist;
   private readonly tile: HTMLImageElement;
-  private readonly cache = new Map<string, ImageResource>();
+  private readonly cache = new Map<string, CanvasImageResource>();
 
   constructor(plist: Plist, tile: HTMLImageElement) {
     this.plist = plist;
     this.tile = tile;
   }
 
-  get(name: string): ImageResource {
+  get(name: string): CanvasImageResource {
     if (this.has(name)) {
       const { frame, rotated, sourceSize, sourceColorRect, offset } =
         this.plist.frames[name];
@@ -96,7 +97,7 @@ export class Resource {
         );
       }
 
-      return this.cache.get(name) as ImageResource;
+      return this.cache.get(name) as CanvasImageResource;
     } else {
       // eslint-disable-next-line functional/no-throw-statement
       throw new Error(

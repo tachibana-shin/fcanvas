@@ -1,10 +1,4 @@
-import { constrain, hypot } from "./index";
-
-describe("hypot test", () => {
-  test("1", () => {
-    expect(hypot(231, 23454, -12)).toBe(Math.hypot(231, 23454, -12));
-  });
-});
+import constrain from "./constrain";
 
 describe.each([
   {
@@ -28,7 +22,7 @@ describe.each([
 
     expected: 100,
   },
-])("constrain($value, $min, $max", ({ value, min, max, expected }) => {
+])("constrain($value, $min, $max)", ({ value, min, max, expected }) => {
   // eslint-disable-next-line jest/no-standalone-expect
   expect(constrain(value, min, max)).toBe(expected);
 });
