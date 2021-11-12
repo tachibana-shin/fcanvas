@@ -1,3 +1,5 @@
+import { throwError } from "../helpers/throw"
+
 function range(start: number, stop: number, step: number): number;
 function range(start: string, stop: string, step: number): string;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,7 +19,7 @@ function range(start: any, stop: any, step: number): any {
 
   if (start !== stop && Math.abs(stop - start) < Math.abs(step))
     // eslint-disable-next-line functional/no-throw-statement
-    throw new Error("range(): step exceeds the specified range.");
+    throwError("range(): step exceeds the specified range.");
 
   if (stop > start) {
     step < 0 && (step *= -1);

@@ -5,6 +5,7 @@ import mitt from "mitt";
 import { noop } from "../types";
 
 import { CanvasElement } from "./CanvasElement";
+import { warn } from "../helpers/log"
 
 type ComponentRenderProxy<
   P = {}, // props type extracted from props option
@@ -374,7 +375,7 @@ function createClass<
           Object.defineProperty(this, prop, {
             get: (options.computed[prop] as Function).bind(this),
             set() {
-              console.error(`Can't set for computed "${prop}".`);
+              error(`Can't set for computed "${prop}".`);
             },
           });
         } else {

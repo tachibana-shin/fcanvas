@@ -4,6 +4,8 @@ import { AutoToPx } from "../utils/index";
 
 import fCanvas, { DirectionPattern, ParamsToRgb } from "./fCanvas";
 
+import { throwError } from "../helpers/throw"
+
 type LineJoin = "bevel" | "round" | "miter";
 type LineCap = "butt" | "round" | "square";
 
@@ -84,8 +86,8 @@ export abstract class CanvasElement {
       return this.canvasInstance;
     } else {
       // eslint-disable-next-line functional/no-throw-statement
-      throw new Error(
-        "fCanvas: The current referenced version of the fCanvas.run function is incorrect."
+      throwError(
+        "the current referenced version of the fCanvas.run function is incorrect."
       );
     }
   }

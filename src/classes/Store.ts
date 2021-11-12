@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mitt, { Emitter } from "mitt";
+import { throwError } from "../helpers/throw"
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const weakCache = new WeakMap<Object, any>();
@@ -44,8 +45,7 @@ function toProxy(
         const oldValue = target[p];
         // eslint-disable-next-line functional/immutable-data
         if (delete target[p] === false) {
-          // eslint-disable-next-line functional/no-throw-statement
-          throw new Error("DELETE_FAILED");
+          throwError(`cant't delete "${p}" because unknown error.`);
         }
         emitter.emit("*", [
           [...path, p].map((e) => e.toString()),

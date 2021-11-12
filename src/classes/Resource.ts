@@ -6,6 +6,8 @@ import loadImage from "../functions/loadImage";
 import type { ReadonlyOffset, ReadonlySize } from "../types";
 import { trim } from "../utils/index";
 
+import { throwError } from "../helpers/throw"
+
 type CanvasImageResource = HTMLCanvasElement & {
   readonly sourceSize: ReadonlySize;
   readonly sourceColorRect: ReadonlySize & ReadonlyOffset;
@@ -39,8 +41,7 @@ function passValueOfPlistToJSON<T = number>(value: string): readonly T[] {
     return new Function(`return ${value}`)();
   }
 
-  // eslint-disable-next-line functional/no-throw-statement
-  throw new Error(`fCanvas<Resource>: "${value}" a malformed field`);
+  throwError(`resource "${value}" a malformed field`);
 }
 
 export class Resource {
@@ -99,9 +100,8 @@ export class Resource {
 
       return this.cache.get(name) as CanvasImageResource;
     } else {
-      // eslint-disable-next-line functional/no-throw-statement
-      throw new Error(
-        `Error does not exist this file "${name}" in declaration plist`
+      throwError(
+        `does not exist this file "${name}" in declaration plist`
       );
     }
   }

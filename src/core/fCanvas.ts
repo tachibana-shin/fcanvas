@@ -15,6 +15,8 @@ import {
 
 import { draw, setup } from "./SystemEvents";
 
+import { warn, error } from "../helpers/log"
+
 type AngleType = "degress" | "radial";
 export type AlignType = "left" | "center" | "right";
 export type BaselineType = "top" | "middle" | "bottom";
@@ -136,8 +138,8 @@ export default class fCanvas {
         if (el instanceof HTMLCanvasElement) {
           this._el = el;
         } else {
-          console.warn(
-            `fCanvas: "${element}" is not instanceof HTMLCanvasElement.`
+          warn(
+            `"${element}" is not instanceof HTMLCanvasElement.`
           );
           this._el = document.createElement("canvas");
         }
@@ -372,8 +374,8 @@ export default class fCanvas {
         ) || this._el;
     } else {
       if (element.tagName !== "CANVAS") {
-        console.error(
-          `fCanvas<sys>: function .mount() not allow element "${element?.tagName.toLocaleLowerCase()}`
+        error(
+          `function .mount() not allow element "${element?.tagName.toLocaleLowerCase()}`
         );
         el = this._el;
       } else {

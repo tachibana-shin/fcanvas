@@ -1,6 +1,8 @@
 /* eslint-disable prefer-rest-params */
 /* eslint-disable functional/functional-parameters */
 /* eslint-disable functional/immutable-data */
+import { warn } from "../helpers/log"
+
 function calculateRemainder2D(
   this: Vector,
   xComponent: number,
@@ -213,7 +215,7 @@ export class Vector {
 
   div(n: number): this {
     if (n === 0) {
-      console.warn("div:", "divide by 0");
+      warn("div:", "divide by 0");
       return this;
     }
 
