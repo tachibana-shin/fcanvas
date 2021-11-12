@@ -20,7 +20,6 @@ export {
   cancelAnimationFrame,
   isMobile,
   isTouch,
-  passive,
 } from "./utils/index";
 export * from "./functions/index";
 export * from "./core/SystemEvents";
