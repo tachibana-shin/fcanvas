@@ -5,7 +5,7 @@ export {
   Point3DCenter,
   getCanvasInstance,
 } from "./core/CanvasElement";
-export { createCanvasElement } from "./core/createCanvasElement";
+export { createClass } from "./core/createClass";
 
 export { createAnimate } from "./classes/Animate";
 export { createCamera, Camera } from "./classes/Camera";

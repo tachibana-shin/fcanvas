@@ -278,7 +278,7 @@ type XProxy<
   Methods
 >;
 
-function createCanvasElement<
+function createClass<
   RawBindings,
   D = Data,
   E extends EmitsOptions = {},
@@ -287,7 +287,7 @@ function createCanvasElement<
 >(
   options: ComponentOptionsWithoutProps<unknown, RawBindings, D, E, C, M>
 ): XProxy<unknown, RawBindings, D, E, C, M>;
-function createCanvasElement<
+function createClass<
   PropNames extends string,
   RawBindings = Data,
   D = Data,
@@ -306,7 +306,7 @@ function createCanvasElement<
   C,
   M
 >;
-function createCanvasElement<
+function createClass<
   Props,
   RawBindings = Data,
   D = Data,
@@ -319,7 +319,7 @@ function createCanvasElement<
     ? ComponentOptionsWithProps<PropsOptions, RawBindings, D, E, C, M, Props>
     : ComponentOptionsWithProps<PropsOptions, RawBindings, D, E, C, M>
 ): XProxy<PropsOptions, RawBindings, D, E, C, M>;
-function createCanvasElement<
+function createClass<
   Props,
   RawBindings = Data,
   D = Data,
@@ -395,4 +395,4 @@ export function PropType<T = any>(): T {
   return undefined as unknown as T;
 }
 
-export { createCanvasElement };
+export { createClass };
