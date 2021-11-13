@@ -1,17 +1,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { throwError } from "../helpers/throw"
 
+type Listeners = Map < string, {
+  cb: (newVal: any, oldValue: any) => void,
+  deep: boolean
+}[] >
 // eslint-disable-next-line @typescript-eslint/ban-types
 const weakCache = new WeakMap<Object, any>();
+const listenersCache = new WeakMap<Proxy, Listeners>()
+
+function mergeListeners(listenerRoot: Listeners, ...listListeners: Listeners[]): Listeners {
+  listListeners.forEach(listeners => {
+    // merge
+    listeners.forEach((cbs, key) => {
+      if ( listenerRoot.has(key) ) {
+        listenerRoot.get(key).push(...cbs)
+      } else {
+        listenerRoot.set(key, cbs)
+      }
+    })
+  })
+}
+
 function toProxy(
   obj: any,
   path: readonly string[] = [],
-  listeners: Map<string, {
-    cb: (newVal: any, oldValue: any) => void,
-    deep: boolean,
-    propId: string
-  }>
+  listeners: Listeners
 ): typeof obj {
+  if ( obj === null || (typeof obj !== "object" && typeof obj !== "function") ) {
+    throwError(`can't reactive value typeof "${typeof obj}"`)
+  }
+   
   if (weakCache.has(obj)) {
     return weakCache.get(obj);
   }
@@ -34,15 +53,15 @@ function toProxy(
         
         const propId = [...path, p.toString()].join(".")
         
-        listeners.forEach((listener) => {
+        listeners.forEach((cbs, key) => {
           if ( listener.deep ) {
             //
-            if ( propId.startsWith(`${listener.propId}.`) ) {
-              listener.cb(value, oldValue)
+            if ( propId.startsWith(`${key}.`) ) {
+              listener.cbs.forEach(cb => cb(value, oldValue))
             }
           }
-          if ( propId === listener.propId ) {
-            listener.cb(value, oldValue)
+          if ( propId === key ) {
+            listener.cbs.forEach(cb => (value, oldValue))
           }
         })
       }
@@ -60,15 +79,15 @@ function toProxy(
         
         const propId = [...path, p.toString()].join(".")
         
-        listeners.forEach((listener) => {
+        listeners.forEach((listener, key) => {
           if ( listener.deep ) {
             //
-            if ( propId.startsWith(`${listener.propId}.`) ) {
-              listener.cb(void 0, oldValue)
+            if ( propId.startsWith(`${key}.`) ) {
+              listener.cbs.forEach(cb => cb(void 0, oldValue))
             }
           }
-          if ( propId === listener.propId ) {
-            listener.cb(void 0, oldValue)
+          if ( propId === key ) {
+            listener.cbs.forEach(cb => cb(void 0, oldValue))
           }
         })
 
@@ -83,10 +102,27 @@ function toProxy(
 
   return proxy;
 }
-
-function ref<T = any>(value: T): Ref<T> {
+function createProxy<T>(obj: T): T {
+  const listeners = new Map()
+  const proxy = toProxy(obj, [], listeners)
   
+  // save to cache
+  if ( listenersCache.has(proxy) ) {
+    // merge
+    listenersCache.set(proxy, mergeListeners(listenersCache.get(proxy), listeners))
+  } else {
+    listenersCache.set(proxy, listeners)
+  }
+  
+  return proxy
 }
+
+function reactive<T = object|any[]>(value: T): T {
+  const listeners = new Map();
+  
+  return toProxy(value, [], listeners)
+}
+function watch()
 
 export function createStore<T = any>(obj: T) {
   const emitter = mitt<{
