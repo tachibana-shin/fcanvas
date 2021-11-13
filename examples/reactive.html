@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+  </head>
+
+  <body>
+    <script type="module">
+      import { ref, reactive, readonly, shallowReadonly, watch } from "./dist/fcanvas.esm.js";
+
+      self.a = ref(100);
+      watch(a, (val) => console.log("value changed", val), {
+        deep: true
+      });
+      self.watch = watch;
+      self.reactive = reactive;
+      self.readonly = readonly
+      self.shallowReadonly = shallowReadonly
+    </script>
+  </body>
+</html>

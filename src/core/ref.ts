@@ -5,52 +5,42 @@ import { throwError } from "../helpers/throw";
 type Listeners = Map<
   string,
   // eslint-disable-next-line functional/prefer-readonly-type
-  ((newVal: any, oldValue: any) => void)[]
+  Set<(newVal: any, oldValue: any) => void>
 >;
+export class Ref<T = any> {
+  // eslint-disable-next-line functional/prefer-readonly-type
+  value: T;
+  constructor(value: T) {
+    this.value = value;
+  }
+}
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type Reactive<T = object> = T;
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 const weakCache = new WeakMap<Object, any>();
 const listenersCache = new WeakMap<
-  typeof Proxy,
+  Ref | Reactive,
   readonly [Listeners, Listeners]
 >();
-
-function mergeListeners(
-  listenerRoot: Listeners,
-  // eslint-disable-next-line functional/functional-parameters
-  ...listListeners: readonly Listeners[]
-): Listeners {
-  listListeners.forEach((listeners) => {
-    // merge
-    listeners.forEach((cbs, key) => {
-      if (listenerRoot.has(key)) {
-        // eslint-disable-next-line functional/immutable-data
-        listenerRoot.get(key)?.push(...cbs);
-      } else {
-        listenerRoot.set(key, cbs);
-      }
-    });
-  });
-
-  return listenerRoot;
-}
-function getValueOfPath(rootValue: any, path: string): any {
-  return path.split(".").reduce((prev, prop) => {
-    return prev[prop];
-  }, rootValue);
-}
 
 function toProxy(
   obj: any,
   path: readonly string[] = [],
-  [listenersDeep, listenersNoDeep]: readonly [Listeners, Listeners],
-  rootValue: any,
+  rootObj: any,
+  isCreateRef: boolean,
   readonly: boolean,
   shallow: boolean
 ): typeof obj {
-  if ( typeof obj !== "function" ) {
-    return obj
+  if (isCreateRef) {
+    obj = new Ref(obj);
+    rootObj = obj;
   }
-  if (obj === null || (typeof obj !== "object")) {
+
+  if (typeof obj === "function") {
+    return obj;
+  }
+  if (obj === null || typeof obj !== "object") {
     // eslint-disable-next-line functional/no-throw-statement
     throw throwError(`can't reactive value typeof "${typeof obj}"`);
   }
@@ -61,25 +51,41 @@ function toProxy(
 
   function setter(p: string, value: any, oldValue: any) {
     // call watch
+    const listeners = listenersCache.get(weakCache.get(obj));
 
     const propId = [...path, p.toString()].join(".");
-    // no scan listenersNoDeep because use regular absolute
-    listenersNoDeep.get(propId)?.forEach((cb) => {
-      cb(value, oldValue);
-    });
-    listenersDeep.get(propId)?.forEach((cb) => {
-      cb(value, oldValue);
-    });
-    // scan listenersDeep because use regular relative
-    listenersDeep.forEach((cbs, key) => {
-      if (propId.startsWith(`${key}.`)) {
-        // call...
-        const value = getValueOfPath(rootValue, key);
-        cbs.forEach((cb) => {
-          cb(value, value);
-        });
-      }
-    });
+
+    if (listeners) {
+      const [listenersDeep, listenersNoDeep] = listeners;
+      // no scan listenersNoDeep because use regular absolute
+      listenersNoDeep.get(propId)?.forEach((cb) => {
+        cb(value, oldValue);
+      });
+
+      listenersDeep.get(propId)?.forEach((cb) => {
+        cb(value, oldValue);
+      });
+      // scan listenersDeep because use regular relative
+
+      listenersDeep.forEach((cbs, key) => {
+        // get value;
+
+        const val = weakCache.get(obj);
+        const valueByKey =
+          key
+            .split(".")
+            .reduce((prev, prop) => prev[prop], isRef(val) ? val.value : val) ||
+          (isRef(val) ? val.value : val);
+
+        if (key === "" || propId.startsWith(`${key}.`)) {
+          // call...
+          // const value = getValueOfPath(rootValue, key);
+          cbs.forEach((cb) => {
+            cb(valueByKey, valueByKey);
+          });
+        }
+      });
+    }
   }
 
   const proxy = new Proxy(obj, {
@@ -88,20 +94,34 @@ function toProxy(
         return toProxy(
           target[p],
           [...path, p.toString()],
-          [listenersDeep, listenersNoDeep],
-          rootValue
+          rootObj,
+          false,
+          readonly && !shallow,
+          shallow
         );
       }
 
       return target[p];
     },
     set(target, p, value) {
+      if (isCreateRef && p !== "value") {
+        return false;
+      }
+
+      if (readonly) {
+        // eslint-disable-next-line functional/no-throw-statement
+        throw throwError(
+          `cant't set prop "${path
+            .concat(p.toString())
+            .join(".")}" because this is ${shallow ? "shallow " : ""}readonly`
+        );
+      }
+
       const oldValue = target[p];
 
       if (oldValue !== value) {
         // eslint-disable-next-line functional/immutable-data
         target[p] = value;
-
         setter(p.toString(), value, oldValue);
       }
 
@@ -113,7 +133,12 @@ function toProxy(
         const oldValue = target[p];
         // eslint-disable-next-line functional/immutable-data
         if (delete target[p] === false) {
-          throwError(`cant't delete "${p.toString()}" because unknown error.`);
+          // eslint-disable-next-line functional/no-throw-statement
+          throw throwError(
+            `cant't delete "${path
+              .concat(p.toString())
+              .join(".")}" because unknown error.`
+          );
         }
 
         setter(p.toString(), undefined, oldValue);
@@ -128,88 +153,83 @@ function toProxy(
 
   return proxy;
 }
-function createProxy<T>(obj: T): T {
-  const listeners: readonly [Listeners, Listeners] = [new Map(), new Map()];
-  const proxy = toProxy(obj, [], listeners, obj);
-
-  // save to cache
-  if (listenersCache.has(proxy)) {
-    // merge listenersDeep
-    mergeListeners(listenersCache.get(proxy)?.[0] as Listeners, listeners[0]);
-    mergeListeners(listenersCache.get(proxy)?.[1] as Listeners, listeners[1]);
-  } else {
-    listenersCache.set(proxy, listeners);
-  }
+function createProxy<T>(
+  obj: T,
+  isRef = false,
+  readonly = false,
+  shallow = false
+): T {
+  const proxy = toProxy(obj, [], obj, isRef, readonly, shallow);
 
   return proxy;
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function reactive<T = object | readonly any[]>(value: T): T {
-  return createProxy(value);
+export function ref<T = object>(value: T): Ref<T> {
+  return createProxy(value, true) as any;
 }
-export function watch<T>(obj: Ref<T>, cb: (newValue: T, oldValue: T) => void, options?: {
-  deep?: boolean
-  immediate?: boolean
-}) : () => void {
-  if ( options?.immediate ) {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function reactive<T = object>(value: T): Reactive<T> {
+  return createProxy(value) as any;
+}
+export function isRef(value: any): value is Ref {
+  return value instanceof Ref;
+}
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function readonly<T = object>(value: T): Ref<T> {
+  return createProxy(value, false, true) as any;
+}
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function shallowReadonly<T = object>(value: T): Ref<T> {
+  return createProxy(value, false, true, true) as any;
+}
+export function watch<T = any>(
+  proxy: Ref<T> | Reactive<T>,
+  cb: (newValue: T, oldValue: T) => void,
+  options?: {
+    readonly deep?: boolean;
+    readonly immediate?: boolean;
+  }
+): () => void {
+  if (options?.immediate) {
     // get val
-    return cb(obj.value, obj.value)
-  }
-  // get listeners haha;;
-  const listeners = listenersCache.get(obj)
-  
-  if ( listeners ) {
-    if ( options?.deep ) {
-      // add to listenersDeep
-      listeners[0].push(cb)
-      return () => listeners[0].splice(listeners[0].indexOf(cb), 1)
+    if (isRef(proxy)) {
+      cb(proxy.value, proxy.value);
+    } else {
+      cb(proxy, proxy);
     }
-    
-    listeners[1].push(cb)
-    return () => listeners[1].splice(listeners[1].indexOf(cb), 1)
-  } else {
-    warn(`value not is proxy ref`)
   }
+
+  // save to cache
+  if (listenersCache.has(proxy as any) === false) {
+    listenersCache.set(proxy as any, [new Map(), new Map()]);
+  }
+
+  const listeners = listenersCache.get(proxy as any);
+
+  if (listeners) {
+    if (options?.deep) {
+      // add to listenersDeep
+
+      if (listeners[0].has("") === false) {
+        listeners[0].set("", new Set());
+      }
+
+      listeners[0].get("")?.add(cb);
+      return () => listeners[0].get("")?.delete(cb);
+    }
+    if (isRef(proxy)) {
+      if (listeners[1].has("value") === false) {
+        listeners[1].set("value", new Set());
+      }
+
+      listeners[1].get("value")?.add(cb);
+      return () => listeners[1].get("value")?.delete(cb);
+    } else {
+      return () => void 0;
+    }
+  }
+
+  // eslint-disable-next-line functional/no-throw-statement
+  throw throwError("value not is proxy ref");
 }
-
-// export function createStore<T = any>(obj: T) {
-//   const emitter = {}
-//   return {
-//     watch<N = any, O = N>(
-//       path: string,
-//       cb: (newValue: N, oldValue: O) => void,
-//       {
-//         immediate = false,
-//         deep = false,
-//       }: {
-//         readonly immediate?: boolean;
-//         readonly deep?: boolean;
-//       } = {}
-//     ) {
-//       const handler = ([pathEmit, newValue, oldValue]: readonly [
-//         readonly string[],
-//         any,
-//         any
-//       ]) => {
-//         if (
-//           path === pathEmit.join(".") ||
-//           (deep ? pathEmit.join(".").startsWith(`${path}.`) : false)
-//         ) {
-//           // emit
-//           cb(newValue, oldValue);
-//         }
-//       };
-
-//       if (immediate) {
-//         const val = path.split(".").reduce((obj: any, p) => obj[p], obj);
-//         cb(val, val);
-//       }
-
-//       emitter.on("*", handler);
-
-//       return () => emitter.off("*", handler);
-//     },
-//     value: toProxy(obj, [], emitter) as T,
-//   };
-// }
