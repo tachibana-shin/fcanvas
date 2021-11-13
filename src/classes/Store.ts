@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mitt, { Emitter } from "mitt";
+
 import { throwError } from "../helpers/throw"
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -45,7 +46,8 @@ function toProxy(
         const oldValue = target[p];
         // eslint-disable-next-line functional/immutable-data
         if (delete target[p] === false) {
-          throwError(`cant't delete "${p}" because unknown error.`);
+          // eslint-disable-next-line functional/no-throw-statement
+          throw throwError(`cant't delete "${p.toString()}" because unknown error.`);
         }
         emitter.emit("*", [
           [...path, p].map((e) => e.toString()),

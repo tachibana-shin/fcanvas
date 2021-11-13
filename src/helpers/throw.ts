@@ -1,3 +1,3 @@
-export function throwError(msg: string): void {
-  throw new Error(msg)
+export function throwError(msg: string) {
+  return new Error(`[fcanvas]: ${msg}`);
 }

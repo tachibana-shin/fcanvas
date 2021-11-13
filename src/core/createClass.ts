@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import mitt from "mitt";
 
+import { error } from "../helpers/log";
 import { noop } from "../types";
 
 import { CanvasElement } from "./CanvasElement";
-import { warn } from "../helpers/log"
 
 type ComponentRenderProxy<
   P = {}, // props type extracted from props option

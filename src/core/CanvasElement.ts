@@ -1,10 +1,9 @@
 import { map } from "..";
+import { throwError } from "../helpers/throw";
 import type { noop, ReadonlyOffset } from "../types/index";
 import { AutoToPx } from "../utils/index";
 
 import fCanvas, { DirectionPattern, ParamsToRgb } from "./fCanvas";
-
-import { throwError } from "../helpers/throw"
 
 type LineJoin = "bevel" | "round" | "miter";
 type LineCap = "butt" | "round" | "square";
@@ -86,7 +85,7 @@ export abstract class CanvasElement {
       return this.canvasInstance;
     } else {
       // eslint-disable-next-line functional/no-throw-statement
-      throwError(
+      throw throwError(
         "the current referenced version of the fCanvas.run function is incorrect."
       );
     }

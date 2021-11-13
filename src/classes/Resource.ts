@@ -3,10 +3,9 @@ import { parse } from "plist/lib/parse.js";
 
 import cutImage from "../functions/cutImage";
 import loadImage from "../functions/loadImage";
+import { throwError } from "../helpers/throw";
 import type { ReadonlyOffset, ReadonlySize } from "../types";
 import { trim } from "../utils/index";
-
-import { throwError } from "../helpers/throw"
 
 type CanvasImageResource = HTMLCanvasElement & {
   readonly sourceSize: ReadonlySize;
@@ -41,7 +40,8 @@ function passValueOfPlistToJSON<T = number>(value: string): readonly T[] {
     return new Function(`return ${value}`)();
   }
 
-  throwError(`resource "${value}" a malformed field`);
+  // eslint-disable-next-line functional/no-throw-statement
+  throw throwError(`resource "${value}" a malformed field`);
 }
 
 export class Resource {
@@ -100,7 +100,8 @@ export class Resource {
 
       return this.cache.get(name) as CanvasImageResource;
     } else {
-      throwError(
+      // eslint-disable-next-line functional/no-throw-statement
+      throw throwError(
         `does not exist this file "${name}" in declaration plist`
       );
     }

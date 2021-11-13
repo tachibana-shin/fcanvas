@@ -1,4 +1,5 @@
-import {OneTimeEvent} from "../classes/OneTimeEvent";
+import { OneTimeEvent } from "../classes/OneTimeEvent";
+import { error, warn } from "../helpers/log";
 import type { MouseOffset, noop, ReadonlyOffset } from "../types/index";
 import {
   AutoToPx,
@@ -14,8 +15,6 @@ import {
 } from "../utils/index";
 
 import { draw, setup } from "./SystemEvents";
-
-import { warn, error } from "../helpers/log"
 
 type AngleType = "degress" | "radial";
 export type AlignType = "left" | "center" | "right";
@@ -138,9 +137,7 @@ export default class fCanvas {
         if (el instanceof HTMLCanvasElement) {
           this._el = el;
         } else {
-          warn(
-            `"${element}" is not instanceof HTMLCanvasElement.`
-          );
+          warn(`"${element}" is not instanceof HTMLCanvasElement.`);
           this._el = document.createElement("canvas");
         }
       }

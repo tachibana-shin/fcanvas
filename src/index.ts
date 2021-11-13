@@ -1,10 +1,5 @@
 export { default } from "./core/fCanvas";
-export {
-  CanvasElement,
-  Point3D,
-  Point3DCenter,
-  getCanvasInstance,
-} from "./core/CanvasElement";
+export { CanvasElement, getCanvasInstance } from "./core/CanvasElement";
 export { createClass } from "./core/createClass";
 
 export { createAnimate } from "./classes/Animate";

@@ -19,7 +19,7 @@ function range(start: any, stop: any, step: number): any {
 
   if (start !== stop && Math.abs(stop - start) < Math.abs(step))
     // eslint-disable-next-line functional/no-throw-statement
-    throwError("range(): step exceeds the specified range.");
+    throw throwError("range(): step exceeds the specified range.");
 
   if (stop > start) {
     step < 0 && (step *= -1);

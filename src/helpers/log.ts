@@ -1,5 +1,6 @@
-export function warn(msg: string) {
-  console.warn(`[fcanvas]: ${msg}`);
+// eslint-disable-next-line functional/functional-parameters
+export function warn(...msg: readonly string[]) {
+  console.warn(`[fcanvas]: ${msg.join(" ")}`);
 }
 
 export function error(msg: string) {
@@ -8,4 +9,4 @@ export function error(msg: string) {
 
 export function log(msg: string) {
   console.log(`[fcanvas]: ${msg}`);
-} 
+}
