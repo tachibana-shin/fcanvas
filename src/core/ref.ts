@@ -43,9 +43,14 @@ function toProxy(
   obj: any,
   path: readonly string[] = [],
   [listenersDeep, listenersNoDeep]: readonly [Listeners, Listeners],
-  rootValue: any
+  rootValue: any,
+  readonly: boolean,
+  shallow: boolean
 ): typeof obj {
-  if (obj === null || (typeof obj !== "object" && typeof obj !== "function")) {
+  if ( typeof obj !== "function" ) {
+    return obj
+  }
+  if (obj === null || (typeof obj !== "object")) {
     // eslint-disable-next-line functional/no-throw-statement
     throw throwError(`can't reactive value typeof "${typeof obj}"`);
   }
@@ -142,6 +147,30 @@ function createProxy<T>(obj: T): T {
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function reactive<T = object | readonly any[]>(value: T): T {
   return createProxy(value);
+}
+export function watch<T>(obj: Ref<T>, cb: (newValue: T, oldValue: T) => void, options?: {
+  deep?: boolean
+  immediate?: boolean
+}) : () => void {
+  if ( options?.immediate ) {
+    // get val
+    return cb(obj.value, obj.value)
+  }
+  // get listeners haha;;
+  const listeners = listenersCache.get(obj)
+  
+  if ( listeners ) {
+    if ( options?.deep ) {
+      // add to listenersDeep
+      listeners[0].push(cb)
+      return () => listeners[0].splice(listeners[0].indexOf(cb), 1)
+    }
+    
+    listeners[1].push(cb)
+    return () => listeners[1].splice(listeners[1].indexOf(cb), 1)
+  } else {
+    warn(`value not is proxy ref`)
+  }
 }
 
 // export function createStore<T = any>(obj: T) {
