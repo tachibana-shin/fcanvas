@@ -1,4 +1,5 @@
-import { CanvasElement, getCanvasInstance } from "../core/CanvasElement";
+import { CanvasElement } from "../core/CanvasElement";
+import { getCanvasInstance } from "../core/fCanvas";
 
 function existsCbFilter(
   pr: CanvasElement & {

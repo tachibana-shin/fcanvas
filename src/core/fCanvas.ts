@@ -51,6 +51,18 @@ type HightTransform = {
   sumY: number;
 };
 
+// eslint-disable-next-line functional/no-let
+let canvasInstance: fCanvas | null = null;
+export function setCanvasInstance(canvas: fCanvas | null): void {
+  canvasInstance = canvas;
+}
+export function unsetCanvasInstance(): void {
+  canvasInstance = null;
+}
+export function getCanvasInstance(): fCanvas | null {
+  return canvasInstance;
+}
+
 export default class fCanvas {
   // eslint-disable-next-line functional/prefer-readonly-type
   private _el: HTMLCanvasElement;

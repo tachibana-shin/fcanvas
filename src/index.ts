@@ -1,5 +1,5 @@
-export { default } from "./core/fCanvas";
-export { CanvasElement, getCanvasInstance } from "./core/CanvasElement";
+export { default, getCanvasInstance } from "./core/fCanvas";
+export { CanvasElement } from "./core/CanvasElement";
 export { createClass } from "./core/createClass";
 
 export { createAnimate } from "./classes/Animate";

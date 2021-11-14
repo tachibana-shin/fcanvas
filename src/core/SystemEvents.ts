@@ -3,8 +3,7 @@ import mitt from "mitt";
 import type { noop } from "../types/index";
 import { bindEvent, requestAnimationFrame } from "../utils/index";
 
-import { setCanvasInstance, unsetCanvasInstance } from "./CanvasElement";
-import fCanvas from "./fCanvas";
+import fCanvas, { setCanvasInstance, unsetCanvasInstance } from "./fCanvas";
 
 // eslint-disable-next-line functional/no-let
 let initd = false;

@@ -3,22 +3,14 @@ import { throwError } from "../helpers/throw";
 import type { noop, ReadonlyOffset } from "../types/index";
 import { AutoToPx } from "../utils/index";
 
-import fCanvas, { DirectionPattern, ParamsToRgb } from "./fCanvas";
+import fCanvas, {
+  DirectionPattern,
+  getCanvasInstance,
+  ParamsToRgb,
+} from "./fCanvas";
 
 type LineJoin = "bevel" | "round" | "miter";
 type LineCap = "butt" | "round" | "square";
-
-// eslint-disable-next-line functional/no-let
-let canvasInstance: fCanvas | null = null;
-export function setCanvasInstance(canvas: fCanvas | null): void {
-  canvasInstance = canvas;
-}
-export function unsetCanvasInstance(): void {
-  canvasInstance = null;
-}
-export function getCanvasInstance(): fCanvas | null {
-  return canvasInstance;
-}
 
 function existsCbDraw(
   el: CanvasElement & {
