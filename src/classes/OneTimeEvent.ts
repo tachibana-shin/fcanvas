@@ -1,4 +1,4 @@
-import { createStore } from "./Store";
+import { reactive, watch } from "../core/reactive";
 
 export class OneTimeEvent<
   States extends {
@@ -7,21 +7,23 @@ export class OneTimeEvent<
 > {
   private readonly store;
   constructor(obj: States) {
-    this.store = createStore<States>(obj);
+    this.store = reactive(obj)
   }
 
   on(name: keyof States, callback: () => void): void {
-    if (this.store.value[name]) {
+    if (this.store[name]) {
       callback();
     } else {
-      const watcher = this.store.watch(name as string, () => {
+      const watcher = watch(this.store, () => {
         callback();
         watcher();
+      }, {
+        path: name
       });
     }
   }
   emit(name: keyof States): void {
-    (this.store.value[name] as boolean) = true;
+    (this.store[name] as boolean) = true;
   }
 }
 

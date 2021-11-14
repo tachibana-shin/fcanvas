@@ -284,18 +284,17 @@ export function watch<T = any>(
       listeners[0].get(id)?.add(cb);
       return () => listeners[0].get(id)?.delete(cb);
     }
-    if (isRef(proxy)) {
-      const id = "value" + (options?.path ? "." + options.path : "")
+    
+      const id = [...(isRef(proxy) ? ["value"] : []) , ...(options?.path ? [options.path] : [])].join(".")
       
+      if ( id !== "") {
       if (listeners[1].has(id) === false) {
         listeners[1].set(id, new Set());
       }
 
       listeners[1].get(id)?.add(cb);
       return () => listeners[1].get(id)?.delete(cb);
-    } else {
-      return () => void 0;
-    }
+      }
   }
 
   // eslint-disable-next-line functional/no-throw-statement
