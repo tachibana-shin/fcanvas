@@ -1,7 +1,7 @@
 import { map } from "..";
 import { throwError } from "../helpers/throw";
 import type { noop, ReadonlyOffset } from "../types/index";
-import { AutoToPx } from "../utils/index";
+import convertValueToPixel from "../utils/convertValueToPixel";
 
 import fCanvas, {
   DirectionPattern,
@@ -526,10 +526,10 @@ export abstract class CanvasElement {
 
     const fontSize = this.fcanvas.fontSize();
     const arc = [
-      AutoToPx(radiusTopLeft || 0, w, fontSize),
-      AutoToPx(radiusTopRight || 0, h, fontSize),
-      AutoToPx(radiusBottomRight || 0, w, fontSize),
-      AutoToPx(radiusBottomLeft || 0, h, fontSize),
+      convertValueToPixel(radiusTopLeft || 0, fontSize),
+      convertValueToPixel(radiusTopRight || 0, fontSize),
+      convertValueToPixel(radiusBottomRight || 0, fontSize),
+      convertValueToPixel(radiusBottomLeft || 0, fontSize),
     ];
     this.move(x, y);
     this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);

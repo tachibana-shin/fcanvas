@@ -13,8 +13,8 @@ export { createVector, Vector } from "./classes/Vector";
 export {
   requestAnimationFrame,
   cancelAnimationFrame,
-  isMobile,
-  isTouch,
-} from "./utils/index";
+} from "./utils/aimationFrame";
 export * from "./functions/index";
 export * from "./core/SystemEvents";
+export { default as isMobile } from "./utils/isMobile"
+export { default as isTouch } from "./utils/isTouch"

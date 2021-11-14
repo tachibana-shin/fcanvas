@@ -1,18 +1,21 @@
 import { OneTimeEvent } from "../classes/OneTimeEvent";
 import { error, warn } from "../helpers/log";
 import type { MouseOffset, noop, ReadonlyOffset } from "../types/index";
-import {
-  AutoToPx,
-  bindEvent,
-  cancelAnimationFrame,
-  fontToArray,
-  generateUUID,
-  getTouchInfo,
-  isMobile,
+import bindEvent, {
+  
   ListEvents,
-  passive,
-  windowSize,
-} from "../utils/index";
+  
+  
+} from "../utils/bindEvent";
+import convertValueToPixel from "../utils/convertValueToPixel"
+import getInfoFont from "../utils/getInfoFont"
+import getTouchInfo from "../utils/getTouchInfo"
+import isMobile from "../utils/isMobile"
+import generateUUID from "../utils/generateUUID"
+import { cancelAnimationFrame } from "../utils/animationFrame"
+import isSupportPassive from "../utils/isSupportPassive"
+import windowSize from "../utils/"
+
 
 import { draw, setup } from "./SystemEvents";
 
@@ -251,7 +254,7 @@ export default class fCanvas {
     el.addEventListener(
       isMobile() ? "touchstart" : "mouseover",
       this._handlerEvent,
-      passive
+      isSupportPassive
         ? {
             passive: true,
           }
@@ -260,7 +263,7 @@ export default class fCanvas {
     el.addEventListener(
       isMobile() ? "touchmove" : "mousemove",
       this._handlerEvent,
-      passive
+      isSupportPassive
         ? {
             passive: true,
           }
@@ -269,7 +272,7 @@ export default class fCanvas {
     el.addEventListener(
       isMobile() ? "touchend" : "mouseout",
       this._handlerEvent,
-      passive
+      isSupportPassive
         ? {
             passive: true,
           }
@@ -514,19 +517,19 @@ export default class fCanvas {
   fontSize(): number;
   fontSize(size: number): void;
   fontSize(value?: number): number | void {
-    const { size, weight, family } = fontToArray(this.font());
+    const { size, weight, family } = getInfoFont(this.font());
 
     if (value === undefined) {
       return size;
     } else {
-      value = AutoToPx(value, size, size) || 16;
+      value = convertValueToPixel(value, size);
       this.font([weight, `${value}px`, family].join(" "));
     }
   }
   fontFamily(): string;
   fontFamily(font: string): void;
   fontFamily(value?: string): string | void {
-    const { size, weight, family } = fontToArray(this.font());
+    const { size, weight, family } = getInfoFont(this.font());
 
     if (value === undefined) {
       return family;
@@ -537,7 +540,7 @@ export default class fCanvas {
   fontWeight(): string;
   fontWeight(weight: string): void;
   fontWeight(value?: string): string | void {
-    const { size, weight, family } = fontToArray(this.font());
+    const { size, weight, family } = getInfoFont(this.font());
 
     if (value === undefined) {
       return weight;

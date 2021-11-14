@@ -5,7 +5,7 @@ import cutImage from "../functions/cutImage";
 import loadImage from "../functions/loadImage";
 import { throwError } from "../helpers/throw";
 import type { ReadonlyOffset, ReadonlySize } from "../types";
-import { trim } from "../utils/index";
+import trim from "../utils/trim";
 
 type CanvasImageResource = HTMLCanvasElement & {
   readonly sourceSize: ReadonlySize;
