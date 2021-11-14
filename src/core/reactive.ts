@@ -1,52 +1,56 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { warn } from "../helpers/log";
 import { throwError } from "../helpers/throw";
 
 // eslint-disable-next-line functional/prefer-readonly-type
-type Listeners = Map <
+type Listeners = Map<
   string,
   // eslint-disable-next-line functional/prefer-readonly-type
-  Set < (newVal: any, oldValue: any) => void >
-  >
-;
-export class Ref < T = any > {
-  // eslint-disable-next-line functional/prefer-readonly-type
+  Set<(newVal: any, oldValue: any) => void>
+>;
+type SetterGetter<T = any> = {
+  readonly get: () => T;
+  readonly set?: (value: T) => void;
+};
+
+export class Ref<T = any> {
   readonly value: T;
   constructor(value: T) {
     this.value = value;
   }
 }
 
-export class ComputedRef < T=any > {
-  
-  constructor(private getter: () => T, private setter?:(value: T) => void) {
-    this.getter = getter
-    this.setter = setter
-  }
+export class ComputedRef<T = any> {
+  constructor(
+    private readonly getter: () => T,
+    private readonly setter?: (value: T) => void
+  ) {
+    this.getter = getter;
+    this.setter = setter;
   }
 
   get value(): T {
-    const value = this.getter()
-    
-    return value
+    const value = this.getter();
+
+    return value;
   }
-  set value(value: T): void {
+  set value(value: T) {
     if (this.setter) {
-      this.setter(value)
+      this.setter(value);
     } else {
-      warn(`can't set value because this computed not exists setter`)
+      warn("can't set value because this computed not exists setter");
     }
   }
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type Reactive < T = object > = T;
+export type Reactive<T = object> = T;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-const weakCache = new WeakMap < Object,
-  any > ();
-const listenersCache = new WeakMap <
-  Ref | Reactive ,
-  readonly[Listeners, Listeners] >
-  ();
+const weakCache = new WeakMap<Object, any>();
+const listenersCache = new WeakMap<
+  Ref | Reactive,
+  readonly [Listeners, Listeners]
+>();
 
 function toProxy(
   obj: any,
@@ -97,8 +101,8 @@ function toProxy(
         const val = weakCache.get(obj);
         const valueByKey =
           key
-          .split(".")
-          .reduce((prev, prop) => prev[prop], isRef(val) ? val.value : val) ||
+            .split(".")
+            .reduce((prev, prop) => prev[prop], isRef(val) ? val.value : val) ||
           (isRef(val) ? val.value : val);
 
         if (key === "" || propId.startsWith(`${key}.`)) {
@@ -165,9 +169,9 @@ function toProxy(
           );
         }
 
-if ( oldValue !== undefined ) {
-        setter(p.toString(), undefined, oldValue);
-}
+        if (oldValue !== undefined) {
+          setter(p.toString(), undefined, oldValue);
+        }
         return true;
       } catch {
         return false;
@@ -180,7 +184,7 @@ if ( oldValue !== undefined ) {
   return proxy;
 }
 
-function createProxy < T > (
+function createProxy<T>(
   obj: T,
   isRef = false,
   readonly = false,
@@ -191,31 +195,34 @@ function createProxy < T > (
   return proxy;
 }
 
+function isSetterGetter(options: any): options is SetterGetter {
+  return typeof options === "object" && "get" in options;
+}
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function ref < T = object > (value: T): Ref < T > {
+export function ref<T = object>(value: T): Ref<T> {
   return createProxy(value, true) as any;
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function reactive < T = object > (value: T): Reactive < T > {
+export function reactive<T = object>(value: T): Reactive<T> {
   return createProxy(value) as any;
 }
 export function isRef(value: any): value is Ref {
   return value instanceof Ref;
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function readonly < T = object > (value: T): Ref < T > {
+export function readonly<T = object>(value: T): Ref<T> {
   return createProxy(value, false, true) as any;
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function shallowReadonly < T = object > (value: T): Ref < T > {
+export function shallowReadonly<T = object>(value: T): Ref<T> {
   return createProxy(value, false, true, true) as any;
 }
-export function watch < T = any > (
-  proxy: Ref < T > | Reactive < T > ,
+export function watch<T = any>(
+  proxy: Ref<T> | Reactive<T>,
   cb: (newValue: T, oldValue: T) => void,
-  options?:{
-    readonly deep?:boolean;
-    readonly immediate?:boolean;
+  options?: {
+    readonly deep?: boolean;
+    readonly immediate?: boolean;
   }
 ): () => void {
   if (options?.immediate) {
@@ -260,21 +267,12 @@ export function watch < T = any > (
   // eslint-disable-next-line functional/no-throw-statement
   throw throwError("value not is proxy ref");
 }
-
-type SetterGetter = {
-  get: () => T,
-  set?:(value: T) => void
-}
-
-function isSetterGetter(options: any): options is SetterGetter {
-  return typeof options === "object" && ("get" in options)
-}
-export function computed < T = any> (options: SetterGetter["get"] | SetterGetter): ComputedRef < T > {
-  if (isComputedOptions(options) === false) {
-    options = {
-      get: options
-    }
+export function computed<T = any>(
+  options: SetterGetter["get"] | SetterGetter
+): ComputedRef<T> {
+  if (isSetterGetter(options)) {
+    return new ComputedRef(options.get, options.set);
   }
 
-  return new ComputedRef(options.get, options.set)
+  return new ComputedRef(options);
 }
