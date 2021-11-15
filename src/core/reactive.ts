@@ -285,9 +285,8 @@ export function watch<T = any>(
     listenersCache.set(proxy as any, [new Map(), new Map()]);
   }
 
-  const listeners = listenersCache.get(proxy as any);
+  const listeners = listenersCache.get(proxy as any)!;
 
-  if (listeners) {
     if (options?.deep) {
       const id = options?.path || "";
       // add to listenersDeep
@@ -313,7 +312,6 @@ export function watch<T = any>(
       listeners[1].get(id)?.add(cb);
       return () => listeners[1].get(id)?.delete(cb);
     }
-  }
 
   // eslint-disable-next-line functional/no-throw-statement
   throw throwError("value not is proxy ref");
