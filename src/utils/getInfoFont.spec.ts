@@ -5,14 +5,14 @@ describe("getInfoFont test", () => {
     expect(getInfoFont("12px Arial")).toEqual({
       font: 12,
       family: "Arial",
-      weight: "normal"
+      weight: "normal",
     });
   });
   test("12px 900 Arial", () => {
     expect(getInfoFont("12px Arial")).toEqual({
       font: 12,
       family: "Arial",
-      weight: "900"
+      weight: "900",
     });
   });
 });

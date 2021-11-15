@@ -1,4 +1,3 @@
-
 // eslint-disable-next-line functional/no-let
 let supportPassive = false;
 

@@ -1,7 +1,8 @@
 import { map } from "..";
 import { throwError } from "../helpers/throw";
-import type { noop, ReadonlyOffset } from "../types/index";
+import type { noop } from "../types/index";
 import convertValueToPixel from "../utils/convertValueToPixel";
+import { ReadonlyOffset } from "../utils/getTouchInfo";
 
 import fCanvas, {
   DirectionPattern,

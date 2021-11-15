@@ -1,4 +1,3 @@
-
 export type ListEvents = {
   readonly [name: string]: Event;
 } & {

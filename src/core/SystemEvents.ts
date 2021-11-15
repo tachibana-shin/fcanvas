@@ -1,9 +1,8 @@
 import mitt from "mitt";
 
 import type { noop } from "../types/index";
+import { requestAnimationFrame } from "../utils/animationFrame";
 import bindEvent from "../utils/bindEvent";
-
-import { requestAnimationFrame } from "../utils/animationFrame"
 
 import fCanvas, { setCanvasInstance, unsetCanvasInstance } from "./fCanvas";
 

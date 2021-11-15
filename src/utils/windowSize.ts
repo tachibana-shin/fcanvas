@@ -1,4 +1,4 @@
- const windowSize: {
+const windowSize: {
   readonly windowWidth: {
     // eslint-disable-next-line functional/no-method-signature
     get(): number;
@@ -22,4 +22,4 @@
   },
 };
 
-export default windowSize
+export default windowSize;

@@ -1,5 +1,6 @@
 import type { CanvasElement } from "../core/CanvasElement";
-import type { ReadonlyOffset, ReadonlySize } from "../types/index";
+import type { ReadonlySize } from "../types/index";
+import type { ReadonlyOffset } from "../utils/getTouchInfo";
 
 type ReturnInterfering = {
   readonly direction: number;

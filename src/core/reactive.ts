@@ -57,9 +57,9 @@ function toProxy(
   path: readonly string[] = [],
   rootObj: any,
   isCreateRef: boolean,
-  readonly: 0|1|2 ,// 0: turn off, 1: shallow readonly, 2: readonly
+  readonly: 0 | 1 | 2, // 0: turn off, 1: shallow readonly, 2: readonly
   shallowReactive: boolean,
-  limitWrite: number = -1
+  limitWrite = -1
 ): typeof obj {
   if (isCreateRef) {
     obj = new Ref(obj);
@@ -125,7 +125,7 @@ function toProxy(
           [...path, p.toString()],
           rootObj,
           false,
-          limitWrite === 0 ? 2 : (readonly === 1 ? 0 : readonly),
+          limitWrite === 0 ? 2 : readonly === 1 ? 0 : readonly,
           shallowReactive
         );
       }
@@ -133,13 +133,15 @@ function toProxy(
       return target[p];
     },
     set(target, p, value) {
-      if ( limitWrite > -1 ) {
-        if ( limitWrite === 0 ) {
-          warn(`can't set new value to "${p}" because limited write`)
-          
-          return false
+      if (limitWrite > -1) {
+        if (limitWrite === 0) {
+          warn(
+            `can't set new value to "${p.toString()}" because limited write`
+          );
+
+          return false;
         } else {
-          limitWrite--
+          limitWrite--;
         }
       }
       if (isCreateRef && p !== "value") {
@@ -151,7 +153,9 @@ function toProxy(
         throw throwError(
           `cant't set prop "${path
             .concat(p.toString())
-            .join(".")}" because this is ${readonly === 1 ? "shallow " : ""}readonly`
+            .join(".")}" because this is ${
+            readonly === 1 ? "shallow " : ""
+          }readonly`
         );
       }
 
@@ -166,16 +170,18 @@ function toProxy(
       return true;
     },
     deleteProperty(target, p) {
-      if ( limitWrite > -1 ) {
-        if ( limitWrite === 0 ) {
-          warn(`can't set new value to "${p}" because limited write`)
-          
-          return false
+      if (limitWrite > -1) {
+        if (limitWrite === 0) {
+          warn(
+            `can't set new value to "${p.toString()}" because limited write`
+          );
+
+          return false;
         } else {
-          limitWrite--
+          limitWrite--;
         }
       }
-      
+
       try {
         // call watch
         const oldValue = target[p];
@@ -207,11 +213,19 @@ function toProxy(
 function createProxy<T>(
   obj: T,
   isRef = false,
-  readonly = 0,
+  readonly: 0 | 1 | 2 = 0,
   shallowReactive = false,
   limitWrite = -1
 ): T {
-  const proxy = toProxy(obj, [], obj, isRef, readonly, shallowReactive, limitWrite);
+  const proxy = toProxy(
+    obj,
+    [],
+    obj,
+    isRef,
+    readonly,
+    shallowReactive,
+    limitWrite
+  );
 
   return proxy;
 }
@@ -225,7 +239,7 @@ export function ref<T = any>(value: T): Ref<T> {
 }
 export function onewrite<T>(value: T): Ref<T> {
   return createProxy(value, true, 0, false, 1) as any;
-} 
+}
 export function shallowOnewrite<T>(value: T): Ref<T> {
   return createProxy(value, true, 0, true, 1) as any;
 }
@@ -233,9 +247,10 @@ export function shallowOnewrite<T>(value: T): Ref<T> {
 export function reactive<T = object>(value: T): Reactive<T> {
   return createProxy(value) as any;
 }
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function shallowReactive<T = object>(value: T): Reactive<T> {
   return createProxy(value, false, 0, true) as any;
-} 
+}
 export function isRef(value: any): value is Ref {
   return value instanceof Ref;
 }
@@ -253,7 +268,7 @@ export function watch<T = any>(
   options?: {
     readonly deep?: boolean;
     readonly immediate?: boolean;
-    readonly path?: string
+    readonly path?: string;
   }
 ): () => void {
   if (options?.immediate) {
@@ -274,7 +289,7 @@ export function watch<T = any>(
 
   if (listeners) {
     if (options?.deep) {
-      const id = options?.path || ""
+      const id = options?.path || "";
       // add to listenersDeep
 
       if (listeners[0].has(id) === false) {
@@ -284,17 +299,20 @@ export function watch<T = any>(
       listeners[0].get(id)?.add(cb);
       return () => listeners[0].get(id)?.delete(cb);
     }
-    
-      const id = [...(isRef(proxy) ? ["value"] : []) , ...(options?.path ? [options.path] : [])].join(".")
-      
-      if ( id !== "") {
+
+    const id = [
+      ...(isRef(proxy) ? ["value"] : []),
+      ...(options?.path ? [options.path] : []),
+    ].join(".");
+
+    if (id !== "") {
       if (listeners[1].has(id) === false) {
         listeners[1].set(id, new Set());
       }
 
       listeners[1].get(id)?.add(cb);
       return () => listeners[1].get(id)?.delete(cb);
-      }
+    }
   }
 
   // eslint-disable-next-line functional/no-throw-statement

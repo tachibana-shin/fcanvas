@@ -7,19 +7,23 @@ export class OneTimeEvent<
 > {
   private readonly store;
   constructor(obj: States) {
-    this.store = reactive(obj)
+    this.store = reactive(obj);
   }
 
   on(name: keyof States, callback: () => void): void {
     if (this.store[name]) {
       callback();
     } else {
-      const watcher = watch(this.store, () => {
-        callback();
-        watcher();
-      }, {
-        path: name
-      });
+      const watcher = watch(
+        this.store,
+        () => {
+          callback();
+          watcher();
+        },
+        {
+          path: name.toString(),
+        }
+      );
     }
   }
   emit(name: keyof States): void {

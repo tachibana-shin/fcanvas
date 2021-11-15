@@ -1,21 +1,18 @@
 import { OneTimeEvent } from "../classes/OneTimeEvent";
 import { error, warn } from "../helpers/log";
-import type { MouseOffset, noop, ReadonlyOffset } from "../types/index";
-import bindEvent, {
-  
-  ListEvents,
-  
-  
-} from "../utils/bindEvent";
-import convertValueToPixel from "../utils/convertValueToPixel"
-import getInfoFont from "../utils/getInfoFont"
-import getTouchInfo from "../utils/getTouchInfo"
-import isMobile from "../utils/isMobile"
-import generateUUID from "../utils/generateUUID"
-import { cancelAnimationFrame } from "../utils/animationFrame"
-import isSupportPassive from "../utils/isSupportPassive"
-import windowSize from "../utils/"
-
+import type { noop } from "../types/index";
+import { cancelAnimationFrame } from "../utils/animationFrame";
+import bindEvent, { ListEvents } from "../utils/bindEvent";
+import convertValueToPixel from "../utils/convertValueToPixel";
+import generateUUID from "../utils/generateUUID";
+import getInfoFont from "../utils/getInfoFont";
+import getTouchInfo, {
+  MouseOffset,
+  ReadonlyOffset,
+} from "../utils/getTouchInfo";
+import isMobile from "../utils/isMobile";
+import isSupportPassive from "../utils/isSupportPassive";
+import windowSize from "../utils/windowSize";
 
 import { draw, setup } from "./SystemEvents";
 

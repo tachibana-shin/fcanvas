@@ -1,11 +1,10 @@
-import trim from "./trim"
+import trim from "./trim";
 
 type InfoFont = {
   readonly size: number;
   readonly family: string;
   readonly weight: string;
 };
-
 
 export default function getInfoFont(font: string): InfoFont {
   const fontSplit = font.split(" ");
