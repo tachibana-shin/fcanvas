@@ -17,3 +17,4 @@ export * from "./functions/index";
 export * from "./core/SystemEvents";
 export { default as isMobile } from "./utils/isMobile";
 export { default as isTouch } from "./utils/isTouch";
+export * from "./core/reactive";
