@@ -1,4 +1,4 @@
-import { dirname, extname, join } from "path-cross";
+import { dirname, join } from "path-cross";
 import { parse } from "plist/lib/parse.js";
 
 import cutImage from "../functions/cutImage";
@@ -45,7 +45,7 @@ function passValueOfPlistToJSON<T = number>(value: string): readonly T[] {
   throw throwError(`resource "${value}" a malformed field`);
 }
 
-export class Resource {
+class Resource {
   private readonly plist: Plist;
   private readonly tile: HTMLImageElement;
   private readonly cache = new Map<string, CanvasImageResource>();
@@ -112,11 +112,7 @@ export class Resource {
   }
 }
 
-export async function createResource(url: string): Promise<Resource> {
-  if (extname(url) !== ".plist") {
-    url += ".plist";
-  }
-
+export async function loadTiles(url: string): Promise<Resource> {
   const plist = parse(
     await fetch(url).then((response) => response.text())
   ) as Plist;

@@ -6,7 +6,7 @@ export { createAnimate } from "./classes/Animate";
 export { createCamera, Camera } from "./classes/Camera";
 export { createCanvasList, CanvasList } from "./classes/CanvasList";
 export { createOneTimeEvent, OneTimeEvent } from "./classes/OneTimeEvent";
-export { createResource, Resource } from "./classes/Resource";
+export { loadTiles } from "./classes/Tiles";
 export { createVector, Vector } from "./classes/Vector";
 
 export {
