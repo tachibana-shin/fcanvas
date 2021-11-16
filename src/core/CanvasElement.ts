@@ -128,6 +128,31 @@ export abstract class CanvasElement {
   get mouseIsPressed(): boolean {
     return this.fcanvas.mouseIsPressed;
   }
+  
+  get isPressed(): boolean {
+    switch ( this.type ) {
+      case "rect":
+        return intersectRectPoint(this, this.mouseX, this.mouseY)
+      case "circle":
+        return intersectCirclePoint(this, this.mouseX, this.mouseY)
+      case "point":
+        return Math.round(this.x) === Math.round(this.mouseX), Math.round(this.y) === Math.round(this.mouseY)
+      default:
+        return false
+    }
+  }
+  get isPressedInTouches(): boolean {
+    switch ( this.type ) {
+      case "rect":
+        return this.fcanvas.touches.some(item => intersectRectPoint(this, item.x, item.y))
+      case "circle":
+        return this.fcanvas.touches.some(item => intersectCirclePoint(this, item.x, item.y))
+      case "point":
+        return this.fcanvas.touches.some(item => Math.round(this.x) === Math.round(item.x), Math.round(this.y) === Math.round(item.y))
+      default:
+        return false
+    }
+  } 
 
   get windowWidth(): number {
     return this.fcanvas.windowWidth;
