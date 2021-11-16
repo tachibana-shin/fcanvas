@@ -1,4 +1,8 @@
 import { map } from "..";
+import {
+  intersectCirclePoint,
+  intersectRectPoint,
+} from "../functions/intersects";
 import { throwError } from "../helpers/throw";
 import type { noop } from "../types/index";
 import convertValueToPixel from "../utils/convertValueToPixel";
@@ -128,31 +132,72 @@ export abstract class CanvasElement {
   get mouseIsPressed(): boolean {
     return this.fcanvas.mouseIsPressed;
   }
-  
+
   get isPressed(): boolean {
-    switch ( this.type ) {
+    if (
+      this.mouseX === null ||
+      this.mouseY === null ||
+      "x" in this === false ||
+      "y" in this === false
+    ) {
+      return false;
+    }
+
+    switch (this.type) {
       case "rect":
-        return intersectRectPoint(this, this.mouseX, this.mouseY)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return intersectRectPoint(this as any, this.mouseX, this.mouseY);
       case "circle":
-        return intersectCirclePoint(this, this.mouseX, this.mouseY)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return intersectCirclePoint(this as any, this.mouseX, this.mouseY);
       case "point":
-        return Math.round(this.x) === Math.round(this.mouseX), Math.round(this.y) === Math.round(this.mouseY)
+        return (
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (this as any).x &&
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (this as any).y &&
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (Math.round((this as any).x) === Math.round(this.mouseX),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          Math.round((this as any).y) === Math.round(this.mouseY))
+        );
       default:
-        return false
+        return false;
     }
   }
   get isPressedInTouches(): boolean {
-    switch ( this.type ) {
-      case "rect":
-        return this.fcanvas.touches.some(item => intersectRectPoint(this, item.x, item.y))
-      case "circle":
-        return this.fcanvas.touches.some(item => intersectCirclePoint(this, item.x, item.y))
-      case "point":
-        return this.fcanvas.touches.some(item => Math.round(this.x) === Math.round(item.x), Math.round(this.y) === Math.round(item.y))
-      default:
-        return false
+    if (
+      this.mouseX === null ||
+      this.mouseY === null ||
+      "x" in this === false ||
+      "y" in this === false
+    ) {
+      return false;
     }
-  } 
+
+    switch (this.type) {
+      case "rect":
+        return this.fcanvas.touches.some((item) =>
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          intersectRectPoint(this as any, item.x, item.y)
+        );
+      case "circle":
+        return this.fcanvas.touches.some((item) =>
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          intersectCirclePoint(this as any, item.x, item.y)
+        );
+      case "point":
+        return this.fcanvas.touches.some(
+          (item) =>
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            Math.round((this as any).x) === Math.round(item.x) &&
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            Math.round((this as any).y) === Math.round(item.y)
+        );
+      default:
+        return false;
+    }
+  }
 
   get windowWidth(): number {
     return this.fcanvas.windowWidth;
