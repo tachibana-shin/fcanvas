@@ -1,6 +1,9 @@
 export { default, getCanvasInstance } from "./core/fCanvas";
 export { CanvasElement } from "./core/CanvasElement";
 export { createClass } from "./core/createClass";
+export * from "./core/SystemEvents";
+export * from "./core/reactive";
+// END **core**
 
 export { createAnimate } from "./classes/Animate";
 export { createCamera, Camera } from "./classes/Camera";
@@ -13,8 +16,7 @@ export {
   requestAnimationFrame,
   cancelAnimationFrame,
 } from "./utils/animationFrame";
-export * from "./functions/index";
-export * from "./core/SystemEvents";
 export { default as isMobile } from "./utils/isMobile";
 export { default as isTouch } from "./utils/isTouch";
-export * from "./core/reactive";
+
+export * from "./functions/index";
