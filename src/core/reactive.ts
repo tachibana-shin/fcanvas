@@ -99,7 +99,7 @@ function toProxy(
       listenersDeep.forEach((cbs, key) => {
         // get value;
 
-        const val = weakCache.get(obj);
+        const val = weakCache.get(rootObj);
         const valueByKey =
           key
             .split(".")
