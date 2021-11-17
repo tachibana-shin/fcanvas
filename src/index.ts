@@ -1,5 +1,6 @@
 export { default, getCanvasInstance } from "./core/fCanvas";
 export { CanvasElement } from "./core/CanvasElement";
+export { createCanvas } from "./core/createCanvas";
 export { createClass } from "./core/createClass";
 export * from "./core/SystemEvents";
 export * from "./core/reactive";
