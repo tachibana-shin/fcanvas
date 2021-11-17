@@ -45,7 +45,7 @@ function passValueOfPlistToJSON<T = number>(value: string): readonly T[] {
   throw throwError(`resource "${value}" a malformed field`);
 }
 
-class Resource {
+export class Tiles {
   private readonly plist: Plist;
   private readonly tile: HTMLImageElement;
   private readonly cache = new Map<string, CanvasImageResource>();
@@ -112,7 +112,7 @@ class Resource {
   }
 }
 
-export async function loadTiles(url: string): Promise<Resource> {
+export async function loadTiles(url: string): Promise<Tiles> {
   const plist = parse(
     await fetch(url).then((response) => response.text())
   ) as Plist;
@@ -123,5 +123,5 @@ export async function loadTiles(url: string): Promise<Resource> {
     )
   );
 
-  return new Resource(plist, tile);
+  return new Tiles(plist, tile);
 }
