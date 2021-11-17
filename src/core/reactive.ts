@@ -287,31 +287,31 @@ export function watch<T = any>(
 
   const listeners = listenersCache.get(proxy as any)!;
 
-    if (options?.deep) {
-      const id = options?.path || "";
-      // add to listenersDeep
+  if (options?.deep) {
+    const id = options?.path || "";
+    // add to listenersDeep
 
-      if (listeners[0].has(id) === false) {
-        listeners[0].set(id, new Set());
-      }
-
-      listeners[0].get(id)?.add(cb);
-      return () => listeners[0].get(id)?.delete(cb);
+    if (listeners[0].has(id) === false) {
+      listeners[0].set(id, new Set());
     }
 
-    const id = [
-      ...(isRef(proxy) ? ["value"] : []),
-      ...(options?.path ? [options.path] : []),
-    ].join(".");
+    listeners[0].get(id)?.add(cb);
+    return () => listeners[0].get(id)?.delete(cb);
+  }
 
-    if (id !== "") {
-      if (listeners[1].has(id) === false) {
-        listeners[1].set(id, new Set());
-      }
+  const id = [
+    ...(isRef(proxy) ? ["value"] : []),
+    ...(options?.path ? [options.path] : []),
+  ].join(".");
 
-      listeners[1].get(id)?.add(cb);
-      return () => listeners[1].get(id)?.delete(cb);
+  if (id !== "") {
+    if (listeners[1].has(id) === false) {
+      listeners[1].set(id, new Set());
     }
+
+    listeners[1].get(id)?.add(cb);
+    return () => listeners[1].get(id)?.delete(cb);
+  }
 
   // eslint-disable-next-line functional/no-throw-statement
   throw throwError("value not is proxy ref");
