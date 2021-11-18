@@ -1,4 +1,4 @@
-import { CanvasElement } from "../core/CanvasElement";
+import { Block } from "../core/Block";
 import fCanvas from "../core/fCanvas";
 import constrain from "../functions/constrain";
 import type { noop, ReadonlySize } from "../types/index";
@@ -203,14 +203,14 @@ export class Camera {
     return 0;
   }
 
-  public isXInViewBox(element: CanvasElement, diffSpeed: number): boolean;
+  public isXInViewBox(element: Block, diffSpeed: number): boolean;
   public isXInViewBox(value: number, width: number, diffSpeed: number): boolean;
   public isXInViewBox(
-    value: number | CanvasElement,
+    value: number | Block,
     width = 0,
     diffSpeed = 1
   ): boolean {
-    if (value instanceof CanvasElement) {
+    if (value instanceof Block) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       width = (value as any).width || 0;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -221,18 +221,18 @@ export class Camera {
 
     return value + width > 0 || value < this._canvas.width;
   }
-  public isYInViewBox(element: CanvasElement, diffSpeed: number): boolean;
+  public isYInViewBox(element: Block, diffSpeed: number): boolean;
   public isYInViewBox(
     value: number,
     height: number,
     diffSpeed: number
   ): boolean;
   public isYInViewBox(
-    value: number | CanvasElement,
+    value: number | Block,
     height = 0,
     diffSpeed = 1
   ): boolean {
-    if (value instanceof CanvasElement) {
+    if (value instanceof Block) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       height = (value as any).height || 0;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -245,7 +245,7 @@ export class Camera {
   }
 
   public isInViewBox(
-    element: CanvasElement,
+    element: Block,
     diffSpeedX: number,
     diffSpeedY: number
   ): boolean;
@@ -258,14 +258,14 @@ export class Camera {
     diffSpeedY: number
   ): boolean;
   public isInViewBox(
-    x: CanvasElement | number,
+    x: Block | number,
     y: number,
     width = 0,
     height = 0,
     diffSpeedX = 1,
     diffSpeedY = 1
   ): boolean {
-    if (x instanceof CanvasElement) {
+    if (x instanceof Block) {
       return (
         this.isXInViewBox(x, diffSpeedX) && this.isYInViewBox(x, diffSpeedY)
       );

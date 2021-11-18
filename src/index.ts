@@ -1,7 +1,7 @@
 export { default, getCanvasInstance } from "./core/fCanvas";
-export { CanvasElement } from "./core/CanvasElement";
+export { Block } from "./core/Block";
 export { createCanvas } from "./core/createCanvas";
-export { createClass } from "./core/createClass";
+export { defineBlock } from "./core/defineBlock";
 export * from "./core/SystemEvents";
 export * from "./core/reactive";
 // END **core**

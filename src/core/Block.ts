@@ -44,7 +44,7 @@ function compressTypeToImage(
 } {
   return true;
 }
-export abstract class CanvasElement {
+export abstract class Block {
   public get type(): "rect" | "circle" | "point" | "unknown" {
     if ("x" in this && "y" in this) {
       if ("width" in this && "height" in this) {
