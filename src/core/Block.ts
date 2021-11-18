@@ -29,10 +29,10 @@ function existsCbDraw(
 }
 function existsCbUpdate(
   el: Block & {
-    readonly update?: () => void;
+    readonly update?: () => any;
   }
 ): el is Block & {
-  readonly update: () => void;
+  readonly update: () => any;
 } {
   return typeof el.update === "function";
 }
@@ -64,19 +64,23 @@ export abstract class Block {
   // eslint-disable-next-line functional/prefer-readonly-type
   private canvasInstance: fCanvas | null = null;
 
-  render(canvas = getCanvasInstance()): void {
+  render<T = void>(canvas = getCanvasInstance()): void | T {
+    let updateReturn: T
+    
     this.canvasInstance = canvas;
 
     if (existsCbUpdate(this)) {
       if (existsCbDraw(this)) {
         this.draw();
       }
-      this.update();
+      updateReturn = this.update() as any;
     } else if (existsCbDraw(this)) {
       this.draw();
     }
 
     this.canvasInstance = null;
+    
+    return updateReturn;
   }
   get fcanvas(): fCanvas {
     if (this.canvasInstance instanceof fCanvas) {
