@@ -12,10 +12,9 @@
   },
   "module": "dist/fcanvas.esm.js",
   "unpkg": "dist/fcanvas.esm.min.js",
-  "types": "types/index.d.ts",
+  "types": "dist/fcanvas.d.ts",
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
   "license": "MIT",
   "devDependencies": {
@@ -37,11 +36,10 @@
     "plist": "^3.0.4",
     "prettier": "^2.1.1",
     "rollup": "^2.45.2",
-    "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-dts": "^4.0.1",
+    "rollup-plugin-esbuild": "^4.6.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.30.0",
     "ts-jest": "^27.0.5",
     "typedoc": "^0.22.4",
     "typescript": "^4.2.4"
