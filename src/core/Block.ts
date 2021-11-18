@@ -1,10 +1,10 @@
-import { map } from "..";
+import map from "../functions/map";
 import {
   intersectCirclePoint,
   intersectRectPoint,
 } from "../functions/intersects";
 import { throwError } from "../helpers/throw";
-import type { noop } from "../types/index";
+import type { noop } from "../types";
 import convertValueToPixel from "../utils/convertValueToPixel";
 import { ReadonlyOffset } from "../utils/getTouchInfo";
 

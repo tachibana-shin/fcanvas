@@ -1,7 +1,7 @@
 import { Block } from "../core/Block";
 import fCanvas from "../core/fCanvas";
 import constrain from "../functions/constrain";
-import type { noop, ReadonlySize } from "../types/index";
+import type { noop, ReadonlySize } from "../types";
 import type { ReadonlyOffset } from "../utils/getTouchInfo";
 
 type ViewPort = ReadonlyOffset & ReadonlySize;

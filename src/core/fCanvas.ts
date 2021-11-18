@@ -1,6 +1,6 @@
 import { OneTimeEvent } from "../classes/OneTimeEvent";
 import { error, warn } from "../helpers/log";
-import type { noop } from "../types/index";
+import type { noop } from "../types";
 import { cancelAnimationFrame } from "../utils/animationFrame";
 import bindEvent, { ListEvents } from "../utils/bindEvent";
 import convertValueToPixel from "../utils/convertValueToPixel";
