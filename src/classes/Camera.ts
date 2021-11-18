@@ -3,6 +3,7 @@ import fCanvas from "../core/fCanvas";
 import constrain from "../functions/constrain";
 import type { noop, ReadonlySize } from "../types/index";
 import type { ReadonlyOffset } from "../utils/getTouchInfo";
+
 type ViewPort = ReadonlyOffset & ReadonlySize;
 type Range = {
   readonly min: number;
