@@ -1,8 +1,8 @@
-import map from "../functions/map";
 import {
   intersectCirclePoint,
   intersectRectPoint,
 } from "../functions/intersects";
+import map from "../functions/map";
 import { throwError } from "../helpers/throw";
 import type { noop } from "../types";
 import convertValueToPixel from "../utils/convertValueToPixel";
@@ -18,19 +18,19 @@ type LineJoin = "bevel" | "round" | "miter";
 type LineCap = "butt" | "round" | "square";
 
 function existsCbDraw(
-  el: CanvasElement & {
+  el: Block & {
     readonly draw?: () => void;
   }
-): el is CanvasElement & {
+): el is Block & {
   readonly draw: () => void;
 } {
   return typeof el.draw === "function";
 }
 function existsCbUpdate(
-  el: CanvasElement & {
+  el: Block & {
     readonly update?: () => void;
   }
-): el is CanvasElement & {
+): el is Block & {
   readonly update: () => void;
 } {
   return typeof el.update === "function";

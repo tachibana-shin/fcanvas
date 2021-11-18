@@ -5,7 +5,7 @@ import mitt from "mitt";
 import { error } from "../helpers/log";
 import { noop } from "../types";
 
-import { CanvasElement } from "./CanvasElement";
+import { Block } from "./Block";
 
 type ComponentRenderProxy<
   P = {}, // props type extracted from props option
@@ -19,7 +19,7 @@ type ComponentRenderProxy<
   D &
   M &
   ExtractComputedReturns<C> &
-  CanvasElement &
+  Block &
   ExtractEmitsFn<E> &
   ExtractOnFn<E> &
   ExtractOffFn<E>;
@@ -266,10 +266,10 @@ type DefaultComputed = {
 type XProxy<
   PropsOptions,
   RawBindings,
-  Data = DefaultData<CanvasElement>,
+  Data = DefaultData<Block>,
   Emits extends EmitsOptions = {},
   Computed extends ComputedOptions = DefaultComputed,
-  Methods extends MethodOptions = DefaultMethods<CanvasElement>
+  Methods extends MethodOptions = DefaultMethods<Block>
 > = XConstructorProxy<
   PropsOptions,
   RawBindings,
@@ -345,7 +345,7 @@ function defineBlock<
       (propsDefault as any)[prop] = (options.props as any).default;
     }
   }
-  return class extends CanvasElement {
+  return class extends Block {
     private readonly emitter = mitt();
 
     readonly on = this.emitter.on;

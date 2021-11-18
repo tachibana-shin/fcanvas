@@ -13,14 +13,17 @@ function createCanvas(
   width?: number,
   height?: number
 ): fCanvas {
+  // eslint-disable-next-line functional/functional-parameters
   if (arguments.length < 2) {
-    return new fCanvas(element);
+    return new fCanvas(element as HTMLCanvasElement | string | undefined);
   }
+  // eslint-disable-next-line functional/functional-parameters
   if (arguments.length === 2) {
-    return new fCanvas(element, width);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return new fCanvas(element as number, width!);
   }
 
-  return new fCanvas(element, width, height);
+  return new fCanvas(element as HTMLCanvasElement, width, height);
 }
 
 export { createCanvas };

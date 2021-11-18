@@ -26,7 +26,7 @@ function assert(obj: any, type: "CIRCLE" | "RECT" | "POINT"): void {
   }
 }
 
-type CanvasElementSize = {
+type BlockSize = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [prop: string]: any;
 } & {
@@ -35,8 +35,8 @@ type CanvasElementSize = {
 };
 
 export function getPowerDirection(
-  el1: CanvasElementSize,
-  el2: CanvasElementSize
+  el1: BlockSize,
+  el2: BlockSize
 ): number {
   // el.fcanvas._argsRect(el.x, el.y, el.width, el.height);
 
@@ -44,10 +44,10 @@ export function getPowerDirection(
 }
 
 export function intersectTwoCircles(
-  circle1: CanvasElementSize & {
+  circle1: BlockSize & {
     radius: number;
   },
-  circle2: CanvasElementSize & {
+  circle2: BlockSize & {
     radius: number;
   }
 ): boolean {
@@ -60,11 +60,11 @@ export function intersectTwoCircles(
   );
 }
 export function intersectTwoRects(
-  rect1: CanvasElementSize & {
+  rect1: BlockSize & {
     width: number;
     height: number;
   },
-  rect2: CanvasElementSize & {
+  rect2: BlockSize & {
     width: number;
     height: number;
   }
@@ -80,7 +80,7 @@ export function intersectTwoRects(
   );
 }
 export function intersectCirclePoint(
-  circle: CanvasElementSize & {
+  circle: BlockSize & {
     radius: number;
   },
   x: number,
@@ -91,7 +91,7 @@ export function intersectCirclePoint(
   return (x - circle.x) ** 2 + (y - circle.y) ** 2 < circle.radius ** 2;
 }
 export function intersectRectPoint(
-  rect: CanvasElementSize & {
+  rect: BlockSize & {
     width: number;
     height: number;
   },
@@ -108,10 +108,10 @@ export function intersectRectPoint(
   );
 }
 export function intersectCircleRect(
-  circle: CanvasElementSize & {
+  circle: BlockSize & {
     radius: number;
   },
-  rect: CanvasElementSize & {
+  rect: BlockSize & {
     width: number;
     height: number;
   }
@@ -128,11 +128,11 @@ export function intersectCircleRect(
   return distance < circle.radius ** 2;
 }
 export function intersectRectCircle(
-  rect: CanvasElementSize & {
+  rect: BlockSize & {
     width: number;
     height: number;
   },
-  circle: CanvasElementSize & {
+  circle: BlockSize & {
     radius: number;
   }
 ): boolean {
