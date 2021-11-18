@@ -65,7 +65,7 @@ export abstract class Block {
   private canvasInstance: fCanvas | null = null;
 
   render<T = void>(canvas = getCanvasInstance()): void | T {
-    let updateReturn: T
+    let updateReturn
     
     this.canvasInstance = canvas;
 
@@ -73,14 +73,14 @@ export abstract class Block {
       if (existsCbDraw(this)) {
         this.draw();
       }
-      updateReturn = this.update() as any;
+      updateReturn = this.update();
     } else if (existsCbDraw(this)) {
       this.draw();
     }
 
     this.canvasInstance = null;
     
-    return updateReturn;
+    return updateReturn as (void | T);
   }
   get fcanvas(): fCanvas {
     if (this.canvasInstance instanceof fCanvas) {
