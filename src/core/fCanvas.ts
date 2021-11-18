@@ -1,6 +1,5 @@
 import { OneTimeEvent } from "../classes/OneTimeEvent";
 import { error, warn } from "../helpers/log";
-import type { noop } from "../types";
 import { cancelAnimationFrame } from "../utils/animationFrame";
 import bindEvent, { ListEvents } from "../utils/bindEvent";
 import convertValueToPixel from "../utils/convertValueToPixel";
@@ -15,6 +14,8 @@ import isSupportPassive from "../utils/isSupportPassive";
 import windowSize from "../utils/windowSize";
 
 import { draw, setup } from "./SystemEvents";
+
+type noop = () => void;
 
 type AngleType = "degress" | "radial";
 export type AlignType = "left" | "center" | "right";

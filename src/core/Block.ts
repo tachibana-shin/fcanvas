@@ -4,7 +4,6 @@ import {
 } from "../functions/intersects";
 import map from "../functions/map";
 import { throwError } from "../helpers/throw";
-import type { noop } from "../types";
 import convertValueToPixel from "../utils/convertValueToPixel";
 import { ReadonlyOffset } from "../utils/getTouchInfo";
 
@@ -13,6 +12,8 @@ import fCanvas, {
   getCanvasInstance,
   ParamsToRgb,
 } from "./fCanvas";
+
+type noop = () => void;
 
 type LineJoin = "bevel" | "round" | "miter";
 type LineCap = "butt" | "round" | "square";

@@ -4,10 +4,13 @@ import { parse } from "plist/lib/parse.js";
 import cutImage from "../functions/cutImage";
 import loadImage from "../functions/loadImage";
 import { throwError } from "../helpers/throw";
-import type { ReadonlySize } from "../types";
 import { ReadonlyOffset } from "../utils/getTouchInfo";
 import trim from "../utils/trim";
 
+type ReadonlySize = {
+  readonly width: number;
+  readonly height: number;
+};
 type CanvasImageResource = HTMLCanvasElement & {
   readonly sourceSize: ReadonlySize;
   readonly sourceColorRect: ReadonlySize & ReadonlyOffset;
