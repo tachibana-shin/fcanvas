@@ -279,7 +279,7 @@ type XProxy<
   Methods
 >;
 
-function createClass<
+function defineBlock<
   RawBindings,
   D = Data,
   E extends EmitsOptions = {},
@@ -288,7 +288,7 @@ function createClass<
 >(
   options: ComponentOptionsWithoutProps<unknown, RawBindings, D, E, C, M>
 ): XProxy<unknown, RawBindings, D, E, C, M>;
-function createClass<
+function defineBlock<
   PropNames extends string,
   RawBindings = Data,
   D = Data,
@@ -307,7 +307,7 @@ function createClass<
   C,
   M
 >;
-function createClass<
+function defineBlock<
   Props,
   RawBindings = Data,
   D = Data,
@@ -320,7 +320,7 @@ function createClass<
     ? ComponentOptionsWithProps<PropsOptions, RawBindings, D, E, C, M, Props>
     : ComponentOptionsWithProps<PropsOptions, RawBindings, D, E, C, M>
 ): XProxy<PropsOptions, RawBindings, D, E, C, M>;
-function createClass<
+function defineBlock<
   Props,
   RawBindings = Data,
   D = Data,
@@ -392,8 +392,4 @@ function createClass<
   };
 }
 
-export function PropType<T = any>(): T {
-  return undefined as unknown as T;
-}
-
-export { createClass };
+export { defineBlock };

@@ -1,6 +1,7 @@
 export { default, getCanvasInstance } from "./core/fCanvas";
-export { CanvasElement } from "./core/CanvasElement";
-export { createClass } from "./core/createClass";
+export { Block } from "./core/Block";
+export { createCanvas } from "./core/createCanvas";
+export { defineBlock } from "./core/defineBlock";
 export * from "./core/SystemEvents";
 export * from "./core/reactive";
 // END **core**
@@ -9,7 +10,7 @@ export { createAnimate } from "./classes/Animate";
 export { createCamera, Camera } from "./classes/Camera";
 export { createCanvasList, CanvasList } from "./classes/CanvasList";
 export { createOneTimeEvent, OneTimeEvent } from "./classes/OneTimeEvent";
-export { loadTiles } from "./classes/Tiles";
+export { loadTiles, Tiles } from "./classes/Tiles";
 export { createVector, Vector } from "./classes/Vector";
 
 export {
@@ -19,4 +20,4 @@ export {
 export { default as isMobile } from "./utils/isMobile";
 export { default as isTouch } from "./utils/isTouch";
 
-export * from "./functions/index";
+export * from "./functions";

@@ -1,21 +1,21 @@
-import { CanvasElement } from "../core/CanvasElement";
+import { Block } from "../core/Block";
 import { getCanvasInstance } from "../core/fCanvas";
 
 function existsCbFilter(
-  pr: CanvasElement & {
+  pr: Block & {
     // eslint-disable-next-line functional/prefer-readonly-type
-    readonly filter?: (peers: Set<CanvasElement>) => boolean | void;
+    readonly filter?: (peers: Set<Block>) => boolean | void;
   }
-): pr is CanvasElement & {
+): pr is Block & {
   // eslint-disable-next-line functional/prefer-readonly-type
-  readonly filter: (peers: Set<CanvasElement>) => boolean | void;
+  readonly filter: (peers: Set<Block>) => boolean | void;
 } {
   return typeof pr.filter === "function";
 }
 
-export class CanvasList extends Set<CanvasElement> {
+export class CanvasList extends Set<Block> {
   render(canvas = getCanvasInstance()): void {
-    this.forEach((element: CanvasElement) => {
+    this.forEach((element: Block) => {
       element.render(canvas);
 
       if (existsCbFilter(element) && !element.filter(this)) {
@@ -26,11 +26,11 @@ export class CanvasList extends Set<CanvasElement> {
 
   filter(
     callback: (
-      element: CanvasElement,
-      peers: ReadonlySet<CanvasElement>
+      element: Block,
+      peers: ReadonlySet<Block>
     ) => boolean | void
   ): void {
-    this.forEach((element: CanvasElement) => {
+    this.forEach((element: Block) => {
       if (callback(element, this)) {
         this.delete(element);
       }
@@ -39,7 +39,7 @@ export class CanvasList extends Set<CanvasElement> {
 }
 
 export function createCanvasList(
-  iterable?: Iterable<CanvasElement> | null | undefined
+  iterable?: Iterable<Block> | null | undefined
 ): CanvasList {
   return new CanvasList(iterable);
 }

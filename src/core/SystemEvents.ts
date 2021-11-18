@@ -1,6 +1,6 @@
 import mitt from "mitt";
 
-import type { noop } from "../types/index";
+import type { noop } from "../types";
 import { requestAnimationFrame } from "../utils/animationFrame";
 import bindEvent from "../utils/bindEvent";
 
