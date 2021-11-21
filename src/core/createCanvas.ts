@@ -13,6 +13,7 @@ function createCanvas(
   width?: number,
   height?: number
 ): fCanvas {
+  // eslint-disable-next-line functional/functional-parameters
   if (arguments.length === 0) {
     return new fCanvas();
   }
