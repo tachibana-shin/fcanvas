@@ -169,7 +169,6 @@ export abstract class Block {
     this.instance.ctx.fillStyle = this.instance._toRgb(args);
     this.instance.ctx.fill();
   }
-  
   // eslint-disable-next-line functional/functional-parameters
   stroke: FunctionColor = function(...args: ParamsToRgb) {
     // eslint-disable-next-line functional/immutable-data
