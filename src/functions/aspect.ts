@@ -1,7 +1,4 @@
-type ReadonlySize = {
-  readonly width: number;
-  readonly height: number;
-};
+import type ReadonlySize from "../types/ReadonlySize";
 
 export default function aspect(
   { width, height }: ReadonlySize,

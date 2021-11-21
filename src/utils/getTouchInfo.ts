@@ -1,20 +1,11 @@
-export type ReadonlyOffset<T = number> = {
-  readonly x: T;
-  readonly y: T;
-};
-
-export type MouseOffset = ReadonlyOffset & {
-  readonly winX: number;
-  readonly winY: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly id: any;
-};
+import type ReadonlyOffset from "../types/ReadonlyOffset";
+import type ReadonlyMouseOffset from "../types/ReadonlyMouseOffset";
 
 export default function getTouchInfo(
   element: HTMLCanvasElement,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   touches: readonly any[]
-): readonly MouseOffset[] {
+): readonly ReadonlyMouseOffset[] {
   const rect = element.getBoundingClientRect();
   const sx = element.scrollWidth / element.width || 1;
   const sy = element.scrollHeight / element.height || 1;

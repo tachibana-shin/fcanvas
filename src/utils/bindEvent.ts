@@ -1,21 +1,8 @@
-export type ListEvents = {
-  readonly [name: string]: Event;
-} & {
-  readonly keydown: KeyboardEvent;
-  readonly resize: Event;
-  readonly wheel: WheelEvent;
-  readonly mousedown: MouseEvent;
-  readonly click: MouseEvent;
-  readonly mousemove: MouseEvent;
-  readonly mouseout: MouseEvent;
-  readonly mouseover: MouseEvent;
-  readonly touchstart: TouchEvent;
-  readonly touchmove: TouchEvent;
-  readonly touchend: TouchEvent;
-};
-export default function bindEvent<Name extends keyof ListEvents>(
+import ReadonlyListEvents from "../types/ReadonlyListEvents";
+
+export default function bindEvent<Name extends keyof ReadonlyListEvents>(
   name: Name,
-  callback: (ev: ListEvents[Name]) => void,
+  callback: (ev: ReadonlyListEvents[Name]) => void,
   element: Element | Window | typeof globalThis
 ): () => void {
   element.addEventListener(

@@ -1,13 +1,10 @@
 import { Block } from "../core/Block";
 import fCanvas from "../core/fCanvas";
 import constrain from "../functions/constrain";
-import type { ReadonlyOffset } from "../utils/getTouchInfo";
-import type Noop from "../types/Noop";
 
-type ReadonlySize = {
-  readonly width: number;
-  readonly height: number;
-};
+import type ReadonlyOffset from "../types/ReadonlyOffset";
+import type Noop from "../types/Noop";
+import type ReadonlySize from "../types/ReadonlySize";
 
 type ViewPort = ReadonlyOffset & ReadonlySize;
 type Range = {

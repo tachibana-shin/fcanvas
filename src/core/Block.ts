@@ -5,13 +5,9 @@ import {
 import map from "../functions/map";
 import { throwError } from "../helpers/throw";
 import convertValueToPixel from "../utils/convertValueToPixel";
-import { ReadonlyOffset } from "../utils/getTouchInfo";
+import type ReadonlyOffset from "../types/ReadonlyOffset";
 
-import fCanvas, {
-  DirectionPattern,
-  getCanvasInstance,
-  ParamsToRgb,
-} from "./fCanvas";
+import fCanvas, { getCanvasInstance } from "./fCanvas";
 
 import type FunctionColor from "../types/FunctionColor";
 import type Noop from "../types/Noop";
@@ -163,15 +159,15 @@ export abstract class Block {
   }
   // > /shared
 
-  // eslint-disable-next-line functional/functional-parameters
-  fill: FunctionColor = function (...args: ParamsToRgb) {
+  // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
+  fill: FunctionColor = function (...args: any[]) {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.fillStyle = this.instance._toRgb(args);
     this.instance.ctx.fill();
   };
 
-  // eslint-disable-next-line functional/functional-parameters
-  stroke: FunctionColor = function (...args: ParamsToRgb) {
+  // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
+  stroke: FunctionColor = function (...args: any[]) {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.strokeStyle = this.instance._toRgb(args);
     this.instance.ctx.stroke();
@@ -685,8 +681,8 @@ export abstract class Block {
     this.instance.ctx.shadowBlur = opacity;
   }
 
-  // eslint-disable-next-line functional/functional-parameters
-  shadowColor: FunctionColor = function (...args: ParamsToRgb) {
+  // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
+  shadowColor: FunctionColor = function (...args: any[]) {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.shadowColor = this.instance._toRgb(args);
   };

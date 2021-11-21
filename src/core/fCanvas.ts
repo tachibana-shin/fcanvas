@@ -1,14 +1,11 @@
 import { OneTimeEvent } from "../classes/OneTimeEvent";
 import { error, warn } from "../helpers/log";
 import { cancelAnimationFrame } from "../utils/animationFrame";
-import bindEvent, { ListEvents } from "../utils/bindEvent";
+import bindEvent from "../utils/bindEvent";
 import convertValueToPixel from "../utils/convertValueToPixel";
 import generateUUID from "../utils/generateUUID";
 import getInfoFont from "../utils/getInfoFont";
-import getTouchInfo, {
-  MouseOffset,
-  ReadonlyOffset,
-} from "../utils/getTouchInfo";
+import getTouchInfo from "../utils/getTouchInfo";
 import isMobile from "../utils/isMobile";
 import isSupportPassive from "../utils/isSupportPassive";
 import windowSize from "../utils/windowSize";
@@ -17,13 +14,14 @@ import { draw, setup } from "./SystemEvents";
 
 import type FunctionColor from "../types/FunctionColor";
 import type Noop from "../types/Noop";
+import type ReadonlyOffset from "../types/ReadonlyOffset";
+import type ReadonlyMouseOffset from "../types/ReadonlyMouseOffset";
+import type ReadonlyListEvents from "../types/ReadonlyListEvents";
 
 type AngleType = "degress" | "radial";
-export type AlignType = "left" | "center" | "right";
-export type BaselineType = "top" | "middle" | "bottom";
+type AlignType = "left" | "center" | "right";
+type BaselineType = "top" | "middle" | "bottom";
 type ColorType = "rgb" | "hsl" | "hsb";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ParamsToRgb = readonly [any?, any?, any?, number?];
 type TextAlignType = AlignType | "start" | "end";
 type TextBaselineType = BaselineType | "hanging" | "alphabetic" | "ideographic";
 type RectMode = "corner" | "corners" | "center" | "radius";
@@ -40,7 +38,7 @@ type GlobalCompositeOperationType =
   | "copy"
   | "xor";
 type RuleClip = "nonzero" | "evenodd";
-export type DirectionPattern = "repeat" | "repeat-x" | "repeat-y" | "no-repeat";
+type DirectionPattern = "repeat" | "repeat-x" | "repeat-y" | "no-repeat";
 
 type HightTransform = {
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -289,9 +287,9 @@ export default class fCanvas {
   }
 
   // eslint-disable-next-line functional/prefer-readonly-type
-  touches: readonly MouseOffset[] = [];
+  touches: readonly ReadonlyMouseOffset[] = [];
   // eslint-disable-next-line functional/prefer-readonly-type
-  changedTouches: readonly MouseOffset[] = [];
+  changedTouches: readonly ReadonlyMouseOffset[] = [];
   preventTouch(): void {
     // eslint-disable-next-line functional/immutable-data
     this.env.preventTouch = true;
@@ -443,9 +441,10 @@ export default class fCanvas {
     return this.env.angleMode === "degress" ? (value * 180) / Math.PI : value;
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  _toRgb([red = 0, green = red, blue = green, alpha = 1]: ParamsToRgb): any {
+  _toRgb([red = 0, green = red, blue = green, alpha = 1]: any[]): any {
     if (Array.isArray(red)) {
-      return this._toRgb(red as unknown as ParamsToRgb);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return this._toRgb(red as unknown as any);
     } else {
       if (typeof red === "object" && red !== null) {
         return red;
@@ -551,8 +550,8 @@ export default class fCanvas {
     this.ctx.clearRect(x, y, w, h);
   }
 
-  // eslint-disable-next-line functional/functional-parameters
-  background: FunctionColor = function (...params: ParamsToRgb) {
+  // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
+  background: FunctionColor = function (...params: any[]) {
     // eslint-disable-next-line functional/immutable-data
     this.ctx.fillStyle = this._toRgb(params);
     this.ctx.fill();
@@ -923,9 +922,9 @@ export default class fCanvas {
   get allowLoop(): boolean {
     return this.env.loop;
   }
-  on<Name extends keyof ListEvents>(
+  on<Name extends keyof ReadonlyListEvents>(
     name: Name,
-    callback: (ev: ListEvents[Name]) => void
+    callback: (ev: ReadonlyListEvents[Name]) => void
   ): Noop {
     return bindEvent(name, callback, this.$el);
   }

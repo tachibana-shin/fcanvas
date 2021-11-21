@@ -1,6 +1,6 @@
 import mitt from "mitt";
 
-export type AnimateType =
+type AnimateType =
   | "ease"
   | "quadratic"
   | "sine-ease-in-out"
@@ -188,7 +188,11 @@ class AnimateClass<
       }
     }
   }
-  private _to(state: Partial<State>, duration?: number, easing?: AnimateType): void {
+  private _to(
+    state: Partial<State>,
+    duration?: number,
+    easing?: AnimateType
+  ): void {
     // eslint-disable-next-line functional/no-loop-statement
     for (const prop in state) {
       this.cancel(prop);
