@@ -169,6 +169,7 @@ export abstract class Block {
     this.instance.ctx.fillStyle = this.instance._toRgb(args);
     this.instance.ctx.fill();
   }
+
   // eslint-disable-next-line functional/functional-parameters
   stroke: FunctionColor = function(...args: ParamsToRgb) {
     // eslint-disable-next-line functional/immutable-data
@@ -653,74 +654,6 @@ export abstract class Block {
   isPoint(x: number, y: number): boolean {
     return this.instance.ctx.isPointInPath(x, y);
   }
-  createImageData(height: ImageData): ImageData;
-  createImageData(width: number, height: number): ImageData;
-  createImageData(width: ImageData | number, height?: number): ImageData {
-    return height
-      ? this.instance.createImageData(width as number, height)
-      : this.instance.createImageData(width as ImageData);
-  }
-  getImageData(x: number, y: number, width: number, height: number): ImageData {
-    return this.instance.getImageData(x, y, width, height);
-  }
-  putImageData(imageData: ImageData, x: number, y: number): void;
-  putImageData(
-    imageData: ImageData,
-    x: number,
-    y: number,
-    xs: number,
-    ys: number,
-    width: number,
-    height: number
-  ): void;
-  putImageData(
-    imageData: ImageData,
-    x: number,
-    y: number,
-    xs?: number,
-    ys?: number,
-    width?: number,
-    height?: number
-  ): void {
-    // eslint-disable-next-line functional/functional-parameters
-    if (arguments.length === 7) {
-      this.instance.putImageData(
-        imageData,
-        x,
-        y,
-        xs as number,
-        ys as number,
-        width as number,
-        height as number
-      );
-    } else {
-      this.instance.putImageData(imageData, x, y);
-    }
-  }
-  createPattern(
-    image: CanvasImageSource,
-    direction: DirectionPattern
-  ): CanvasPattern | null {
-    return this.instance.createPattern(image, direction);
-  }
-  createRadialGradient(
-    x1: number,
-    y1: number,
-    r1: number,
-    x2: number,
-    y2: number,
-    r2: number
-  ): CanvasGradient {
-    return this.instance.createRadialGradient(x1, y1, r1, x2, y2, r2);
-  }
-  createLinearGradient(
-    x: number,
-    y: number,
-    width: number,
-    height: number
-  ): CanvasGradient {
-    return this.instance.createLinearGradient(x, y, width, height);
-  }
 
   lineJoin(): LineJoin;
   lineJoin(type: LineJoin): void;
@@ -821,16 +754,5 @@ export abstract class Block {
         points[1] as number
       );
     }
-  }
-
-  drawing(program: Noop): void {
-    this.begin();
-    program.call(this);
-    this.close();
-  }
-  backup(program: Noop): void {
-    this.save();
-    program.call(this);
-    this.restore();
   }
 }
