@@ -346,11 +346,11 @@ function defineBlock<
     }
   }
   return class extends Block {
-    private readonly emitter = mitt();
+    readonly #emitter = mitt();
 
-    readonly on = this.emitter.on;
-    readonly off = this.emitter.off;
-    readonly emit = this.emitter.emit;
+    readonly on = this.#emitter.on;
+    readonly off = this.#emitter.off;
+    readonly emit = this.#emitter.emit;
     readonly draw = options.draw;
     readonly update?: Noop;
 

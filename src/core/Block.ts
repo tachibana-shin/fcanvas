@@ -60,13 +60,13 @@ export abstract class Block {
     return "unknown";
   }
   // eslint-disable-next-line functional/prefer-readonly-type
-  private canvasInstance: fCanvas | null = null;
+  #canvasInstance: fCanvas | null = null;
 
   render<T = void>(canvas = getCanvasInstance()): void | T {
     // eslint-disable-next-line functional/no-let
     let updateReturn;
 
-    this.canvasInstance = canvas;
+    this.#canvasInstance = canvas;
 
     if (existsCbUpdate(this)) {
       if (existsCbDraw(this)) {
@@ -77,13 +77,13 @@ export abstract class Block {
       this.draw();
     }
 
-    this.canvasInstance = null;
+    this.#canvasInstance = null;
 
     return updateReturn as void | T;
   }
-  get instance(): fCanvas {
-    if (this.canvasInstance instanceof fCanvas) {
-      return this.canvasInstance;
+  protected get instance(): fCanvas {
+    if (this.#canvasInstance instanceof fCanvas) {
+      return this.#canvasInstance;
     } else {
       // eslint-disable-next-line functional/no-throw-statement
       throw throwError(
@@ -169,33 +169,33 @@ export abstract class Block {
   // > /shared
 
   // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
-  readonly fill = ((...args: any) => {
+  protected readonly fill = ((...args: any) => {
     // eslint-disable-next-line functional/immutable-data
-    this.instance.ctx.fillStyle = this.instance._toRgb(args);
+    this.instance.ctx.fillStyle = this.instance.convertToRgbColor(args);
     this.instance.ctx.fill();
   }) as FunctionColor;
 
   // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
-  readonly stroke = ((...args: any) => {
+  protected readonly stroke = ((...args: any) => {
     // eslint-disable-next-line functional/immutable-data
-    this.instance.ctx.strokeStyle = this.instance._toRgb(args);
+    this.instance.ctx.strokeStyle = this.instance.convertToRgbColor(args);
     this.instance.ctx.stroke();
   }) as FunctionColor;
-  noFill(): void {
+  protected noFill(): void {
     return this.fill(0, 0, 0, 0);
   }
-  lineWidth(): number;
-  lineWidth(width: number): void;
-  lineWidth(value?: number): number | void {
+  protected lineWidth(): number;
+  protected lineWidth(width: number): void;
+  protected lineWidth(value?: number): number | void {
     if (value === undefined) {
       return this.instance.ctx.lineWidth;
     }
     // eslint-disable-next-line functional/immutable-data
-    this.instance.ctx.lineWidth = this.instance._getPixel(value);
+    this.instance.ctx.lineWidth = this.instance.performancePixel(value);
   }
-  miterLimit(): number;
-  miterLimit(value: number): void;
-  miterLimit(value?: number): number | void {
+  protected miterLimit(): number;
+  protected miterLimit(value: number): void;
+  protected miterLimit(value?: number): number | void {
     if (value === undefined) {
       return this.instance.ctx.miterLimit;
     }
@@ -204,9 +204,9 @@ export abstract class Block {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.miterLimit = value;
   }
-  shadowOffset(): ReadonlyOffset;
-  shadowOffset(x: number, y: number): void;
-  shadowOffset(x?: number, y?: number): ReadonlyOffset | void {
+  protected shadowOffset(): ReadonlyOffset;
+  protected shadowOffset(x: number, y: number): void;
+  protected shadowOffset(x?: number, y?: number): ReadonlyOffset | void {
     // eslint-disable-next-line functional/functional-parameters
     if (arguments.length === 0) {
       return {
@@ -216,44 +216,31 @@ export abstract class Block {
     }
 
     [this.instance.ctx.shadowOffsetX, this.instance.ctx.shadowOffsetY] = [
-      this.instance._getPixel(x || 0),
-      this.instance._getPixel(y || 0),
+      this.instance.performancePixel(x || 0),
+      this.instance.performancePixel(y || 0),
     ];
   }
-  measureText(text: string): number {
+  protected measureText(text: string): number {
     return this.instance.measureText(text);
   }
-  begin(): void {
+  protected begin(): void {
     this.instance.ctx.beginPath();
   }
-  close(): void {
+  protected close(): void {
     this.instance.ctx.closePath();
   }
-  save(): void {
+  protected save(): void {
     this.instance.save();
   }
-  restore(): void {
+  protected restore(): void {
     this.instance.restore();
   }
-  rotate(): number;
-  rotate(angle: number): void;
-  rotate(angle?: number): number | void {
-    if (angle === undefined) {
-      return this.instance.rotate();
-    }
-    this.instance.rotate(angle);
+  protected drawWithInstance(cb: (fcanvas: fCanvas) => void): void {
+    this.instance.save();
+    void cb(this.instance);
+    this.instance.restore();
   }
-  translate(): ReadonlyOffset;
-  translate(x: number, y: number): void;
-  translate(x?: number, y?: number): ReadonlyOffset | void {
-    // eslint-disable-next-line functional/functional-parameters
-    if (arguments.length === 0) {
-      return this.instance.translate();
-    }
-
-    this.instance.translate(x as number, y as number);
-  }
-  arc(
+  protected arc(
     x: number,
     y: number,
     radius: number,
@@ -263,16 +250,16 @@ export abstract class Block {
   ): void {
     this.begin();
     this.instance.ctx.arc(
-      this.instance._getPixel(x),
-      this.instance._getPixel(y),
+      this.instance.performancePixel(x),
+      this.instance.performancePixel(y),
       radius,
-      this.instance._toRadius(astart) - Math.PI / 2,
-      this.instance._toRadius(astop) - Math.PI / 2,
+      this.instance.convertToRadius(astart) - Math.PI / 2,
+      this.instance.convertToRadius(astop) - Math.PI / 2,
       reverse
     );
     this.close();
   }
-  pie(
+  protected pie(
     x: number,
     y: number,
     radius: number,
@@ -284,13 +271,13 @@ export abstract class Block {
     this.arc(x, y, radius, astart, astop, reverse);
     this.to(x, y);
   }
-  line(x1: number, y1: number, x2: number, y2: number): void {
+  protected line(x1: number, y1: number, x2: number, y2: number): void {
     // this.begin();
     this.move(x1, y1);
     this.to(x2, y2);
     // this.close();fix
   }
-  ellipse(
+  protected ellipse(
     x: number,
     y: number,
     radius1: number,
@@ -301,17 +288,17 @@ export abstract class Block {
   ): void {
     this.begin();
     this.instance.ctx.ellipse(
-      this.instance._getPixel(x),
-      this.instance._getPixel(y),
+      this.instance.performancePixel(x),
+      this.instance.performancePixel(y),
       radius1,
       radius2,
-      this.instance._toRadius(astart) - Math.PI / 2,
-      this.instance._toRadius(astop),
+      this.instance.convertToRadius(astart) - Math.PI / 2,
+      this.instance.convertToRadius(astop),
       reverse
     );
     this.close();
   }
-  circle(x: number, y: number, radius: number): void {
+  protected circle(x: number, y: number, radius: number): void {
     return this.arc(
       x,
       y,
@@ -320,10 +307,10 @@ export abstract class Block {
       this.instance.angleMode() === "degress" ? 360 : Math.PI * 2
     );
   }
-  point(x: number, y: number): void {
+  protected point(x: number, y: number): void {
     return this.circle(x, y, 1);
   }
-  triangle(
+  protected triangle(
     x1: number,
     y1: number,
     x2: number,
@@ -336,15 +323,15 @@ export abstract class Block {
     this.to(x3, y3);
   }
 
-  drawImage(image: CanvasImageSource, x: number, y: number): void;
-  drawImage(
+  protected drawImage(image: CanvasImageSource, x: number, y: number): void;
+  protected drawImage(
     image: CanvasImageSource,
     x: number,
     y: number,
     width: number,
     height: number
   ): void;
-  drawImage(
+  protected drawImage(
     image: CanvasImageSource,
     xStartCut: number,
     yStartCut: number,
@@ -355,8 +342,12 @@ export abstract class Block {
     width: number,
     height: number
   ): void;
-  // eslint-disable-next-line functional/functional-parameters
-  drawImage(image: CanvasImageSource, ...args: readonly number[]): void {
+
+  protected drawImage(
+    image: CanvasImageSource,
+    // eslint-disable-next-line functional/functional-parameters
+    ...args: readonly number[]
+  ): void {
     // eslint-disable-next-line prefer-spread
     this.instance.ctx.drawImage.apply(this.instance.ctx, [
       image,
@@ -365,14 +356,14 @@ export abstract class Block {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ] as any);
   }
-  drawImageRepeat(
+  protected drawImageRepeat(
     image: CanvasImageSource,
     x: number,
     y: number,
     frameWidth: number,
     frameHeight: number
   ): void;
-  drawImageRepeat(
+  protected drawImageRepeat(
     image: CanvasImageSource,
     x: number,
     y: number,
@@ -381,7 +372,7 @@ export abstract class Block {
     frameWidth: number,
     frameHeight: number
   ): void;
-  drawImageRepeat(
+  protected drawImageRepeat(
     image: CanvasImageSource,
     x: number,
     y: number,
@@ -392,7 +383,7 @@ export abstract class Block {
     frameWidth: number,
     frameHeight: number
   ): void;
-  drawImageRepeat(
+  protected drawImageRepeat(
     image: CanvasImageSource,
     x: number,
     y: number,
@@ -499,14 +490,14 @@ export abstract class Block {
       }
     }
   }
-  rRect(
+  protected rRect(
     x: number,
     y: number,
     width: number,
     height: number,
     radius: string | number
   ): void;
-  rRect(
+  protected rRect(
     x: number,
     y: number,
     width: number,
@@ -514,7 +505,7 @@ export abstract class Block {
     radiusLeft: string | number,
     radiusRight: string | number
   ): void;
-  rRect(
+  protected rRect(
     x: number,
     y: number,
     width: number,
@@ -524,7 +515,7 @@ export abstract class Block {
     radiusBottomRight: string | number,
     radiusBottomLeft: string | number
   ): void;
-  rRect(
+  protected rRect(
     x: number,
     y: number,
     w: number,
@@ -535,7 +526,7 @@ export abstract class Block {
     radiusBottomLeft?: string | number
   ): void {
     this.begin();
-    [x, y, w, h] = this.instance._argsRect(x, y, w, h);
+    [x, y, w, h] = this.instance.getSizeofRect(x, y, w, h);
 
     const fontSize = this.instance.fontSize();
     const arc = [
@@ -552,21 +543,21 @@ export abstract class Block {
 
     this.close();
   }
-  rect(x: number, y: number, width: number, height: number): void {
+  protected rect(x: number, y: number, width: number, height: number): void {
     this.begin();
-    [x, y, width, height] = this.instance._argsRect(x, y, width, height);
+    [x, y, width, height] = this.instance.getSizeofRect(x, y, width, height);
     this.instance.ctx.rect(
-      this.instance._getPixel(x),
-      this.instance._getPixel(y),
+      this.instance.performancePixel(x),
+      this.instance.performancePixel(y),
       width,
       height
     );
     this.close();
   }
-  quadratic(cpx: number, cpy: number, x: number, y: number): void {
+  protected quadratic(cpx: number, cpy: number, x: number, y: number): void {
     this.instance.ctx.quadraticCurveTo(cpx, cpy, x, y);
   }
-  bezier(
+  protected bezier(
     cp1x: number,
     cp1y: number,
     cp2x: number,
@@ -576,53 +567,73 @@ export abstract class Block {
   ): void {
     this.instance.ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
   }
-  move(x: number, y: number): void {
+  protected move(x: number, y: number): void {
     this.instance.ctx.moveTo(
-      this.instance._getPixel(x),
-      this.instance._getPixel(y)
+      this.instance.performancePixel(x),
+      this.instance.performancePixel(y)
     );
   }
-  to(x: number, y: number): void {
+  protected to(x: number, y: number): void {
     this.instance.ctx.lineTo(
-      this.instance._getPixel(x),
-      this.instance._getPixel(y)
+      this.instance.performancePixel(x),
+      this.instance.performancePixel(y)
     );
   }
-  fillText(text: string, x: number, y: number, maxWidth?: number): void {
+  protected fillText(
+    text: string,
+    x: number,
+    y: number,
+    maxWidth?: number
+  ): void {
     this.instance.ctx.fillText(
       text,
-      this.instance._getPixel(x),
-      this.instance._getPixel(y),
+      this.instance.performancePixel(x),
+      this.instance.performancePixel(y),
       maxWidth
     );
   }
-  strokeText(text: string, x: number, y: number, maxWidth?: number): void {
+  protected strokeText(
+    text: string,
+    x: number,
+    y: number,
+    maxWidth?: number
+  ): void {
     this.instance.ctx.strokeText(
       text,
-      this.instance._getPixel(x),
-      this.instance._getPixel(y),
+      this.instance.performancePixel(x),
+      this.instance.performancePixel(y),
       maxWidth
     );
   }
-  fillRect(x: number, y: number, width: number, height: number): void {
+  protected fillRect(
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): void {
     this.instance.ctx.fillRect(
-      this.instance._getPixel(x),
-      this.instance._getPixel(y),
+      this.instance.performancePixel(x),
+      this.instance.performancePixel(y),
       width,
       height
     );
   }
-  strokeRect(x: number, y: number, width: number, height: number): void {
+  protected strokeRect(
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): void {
     this.instance.ctx.strokeRect(
-      this.instance._getPixel(x),
-      this.instance._getPixel(y),
+      this.instance.performancePixel(x),
+      this.instance.performancePixel(y),
       width,
       height
     );
   }
-  lineDashOffset(): number;
-  lineDashOffset(value: number): void;
-  lineDashOffset(value?: number): number | void {
+  protected lineDashOffset(): number;
+  protected lineDashOffset(value: number): void;
+  protected lineDashOffset(value?: number): number | void {
     if (value === undefined) {
       return this.instance.ctx.lineDashOffset;
     }
@@ -630,10 +641,10 @@ export abstract class Block {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.lineDashOffset = value;
   }
-  lineDash(): readonly number[];
-  lineDash(segments: readonly number[]): void;
-  lineDash(...segments: readonly number[]): void;
-  lineDash(
+  protected lineDash(): readonly number[];
+  protected lineDash(segments: readonly number[]): void;
+  protected lineDash(...segments: readonly number[]): void;
+  protected lineDash(
     // eslint-disable-next-line functional/functional-parameters
     ...segments: ReadonlyArray<readonly number[] | number>
   ): readonly number[] | void {
@@ -647,22 +658,28 @@ export abstract class Block {
 
     this.instance.ctx.setLineDash(segments as readonly number[]);
   }
-  arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void {
+  protected arcTo(
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    radius: number
+  ): void {
     this.instance.ctx.arcTo(
-      this.instance._getPixel(x1),
-      this.instance._getPixel(y1),
-      this.instance._getPixel(x2),
-      this.instance._getPixel(y2),
+      this.instance.performancePixel(x1),
+      this.instance.performancePixel(y1),
+      this.instance.performancePixel(x2),
+      this.instance.performancePixel(y2),
       radius
     );
   }
-  isPoint(x: number, y: number): boolean {
+  protected isPoint(x: number, y: number): boolean {
     return this.instance.ctx.isPointInPath(x, y);
   }
 
-  lineJoin(): LineJoin;
-  lineJoin(type: LineJoin): void;
-  lineJoin(type?: LineJoin): LineJoin | void {
+  protected lineJoin(): LineJoin;
+  protected lineJoin(type: LineJoin): void;
+  protected lineJoin(type?: LineJoin): LineJoin | void {
     if (type === undefined) {
       return this.instance.ctx.lineJoin;
     }
@@ -670,18 +687,18 @@ export abstract class Block {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.lineJoin = type;
   }
-  lineCap(): LineCap;
-  lineCap(value: LineCap): void;
-  lineCap(value?: LineCap): LineCap | void {
+  protected lineCap(): LineCap;
+  protected lineCap(value: LineCap): void;
+  protected lineCap(value?: LineCap): LineCap | void {
     if (value === undefined) {
       return this.instance.ctx.lineCap;
     }
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.lineCap = value;
   }
-  shadowBlur(): number;
-  shadowBlur(opacity: number): void;
-  shadowBlur(opacity?: number): number | void {
+  protected shadowBlur(): number;
+  protected shadowBlur(opacity: number): void;
+  protected shadowBlur(opacity?: number): number | void {
     if (opacity === undefined) {
       return this.instance.ctx.shadowBlur;
     }
@@ -691,13 +708,13 @@ export abstract class Block {
   }
 
   // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
-  readonly shadowColor = ((...args: any) => {
+  protected readonly shadowColor = ((...args: any) => {
     // eslint-disable-next-line functional/immutable-data
-    this.instance.ctx.shadowColor = this.instance._toRgb(args);
+    this.instance.ctx.shadowColor = this.instance.convertToRgbColor(args);
   }) as FunctionColor;
-  drawFocusIfNeeded(element: Element): void;
-  drawFocusIfNeeded(path: Path2D, element: Element): void;
-  drawFocusIfNeeded(path: Element | Path2D, element?: Element): void {
+  protected drawFocusIfNeeded(element: Element): void;
+  protected drawFocusIfNeeded(path: Path2D, element: Element): void;
+  protected drawFocusIfNeeded(path: Element | Path2D, element?: Element): void {
     if (element === undefined) {
       this.instance.ctx.drawFocusIfNeeded(path as Element);
     } else {
@@ -705,9 +722,9 @@ export abstract class Block {
     }
   }
 
-  polyline(...points: readonly number[]): void;
-  polyline(...points: readonly (readonly [number, number])[]): void;
-  polyline(
+  protected polyline(...points: readonly number[]): void;
+  protected polyline(...points: readonly (readonly [number, number])[]): void;
+  protected polyline(
     // eslint-disable-next-line functional/functional-parameters
     ...points: readonly number[] | ReadonlyArray<readonly [number, number]>
   ): void {
@@ -744,9 +761,9 @@ export abstract class Block {
       }
     }
   }
-  polygon(...points: readonly number[]): void;
-  polygon(...points: readonly (readonly [number, number])[]): void;
-  polygon(
+  protected polygon(...points: readonly number[]): void;
+  protected polygon(...points: readonly (readonly [number, number])[]): void;
+  protected polygon(
     // eslint-disable-next-line functional/functional-parameters
     ...points: readonly number[] | ReadonlyArray<readonly [number, number]>
   ): void {

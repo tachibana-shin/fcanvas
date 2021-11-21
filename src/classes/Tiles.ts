@@ -46,26 +46,26 @@ function passValueOfPlistToJSON<T = number>(value: string): readonly T[] {
 }
 
 export class Tiles {
-  private readonly plist: Plist;
-  private readonly tile: HTMLImageElement;
-  private readonly cache = new Map<string, CanvasImageResource>();
+  readonly #plist: Plist;
+  readonly #tile: HTMLImageElement;
+  readonly #cache = new Map<string, CanvasImageResource>();
 
   constructor(plist: Plist, tile: HTMLImageElement) {
-    this.plist = plist;
-    this.tile = tile;
+    this.#plist = plist;
+    this.#tile = tile;
   }
 
   get(name: string): CanvasImageResource {
     if (this.has(name)) {
       const { frame, rotated, sourceSize, sourceColorRect, offset } =
-        this.plist.frames[name];
+        this.#plist.frames[name];
 
-      if (this.cache.has(name) === false) {
+      if (this.#cache.has(name) === false) {
         const [[xCutStart, yCutStart], [xCutStop, yCutStop]] =
           passValueOfPlistToJSON<readonly [number, number]>(frame);
 
         const imageNotResource = cutImage(
-          this.tile,
+          this.#tile,
           xCutStart,
           yCutStart,
           xCutStop,
@@ -77,7 +77,7 @@ export class Tiles {
         const [[xColorRect, yColorRect], [widthColorRect, heightColorRect]] =
           passValueOfPlistToJSON<readonly [number, number]>(sourceColorRect);
         const [x, y] = passValueOfPlistToJSON(offset);
-        this.cache.set(
+        this.#cache.set(
           name,
           // eslint-disable-next-line functional/immutable-data
           Object.assign(imageNotResource, {
@@ -99,7 +99,7 @@ export class Tiles {
         );
       }
 
-      return this.cache.get(name) as CanvasImageResource;
+      return this.#cache.get(name) as CanvasImageResource;
     } else {
       // eslint-disable-next-line functional/no-throw-statement
       throw throwError(
@@ -108,7 +108,7 @@ export class Tiles {
     }
   }
   has(name: string): boolean {
-    return name in this.plist.frames;
+    return name in this.#plist.frames;
   }
 }
 

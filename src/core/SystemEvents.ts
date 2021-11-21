@@ -62,7 +62,7 @@ function __draw(callback: Noop, canvas?: fCanvas): void {
       __draw(callback, canvas);
     });
 
-    canvas?._setIdFrame(id);
+    canvas?.setIdFrame(id);
   }
 }
 

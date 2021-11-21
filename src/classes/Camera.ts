@@ -16,43 +16,43 @@ type Range = {
 };
 
 class Cursor {
-  private readonly _camera: Camera;
-  private readonly _config: ReadonlyOffset<Range>;
+  readonly #camera: Camera;
+  readonly #config: ReadonlyOffset<Range>;
 
   public get x(): number {
-    return this._config.x.current;
+    return this.#config.x.current;
   }
   public get y(): number {
-    return this._config.y.current;
+    return this.#config.y.current;
   }
 
   constructor(camera: Camera, config: ReadonlyOffset<Range>) {
-    this._camera = camera;
+    this.#camera = camera;
 
-    this._config = config;
+    this.#config = config;
 
     const watch = (prop: keyof ReadonlyOffset<Range>) => {
-      this._camera.$watch(prop, (newValue, oldValue) => {
+      this.#camera.$watch(prop, (newValue, oldValue) => {
         const dist = newValue - oldValue;
         // min = this._config.x.min;
 
-        if (this._config[prop].dynamic) {
+        if (this.#config[prop].dynamic) {
           if (
             dist < 0
-              ? this[prop] > this._config[prop].min
-              : this[prop] < this._config[prop].max
+              ? this[prop] > this.#config[prop].min
+              : this[prop] < this.#config[prop].max
           ) {
-            this._config[prop].current += dist;
+            this.#config[prop].current += dist;
             return false;
           }
         } else {
           if (
             (prop === "x"
-              ? this._camera.isLimitX()
-              : this._camera.isLimitY()) === (dist < 0 ? -1 : 1)
+              ? this.#camera.isLimitX()
+              : this.#camera.isLimitY()) === (dist < 0 ? -1 : 1)
           ) {
-            if (this[prop] > this._config[prop].min) {
-              this._config[prop].current += dist;
+            if (this[prop] > this.#config[prop].min) {
+              this.#config[prop].current += dist;
             }
           }
         }
@@ -66,9 +66,9 @@ class Cursor {
 
 export class Camera {
   static readonly Cursor: typeof Cursor = Cursor;
-  private readonly _canvas: fCanvas;
-  private readonly _viewport: ViewPort;
-  private readonly _offset: {
+  readonly #canvas: fCanvas;
+  readonly #viewport: ViewPort;
+  readonly #offset: {
     // eslint-disable-next-line functional/prefer-readonly-type
     x: number;
     // eslint-disable-next-line functional/prefer-readonly-type
@@ -77,19 +77,19 @@ export class Camera {
     x: 0,
     y: 0,
   });
-  private readonly _watchers: {
+  readonly #watchers: {
     // eslint-disable-next-line @typescript-eslint/ban-types, functional/prefer-readonly-type
     readonly [propName: string]: Function[];
   } = Object.create(null);
 
   public get x(): number {
-    return this._offset.x;
+    return this.#offset.x;
   }
   public set x(value: number) {
-    const old = this._offset.x;
+    const old = this.#offset.x;
     // eslint-disable-next-line functional/no-let
     let allowChange = true;
-    this._watchers.x?.forEach((callback) => {
+    this.#watchers.x?.forEach((callback) => {
       if (callback(value, old) === false) {
         allowChange = false;
       }
@@ -97,17 +97,17 @@ export class Camera {
 
     if (allowChange) {
       // eslint-disable-next-line functional/immutable-data
-      this._offset.x = value;
+      this.#offset.x = value;
     }
   }
   public get y(): number {
-    return this._offset.y;
+    return this.#offset.y;
   }
   public set y(value: number) {
-    const old = this._offset.y;
+    const old = this.#offset.y;
     // eslint-disable-next-line functional/no-let
     let allowChange = true;
-    this._watchers.y?.forEach((callback) => {
+    this.#watchers.y?.forEach((callback) => {
       if (callback(value, old) === false) {
         allowChange = false;
       }
@@ -115,7 +115,7 @@ export class Camera {
 
     if (allowChange) {
       // eslint-disable-next-line functional/immutable-data
-      this._offset.y = value;
+      this.#offset.y = value;
     }
   }
   public $watch(
@@ -125,22 +125,22 @@ export class Camera {
       (newValue: any, oldValue: any): void;
     }
   ): Noop {
-    if (name in this._watchers === false) {
+    if (name in this.#watchers === false) {
       // eslint-disable-next-line functional/immutable-data
-      this._watchers[name].splice(0);
+      this.#watchers[name].splice(0);
     }
 
     // eslint-disable-next-line functional/immutable-data
-    this._watchers[name].push(callback);
+    this.#watchers[name].push(callback);
 
     return () => {
-      const index = this._watchers[name]?.findIndex(
+      const index = this.#watchers[name]?.findIndex(
         (item) => item === callback
       );
 
       if (index && index !== -1) {
         // eslint-disable-next-line functional/immutable-data
-        this._watchers[name].splice(index, 1);
+        this.#watchers[name].splice(index, 1);
       }
     };
   }
@@ -152,9 +152,9 @@ export class Camera {
     width: number,
     height: number
   ) {
-    this._canvas = canvas;
+    this.#canvas = canvas;
 
-    this._viewport = {
+    this.#viewport = {
       x,
       y,
       width,
@@ -167,8 +167,8 @@ export class Camera {
       value -
       constrain(
         this.x * diffSpeed,
-        this._viewport.x,
-        this._viewport.width - this._canvas.width
+        this.#viewport.x,
+        this.#viewport.width - this.#canvas.width
       )
     );
   }
@@ -177,28 +177,28 @@ export class Camera {
       value -
       constrain(
         this.y * diffSpeed,
-        this._viewport.y,
-        this._viewport.height - this._canvas.height
+        this.#viewport.y,
+        this.#viewport.height - this.#canvas.height
       )
     );
   }
   public isLimitX(): -1 | 0 | 1 {
-    if (this.x < this._viewport.x) {
+    if (this.x < this.#viewport.x) {
       return -1;
     }
 
-    if (this.x > this._viewport.width - this._canvas.width) {
+    if (this.x > this.#viewport.width - this.#canvas.width) {
       return 1;
     }
 
     return 0;
   }
   public isLimitY(): -1 | 0 | 1 {
-    if (this.y < this._viewport.y) {
+    if (this.y < this.#viewport.y) {
       return -1;
     }
 
-    if (this.y > this._viewport.height - this._canvas.height) {
+    if (this.y > this.#viewport.height - this.#canvas.height) {
       return 1;
     }
 
@@ -221,7 +221,7 @@ export class Camera {
 
     value = this.getXOffset(value, diffSpeed);
 
-    return value + width > 0 || value < this._canvas.width;
+    return value + width > 0 || value < this.#canvas.width;
   }
   public isYInViewBox(element: Block, diffSpeed: number): boolean;
   public isYInViewBox(
@@ -243,7 +243,7 @@ export class Camera {
 
     value = this.getYOffset(value, diffSpeed);
 
-    return value + height > 0 || value < this._canvas.height;
+    return value + height > 0 || value < this.#canvas.height;
   }
 
   public isInViewBox(

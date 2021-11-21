@@ -5,17 +5,17 @@ export class OneTimeEvent<
     readonly [name: string]: boolean;
   }
 > {
-  private readonly store;
+  readonly #store;
   constructor(obj: States) {
-    this.store = reactive(obj);
+    this.#store = reactive(obj);
   }
 
   on(name: keyof States, callback: () => void): void {
-    if (this.store[name]) {
+    if (this.#store[name]) {
       callback();
     } else {
       const watcher = watch(
-        this.store,
+        this.#store,
         () => {
           callback();
           watcher();
@@ -27,7 +27,7 @@ export class OneTimeEvent<
     }
   }
   emit(name: keyof States): void {
-    (this.store[name] as boolean) = true;
+    (this.#store[name] as boolean) = true;
   }
 }
 

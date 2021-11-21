@@ -21,12 +21,11 @@ export class Ref<T = any> {
 }
 
 export class ComputedRef<T = any> {
-  constructor(
-    private readonly getter: () => T,
-    private readonly setter?: (value: T) => void
-  ) {
-    this.getter = getter;
-    this.setter = setter;
+  readonly #getter;
+  readonly #setter;
+  constructor(readonly getter: () => T, readonly setter?: (value: T) => void) {
+    this.#getter = getter;
+    this.#setter = setter;
   }
 
   get value(): T {
@@ -285,6 +284,7 @@ export function watch<T = any>(
     listenersCache.set(proxy as any, [new Map(), new Map()]);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const listeners = listenersCache.get(proxy as any)!;
 
   if (options?.deep) {

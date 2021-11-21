@@ -94,9 +94,9 @@ class AnimateClass<
         readonly [propName: string]: number;
       }
 > {
-  private readonly fps = 1000 / 60;
+  readonly #fps = 1000 / 60;
   // eslint-disable-next-line functional/prefer-readonly-type
-  private readonly queue: {
+  readonly #queue: {
     readonly state: Partial<State>;
     readonly duration?: number;
     readonly easing?: AnimateType;
@@ -106,31 +106,31 @@ class AnimateClass<
   // eslint-disable-next-line functional/prefer-readonly-type
   easing: AnimateType;
   get frames(): number {
-    return Math.max(timeToFrames(this.time, this.fps), 1);
+    return Math.max(timeToFrames(this.time, this.#fps), 1);
   }
   // eslint-disable-next-line functional/prefer-readonly-type
-  private __frame = 1;
+  #frame = 1;
   public get frame(): number {
-    return Math.min(this.__frame, this.frames);
+    return Math.min(this.#frame, this.frames);
   }
   public set frame(value: number) {
-    this.__frame = Math.min(value, this.frames);
+    this.#frame = Math.min(value, this.frames);
 
     if (this.frame === this.frames) {
-      this.emitter.emit("done");
+      this.#emitter.emit("done");
 
-      if (this.queue.length > 0) {
-        this._to(
-          this.queue[0].state,
-          this.queue[0].duration,
-          this.queue[0].easing
+      if (this.#queue.length > 0) {
+        this.#to(
+          this.#queue[0].state,
+          this.#queue[0].duration,
+          this.#queue[0].easing
         );
         // eslint-disable-next-line functional/immutable-data
-        this.queue.splice(0, 1);
+        this.#queue.splice(0, 1);
       }
     }
   }
-  private readonly store: Record<
+  readonly #store: Record<
     keyof State,
     {
       // eslint-disable-next-line functional/prefer-readonly-type
@@ -139,13 +139,14 @@ class AnimateClass<
       to: number;
     }
   >;
-  private readonly emitter = mitt<{
+  readonly #emitter = mitt<{
     readonly cancel: keyof State;
     readonly done: void;
   }>();
 
   constructor(state: State, duration = 0, easing: AnimateType = "ease") {
-    const store: typeof this.store = {} as typeof this.store;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const store = {} as any;
     // eslint-disable-next-line functional/no-loop-statement
     for (const prop in state) {
       store[prop as keyof State] = {
@@ -159,7 +160,7 @@ class AnimateClass<
         },
       });
     }
-    this.store = store;
+    this.#store = store;
     this.time = duration;
     this.easing = easing;
   }
@@ -170,8 +171,8 @@ class AnimateClass<
   get(prop: keyof State): number {
     return getValueInFrame(
       this.easing,
-      this.store[prop].start,
-      this.store[prop].to,
+      this.#store[prop].start,
+      this.#store[prop].to,
       this.frame,
       this.frames
     );
@@ -179,25 +180,21 @@ class AnimateClass<
   cancel(prop?: keyof State): void {
     if (prop) {
       // eslint-disable-next-line functional/immutable-data
-      this.store[prop].start = this.get(prop);
-      this.emitter.emit("cancel", prop);
+      this.#store[prop].start = this.get(prop);
+      this.#emitter.emit("cancel", prop);
     } else {
       // eslint-disable-next-line functional/no-loop-statement
-      for (const prop in this.store) {
+      for (const prop in this.#store) {
         this.cancel(prop);
       }
     }
   }
-  private _to(
-    state: Partial<State>,
-    duration?: number,
-    easing?: AnimateType
-  ): void {
+  #to(state: Partial<State>, duration?: number, easing?: AnimateType): void {
     // eslint-disable-next-line functional/no-loop-statement
     for (const prop in state) {
       this.cancel(prop);
       // eslint-disable-next-line functional/immutable-data
-      this.store[prop].to = state[prop] as unknown as number;
+      this.#store[prop].to = state[prop] as unknown as number;
     }
 
     this.frame = 0;
@@ -205,16 +202,16 @@ class AnimateClass<
     this.easing = easing ?? this.easing;
   }
   to(state: Partial<State>, duration?: number, easing?: AnimateType): void {
-    this._to(state, duration, easing);
+    this.#to(state, duration, easing);
 
     // eslint-disable-next-line functional/immutable-data
-    this.queue.splice(0);
+    this.#queue.splice(0);
   }
   get running(): boolean {
     return this.frame < this.frames;
   }
   add(state: Partial<State>, duration?: number, easing?: AnimateType): void {
     // eslint-disable-next-line functional/immutable-data
-    this.queue.push({ state, duration, easing });
+    this.#queue.push({ state, duration, easing });
   }
 }
