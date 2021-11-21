@@ -82,7 +82,7 @@ export abstract class Block {
     
     return updateReturn as (void | T);
   }
-  get fcanvas(): fCanvas {
+  get instance(): fCanvas {
     if (this.canvasInstance instanceof fCanvas) {
       return this.canvasInstance;
     } else {
@@ -95,47 +95,47 @@ export abstract class Block {
 
   // > share object
   sin(angle: number): number {
-    return this.fcanvas.sin(angle);
+    return this.instance.sin(angle);
   }
   asin(sin: number): number {
-    return this.fcanvas.asin(sin);
+    return this.instance.asin(sin);
   }
   cos(angle: number): number {
-    return this.fcanvas.cos(angle);
+    return this.instance.cos(angle);
   }
   acos(cos: number): number {
-    return this.fcanvas.asin(cos);
+    return this.instance.asin(cos);
   }
   tan(angle: number): number {
-    return this.fcanvas.tan(angle);
+    return this.instance.tan(angle);
   }
   atan(tan: number): number {
-    return this.fcanvas.atan(tan);
+    return this.instance.atan(tan);
   }
   atan2(y: number, x: number): number {
-    return this.fcanvas.atan2(y, x);
+    return this.instance.atan2(y, x);
   }
 
   get mouseX(): number | null {
-    return this.fcanvas.mouseX;
+    return this.instance.mouseX;
   }
   get mouseY(): number | null {
-    return this.fcanvas.mouseY;
+    return this.instance.mouseY;
   }
   get movedX(): number {
-    return this.fcanvas.movedX;
+    return this.instance.movedX;
   }
   get movedY(): number {
-    return this.fcanvas.movedY;
+    return this.instance.movedY;
   }
   get pmouseX(): number {
-    return this.fcanvas.pmouseX;
+    return this.instance.pmouseX;
   }
   get pmouseY(): number {
-    return this.fcanvas.pmouseY;
+    return this.instance.pmouseY;
   }
   get mouseIsPressed(): boolean {
-    return this.fcanvas.mouseIsPressed;
+    return this.instance.mouseIsPressed;
   }
 
   get isPressed(): boolean {
@@ -182,17 +182,17 @@ export abstract class Block {
 
     switch (this.type) {
       case "rect":
-        return this.fcanvas.touches.some((item) =>
+        return this.instance.touches.some((item) =>
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           intersectRectPoint(this as any, item.x, item.y)
         );
       case "circle":
-        return this.fcanvas.touches.some((item) =>
+        return this.instance.touches.some((item) =>
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           intersectCirclePoint(this as any, item.x, item.y)
         );
       case "point":
-        return this.fcanvas.touches.some(
+        return this.instance.touches.some(
           (item) =>
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             Math.round((this as any).x) === Math.round(item.x) &&
@@ -205,10 +205,10 @@ export abstract class Block {
   }
 
   get windowWidth(): number {
-    return this.fcanvas.windowWidth;
+    return this.instance.windowWidth;
   }
   get windowHeight(): number {
-    return this.fcanvas.windowHeight;
+    return this.instance.windowHeight;
   }
   // > /shared
 
@@ -225,8 +225,8 @@ export abstract class Block {
   // eslint-disable-next-line functional/functional-parameters
   fill(...args: ParamsToRgb): void {
     // eslint-disable-next-line functional/immutable-data
-    this.fcanvas.ctx.fillStyle = this.fcanvas._toRgb(args);
-    this.fcanvas.ctx.fill();
+    this.instance.ctx.fillStyle = this.instance._toRgb(args);
+    this.instance.ctx.fill();
   }
   stroke(
     hue: number,
@@ -241,8 +241,8 @@ export abstract class Block {
   // eslint-disable-next-line functional/functional-parameters
   stroke(...args: ParamsToRgb): void {
     // eslint-disable-next-line functional/immutable-data
-    this.fcanvas.ctx.strokeStyle = this.fcanvas._toRgb(args);
-    this.fcanvas.ctx.stroke();
+    this.instance.ctx.strokeStyle = this.instance._toRgb(args);
+    this.instance.ctx.stroke();
   }
   noFill(): void {
     return this.fill(0, 0, 0, 0);
@@ -251,21 +251,21 @@ export abstract class Block {
   lineWidth(width: number): void;
   lineWidth(value?: number): number | void {
     if (value === undefined) {
-      return this.fcanvas.ctx.lineWidth;
+      return this.instance.ctx.lineWidth;
     }
     // eslint-disable-next-line functional/immutable-data
-    this.fcanvas.ctx.lineWidth = this.fcanvas._getPixel(value);
+    this.instance.ctx.lineWidth = this.instance._getPixel(value);
   }
   miterLimit(): number;
   miterLimit(value: number): void;
   miterLimit(value?: number): number | void {
     if (value === undefined) {
-      return this.fcanvas.ctx.miterLimit;
+      return this.instance.ctx.miterLimit;
     }
     this.lineJoin("miter");
 
     // eslint-disable-next-line functional/immutable-data
-    this.fcanvas.ctx.miterLimit = value;
+    this.instance.ctx.miterLimit = value;
   }
   shadowOffset(): ReadonlyOffset;
   shadowOffset(x: number, y: number): void;
@@ -273,48 +273,48 @@ export abstract class Block {
     // eslint-disable-next-line functional/functional-parameters
     if (arguments.length === 0) {
       return {
-        x: this.fcanvas.ctx.shadowOffsetX,
-        y: this.fcanvas.ctx.shadowOffsetY,
+        x: this.instance.ctx.shadowOffsetX,
+        y: this.instance.ctx.shadowOffsetY,
       };
     }
 
-    [this.fcanvas.ctx.shadowOffsetX, this.fcanvas.ctx.shadowOffsetY] = [
-      this.fcanvas._getPixel(x || 0),
-      this.fcanvas._getPixel(y || 0),
+    [this.instance.ctx.shadowOffsetX, this.instance.ctx.shadowOffsetY] = [
+      this.instance._getPixel(x || 0),
+      this.instance._getPixel(y || 0),
     ];
   }
   measureText(text: string): number {
-    return this.fcanvas.measureText(text);
+    return this.instance.measureText(text);
   }
   begin(): void {
-    this.fcanvas.ctx.beginPath();
+    this.instance.ctx.beginPath();
   }
   close(): void {
-    this.fcanvas.ctx.closePath();
+    this.instance.ctx.closePath();
   }
   save(): void {
-    this.fcanvas.save();
+    this.instance.save();
   }
   restore(): void {
-    this.fcanvas.restore();
+    this.instance.restore();
   }
   rotate(): number;
   rotate(angle: number): void;
   rotate(angle?: number): number | void {
     if (angle === undefined) {
-      return this.fcanvas.rotate();
+      return this.instance.rotate();
     }
-    this.fcanvas.rotate(angle);
+    this.instance.rotate(angle);
   }
   translate(): ReadonlyOffset;
   translate(x: number, y: number): void;
   translate(x?: number, y?: number): ReadonlyOffset | void {
     // eslint-disable-next-line functional/functional-parameters
     if (arguments.length === 0) {
-      return this.fcanvas.translate();
+      return this.instance.translate();
     }
 
-    this.fcanvas.translate(x as number, y as number);
+    this.instance.translate(x as number, y as number);
   }
   arc(
     x: number,
@@ -325,12 +325,12 @@ export abstract class Block {
     reverse?: boolean
   ): void {
     this.begin();
-    this.fcanvas.ctx.arc(
-      this.fcanvas._getPixel(x),
-      this.fcanvas._getPixel(y),
+    this.instance.ctx.arc(
+      this.instance._getPixel(x),
+      this.instance._getPixel(y),
       radius,
-      this.fcanvas._toRadius(astart) - Math.PI / 2,
-      this.fcanvas._toRadius(astop) - Math.PI / 2,
+      this.instance._toRadius(astart) - Math.PI / 2,
+      this.instance._toRadius(astop) - Math.PI / 2,
       reverse
     );
     this.close();
@@ -363,13 +363,13 @@ export abstract class Block {
     reverse: number
   ): void {
     this.begin();
-    this.fcanvas.ctx.ellipse(
-      this.fcanvas._getPixel(x),
-      this.fcanvas._getPixel(y),
+    this.instance.ctx.ellipse(
+      this.instance._getPixel(x),
+      this.instance._getPixel(y),
       radius1,
       radius2,
-      this.fcanvas._toRadius(astart) - Math.PI / 2,
-      this.fcanvas._toRadius(astop),
+      this.instance._toRadius(astart) - Math.PI / 2,
+      this.instance._toRadius(astop),
       reverse
     );
     this.close();
@@ -380,7 +380,7 @@ export abstract class Block {
       y,
       radius,
       0,
-      this.fcanvas.angleMode() === "degress" ? 360 : Math.PI * 2
+      this.instance.angleMode() === "degress" ? 360 : Math.PI * 2
     );
   }
   point(x: number, y: number): void {
@@ -421,7 +421,7 @@ export abstract class Block {
   // eslint-disable-next-line functional/functional-parameters
   drawImage(image: CanvasImageSource, ...args: readonly number[]): void {
     // eslint-disable-next-line prefer-spread
-    this.fcanvas.ctx.drawImage.apply(this.fcanvas.ctx, [
+    this.instance.ctx.drawImage.apply(this.instance.ctx, [
       image,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...(args as readonly any[]),
@@ -598,9 +598,9 @@ export abstract class Block {
     radiusBottomLeft?: string | number
   ): void {
     this.begin();
-    [x, y, w, h] = this.fcanvas._argsRect(x, y, w, h);
+    [x, y, w, h] = this.instance._argsRect(x, y, w, h);
 
-    const fontSize = this.fcanvas.fontSize();
+    const fontSize = this.instance.fontSize();
     const arc = [
       convertValueToPixel(radiusTopLeft || 0, fontSize),
       convertValueToPixel(radiusTopRight || 0, fontSize),
@@ -617,17 +617,17 @@ export abstract class Block {
   }
   rect(x: number, y: number, width: number, height: number): void {
     this.begin();
-    [x, y, width, height] = this.fcanvas._argsRect(x, y, width, height);
-    this.fcanvas.ctx.rect(
-      this.fcanvas._getPixel(x),
-      this.fcanvas._getPixel(y),
+    [x, y, width, height] = this.instance._argsRect(x, y, width, height);
+    this.instance.ctx.rect(
+      this.instance._getPixel(x),
+      this.instance._getPixel(y),
       width,
       height
     );
     this.close();
   }
   quadratic(cpx: number, cpy: number, x: number, y: number): void {
-    this.fcanvas.ctx.quadraticCurveTo(cpx, cpy, x, y);
+    this.instance.ctx.quadraticCurveTo(cpx, cpy, x, y);
   }
   bezier(
     cp1x: number,
@@ -637,48 +637,48 @@ export abstract class Block {
     x: number,
     y: number
   ): void {
-    this.fcanvas.ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+    this.instance.ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
   }
   move(x: number, y: number): void {
-    this.fcanvas.ctx.moveTo(
-      this.fcanvas._getPixel(x),
-      this.fcanvas._getPixel(y)
+    this.instance.ctx.moveTo(
+      this.instance._getPixel(x),
+      this.instance._getPixel(y)
     );
   }
   to(x: number, y: number): void {
-    this.fcanvas.ctx.lineTo(
-      this.fcanvas._getPixel(x),
-      this.fcanvas._getPixel(y)
+    this.instance.ctx.lineTo(
+      this.instance._getPixel(x),
+      this.instance._getPixel(y)
     );
   }
   fillText(text: string, x: number, y: number, maxWidth?: number): void {
-    this.fcanvas.ctx.fillText(
+    this.instance.ctx.fillText(
       text,
-      this.fcanvas._getPixel(x),
-      this.fcanvas._getPixel(y),
+      this.instance._getPixel(x),
+      this.instance._getPixel(y),
       maxWidth
     );
   }
   strokeText(text: string, x: number, y: number, maxWidth?: number): void {
-    this.fcanvas.ctx.strokeText(
+    this.instance.ctx.strokeText(
       text,
-      this.fcanvas._getPixel(x),
-      this.fcanvas._getPixel(y),
+      this.instance._getPixel(x),
+      this.instance._getPixel(y),
       maxWidth
     );
   }
   fillRect(x: number, y: number, width: number, height: number): void {
-    this.fcanvas.ctx.fillRect(
-      this.fcanvas._getPixel(x),
-      this.fcanvas._getPixel(y),
+    this.instance.ctx.fillRect(
+      this.instance._getPixel(x),
+      this.instance._getPixel(y),
       width,
       height
     );
   }
   strokeRect(x: number, y: number, width: number, height: number): void {
-    this.fcanvas.ctx.strokeRect(
-      this.fcanvas._getPixel(x),
-      this.fcanvas._getPixel(y),
+    this.instance.ctx.strokeRect(
+      this.instance._getPixel(x),
+      this.instance._getPixel(y),
       width,
       height
     );
@@ -687,11 +687,11 @@ export abstract class Block {
   lineDashOffset(value: number): void;
   lineDashOffset(value?: number): number | void {
     if (value === undefined) {
-      return this.fcanvas.ctx.lineDashOffset;
+      return this.instance.ctx.lineDashOffset;
     }
 
     // eslint-disable-next-line functional/immutable-data
-    this.fcanvas.ctx.lineDashOffset = value;
+    this.instance.ctx.lineDashOffset = value;
   }
   lineDash(): readonly number[];
   lineDash(segments: readonly number[]): void;
@@ -701,36 +701,36 @@ export abstract class Block {
     ...segments: ReadonlyArray<readonly number[] | number>
   ): readonly number[] | void {
     if (segments.length === 0) {
-      return this.fcanvas.ctx.getLineDash();
+      return this.instance.ctx.getLineDash();
     }
 
     if (Array.isArray(segments[0])) {
-      this.fcanvas.ctx.setLineDash(segments[0]);
+      this.instance.ctx.setLineDash(segments[0]);
     }
 
-    this.fcanvas.ctx.setLineDash(segments as readonly number[]);
+    this.instance.ctx.setLineDash(segments as readonly number[]);
   }
   arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void {
-    this.fcanvas.ctx.arcTo(
-      this.fcanvas._getPixel(x1),
-      this.fcanvas._getPixel(y1),
-      this.fcanvas._getPixel(x2),
-      this.fcanvas._getPixel(y2),
+    this.instance.ctx.arcTo(
+      this.instance._getPixel(x1),
+      this.instance._getPixel(y1),
+      this.instance._getPixel(x2),
+      this.instance._getPixel(y2),
       radius
     );
   }
   isPoint(x: number, y: number): boolean {
-    return this.fcanvas.ctx.isPointInPath(x, y);
+    return this.instance.ctx.isPointInPath(x, y);
   }
   createImageData(height: ImageData): ImageData;
   createImageData(width: number, height: number): ImageData;
   createImageData(width: ImageData | number, height?: number): ImageData {
     return height
-      ? this.fcanvas.createImageData(width as number, height)
-      : this.fcanvas.createImageData(width as ImageData);
+      ? this.instance.createImageData(width as number, height)
+      : this.instance.createImageData(width as ImageData);
   }
   getImageData(x: number, y: number, width: number, height: number): ImageData {
-    return this.fcanvas.getImageData(x, y, width, height);
+    return this.instance.getImageData(x, y, width, height);
   }
   putImageData(imageData: ImageData, x: number, y: number): void;
   putImageData(
@@ -753,7 +753,7 @@ export abstract class Block {
   ): void {
     // eslint-disable-next-line functional/functional-parameters
     if (arguments.length === 7) {
-      this.fcanvas.putImageData(
+      this.instance.putImageData(
         imageData,
         x,
         y,
@@ -763,14 +763,14 @@ export abstract class Block {
         height as number
       );
     } else {
-      this.fcanvas.putImageData(imageData, x, y);
+      this.instance.putImageData(imageData, x, y);
     }
   }
   createPattern(
     image: CanvasImageSource,
     direction: DirectionPattern
   ): CanvasPattern | null {
-    return this.fcanvas.createPattern(image, direction);
+    return this.instance.createPattern(image, direction);
   }
   createRadialGradient(
     x1: number,
@@ -780,7 +780,7 @@ export abstract class Block {
     y2: number,
     r2: number
   ): CanvasGradient {
-    return this.fcanvas.createRadialGradient(x1, y1, r1, x2, y2, r2);
+    return this.instance.createRadialGradient(x1, y1, r1, x2, y2, r2);
   }
   createLinearGradient(
     x: number,
@@ -788,37 +788,37 @@ export abstract class Block {
     width: number,
     height: number
   ): CanvasGradient {
-    return this.fcanvas.createLinearGradient(x, y, width, height);
+    return this.instance.createLinearGradient(x, y, width, height);
   }
 
   lineJoin(): LineJoin;
   lineJoin(type: LineJoin): void;
   lineJoin(type?: LineJoin): LineJoin | void {
     if (type === undefined) {
-      return this.fcanvas.ctx.lineJoin;
+      return this.instance.ctx.lineJoin;
     }
 
     // eslint-disable-next-line functional/immutable-data
-    this.fcanvas.ctx.lineJoin = type;
+    this.instance.ctx.lineJoin = type;
   }
   lineCap(): LineCap;
   lineCap(value: LineCap): void;
   lineCap(value?: LineCap): LineCap | void {
     if (value === undefined) {
-      return this.fcanvas.ctx.lineCap;
+      return this.instance.ctx.lineCap;
     }
     // eslint-disable-next-line functional/immutable-data
-    this.fcanvas.ctx.lineCap = value;
+    this.instance.ctx.lineCap = value;
   }
   shadowBlur(): number;
   shadowBlur(opacity: number): void;
   shadowBlur(opacity?: number): number | void {
     if (opacity === undefined) {
-      return this.fcanvas.ctx.shadowBlur;
+      return this.instance.ctx.shadowBlur;
     }
 
     // eslint-disable-next-line functional/immutable-data
-    this.fcanvas.ctx.shadowBlur = opacity;
+    this.instance.ctx.shadowBlur = opacity;
   }
 
   shadowColor(
@@ -834,15 +834,15 @@ export abstract class Block {
   // eslint-disable-next-line functional/functional-parameters
   shadowColor(...args: ParamsToRgb): void {
     // eslint-disable-next-line functional/immutable-data
-    this.fcanvas.ctx.shadowColor = this.fcanvas._toRgb(args);
+    this.instance.ctx.shadowColor = this.instance._toRgb(args);
   }
   drawFocusIfNeeded(element: Element): void;
   drawFocusIfNeeded(path: Path2D, element: Element): void;
   drawFocusIfNeeded(path: Element | Path2D, element?: Element): void {
     if (element === undefined) {
-      this.fcanvas.ctx.drawFocusIfNeeded(path as Element);
+      this.instance.ctx.drawFocusIfNeeded(path as Element);
     } else {
-      this.fcanvas.ctx.drawFocusIfNeeded(path as Path2D, element);
+      this.instance.ctx.drawFocusIfNeeded(path as Path2D, element);
     }
   }
 
