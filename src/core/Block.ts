@@ -94,50 +94,6 @@ export abstract class Block {
   }
 
   // > share object
-  sin(angle: number): number {
-    return this.instance.sin(angle);
-  }
-  asin(sin: number): number {
-    return this.instance.asin(sin);
-  }
-  cos(angle: number): number {
-    return this.instance.cos(angle);
-  }
-  acos(cos: number): number {
-    return this.instance.asin(cos);
-  }
-  tan(angle: number): number {
-    return this.instance.tan(angle);
-  }
-  atan(tan: number): number {
-    return this.instance.atan(tan);
-  }
-  atan2(y: number, x: number): number {
-    return this.instance.atan2(y, x);
-  }
-
-  get mouseX(): number | null {
-    return this.instance.mouseX;
-  }
-  get mouseY(): number | null {
-    return this.instance.mouseY;
-  }
-  get movedX(): number {
-    return this.instance.movedX;
-  }
-  get movedY(): number {
-    return this.instance.movedY;
-  }
-  get pmouseX(): number {
-    return this.instance.pmouseX;
-  }
-  get pmouseY(): number {
-    return this.instance.pmouseY;
-  }
-  get mouseIsPressed(): boolean {
-    return this.instance.mouseIsPressed;
-  }
-
   get isPressed(): boolean {
     if (
       this.mouseX === null ||
@@ -202,13 +158,6 @@ export abstract class Block {
       default:
         return false;
     }
-  }
-
-  get windowWidth(): number {
-    return this.instance.windowWidth;
-  }
-  get windowHeight(): number {
-    return this.instance.windowHeight;
   }
   // > /shared
 
