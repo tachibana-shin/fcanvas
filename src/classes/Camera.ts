@@ -2,7 +2,7 @@ import { Block } from "../core/Block";
 import fCanvas from "../core/fCanvas";
 import constrain from "../functions/constrain";
 import type { ReadonlyOffset } from "../utils/getTouchInfo";
-import type noop from "../types/noop";
+import type Noop from "../types/Noop";
 
 type ReadonlySize = {
   readonly width: number;
@@ -128,7 +128,7 @@ export class Camera {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (newValue: any, oldValue: any): void;
     }
-  ): noop {
+  ): Noop {
     if (name in this._watchers === false) {
       // eslint-disable-next-line functional/immutable-data
       this._watchers[name].splice(0);

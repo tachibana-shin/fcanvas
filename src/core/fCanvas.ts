@@ -15,8 +15,8 @@ import windowSize from "../utils/windowSize";
 
 import { draw, setup } from "./SystemEvents";
 
-import type FunctionColor from "../types/FunctionColor"
-import type Noop from "../types/Noop"
+import type FunctionColor from "../types/FunctionColor";
+import type Noop from "../types/Noop";
 
 type AngleType = "degress" | "radial";
 export type AlignType = "left" | "center" | "right";
@@ -550,14 +550,14 @@ export default class fCanvas {
   clear(x = 0, y = 0, w: number = this.width, h: number = this.height): void {
     this.ctx.clearRect(x, y, w, h);
   }
-  
+
   // eslint-disable-next-line functional/functional-parameters
-  background: FunctionColor = function(...params: ParamsToRgb) {
+  background: FunctionColor = function (...params: ParamsToRgb) {
     // eslint-disable-next-line functional/immutable-data
     this.ctx.fillStyle = this._toRgb(params);
     this.ctx.fill();
     this.ctx.fillRect(0, 0, this.width, this.height);
-  }
+  };
   backgroundImage(image: CanvasImageSource): void {
     this.ctx.drawImage(image, 0, 0, this.width, this.height);
   }

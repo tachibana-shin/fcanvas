@@ -1,3 +1,3 @@
-type Noop = () => void
+type Noop = () => void;
 
-export default Noop
+export default Noop;

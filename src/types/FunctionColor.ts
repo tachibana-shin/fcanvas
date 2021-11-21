@@ -3,52 +3,38 @@ declare function FunctionColor(
   hue: number,
   saturation: number,
   lightness: number
-): void
+): void;
 declare function FunctionColor(
   hue: number,
   saturation: number,
   lightness: number,
   alpha: number
-): void
+): void;
 // @hsb color
 declare function FunctionColor(
   hue: number,
   saturation: number,
   bright: number
-): void
+): void;
 declare function FunctionColor(
   hue: number,
   saturation: number,
   bright: number,
   alpha: number
-): void
+): void;
 // @rgb color
-declare function FunctionColor(
-  red: number,
-  green: number,
-  blue: number
-): void
+declare function FunctionColor(red: number, green: number, blue: number): void;
 declare function FunctionColor(
   red: number,
   green: number,
   blue: number,
   alpha: number
-): void
+): void;
 // @canvasGradient
-declare function FunctionColor(
-  linear: CanvasGradient
-): void
-declare function FunctionColor(
-  pattern: CanvasPattern
-): void
-declare function FunctionColor(
-  image: CanvasImageSource
-): void
-declare function FunctionColor(
-  color: string
-): void
-declare function FunctionColor(
-  value: number
-): void
+declare function FunctionColor(linear: CanvasGradient): void;
+declare function FunctionColor(pattern: CanvasPattern): void;
+declare function FunctionColor(image: CanvasImageSource): void;
+declare function FunctionColor(color: string): void;
+declare function FunctionColor(value: number): void;
 
-export default FunctionColor
+export default FunctionColor;

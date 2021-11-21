@@ -67,8 +67,8 @@ export abstract class Block {
   private canvasInstance: fCanvas | null = null;
 
   render<T = void>(canvas = getCanvasInstance()): void | T {
-    let updateReturn
-    
+    let updateReturn;
+
     this.canvasInstance = canvas;
 
     if (existsCbUpdate(this)) {
@@ -81,8 +81,8 @@ export abstract class Block {
     }
 
     this.canvasInstance = null;
-    
-    return updateReturn as (void | T);
+
+    return updateReturn as void | T;
   }
   get instance(): fCanvas {
     if (this.canvasInstance instanceof fCanvas) {
@@ -164,18 +164,18 @@ export abstract class Block {
   // > /shared
 
   // eslint-disable-next-line functional/functional-parameters
-  fill: FunctionColor = function(...args: ParamsToRgb) {
+  fill: FunctionColor = function (...args: ParamsToRgb) {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.fillStyle = this.instance._toRgb(args);
     this.instance.ctx.fill();
-  }
+  };
 
   // eslint-disable-next-line functional/functional-parameters
-  stroke: FunctionColor = function(...args: ParamsToRgb) {
+  stroke: FunctionColor = function (...args: ParamsToRgb) {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.strokeStyle = this.instance._toRgb(args);
     this.instance.ctx.stroke();
-  }
+  };
   noFill(): void {
     return this.fill(0, 0, 0, 0);
   }
@@ -686,10 +686,10 @@ export abstract class Block {
   }
 
   // eslint-disable-next-line functional/functional-parameters
-  shadowColor: FunctionColor = function(...args: ParamsToRgb) {
+  shadowColor: FunctionColor = function (...args: ParamsToRgb) {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.shadowColor = this.instance._toRgb(args);
-  }
+  };
   drawFocusIfNeeded(element: Element): void;
   drawFocusIfNeeded(path: Path2D, element: Element): void;
   drawFocusIfNeeded(path: Element | Path2D, element?: Element): void {
