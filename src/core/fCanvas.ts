@@ -550,12 +550,7 @@ export default class fCanvas {
   clear(x = 0, y = 0, w: number = this.width, h: number = this.height): void {
     this.ctx.clearRect(x, y, w, h);
   }
-  background(
-    hue: number,
-    saturation: number,
-    lightness: number,
-    alpha?: number
-  ): void;
+  
   // eslint-disable-next-line functional/functional-parameters
   background: FunctionColor = function(...params: ParamsToRgb) {
     // eslint-disable-next-line functional/immutable-data
