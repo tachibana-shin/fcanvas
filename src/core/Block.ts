@@ -4,13 +4,11 @@ import {
 } from "../functions/intersects";
 import map from "../functions/map";
 import { throwError } from "../helpers/throw";
-import convertValueToPixel from "../utils/convertValueToPixel";
+import type FunctionColor from "../types/FunctionColor";
 import type ReadonlyOffset from "../types/ReadonlyOffset";
+import convertValueToPixel from "../utils/convertValueToPixel";
 
 import fCanvas, { getCanvasInstance } from "./fCanvas";
-
-import type FunctionColor from "../types/FunctionColor";
-import type Noop from "../types/Noop";
 
 type LineJoin = "bevel" | "round" | "miter";
 type LineCap = "butt" | "round" | "square";
@@ -26,9 +24,11 @@ function existsCbDraw(
 }
 function existsCbUpdate(
   el: Block & {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     readonly update?: () => any;
   }
 ): el is Block & {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly update: () => any;
 } {
   return typeof el.update === "function";
@@ -63,6 +63,7 @@ export abstract class Block {
   private canvasInstance: fCanvas | null = null;
 
   render<T = void>(canvas = getCanvasInstance()): void | T {
+    // eslint-disable-next-line functional/no-let
     let updateReturn;
 
     this.canvasInstance = canvas;
@@ -94,8 +95,8 @@ export abstract class Block {
   // > share object
   get isPressed(): boolean {
     if (
-      this.mouseX === null ||
-      this.mouseY === null ||
+      this.instance.mouseX === null ||
+      this.instance.mouseY === null ||
       "x" in this === false ||
       "y" in this === false
     ) {
@@ -104,11 +105,19 @@ export abstract class Block {
 
     switch (this.type) {
       case "rect":
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return intersectRectPoint(this as any, this.mouseX, this.mouseY);
+        return intersectRectPoint(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          this as any,
+          this.instance.mouseX,
+          this.instance.mouseY
+        );
       case "circle":
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return intersectCirclePoint(this as any, this.mouseX, this.mouseY);
+        return intersectCirclePoint(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          this as any,
+          this.instance.mouseX,
+          this.instance.mouseY
+        );
       case "point":
         return (
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -116,9 +125,9 @@ export abstract class Block {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (this as any).y &&
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (Math.round((this as any).x) === Math.round(this.mouseX),
+          (Math.round((this as any).x) === Math.round(this.instance.mouseX),
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          Math.round((this as any).y) === Math.round(this.mouseY))
+          Math.round((this as any).y) === Math.round(this.instance.mouseY))
         );
       default:
         return false;
@@ -126,8 +135,8 @@ export abstract class Block {
   }
   get isPressedInTouches(): boolean {
     if (
-      this.mouseX === null ||
-      this.mouseY === null ||
+      this.instance.mouseX === null ||
+      this.instance.mouseY === null ||
       "x" in this === false ||
       "y" in this === false
     ) {
@@ -160,18 +169,18 @@ export abstract class Block {
   // > /shared
 
   // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
-  fill: FunctionColor = function (...args: any[]) {
+  readonly fill = ((...args: any) => {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.fillStyle = this.instance._toRgb(args);
     this.instance.ctx.fill();
-  };
+  }) as FunctionColor;
 
   // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
-  stroke: FunctionColor = function (...args: any[]) {
+  readonly stroke = ((...args: any) => {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.strokeStyle = this.instance._toRgb(args);
     this.instance.ctx.stroke();
-  };
+  }) as FunctionColor;
   noFill(): void {
     return this.fill(0, 0, 0, 0);
   }
@@ -682,10 +691,10 @@ export abstract class Block {
   }
 
   // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
-  shadowColor: FunctionColor = function (...args: any[]) {
+  readonly shadowColor = ((...args: any) => {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.shadowColor = this.instance._toRgb(args);
-  };
+  }) as FunctionColor;
   drawFocusIfNeeded(element: Element): void;
   drawFocusIfNeeded(path: Path2D, element: Element): void;
   drawFocusIfNeeded(path: Element | Path2D, element?: Element): void {

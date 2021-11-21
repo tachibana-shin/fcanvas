@@ -1,3 +1,5 @@
+import ReadonlyOffset from "./ReadonlyOffset";
+
 type ReadonlyMouseOffset = ReadonlyOffset & {
   readonly winX: number;
   readonly winY: number;

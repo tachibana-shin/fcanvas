@@ -4,10 +4,9 @@ import { parse } from "plist/lib/parse.js";
 import cutImage from "../functions/cutImage";
 import loadImage from "../functions/loadImage";
 import { throwError } from "../helpers/throw";
-import trim from "../utils/trim";
-
 import type ReadonlyOffset from "../types/ReadonlyOffset";
 import type ReadonlySize from "../types/ReadonlySize";
+import trim from "../utils/trim";
 
 type CanvasImageResource = HTMLCanvasElement & {
   readonly sourceSize: ReadonlySize;

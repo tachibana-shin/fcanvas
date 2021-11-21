@@ -1,5 +1,10 @@
 import { OneTimeEvent } from "../classes/OneTimeEvent";
 import { error, warn } from "../helpers/log";
+import type FunctionColor from "../types/FunctionColor";
+import type Noop from "../types/Noop";
+import type ReadonlyListEvents from "../types/ReadonlyListEvents";
+import type ReadonlyMouseOffset from "../types/ReadonlyMouseOffset";
+import type ReadonlyOffset from "../types/ReadonlyOffset";
 import { cancelAnimationFrame } from "../utils/animationFrame";
 import bindEvent from "../utils/bindEvent";
 import convertValueToPixel from "../utils/convertValueToPixel";
@@ -11,12 +16,6 @@ import isSupportPassive from "../utils/isSupportPassive";
 import windowSize from "../utils/windowSize";
 
 import { draw, setup } from "./SystemEvents";
-
-import type FunctionColor from "../types/FunctionColor";
-import type Noop from "../types/Noop";
-import type ReadonlyOffset from "../types/ReadonlyOffset";
-import type ReadonlyMouseOffset from "../types/ReadonlyMouseOffset";
-import type ReadonlyListEvents from "../types/ReadonlyListEvents";
 
 type AngleType = "degress" | "radial";
 type AlignType = "left" | "center" | "right";
@@ -441,7 +440,7 @@ export default class fCanvas {
     return this.env.angleMode === "degress" ? (value * 180) / Math.PI : value;
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  _toRgb([red = 0, green = red, blue = green, alpha = 1]: any[]): any {
+  _toRgb([red = 0, green = red, blue = green, alpha = 1]: readonly any[]): any {
     if (Array.isArray(red)) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return this._toRgb(red as unknown as any);
@@ -551,12 +550,12 @@ export default class fCanvas {
   }
 
   // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
-  background: FunctionColor = function (...params: any[]) {
+  readonly background = ((...params: any) => {
     // eslint-disable-next-line functional/immutable-data
     this.ctx.fillStyle = this._toRgb(params);
     this.ctx.fill();
     this.ctx.fillRect(0, 0, this.width, this.height);
-  };
+  }) as FunctionColor;
   backgroundImage(image: CanvasImageSource): void {
     this.ctx.drawImage(image, 0, 0, this.width, this.height);
   }
