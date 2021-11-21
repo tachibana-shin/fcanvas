@@ -321,6 +321,7 @@ export abstract class Block {
     this.move(x1, y1);
     this.to(x2, y2);
     this.to(x3, y3);
+    this.to(x1, y1);
   }
 
   protected drawImage(image: CanvasImageSource, x: number, y: number): void;
