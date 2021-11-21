@@ -1,4 +1,3 @@
-import type ReadonlyOffset from "../types/ReadonlyOffset";
 import type ReadonlyMouseOffset from "../types/ReadonlyMouseOffset";
 
 export default function getTouchInfo(

@@ -1,11 +1,10 @@
 import mitt from "mitt";
 
+import type Noop from "../types/Noop";
 import { requestAnimationFrame } from "../utils/animationFrame";
 import bindEvent from "../utils/bindEvent";
 
 import fCanvas, { setCanvasInstance, unsetCanvasInstance } from "./fCanvas";
-
-import type Noop from "../types/Noop";
 
 // eslint-disable-next-line functional/no-let
 let initd = false;

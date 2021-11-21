@@ -3,10 +3,9 @@
 import mitt from "mitt";
 
 import { error } from "../helpers/log";
+import type Noop from "../types/Noop";
 
 import { Block } from "./Block";
-
-import type Noop from "../types/Noop";
 
 type ComponentRenderProxy<
   P = {}, // props type extracted from props option
