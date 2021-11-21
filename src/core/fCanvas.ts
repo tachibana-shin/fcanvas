@@ -15,12 +15,13 @@ import windowSize from "../utils/windowSize";
 
 import { draw, setup } from "./SystemEvents";
 
-type noop = () => void;
+import type FunctionColor from "../types/FunctionColor"
+import type Noop from "../types/Noop"
 
 type AngleType = "degress" | "radial";
 export type AlignType = "left" | "center" | "right";
 export type BaselineType = "top" | "middle" | "bottom";
-type ColorType = "rgb" | "hsl" | "hue" | "hsb";
+type ColorType = "rgb" | "hsl" | "hsb";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ParamsToRgb = readonly [any?, any?, any?, number?];
 type TextAlignType = AlignType | "start" | "end";
@@ -555,12 +556,8 @@ export default class fCanvas {
     lightness: number,
     alpha?: number
   ): void;
-  background(red: number, green: number, blue: number, alpha?: number): void;
-  background(
-    color?: string | CanvasGradient | CanvasPattern | CanvasImageSource | number
-  ): void;
   // eslint-disable-next-line functional/functional-parameters
-  background(...params: ParamsToRgb): void {
+  background: FunctionColor = function(...params: ParamsToRgb) {
     // eslint-disable-next-line functional/immutable-data
     this.ctx.fillStyle = this._toRgb(params);
     this.ctx.fill();
@@ -665,14 +662,14 @@ export default class fCanvas {
   resetTransform(): void {
     this.setTransform(1, 0, 0, 1, 0, 0);
   }
-  async preload(callback: noop | (() => Promise<void>)): Promise<void> {
+  async preload(callback: Noop | (() => Promise<void>)): Promise<void> {
     // eslint-disable-next-line functional/immutable-data
     this.env.existsPreload = true;
     await callback();
 
     this.hooks.emit("preloaded");
   }
-  async setup(callback: noop | (() => Promise<void>)): Promise<void> {
+  async setup(callback: Noop | (() => Promise<void>)): Promise<void> {
     if (this.env.existsPreload) {
       this.hooks.on("preloaded", async (): Promise<void> => {
         await setup(callback, this);
@@ -683,7 +680,7 @@ export default class fCanvas {
       this.hooks.emit("setuped");
     }
   }
-  draw(callback: noop): void {
+  draw(callback: Noop): void {
     this.hooks.on("setuped", (): void => {
       draw(callback, this);
     });
@@ -934,34 +931,34 @@ export default class fCanvas {
   on<Name extends keyof ListEvents>(
     name: Name,
     callback: (ev: ListEvents[Name]) => void
-  ): noop {
+  ): Noop {
     return bindEvent(name, callback, this.$el);
   }
-  mouseIn(callback: (ev: MouseEvent) => void): noop {
+  mouseIn(callback: (ev: MouseEvent) => void): Noop {
     return this.on("mouseover", callback);
   }
-  mouseOut(callback: (ev: MouseEvent) => void): noop {
+  mouseOut(callback: (ev: MouseEvent) => void): Noop {
     return this.on("mouseout", callback);
   }
-  touchStart(callback: (ev: TouchEvent) => void): noop {
+  touchStart(callback: (ev: TouchEvent) => void): Noop {
     return this.on("touchstart", callback);
   }
-  touchMove(callback: (ev: TouchEvent) => void): noop {
+  touchMove(callback: (ev: TouchEvent) => void): Noop {
     return this.on("touchmove", callback);
   }
-  touchEnd(callback: (ev: TouchEvent) => void): noop {
+  touchEnd(callback: (ev: TouchEvent) => void): Noop {
     return this.on("touchend", callback);
   }
-  mouseMove(callback: (ev: MouseEvent) => void): noop {
+  mouseMove(callback: (ev: MouseEvent) => void): Noop {
     return this.on("mousemove", callback);
   }
-  mouseUp(callback: (ev: Event) => void): noop {
+  mouseUp(callback: (ev: Event) => void): Noop {
     return this.on("mouseup", callback);
   }
-  mouseDown(callback: (ev: MouseEvent) => void): noop {
+  mouseDown(callback: (ev: MouseEvent) => void): Noop {
     return this.on("mousedown", callback);
   }
-  mouseClicked(callback: (ev: MouseEvent) => void): noop {
+  mouseClicked(callback: (ev: MouseEvent) => void): Noop {
     return this.on("click", callback);
   }
 }

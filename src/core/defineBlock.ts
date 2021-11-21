@@ -6,7 +6,7 @@ import { error } from "../helpers/log";
 
 import { Block } from "./Block";
 
-type noop = () => void;
+import type Noop from "../types/Noop";
 
 type ComponentRenderProxy<
   P = {}, // props type extracted from props option
@@ -65,8 +65,8 @@ type ComponentOptionsBase<
   readonly data?: ((this: Props, vm: Props) => D) | D;
   readonly computed?: C;
   readonly methods?: M;
-  readonly draw?: noop;
-  readonly update?: noop;
+  readonly draw?: Noop;
+  readonly update?: Noop;
 };
 
 // eslint-disable-next-line functional/prefer-readonly-type
@@ -353,7 +353,7 @@ function defineBlock<
     readonly off = this.emitter.off;
     readonly emit = this.emitter.emit;
     readonly draw = options.draw;
-    readonly update?: noop;
+    readonly update?: Noop;
 
     constructor(props: any) {
       super();

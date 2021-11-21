@@ -2,8 +2,7 @@ import { Block } from "../core/Block";
 import fCanvas from "../core/fCanvas";
 import constrain from "../functions/constrain";
 import type { ReadonlyOffset } from "../utils/getTouchInfo";
-
-type noop = () => void;
+import type noop from "../types/noop";
 
 type ReadonlySize = {
   readonly width: number;

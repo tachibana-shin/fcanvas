@@ -13,7 +13,8 @@ import fCanvas, {
   ParamsToRgb,
 } from "./fCanvas";
 
-type noop = () => void;
+import type FunctionColor from "../types/FunctionColor";
+import type Noop from "../types/Noop";
 
 type LineJoin = "bevel" | "round" | "miter";
 type LineCap = "butt" | "round" | "square";
@@ -45,6 +46,7 @@ function compressTypeToImage(
 } {
   return true;
 }
+
 export abstract class Block {
   public get type(): "rect" | "circle" | "point" | "unknown" {
     if ("x" in this && "y" in this) {
@@ -161,34 +163,15 @@ export abstract class Block {
   }
   // > /shared
 
-  fill(
-    hue: number,
-    saturation: number,
-    lightness: number,
-    alpha?: number
-  ): void;
-  fill(red: number, green: number, blue: number, alpha?: number): void;
-  fill(
-    color?: string | CanvasGradient | CanvasImageSource | CanvasPattern | number
-  ): void;
   // eslint-disable-next-line functional/functional-parameters
-  fill(...args: ParamsToRgb): void {
+  fill: FunctionColor = function(...args: ParamsToRgb) {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.fillStyle = this.instance._toRgb(args);
     this.instance.ctx.fill();
   }
-  stroke(
-    hue: number,
-    saturation: number,
-    lightness: number,
-    alpha?: number
-  ): void;
-  stroke(red: number, green: number, blue: number, alpha?: number): void;
-  stroke(
-    color?: string | CanvasGradient | CanvasPattern | CanvasImageSource | number
-  ): void;
+  
   // eslint-disable-next-line functional/functional-parameters
-  stroke(...args: ParamsToRgb): void {
+  stroke: FunctionColor = function(...args: ParamsToRgb) {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.strokeStyle = this.instance._toRgb(args);
     this.instance.ctx.stroke();
@@ -770,18 +753,8 @@ export abstract class Block {
     this.instance.ctx.shadowBlur = opacity;
   }
 
-  shadowColor(
-    hue: number,
-    saturation: number,
-    lightness: number,
-    alpha?: number
-  ): void;
-  shadowColor(red: number, green: number, blue: number, alpha?: number): void;
-  shadowColor(
-    color?: string | CanvasGradient | CanvasImageSource | number
-  ): void;
   // eslint-disable-next-line functional/functional-parameters
-  shadowColor(...args: ParamsToRgb): void {
+  shadowColor: FunctionColor = function(...args: ParamsToRgb) {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.shadowColor = this.instance._toRgb(args);
   }
@@ -851,12 +824,12 @@ export abstract class Block {
     }
   }
 
-  drawing(program: noop): void {
+  drawing(program: Noop): void {
     this.begin();
     program.call(this);
     this.close();
   }
-  backup(program: noop): void {
+  backup(program: Noop): void {
     this.save();
     program.call(this);
     this.restore();

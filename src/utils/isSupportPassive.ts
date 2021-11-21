@@ -3,7 +3,7 @@ let supportPassive = false;
 
 try {
   // eslint-disable-next-line @typescript-eslint/no-empty-function, no-inner-declarations
-  function noop() {}
+  function Noop() {}
 
   const opts = Object.defineProperty({}, "passive", {
     get(): boolean {
@@ -11,8 +11,8 @@ try {
       return false;
     },
   });
-  window.addEventListener("testPassive", noop, opts);
-  window.removeEventListener("testPassive", noop, opts);
+  window.addEventListener("testPassive", Noop, opts);
+  window.removeEventListener("testPassive", Noop, opts);
 } catch {
   supportPassive = false;
 }
