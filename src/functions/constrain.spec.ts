@@ -24,5 +24,7 @@ describe.each([
   },
 ])("constrain($value, $min, $max)", ({ value, min, max, expected }) => {
   // eslint-disable-next-line jest/no-standalone-expect
-  expect(constrain(value, min, max)).toBe(expected);
+  test(`constrain(${value}, ${min}, ${max})`, () => {
+    expect(constrain(value, min, max)).toBe(expected);
+  })
 });
