@@ -529,6 +529,7 @@ export default class fCanvas {
       return size;
     } else {
       value = convertValueToPixel(value, size);
+      // eslint-disable-next-line functional/immutable-data 
       this.ctx.font = [weight, `${value}px`, family].join(" ");
     }
   }
@@ -540,6 +541,7 @@ export default class fCanvas {
     if (value === undefined) {
       return family;
     } else {
+      // eslint-disable-next-line functional/immutable-data 
       this.ctx.font = [weight, `${size}px`, value].join(" ");
     }
   }
@@ -551,6 +553,7 @@ export default class fCanvas {
     if (value === undefined) {
       return weight;
     } else {
+      // eslint-disable-next-line functional/immutable-data 
       this.ctx.font = [value, `${size}px`, family].join(" ");
     }
   }
