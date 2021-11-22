@@ -11,11 +11,15 @@ import convertValueToPixel from "../utils/convertValueToPixel";
 import generateUUID from "../utils/generateUUID";
 import getInfoFont from "../utils/getInfoFont";
 import getTouchInfo from "../utils/getTouchInfo";
+import getInfoFont from "../utils/getInfoFont";
 import isMobile from "../utils/isMobile";
 import isSupportPassive from "../utils/isSupportPassive";
 import windowSize from "../utils/windowSize";
 
 import { draw, setup } from "./SystemEvents";
+
+type LineJoin = "bevel" | "round" | "miter";
+type LineCap = "butt" | "round" | "square";
 
 type AngleType = "degress" | "radial";
 type AlignType = "left" | "center" | "right";
@@ -520,36 +524,55 @@ export default class fCanvas {
   fontSize(): number;
   fontSize(size: number): void;
   fontSize(value?: number): number | void {
-    const { size, weight, family } = getInfoFont(this.font());
+    const { size, weight, family } = getInfoFont(this.ctx.font);
 
     if (value === undefined) {
       return size;
     } else {
       value = convertValueToPixel(value, size);
-      this.font([weight, `${value}px`, family].join(" "));
+      this.ctx.font = [weight, `${value}px`, family].join(" ");
     }
   }
   fontFamily(): string;
   fontFamily(font: string): void;
   fontFamily(value?: string): string | void {
-    const { size, weight, family } = getInfoFont(this.font());
+    const { size, weight, family } = getInfoFont(this.ctx.font);
 
     if (value === undefined) {
       return family;
     } else {
-      this.font([weight, `${size}px`, value].join(" "));
+      this.ctx.font = [weight, `${size}px`, value].join(" ");
     }
   }
   fontWeight(): string;
   fontWeight(weight: string): void;
   fontWeight(value?: string): string | void {
-    const { size, weight, family } = getInfoFont(this.font());
+    const { size, weight, family } = getInfoFont(this.ctx.font);
 
     if (value === undefined) {
       return weight;
     } else {
-      this.font([value, `${size}px`, family].join(" "));
+      this.ctx.font = [value, `${size}px`, family].join(" ");
     }
+  }
+  lineJoin(): LineJoin;
+  lineJoin(type: LineJoin): void;
+  lineJoin(type?: LineJoin): LineJoin | void {
+    if (type === undefined) {
+      return this.instance.ctx.lineJoin;
+    }
+  
+    // eslint-disable-next-line functional/immutable-data
+    this.instance.ctx.lineJoin = type;
+  }
+  lineCap(): LineCap;
+  lineCap(value: LineCap): void;
+  lineCap(value?: LineCap): LineCap | void {
+    if (value === undefined) {
+      return this.instance.ctx.lineCap;
+    }
+    // eslint-disable-next-line functional/immutable-data
+    this.instance.ctx.lineCap = value;
   }
   clear(x = 0, y = 0, w: number = this.width, h: number = this.height): void {
     this.ctx.clearRect(x, y, w, h);
