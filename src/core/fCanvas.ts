@@ -559,20 +559,20 @@ export default class fCanvas {
   lineJoin(type: LineJoin): void;
   lineJoin(type?: LineJoin): LineJoin | void {
     if (type === undefined) {
-      return this.instance.ctx.lineJoin;
+      return this.ctx.lineJoin;
     }
   
     // eslint-disable-next-line functional/immutable-data
-    this.instance.ctx.lineJoin = type;
+    this.ctx.lineJoin = type;
   }
   lineCap(): LineCap;
   lineCap(value: LineCap): void;
   lineCap(value?: LineCap): LineCap | void {
     if (value === undefined) {
-      return this.instance.ctx.lineCap;
+      return this.ctx.lineCap;
     }
     // eslint-disable-next-line functional/immutable-data
-    this.instance.ctx.lineCap = value;
+    this.ctx.lineCap = value;
   }
   clear(x = 0, y = 0, w: number = this.width, h: number = this.height): void {
     this.ctx.clearRect(x, y, w, h);
