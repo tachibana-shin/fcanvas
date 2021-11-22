@@ -11,7 +11,6 @@ import convertValueToPixel from "../utils/convertValueToPixel";
 import generateUUID from "../utils/generateUUID";
 import getInfoFont from "../utils/getInfoFont";
 import getTouchInfo from "../utils/getTouchInfo";
-import getInfoFont from "../utils/getInfoFont";
 import isMobile from "../utils/isMobile";
 import isSupportPassive from "../utils/isSupportPassive";
 import windowSize from "../utils/windowSize";
