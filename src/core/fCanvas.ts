@@ -529,7 +529,7 @@ export default class fCanvas {
       return size;
     } else {
       value = convertValueToPixel(value, size);
-      // eslint-disable-next-line functional/immutable-data 
+      // eslint-disable-next-line functional/immutable-data
       this.ctx.font = [weight, `${value}px`, family].join(" ");
     }
   }
@@ -541,7 +541,7 @@ export default class fCanvas {
     if (value === undefined) {
       return family;
     } else {
-      // eslint-disable-next-line functional/immutable-data 
+      // eslint-disable-next-line functional/immutable-data
       this.ctx.font = [weight, `${size}px`, value].join(" ");
     }
   }
@@ -553,7 +553,7 @@ export default class fCanvas {
     if (value === undefined) {
       return weight;
     } else {
-      // eslint-disable-next-line functional/immutable-data 
+      // eslint-disable-next-line functional/immutable-data
       this.ctx.font = [value, `${size}px`, family].join(" ");
     }
   }
@@ -563,7 +563,7 @@ export default class fCanvas {
     if (type === undefined) {
       return this.ctx.lineJoin;
     }
-  
+
     // eslint-disable-next-line functional/immutable-data
     this.ctx.lineJoin = type;
   }
@@ -575,6 +575,17 @@ export default class fCanvas {
     }
     // eslint-disable-next-line functional/immutable-data
     this.ctx.lineCap = value;
+  }
+  miterLimit(): number;
+  miterLimit(value: number): void;
+  miterLimit(value?: number): number | void {
+    if (value === undefined) {
+      return this.ctx.miterLimit;
+    }
+    this.lineJoin("miter");
+
+    // eslint-disable-next-line functional/immutable-data
+    this.ctx.miterLimit = value;
   }
   clear(x = 0, y = 0, w: number = this.width, h: number = this.height): void {
     this.ctx.clearRect(x, y, w, h);

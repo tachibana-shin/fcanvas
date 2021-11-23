@@ -10,9 +10,6 @@ import convertValueToPixel from "../utils/convertValueToPixel";
 
 import fCanvas, { getCanvasInstance } from "./fCanvas";
 
-type LineJoin = "bevel" | "round" | "miter";
-type LineCap = "butt" | "round" | "square";
-
 function existsCbDraw(
   el: Block & {
     readonly draw?: () => void;
@@ -192,17 +189,6 @@ export abstract class Block {
     }
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.lineWidth = this.instance.performancePixel(value);
-  }
-  protected miterLimit(): number;
-  protected miterLimit(value: number): void;
-  protected miterLimit(value?: number): number | void {
-    if (value === undefined) {
-      return this.instance.ctx.miterLimit;
-    }
-    this.lineJoin("miter");
-
-    // eslint-disable-next-line functional/immutable-data
-    this.instance.ctx.miterLimit = value;
   }
   protected shadowOffset(): ReadonlyOffset;
   protected shadowOffset(x: number, y: number): void;
@@ -678,25 +664,6 @@ export abstract class Block {
     return this.instance.ctx.isPointInPath(x, y);
   }
 
-  protected lineJoin(): LineJoin;
-  protected lineJoin(type: LineJoin): void;
-  protected lineJoin(type?: LineJoin): LineJoin | void {
-    if (type === undefined) {
-      return this.instance.ctx.lineJoin;
-    }
-
-    // eslint-disable-next-line functional/immutable-data
-    this.instance.ctx.lineJoin = type;
-  }
-  protected lineCap(): LineCap;
-  protected lineCap(value: LineCap): void;
-  protected lineCap(value?: LineCap): LineCap | void {
-    if (value === undefined) {
-      return this.instance.ctx.lineCap;
-    }
-    // eslint-disable-next-line functional/immutable-data
-    this.instance.ctx.lineCap = value;
-  }
   protected shadowBlur(): number;
   protected shadowBlur(opacity: number): void;
   protected shadowBlur(opacity?: number): number | void {
