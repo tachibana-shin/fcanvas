@@ -2,6 +2,8 @@
 Library for canvas 2 HTML 5
 [View docs](https://tachibana-shin.github.io/fcanvas)
 
+[![Build docs to gh-page](https://github.com/tachibana-shin/fcanvas/actions/workflows/docs.yml/badge.svg)](https://github.com/tachibana-shin/fcanvas/actions/workflows/docs.yml)
+
 Example:
 ``` ts
 import { createCanvas, Block } from "fcanvas"
