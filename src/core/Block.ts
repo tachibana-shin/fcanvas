@@ -243,7 +243,6 @@ export abstract class Block {
       this.instance.convertToRadius(astop) - Math.PI / 2,
       reverse
     );
-    this.close();
   }
   protected pie(
     x: number,
@@ -282,16 +281,16 @@ export abstract class Block {
       this.instance.convertToRadius(astop),
       reverse
     );
-    this.close();
   }
   protected circle(x: number, y: number, radius: number): void {
-    return this.arc(
+    this.arc(
       x,
       y,
       radius,
       0,
       this.instance.angleMode() === "degress" ? 360 : Math.PI * 2
     );
+    this.close();
   }
   protected point(x: number, y: number): void {
     return this.circle(x, y, 1);
