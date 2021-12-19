@@ -4,7 +4,6 @@ import {
 } from "../functions/intersects";
 import map from "../functions/map";
 import { throwError } from "../helpers/throw";
-import type FunctionColor from "../types/FunctionColor";
 import type ReadonlyOffset from "../types/ReadonlyOffset";
 import convertValueToPixel from "../utils/convertValueToPixel";
 
@@ -40,7 +39,7 @@ function compressTypeToImage(
   return true;
 }
 
-export abstract class Block {
+export abstract class Block<ItemMap = any> {
   public get type(): "rect" | "circle" | "point" | "unknown" {
     if ("x" in this && "y" in this) {
       if ("width" in this && "height" in this) {
@@ -58,6 +57,17 @@ export abstract class Block {
   }
   // eslint-disable-next-line functional/prefer-readonly-type
   #canvasInstance: fCanvas | null = null;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  map?: ItemMap[];
+  readonly #mapIs2D = Array.isArray(this.map?.[0]);
+  // eslint-disable-next-line functional/prefer-readonly-type
+  draw?: ItemMap extends (infer T)[]
+    ? (
+        item: ItemMap extends (infer T)[] ? T : ItemMap,
+        x: number,
+        y: number
+      ) => void
+    : (item: ItemMap extends (infer T)[] ? T : ItemMap, index: number) => void;
 
   render<T = void>(canvas = getCanvasInstance()): void | T {
     // eslint-disable-next-line functional/no-let
@@ -67,8 +77,32 @@ export abstract class Block {
 
     if (existsCbUpdate(this)) {
       if (existsCbDraw(this)) {
+        if (this.#mapIs2D) {
+          let i = 0;
+          const { length } = this.map;
+
+          while (i < length) {
+            let j = 0;
+            const { length: len2 } = this.map[i];
+
+            while (j < len2) {
+              this.draw?.(this.map[i][j], j, i);
+              j++;
+            }
+            i++;
+          }
+        }
+        // draw-draw-draw-draw;
         this.draw();
+      } else {
+        let i = 0;
+        const { length } = this.map;
+
+        while (i < length) {
+          this.draw?.(this.map[i], i);
+        }
       }
+
       updateReturn = this.update();
     } else if (existsCbDraw(this)) {
       this.draw();
@@ -166,18 +200,72 @@ export abstract class Block {
   // > /shared
 
   // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
-  protected readonly fill = ((...args: any) => {
+
+  protected fill(hue: number, saturation: number, lightness: number): void;
+  protected fill(
+    hue: number,
+    saturation: number,
+    lightness: number,
+    alpha: number
+  ): void;
+  // @hsb color
+  protected fill(hue: number, saturation: number, bright: number): void;
+  protected fill(
+    hue: number,
+    saturation: number,
+    bright: number,
+    alpha: number
+  ): void;
+  // @rgb color
+  protected fill(red: number, green: number, blue: number): void;
+  protected fill(red: number, green: number, blue: number, alpha: number): void;
+  // @canvasGradient
+  protected fill(linear: CanvasGradient): void;
+  protected fill(pattern: CanvasPattern): void;
+  protected fill(image: CanvasImageSource): void;
+  protected fill(color: string): void;
+  protected fill(value: number): void;
+  protected fill(...args: any) {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.fillStyle = this.instance.convertToRgbColor(args);
     this.instance.ctx.fill();
-  }) as FunctionColor;
+  }
 
+  protected stroke(hue: number, saturation: number, lightness: number): void;
+  protected stroke(
+    hue: number,
+    saturation: number,
+    lightness: number,
+    alpha: number
+  ): void;
+  // @hsb color
+  protected stroke(hue: number, saturation: number, bright: number): void;
+  protected stroke(
+    hue: number,
+    saturation: number,
+    bright: number,
+    alpha: number
+  ): void;
+  // @rgb color
+  protected stroke(red: number, green: number, blue: number): void;
+  protected stroke(
+    red: number,
+    green: number,
+    blue: number,
+    alpha: number
+  ): void;
+  // @canvasGradient
+  protected stroke(linear: CanvasGradient): void;
+  protected stroke(pattern: CanvasPattern): void;
+  protected stroke(image: CanvasImageSource): void;
+  protected stroke(color: string): void;
+  protected stroke(value: number): void;
   // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
-  protected readonly stroke = ((...args: any) => {
+  protected stroke(...args: any) {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.strokeStyle = this.instance.convertToRgbColor(args);
     this.instance.ctx.stroke();
-  }) as FunctionColor;
+  }
   protected noFill(): void {
     return this.fill(0, 0, 0, 0);
   }
@@ -674,11 +762,44 @@ export abstract class Block {
     this.instance.ctx.shadowBlur = opacity;
   }
 
+  protected shadowColor(
+    hue: number,
+    saturation: number,
+    lightness: number
+  ): void;
+  protected shadowColor(
+    hue: number,
+    saturation: number,
+    lightness: number,
+    alpha: number
+  ): void;
+  // @hsb color
+  protected shadowColor(hue: number, saturation: number, bright: number): void;
+  protected shadowColor(
+    hue: number,
+    saturation: number,
+    bright: number,
+    alpha: number
+  ): void;
+  // @rgb color
+  protected shadowColor(red: number, green: number, blue: number): void;
+  protected shadowColor(
+    red: number,
+    green: number,
+    blue: number,
+    alpha: number
+  ): void;
+  // @canvasGradient
+  protected shadowColor(linear: CanvasGradient): void;
+  protected shadowColor(pattern: CanvasPattern): void;
+  protected shadowColor(image: CanvasImageSource): void;
+  protected shadowColor(color: string): void;
+  protected shadowColor(value: number): void;
   // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
-  protected readonly shadowColor = ((...args: any) => {
+  protected shadowColor(...args: any) {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.shadowColor = this.instance.convertToRgbColor(args);
-  }) as FunctionColor;
+  }
   protected drawFocusIfNeeded(element: Element): void;
   protected drawFocusIfNeeded(path: Path2D, element: Element): void;
   protected drawFocusIfNeeded(path: Element | Path2D, element?: Element): void {

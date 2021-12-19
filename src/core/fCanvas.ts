@@ -1,6 +1,5 @@
 import { OneTimeEvent } from "../classes/OneTimeEvent";
 import { error, warn } from "../helpers/log";
-import type FunctionColor from "../types/FunctionColor";
 import type Noop from "../types/Noop";
 import type ReadonlyListEvents from "../types/ReadonlyListEvents";
 import type ReadonlyMouseOffset from "../types/ReadonlyMouseOffset";
@@ -63,6 +62,17 @@ export function unsetCanvasInstance(): void {
 }
 export function getCanvasInstance(): fCanvas | null {
   return canvasInstance;
+}
+
+function moveStyle(from: HTMLElement, to: HTMLElement): void {
+  const styles = getComputedStyle(from);
+  const stylesDefault = getComputedStyle(document.createElement("canvas"));
+
+  for (const prop in styles) {
+    if (styles[prop] !== stylesDefault[prop]) {
+      to.style[prop] = styles[prop];
+    }
+  }
 }
 
 export default class fCanvas {
@@ -396,6 +406,7 @@ export default class fCanvas {
 
     if (this.#el !== el) {
       this.#cancelListenerMouseEventSystem(this.#el);
+      moveStyle(this.#el, el);
       this.#el = el;
       this.#reListenMouseEventSystem(el);
     }
@@ -591,13 +602,37 @@ export default class fCanvas {
     this.ctx.clearRect(x, y, w, h);
   }
 
+  background(hue: number, saturation: number, lightness: number): void;
+  background(
+    hue: number,
+    saturation: number,
+    lightness: number,
+    alpha: number
+  ): void;
+  // @hsb color
+  background(hue: number, saturation: number, bright: number): void;
+  background(
+    hue: number,
+    saturation: number,
+    bright: number,
+    alpha: number
+  ): void;
+  // @rgb color
+  background(red: number, green: number, blue: number): void;
+  background(red: number, green: number, blue: number, alpha: number): void;
+  // @canvasGradient
+  background(linear: CanvasGradient): void;
+  background(pattern: CanvasPattern): void;
+  background(image: CanvasImageSource): void;
+  background(color: string): void;
+  background(value: number): void;
   // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
-  readonly background = ((...params: any) => {
+  background(...params: any) {
     // eslint-disable-next-line functional/immutable-data
     this.ctx.fillStyle = this.convertToRgbColor(params);
     this.ctx.fill();
     this.ctx.fillRect(0, 0, this.width, this.height);
-  }) as FunctionColor;
+  }
   backgroundImage(image: CanvasImageSource): void {
     this.ctx.drawImage(image, 0, 0, this.width, this.height);
   }
