@@ -68,8 +68,10 @@ function moveStyle(from: HTMLElement, to: HTMLElement): void {
   const styles = getComputedStyle(from);
   const stylesDefault = getComputedStyle(document.createElement("canvas"));
 
+  // eslint-disable-next-line functional/no-loop-statement
   for (const prop in styles) {
     if (styles[prop] !== stylesDefault[prop]) {
+      // eslint-disable-next-line functional/immutable-data
       to.style[prop] = styles[prop];
     }
   }

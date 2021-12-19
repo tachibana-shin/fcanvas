@@ -11,10 +11,12 @@ import fCanvas, { getCanvasInstance } from "./fCanvas";
 
 function existsCbDraw(
   el: Block & {
-    readonly draw?: () => void;
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    readonly draw?: Function;
   }
 ): el is Block & {
-  readonly draw: () => void;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  readonly draw: Function;
 } {
   return typeof el.draw === "function";
 }
@@ -39,6 +41,7 @@ function compressTypeToImage(
   return true;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export abstract class Block<ItemMap = any> {
   public get type(): "rect" | "circle" | "point" | "unknown" {
     if ("x" in this && "y" in this) {
@@ -59,15 +62,8 @@ export abstract class Block<ItemMap = any> {
   #canvasInstance: fCanvas | null = null;
   // eslint-disable-next-line functional/prefer-readonly-type
   map?: ItemMap[];
-  readonly #mapIs2D = Array.isArray(this.map?.[0]);
-  // eslint-disable-next-line functional/prefer-readonly-type
-  draw?: ItemMap extends (infer T)[]
-    ? (
-        item: ItemMap extends (infer T)[] ? T : ItemMap,
-        x: number,
-        y: number
-      ) => void
-    : (item: ItemMap extends (infer T)[] ? T : ItemMap, index: number) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly #mapIs2D = Array.isArray((this.map as any)?.[0]);
 
   render<T = void>(canvas = getCanvasInstance()): void | T {
     // eslint-disable-next-line functional/no-let
@@ -75,37 +71,52 @@ export abstract class Block<ItemMap = any> {
 
     this.#canvasInstance = canvas;
 
-    if (existsCbUpdate(this)) {
-      if (existsCbDraw(this)) {
+    if (existsCbDraw(this)) {
+      if (this.map) {
         if (this.#mapIs2D) {
+          // eslint-disable-next-line functional/no-let
           let i = 0;
-          const { length } = this.map;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const { length } = this.map as readonly (readonly any[])[];
 
+          // eslint-disable-next-line functional/no-loop-statement
           while (i < length) {
+            // eslint-disable-next-line functional/no-let
             let j = 0;
-            const { length: len2 } = this.map[i];
+            const { length: len2 } =
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (this.map as readonly (readonly any[])[])[i];
 
+            // eslint-disable-next-line functional/no-loop-statement
             while (j < len2) {
-              this.draw?.(this.map[i][j], j, i);
+              this.draw(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (this.map as readonly (readonly any[])[])[i][j],
+                j,
+                i
+              );
               j++;
             }
             i++;
           }
+        } else {
+          // eslint-disable-next-line functional/no-let
+          let i = 0;
+          const { length } = this.map;
+
+          // eslint-disable-next-line functional/no-loop-statement
+          while (i < length) {
+            this.draw(this.map[i], i++);
+          }
         }
+      } else {
         // draw-draw-draw-draw;
         this.draw();
-      } else {
-        let i = 0;
-        const { length } = this.map;
-
-        while (i < length) {
-          this.draw?.(this.map[i], i);
-        }
       }
+    }
 
+    if (existsCbUpdate(this)) {
       updateReturn = this.update();
-    } else if (existsCbDraw(this)) {
-      this.draw();
     }
 
     this.#canvasInstance = null;
@@ -199,8 +210,6 @@ export abstract class Block<ItemMap = any> {
   }
   // > /shared
 
-  // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
-
   protected fill(hue: number, saturation: number, lightness: number): void;
   protected fill(
     hue: number,
@@ -225,6 +234,8 @@ export abstract class Block<ItemMap = any> {
   protected fill(image: CanvasImageSource): void;
   protected fill(color: string): void;
   protected fill(value: number): void;
+
+  // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
   protected fill(...args: any) {
     // eslint-disable-next-line functional/immutable-data
     this.instance.ctx.fillStyle = this.instance.convertToRgbColor(args);
