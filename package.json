@@ -52,7 +52,8 @@
     "docs": "typedoc src",
     "test:coverage": "jest",
     "test": "run-s test:*",
-    "lint": "eslint \"./src/**\" --ext \".ts\""
+    "lint": "eslint \"./src/**\" --ext \".ts\"",
+    "prettier": "prettier -cw src/"
   },
   "author": "Tachibana Shin",
   "repository": {
