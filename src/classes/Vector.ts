@@ -1,7 +1,7 @@
 /* eslint-disable prefer-rest-params */
 /* eslint-disable functional/functional-parameters */
 /* eslint-disable functional/immutable-data */
-import { warn } from "../helpers/log"
+import { warn } from "../helpers/log";
 
 function calculateRemainder2D(
   this: Vector,

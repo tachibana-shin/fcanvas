@@ -34,10 +34,7 @@ type BlockSize = {
   y: number;
 };
 
-export function getPowerDirection(
-  el1: BlockSize,
-  el2: BlockSize
-): number {
+export function getPowerDirection(el1: BlockSize, el2: BlockSize): number {
   // el.instance._argsRect(el.x, el.y, el.width, el.height);
 
   return (Math.atan2(el1.x - el2.x, el1.y - el2.y) * 180) / Math.PI;

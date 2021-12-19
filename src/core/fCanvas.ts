@@ -226,7 +226,7 @@ export default class fCanvas {
       }
       // eslint-disable-next-line no-empty
     } catch {}
-  }
+  };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly #listenerMousePress = (event: any): void => {
     if (event.type === "mousedown") {
@@ -242,7 +242,7 @@ export default class fCanvas {
 
     // eslint-disable-next-line functional/immutable-data
     this.#env.realMouseIsPressed = event?.touches.length > 0;
-  }
+  };
   #cancelListenerMouseEventSystem(el: Element): void {
     [
       "touchstart",
@@ -274,7 +274,7 @@ export default class fCanvas {
       this.#listenerMouseEventSystem,
       isSupportPassive
         ? {
-            passive: true,
+            passive: false,
           }
         : undefined
     );
@@ -283,7 +283,7 @@ export default class fCanvas {
       this.#listenerMouseEventSystem,
       isSupportPassive
         ? {
-            passive: true,
+            passive: false,
           }
         : undefined
     );
@@ -292,7 +292,7 @@ export default class fCanvas {
       this.#listenerMouseEventSystem,
       isSupportPassive
         ? {
-            passive: true,
+            passive: false,
           }
         : undefined
     );

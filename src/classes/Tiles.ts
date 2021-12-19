@@ -1,4 +1,3 @@
-import { dirname, join } from "path-cross";
 import { parse } from "plist/lib/parse.js";
 
 import cutImage from "../functions/cutImage";
@@ -117,10 +116,13 @@ export async function loadTiles(url: string): Promise<Tiles> {
     await fetch(url).then((response) => response.text())
   ) as Plist;
   const tile = await loadImage(
-    join(
-      dirname(url),
+    url
+      .split("/")
+      .filter((item) => /[^\s]/.test(item))
+      .slice(0, -1)
+      .join("/") +
+      "/" +
       plist.metadata.realTextureFileName || plist.metadata.textureFileName
-    )
   );
 
   return new Tiles(plist, tile);

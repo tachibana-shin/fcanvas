@@ -1,4 +1,4 @@
-import { throwError } from "../helpers/throw"
+import { throwError } from "../helpers/throw";
 
 function range(start: number, stop: number, step: number): number;
 function range(start: string, stop: string, step: number): string;

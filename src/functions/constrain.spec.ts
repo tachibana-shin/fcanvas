@@ -25,5 +25,5 @@ describe.each([
 ])("constrain($value, $min, $max)", ({ value, min, max, expected }) => {
   test(`constrain(${value}, ${min}, ${max})`, () => {
     expect(constrain(value, min, max)).toBe(expected);
-  })
+  });
 });
