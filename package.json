@@ -1,6 +1,6 @@
 {
   "name": "fcanvas",
-  "version": "0.0.7-b20",
+  "version": "0.0.7-b21",
   "main": "dist/fcanvas.umd.js",
   "exports": {
     ".": {
