@@ -203,7 +203,7 @@ export default class fCanvas {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  #listenerMouseEventSystem(event: any): void {
+  readonly #listenerMouseEventSystem = (event: any): void => {
     try {
       // eslint-disable-next-line functional/immutable-data
       this.#env.pmouseX = this.touches[0]?.x || 0;
@@ -228,7 +228,7 @@ export default class fCanvas {
     } catch {}
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  #listenerMousePress(event: any): void {
+  readonly #listenerMousePress = (event: any): void => {
     if (event.type === "mousedown") {
       // eslint-disable-next-line functional/immutable-data
       this.#env.realMouseIsPressed = true;
