@@ -228,10 +228,10 @@ export abstract class Block<ItemMap = any> {
     this.instance.ctx.beginPath();
     cb();
 
-    if (this.doFill()) {
+    if (this.instance.doFill()) {
       this.instance.ctx.fill();
     }
-    if (this.doStroke()) {
+    if (this.instance.doStroke()) {
       this.instance.ctx.stroke();
     }
     this.instance.ctx.closePath();
