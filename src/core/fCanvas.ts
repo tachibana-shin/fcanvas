@@ -84,7 +84,7 @@ export default class fCanvas {
     preloaded: false,
     setuped: false,
   });
-  readonly #env = Object.create({
+  readonly #env = {
     context2dCaching: <CanvasRenderingContext2D | null>null,
 
     translate: <HightTransform>Object.create({
@@ -139,7 +139,12 @@ export default class fCanvas {
     pmouseY: <number>0,
 
     realMouseIsPressed: <boolean>false,
-  });
+
+    doFill: <boolean>true,
+    doStroke: <boolean>true,
+    fillColor: <string>"rgba(0, 0, 0, 0)",
+    strokeColor: <string>"rgba(0, 0, 0, 0)",
+  };
 
   constructor(width: number, height: number);
   constructor(element?: HTMLCanvasElement | string);
@@ -347,6 +352,41 @@ export default class fCanvas {
   }
   get mouseIsPressed(): boolean {
     return this.#env.realMouseIsPressed;
+  }
+
+  doFill(val?: boolean): boolean {
+    if (val !== void 0) {
+      this.#env.doFill = val;
+    }
+
+    return this.#env.doFill;
+  }
+  doStroke(val?: boolean): boolean {
+    if (val !== void 0) {
+      this.#env.doStroke = val;
+    }
+
+    return this.#env.doStroke;
+  }
+  cacheFillColor(val?: string): string {
+    if (val !== void 0) {
+      if (val !== this.#env.fillColor) {
+        this.#env.fillColor = val;
+        this.ctx.fillStyle = val;
+      }
+    }
+
+    return this.#env.fillColor;
+  }
+  cacheStrokeColor(val?: string): string {
+    if (val !== void 0) {
+      if (val !== this.#env.strokeColor) {
+        this.#env.strokeColor = val;
+        this.ctx.strokeStyle = val;
+      }
+    }
+
+    return this.#env.strokeColor;
   }
 
   blur(): void {

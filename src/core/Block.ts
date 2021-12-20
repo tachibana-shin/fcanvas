@@ -210,6 +210,33 @@ export abstract class Block<ItemMap = any> {
   }
   // > /shared
 
+  protected pain(cb: () => void, noFill = false, noStroke = false): void {
+    if (
+      this.instance.doFill() === false &&
+      this.instance.doStroke() === false
+    ) {
+      return;
+    }
+
+    if (noFill && this.instance.doStroke() === false) {
+      return;
+    }
+    if (noStroke && this.instance.doFill() === false) {
+      return;
+    }
+
+    this.instance.ctx.beginPath();
+    cb();
+
+    if (this.doFill()) {
+      this.instance.ctx.fill();
+    }
+    if (this.doStroke()) {
+      this.instance.ctx.stroke();
+    }
+    this.instance.ctx.closePath();
+  }
+
   protected fill(hue: number, saturation: number, lightness: number): void;
   protected fill(
     hue: number,
@@ -237,9 +264,8 @@ export abstract class Block<ItemMap = any> {
 
   // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
   protected fill(...args: any) {
-    // eslint-disable-next-line functional/immutable-data
-    this.instance.ctx.fillStyle = this.instance.convertToRgbColor(args);
-    this.instance.ctx.fill();
+    this.instance.doFill(true);
+    this.instance.cacheFillColor(this.instance.convertToRgbColor(args));
   }
 
   protected stroke(hue: number, saturation: number, lightness: number): void;
@@ -273,12 +299,14 @@ export abstract class Block<ItemMap = any> {
   protected stroke(value: number): void;
   // eslint-disable-next-line functional/functional-parameters, @typescript-eslint/no-explicit-any
   protected stroke(...args: any) {
-    // eslint-disable-next-line functional/immutable-data
-    this.instance.ctx.strokeStyle = this.instance.convertToRgbColor(args);
-    this.instance.ctx.stroke();
+    this.instance.doStroke(true);
+    this.instance.cacheStrokeColor(this.instance.convertToRgbColor(args));
   }
   protected noFill(): void {
-    return this.fill(0, 0, 0, 0);
+    this.instance.doFill(false);
+  }
+  protected noStroke(): void {
+    this.instance.doStroke(false);
   }
   protected lineWidth(): number;
   protected lineWidth(width: number): void;
@@ -333,15 +361,16 @@ export abstract class Block<ItemMap = any> {
     astop: number,
     reverse?: boolean
   ): void {
-    this.begin();
-    this.instance.ctx.arc(
-      this.instance.performancePixel(x),
-      this.instance.performancePixel(y),
-      radius,
-      this.instance.convertToRadius(astart) - Math.PI / 2,
-      this.instance.convertToRadius(astop) - Math.PI / 2,
-      reverse
-    );
+    this.pain(() => {
+      this.instance.ctx.arc(
+        this.instance.performancePixel(x),
+        this.instance.performancePixel(y),
+        radius,
+        this.instance.convertToRadius(astart) - Math.PI / 2,
+        this.instance.convertToRadius(astop) - Math.PI / 2,
+        reverse
+      );
+    });
   }
   protected pie(
     x: number,
@@ -351,15 +380,24 @@ export abstract class Block<ItemMap = any> {
     astop: number,
     reverse?: boolean
   ): void {
-    this.move(x, y);
-    this.arc(x, y, radius, astart, astop, reverse);
-    this.to(x, y);
+    this.pain(() => {
+      this.move(x, y);
+      this.instance.ctx.arc(
+        this.instance.performancePixel(x),
+        this.instance.performancePixel(y),
+        radius,
+        this.instance.convertToRadius(astart) - Math.PI / 2,
+        this.instance.convertToRadius(astop) - Math.PI / 2,
+        reverse
+      );
+      this.to(x, y);
+    });
   }
   protected line(x1: number, y1: number, x2: number, y2: number): void {
-    // this.begin();
-    this.move(x1, y1);
-    this.to(x2, y2);
-    // this.close();fix
+    this.pain(() => {
+      this.move(x1, y1);
+      this.to(x2, y2);
+    }, true);
   }
   protected ellipse(
     x: number,
@@ -370,16 +408,17 @@ export abstract class Block<ItemMap = any> {
     astop: number,
     reverse: number
   ): void {
-    this.begin();
-    this.instance.ctx.ellipse(
-      this.instance.performancePixel(x),
-      this.instance.performancePixel(y),
-      radius1,
-      radius2,
-      this.instance.convertToRadius(astart) - Math.PI / 2,
-      this.instance.convertToRadius(astop),
-      reverse
-    );
+    this.pain(() => {
+      this.instance.ctx.ellipse(
+        this.instance.performancePixel(x),
+        this.instance.performancePixel(y),
+        radius1,
+        radius2,
+        this.instance.convertToRadius(astart) - Math.PI / 2,
+        this.instance.convertToRadius(astop),
+        reverse
+      );
+    });
   }
   protected circle(x: number, y: number, radius: number): void {
     this.arc(
@@ -389,10 +428,9 @@ export abstract class Block<ItemMap = any> {
       0,
       this.instance.angleMode() === "degress" ? 360 : Math.PI * 2
     );
-    this.close();
   }
   protected point(x: number, y: number): void {
-    return this.circle(x, y, 1);
+    this.circle(x, y, 1);
   }
   protected triangle(
     x1: number,
@@ -402,10 +440,12 @@ export abstract class Block<ItemMap = any> {
     x3: number,
     y3: number
   ): void {
-    this.move(x1, y1);
-    this.to(x2, y2);
-    this.to(x3, y3);
-    this.to(x1, y1);
+    this.pain(() => {
+      this.move(x1, y1);
+      this.to(x2, y2);
+      this.to(x3, y3);
+      this.to(x1, y1);
+    });
   }
 
   protected drawImage(image: CanvasImageSource, x: number, y: number): void;
@@ -610,36 +650,42 @@ export abstract class Block<ItemMap = any> {
     radiusBottomRight?: string | number,
     radiusBottomLeft?: string | number
   ): void {
-    this.begin();
-    [x, y, w, h] = this.instance.getSizeofRect(x, y, w, h);
+    this.pain(() => {
+      [x, y, w, h] = this.instance.getSizeofRect(x, y, w, h);
 
-    const fontSize = this.instance.fontSize();
-    const arc = [
-      convertValueToPixel(radiusTopLeft || 0, fontSize),
-      convertValueToPixel(radiusTopRight || 0, fontSize),
-      convertValueToPixel(radiusBottomRight || 0, fontSize),
-      convertValueToPixel(radiusBottomLeft || 0, fontSize),
-    ];
-    this.move(x, y);
-    this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
-    this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
-    this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
-    this.arcTo(x, y, x + w - arc[0], y, arc[0]);
-
-    this.close();
+      const fontSize = this.instance.fontSize();
+      const arc = [
+        convertValueToPixel(radiusTopLeft || 0, fontSize),
+        convertValueToPixel(radiusTopRight || 0, fontSize),
+        convertValueToPixel(radiusBottomRight || 0, fontSize),
+        convertValueToPixel(radiusBottomLeft || 0, fontSize),
+      ];
+      this.move(x, y);
+      this.arcTo(x + w, y, x + w, y + h - arc[1], arc[1]);
+      this.arcTo(x + w, y + h, x + w - arc[2], y + h, arc[2]);
+      this.arcTo(x, y + h, x, y + h - arc[3], arc[3]);
+      this.arcTo(x, y, x + w - arc[0], y, arc[0]);
+    });
   }
   protected rect(x: number, y: number, width: number, height: number): void {
-    this.begin();
-    [x, y, width, height] = this.instance.getSizeofRect(x, y, width, height);
-    this.instance.ctx.rect(
-      this.instance.performancePixel(x),
-      this.instance.performancePixel(y),
-      width,
-      height
-    );
-    this.close();
+    this.pain(() => {
+      [x, y, width, height] = this.instance.getSizeofRect(x, y, width, height);
+      this.instance.ctx.rect(
+        this.instance.performancePixel(x),
+        this.instance.performancePixel(y),
+        width,
+        height
+      );
+    });
   }
-  protected quadratic(cpx: number, cpy: number, x: number, y: number): void {
+  protected quadratic(
+    xs: number,
+    ys: number,
+    cpx: number,
+    cpy: number,
+    x: number,
+    y: number
+  ): void {
     this.instance.ctx.quadraticCurveTo(cpx, cpy, x, y);
   }
   protected bezier(
@@ -670,11 +716,17 @@ export abstract class Block<ItemMap = any> {
     y: number,
     maxWidth?: number
   ): void {
-    this.instance.ctx.fillText(
-      text,
-      this.instance.performancePixel(x),
-      this.instance.performancePixel(y),
-      maxWidth
+    this.pain(
+      () => {
+        this.instance.ctx.fillText(
+          text,
+          this.instance.performancePixel(x),
+          this.instance.performancePixel(y),
+          maxWidth
+        );
+      },
+      false,
+      true
     );
   }
   protected strokeText(
@@ -683,12 +735,14 @@ export abstract class Block<ItemMap = any> {
     y: number,
     maxWidth?: number
   ): void {
-    this.instance.ctx.strokeText(
-      text,
-      this.instance.performancePixel(x),
-      this.instance.performancePixel(y),
-      maxWidth
-    );
+    this.pain(() => {
+      this.instance.ctx.strokeText(
+        text,
+        this.instance.performancePixel(x),
+        this.instance.performancePixel(y),
+        maxWidth
+      );
+    }, true);
   }
   protected fillRect(
     x: number,
@@ -696,11 +750,17 @@ export abstract class Block<ItemMap = any> {
     width: number,
     height: number
   ): void {
-    this.instance.ctx.fillRect(
-      this.instance.performancePixel(x),
-      this.instance.performancePixel(y),
-      width,
-      height
+    this.pain(
+      () => {
+        this.instance.ctx.fillRect(
+          this.instance.performancePixel(x),
+          this.instance.performancePixel(y),
+          width,
+          height
+        );
+      },
+      false,
+      true
     );
   }
   protected strokeRect(
@@ -709,12 +769,14 @@ export abstract class Block<ItemMap = any> {
     width: number,
     height: number
   ): void {
-    this.instance.ctx.strokeRect(
-      this.instance.performancePixel(x),
-      this.instance.performancePixel(y),
-      width,
-      height
-    );
+    this.pain(() => {
+      this.instance.ctx.strokeRect(
+        this.instance.performancePixel(x),
+        this.instance.performancePixel(y),
+        width,
+        height
+      );
+    }, true);
   }
   protected lineDashOffset(): number;
   protected lineDashOffset(value: number): void;
