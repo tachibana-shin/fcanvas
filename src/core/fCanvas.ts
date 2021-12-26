@@ -144,6 +144,8 @@ export default class fCanvas {
     doStroke: <boolean>true,
     fillColor: <string>"rgba(0, 0, 0, 0)",
     strokeColor: <string>"rgba(0, 0, 0, 0)",
+    
+    aspectRatio: <"auto" | number>"auto"
   };
 
   constructor(width: number, height: number);
@@ -205,6 +207,11 @@ export default class fCanvas {
     this.$el.width = width;
     // eslint-disable-next-line functional/immutable-data
     this.$el.height = height;
+  }
+  aspectRatio(value: "auto" | number): void {
+    this.#env.aspectRatio = value;
+    
+    this.#updateAspectRatio();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -467,6 +474,7 @@ export default class fCanvas {
   set width(value: number) {
     // eslint-disable-next-line functional/immutable-data
     this.$el.width = value;
+    this.#updateAspectRatio();
   }
   get height(): number {
     return this.$el.height;
@@ -474,12 +482,21 @@ export default class fCanvas {
   set height(value: number) {
     // eslint-disable-next-line functional/immutable-data
     this.$el.height = value;
+    this.#updateAspectRatio();
   }
   get windowWidth(): number {
     return windowSize.windowWidth.get();
   }
   get windowHeight(): number {
     return windowSize.windowHeight.get();
+  }
+  
+  #updateAspectRatio() {
+    const newValc = this.#env.aspectRatio === "auto" ? this.height : this.width * this.#env.aspectRatio;
+    
+    if (this.height !== newValc) {
+      this.height = newValc;
+    }
   }
 
   save(): void {
