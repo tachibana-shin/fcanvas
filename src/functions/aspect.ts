@@ -13,10 +13,10 @@ export default function aspect(
       width,
       height: sheight,
     };
-  } else {
-    return {
-      width: swidth,
-      height,
-    };
   }
+  
+  return {
+    width: swidth,
+    height,
+  };
 }
