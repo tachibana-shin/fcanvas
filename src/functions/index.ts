@@ -14,3 +14,4 @@ export { default as isUnlimited } from "./isUnlimited";
 
 export * from "./intersects";
 export { default as sleep } from "./sleep";
+export { default as randomColor } from "./randomColor"

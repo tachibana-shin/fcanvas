@@ -20,3 +20,5 @@ export { default as isMobile } from "./utils/isMobile";
 export { default as isTouch } from "./utils/isTouch";
 
 export * from "./functions";
+export { default as Colors } from "./constants/Colors"
+export { default as Transform } from "./classes/Transform"
