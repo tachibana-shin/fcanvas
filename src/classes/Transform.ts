@@ -6,8 +6,8 @@ type Offset = {
 export default class Transform {
   private dirty = false;
   public m: number[] = [1, 0, 0, 1, 0, 0];
-  constructor(m?: [number, number, number, number, number, number] = [1, 0, 0, 1, 0, 0]) {
-    this.m = m || thi
+  constructor(m?: number[]) {
+    this.m = m || this.m
   }
   reset() {
     this.m[0] = 1;
@@ -249,7 +249,7 @@ export default class Transform {
       result.skewY = (a * c + b * d) / delta;
     }
     else;
-    result.rotation = Util._getRotation(result.rotation);
+    // result.rotation = Util._getRotation(result.rotation);
     return result;
   }
 }
