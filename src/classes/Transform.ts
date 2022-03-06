@@ -6,7 +6,7 @@ type Offset = {
 export default class Transform {
   private dirty = false;
   public m: number[] = [1, 0, 0, 1, 0, 0];
-  const ructor(m ? : [number, number, number, number, number, number] = [1, 0, 0, 1, 0, 0]) {
+  constructor(m?: [number, number, number, number, number, number] = [1, 0, 0, 1, 0, 0]) {
     this.m = m || thi
   }
   reset() {

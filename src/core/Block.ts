@@ -42,7 +42,7 @@ function compressTypeToImage(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export abstract class Block<ItemMap = any> {
+export abstract class Block {
   public get type(): "rect" | "circle" | "point" | "unknown" {
     if ("x" in this && "y" in this) {
       if ("width" in this && "height" in this) {
@@ -60,10 +60,6 @@ export abstract class Block<ItemMap = any> {
   }
   // eslint-disable-next-line functional/prefer-readonly-type
   #canvasInstance: fCanvas | null = null;
-  // eslint-disable-next-line functional/prefer-readonly-type
-  map?: ItemMap[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly #mapIs2D = Array.isArray((this.map as any)?.[0]);
 
   render<T = void>(canvas = getCanvasInstance()): void | T {
     // eslint-disable-next-line functional/no-let
@@ -72,47 +68,7 @@ export abstract class Block<ItemMap = any> {
     this.#canvasInstance = canvas;
 
     if (existsCbDraw(this)) {
-      if (this.map) {
-        if (this.#mapIs2D) {
-          // eslint-disable-next-line functional/no-let
-          let i = 0;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { length } = this.map as readonly (readonly any[])[];
-
-          // eslint-disable-next-line functional/no-loop-statement
-          while (i < length) {
-            // eslint-disable-next-line functional/no-let
-            let j = 0;
-            const { length: len2 } =
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (this.map as readonly (readonly any[])[])[i];
-
-            // eslint-disable-next-line functional/no-loop-statement
-            while (j < len2) {
-              this.draw(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (this.map as readonly (readonly any[])[])[i][j],
-                j,
-                i
-              );
-              j++;
-            }
-            i++;
-          }
-        } else {
-          // eslint-disable-next-line functional/no-let
-          let i = 0;
-          const { length } = this.map;
-
-          // eslint-disable-next-line functional/no-loop-statement
-          while (i < length) {
-            this.draw(this.map[i], i++);
-          }
-        }
-      } else {
-        // draw-draw-draw-draw;
-        this.draw();
-      }
+      this.draw();
     }
 
     if (existsCbUpdate(this)) {
@@ -168,8 +124,8 @@ export abstract class Block<ItemMap = any> {
           (this as any).y &&
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (Math.round((this as any).x) === Math.round(this.instance.mouseX),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          Math.round((this as any).y) === Math.round(this.instance.mouseY))
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            Math.round((this as any).y) === Math.round(this.instance.mouseY))
         );
       default:
         return false;
