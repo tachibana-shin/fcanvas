@@ -1,5 +1,8 @@
 # fCanvas
 Library for canvas 2 HTML 5
+
+__!!! This is old version depclare !!!__
+
 [View docs](https://tachibana-shin.github.io/fcanvas)
 
 [![Build](https://github.com/tachibana-shin/fcanvas/actions/workflows/docs.yml/badge.svg)](https://github.com/tachibana-shin/fcanvas/actions/workflows/docs.yml)
