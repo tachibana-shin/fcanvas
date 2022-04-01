@@ -1,7 +1,7 @@
 # fCanvas
 Library for canvas 2 HTML 5
 
-__!!! This is old version depclare !!!__
+__!!! This is old version depclare !!!__. New version at https://github.com/tachibana-shin/fcanvas-next
 
 [View docs](https://tachibana-shin.github.io/fcanvas)
 
